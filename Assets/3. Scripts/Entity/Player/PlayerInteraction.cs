@@ -7,7 +7,7 @@ public class PlayerInteraction : NetworkBehaviour
 {
     [Header("Settings")]
     [SerializeField]
-    private float pickupRadius;
+    private float pickupRadius = 4f;
     [SerializeField]
     private LayerMask itemLayer;
 

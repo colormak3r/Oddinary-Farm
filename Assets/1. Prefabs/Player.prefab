@@ -405,9 +405,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01b0a155acb56c84f9b8f27c58d44024, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickupRange: 0.5
+  inventoryRadius: 1
   inventorySlot: 20
-  inventory: []
+  itemLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &9034817965285367963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -420,7 +422,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 222e90ed015785d4080402a6d58d3a6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickupRadius: 1
+  pickupRadius: 4
   itemLayer:
     serializedVersion: 2
     m_Bits: 64

@@ -37,6 +37,7 @@ public class Item : NetworkBehaviour
 
     public bool CanBePickedUpValue => CanBePickedUp.Value;
     public NetworkBehaviourReference PickerValue => Picker.Value;
+    public ItemProperty CurrentProperty => currentProperty;
 
     private void Awake()
     {
