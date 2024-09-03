@@ -21,13 +21,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         movement = GetComponent<EntityMovement>();        
     }
 
-    private void Start()
-    {
-        if (!IsOwner) return;
-
-        InputManager.Main.InputActions.Player.SetCallbacks(this);
-    }
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();

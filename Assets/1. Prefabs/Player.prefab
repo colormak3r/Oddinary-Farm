@@ -297,7 +297,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3310549321
+  GlobalObjectIdHash: 569683485
   InScenePlacedSourceGlobalObjectIdHash: 569683485
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -376,6 +376,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c44acfe779f2de3499eca404616f9a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lookPosition: {x: 0, y: 0}
+  IsFacingRight:
+    m_InternalValue: 0
 --- !u!114 &3602106504410570466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,6 +405,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01b0a155acb56c84f9b8f27c58d44024, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickupRange: 0.5
+  inventorySlot: 20
+  inventory: []
 --- !u!114 &9034817965285367963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -414,3 +420,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 222e90ed015785d4080402a6d58d3a6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickupRadius: 1
+  itemLayer:
+    serializedVersion: 2
+    m_Bits: 64

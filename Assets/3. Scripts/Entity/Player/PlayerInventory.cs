@@ -12,6 +12,13 @@ public struct ItemPropertyCount
 
 public class PlayerInventory : NetworkBehaviour
 {
+    [Header("Settings")]
+    [SerializeField]
+    private float pickupRange = 0.5f;
+    [SerializeField]
+    private int inventorySlot = 20;
+
+    [Header("Debugs")]
     [SerializeField]
     private List<ItemPropertyCount> inventory = new List<ItemPropertyCount> ();
 
