@@ -13,18 +13,26 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void Update()
     {
-        var hits = Physics2D.OverlapCircleAll(transform.position,pickupRadius,itemLayer);
+        if (!IsServer) return;
+
+        var hits = Physics2D.OverlapCircleAll(transform.PositionHalfUp(), pickupRadius, itemLayer);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)
             {
-                if(hit.TryGetComponent(out Item item))
+                if (hit.TryGetComponent(out Item item))
                 {
                     if (!item.CanBePickedUpValue) continue;
 
-                    item.PickUpItemRpc(this);
+                    item.PickUpItem(transform);
                 }
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.PositionHalfUp(), pickupRadius);
     }
 }

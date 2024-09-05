@@ -110,7 +110,7 @@ Transform:
   m_GameObject: {fileID: 3750516209860231229}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -270,7 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mockProperty: {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
-  pickupSpeed: 300
+  pickupSpeed: 400
   pickupDuration: 3
   pickupRecovery: 3
   Property:
@@ -410,6 +410,7 @@ MonoBehaviour:
         byte0123: 0
         byte0124: 0
         byte0125: 0
+  currentPicker: {fileID: 0}
   CanBePickedUp:
     m_InternalValue: 1
 --- !u!61 &3497622455922979039

@@ -12,13 +12,15 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     private Vector2 playerPosition_cached = Vector2.one;
 
     private EntityMovement movement;
+    private PlayerInventory playerInventory;
 
     [SerializeField]
-    private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>();
+    private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
     private void Awake()
     {
-        movement = GetComponent<EntityMovement>();        
+        movement = GetComponent<EntityMovement>();
+        playerInventory = GetComponent<PlayerInventory>();
     }
 
     public override void OnNetworkSpawn()
@@ -65,5 +67,13 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         lookPosition = Camera.main.ScreenToWorldPoint(context.ReadValue<Vector2>());
         IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;
+    }
+
+    public void OnDrop(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            playerInventory.DropItem(0, lookPosition);
+        }
     }
 }

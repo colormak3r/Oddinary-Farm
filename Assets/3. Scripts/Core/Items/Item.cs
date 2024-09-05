@@ -23,34 +23,34 @@ public class Item : NetworkBehaviour
     private ItemProperty currentProperty;
 
     [SerializeField]
-    private NetworkVariable<NetworkBehaviourReference> Picker;
     private Transform currentPicker;
     private float nextPickupStop;
 
     [SerializeField]
-    private NetworkVariable<bool> CanBePickedUp = new NetworkVariable<bool>(true);
+    private NetworkVariable<bool> CanBePickedUp;
 
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rbody;
+    private Collider2D collider2D;
     private float pickupRangeSqr;
     private Vector3 dummyVelocity;
 
     public bool CanBePickedUpValue => CanBePickedUp.Value;
-    public NetworkBehaviourReference PickerValue => Picker.Value;
     public ItemProperty CurrentProperty => currentProperty;
 
     private void Awake()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         rbody = GetComponent<Rigidbody2D>();
+        collider2D = GetComponentInChildren<Collider2D>();
     }
 
     public override void OnNetworkSpawn()
     {
+        if(IsServer) CanBePickedUp.Value = false;
+        
         HandlePropertyChanged(Property.Value, Property.Value);
-        HandlePickerChanged(Picker.Value, Picker.Value);
         Property.OnValueChanged += HandlePropertyChanged;     
-        Picker.OnValueChanged += HandlePickerChanged;
     }
 
     public override void OnNetworkDespawn()
@@ -71,22 +71,6 @@ public class Item : NetworkBehaviour
         spriteRenderer.sprite = currentProperty.Sprite;
     }
 
-    private void HandlePickerChanged(NetworkBehaviourReference previous, NetworkBehaviourReference current)
-    {   
-        if(current.TryGet(out var networkBehaviour))
-        {
-            HandlePickerChanged(networkBehaviour.transform);            
-        }        
-    }
-
-    private void HandlePickerChanged(Transform picker)
-    {
-        if (!IsServer) return;
-
-        currentPicker = picker;
-        nextPickupStop = Time.time + pickupDuration;
-    }
-
     [ContextMenu("Mock Property Change")]
     public void MockPropertyChange()
     {
@@ -97,12 +81,13 @@ public class Item : NetworkBehaviour
     public void Initialize(ItemProperty property)
     {
         Property.Value = property.name;
+        StartCoroutine(PickupRecovery());
     }    
 
-    [Rpc(SendTo.Server)]
-    public void PickUpItemRpc(NetworkBehaviourReference newPicker)
+    public void PickUpItem(Transform newPicker)
     {
-        Picker.Value = newPicker;
+        currentPicker = newPicker;
+        nextPickupStop = Time.time + pickupDuration;
         CanBePickedUp.Value = false;
     }
 
@@ -117,7 +102,7 @@ public class Item : NetworkBehaviour
         else
         {
             currentPicker = null;
-            Picker.Value = null;
+            CanBePickedUp.Value = false;
             StartCoroutine(PickupRecovery());
         }
     }
@@ -130,6 +115,7 @@ public class Item : NetworkBehaviour
 
     private IEnumerator PickupRecovery()
     {
+        //collider2D.enabled = value;
         yield return new WaitForSeconds(pickupRecovery);
         CanBePickedUp.Value = true;
     }
