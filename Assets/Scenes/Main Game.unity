@@ -422,10 +422,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.0020408165
-    y: 0.003911343
-    width: 0.9959184
-    height: 0.9908735
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -530,6 +530,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1896a7dd816924846b8584e106701212, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 0}
+  isInitialized: 0
+  isInitializing: 0
 --- !u!114 &555041380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -663,7 +666,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   assetPath: Assets/4. Scriptable Object
-  unidentifiedProperty: {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
+  unidentifiedItemProperty: {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
+  unidentifiedPlantProperty: {fileID: 11400000, guid: dbd800054bbb8104cb11cf3d67c8ac49, type: 2}
 --- !u!4 &875643468
 Transform:
   m_ObjectHideFlags: 0

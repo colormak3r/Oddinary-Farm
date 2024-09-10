@@ -124,7 +124,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3134875267881515246}
-  - component: {fileID: 7413931922823501277}
   m_Layer: 0
   m_Name: Graphic
   m_TagString: Untagged
@@ -149,18 +148,6 @@ Transform:
   - {fileID: 1163948847803492089}
   m_Father: {fileID: 2746253684418572068}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &7413931922823501277
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4271386617469591001}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_SortAtRoot: 0
 --- !u!1 &4527705507883887418
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,6 +241,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2746253684418572068}
+  - component: {fileID: 4681378391886280752}
   - component: {fileID: 8578118405527705988}
   - component: {fileID: 8205256396036253032}
   - component: {fileID: 2546670360964751076}
@@ -285,6 +273,18 @@ Transform:
   - {fileID: 3069574845127289831}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &4681378391886280752
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5447349809502746784}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!114 &8578118405527705988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,7 +297,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 569683485
+  GlobalObjectIdHash: 3310549321
   InScenePlacedSourceGlobalObjectIdHash: 569683485
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -379,6 +379,7 @@ MonoBehaviour:
   lookPosition: {x: 0, y: 0}
   IsFacingRight:
     m_InternalValue: 0
+  plantPrefab: {fileID: 4773706747441023441, guid: 6e849e9e46e06ad449bd7c16c7acfa40, type: 3}
 --- !u!114 &3602106504410570466
 MonoBehaviour:
   m_ObjectHideFlags: 0

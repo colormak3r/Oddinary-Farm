@@ -19,7 +19,7 @@ public class Item : NetworkBehaviour
 
     [Header("Debugs")]
     [SerializeField]
-    private NetworkVariable<FixedString128Bytes> Property;
+    private NetworkVariable<FixedString128Bytes> Property = new NetworkVariable<FixedString128Bytes>();
     private ItemProperty currentProperty;
 
     [SerializeField]
@@ -27,7 +27,7 @@ public class Item : NetworkBehaviour
     private float nextPickupStop;
 
     [SerializeField]
-    private NetworkVariable<bool> CanBePickedUp;
+    private NetworkVariable<bool> CanBePickedUp = new NetworkVariable<bool>();
 
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D rbody;
@@ -66,7 +66,7 @@ public class Item : NetworkBehaviour
     private void HandlePropertyChanged(string item)
     {
         currentProperty = (ItemProperty)AssetManager.Main.GetAssetByName(item);
-        if (currentProperty == null) currentProperty = AssetManager.Main.UnidentifiedProperty;
+        if (currentProperty == null) currentProperty = AssetManager.Main.UnidentifiedItemProperty;
 
         spriteRenderer.sprite = currentProperty.Sprite;
     }

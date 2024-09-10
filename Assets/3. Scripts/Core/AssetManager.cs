@@ -20,11 +20,14 @@ public class AssetManager : MonoBehaviour
     [SerializeField]
     private string assetPath;
     [SerializeField]
-    private ItemProperty unidentifiedProperty;
+    private ItemProperty unidentifiedItemProperty;
+    [SerializeField]
+    private PlantProperty unidentifiedPlantProperty;
 
     private Dictionary<string, ScriptableObject> nameToScriptableObject = new Dictionary<string, ScriptableObject>();
 
-    public ItemProperty UnidentifiedProperty => unidentifiedProperty; 
+    public ItemProperty UnidentifiedItemProperty => unidentifiedItemProperty; 
+    public PlantProperty UnidentifiedPlantProperty => unidentifiedPlantProperty;
 
     [ContextMenu("Fetch Assets")]
     public void FetchAssets()
@@ -47,7 +50,7 @@ public class AssetManager : MonoBehaviour
         else if (!nameToScriptableObject.ContainsKey(name))
         {
             Debug.Log("Unidentified property loaded");
-            return unidentifiedProperty;
+            return unidentifiedItemProperty;
         }
         else
         {

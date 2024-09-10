@@ -1,3 +1,4 @@
+using ColorMak3r.Utility;
 using System.Collections;
 using Unity.Netcode;
 using UnityEditor.Overlays;
@@ -94,5 +95,29 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         {
             playerInventory.DropItem(0, lookPosition);
         }
+    }
+
+    [SerializeField]
+    private GameObject plantPrefab;
+
+    public void OnPrimary(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GameObject go = Instantiate(plantPrefab, lookPosition.SnapToGrid(), Quaternion.identity);
+            go.GetComponent<NetworkObject>().Spawn();
+            var plant = go.GetComponent<Plant>();
+            plant.MockPropertyChange();
+        }
+    }
+
+    public void OnSecondary(InputAction.CallbackContext context)
+    {
+        
+    }
+
+    public void OnAlternative(InputAction.CallbackContext context)
+    {
+        
     }
 }

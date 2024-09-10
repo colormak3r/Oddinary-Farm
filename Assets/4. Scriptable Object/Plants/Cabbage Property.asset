@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63517db498b643c42b0decdd941ba821, type: 3}
+  m_Name: Cabbage Property
+  m_EditorClassIdentifier: 
+  stages:
+  - sprite: {fileID: 1155793255, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
+    duration: 3
+    isHarvestStage: 0
+    nextStage: 1
+  - sprite: {fileID: 1345531618, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
+    duration: 3
+    isHarvestStage: 0
+    nextStage: 1
+  - sprite: {fileID: 1471501572, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
+    duration: 3
+    isHarvestStage: 0
+    nextStage: 1
+  - sprite: {fileID: -435341045, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
+    duration: 3
+    isHarvestStage: 1
+    nextStage: 0
