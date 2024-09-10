@@ -14,7 +14,7 @@ public class TerrainUnit : MonoBehaviour
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
-    public void SetProperty(TerrainProperty property)
+    public void Initialize(TerrainProperty property)
     {
         spriteRenderer.sprite = property.Sprite;
     }

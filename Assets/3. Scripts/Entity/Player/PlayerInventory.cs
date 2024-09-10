@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Netcode;
 using Unity.Collections;
 using System;
+using ColorMak3r.Utility;
 
 [System.Serializable]
 public struct ItemStack : IEquatable<ItemStack>, INetworkSerializable

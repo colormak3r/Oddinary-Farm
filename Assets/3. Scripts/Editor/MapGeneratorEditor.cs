@@ -11,7 +11,7 @@ public class MapGeneratorEditor : Editor
 
         MapGenerator script = (MapGenerator)target;
 
-        if (GUILayout.Button("Generate"))
+        /*if (GUILayout.Button("Generate"))
         {
             script.Generate();
         }
@@ -19,6 +19,6 @@ public class MapGeneratorEditor : Editor
         if (GUILayout.Button("Clear"))
         {
             script.Clear();
-        }
+        }*/
     }
 }

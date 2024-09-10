@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Netcode;
 using UnityEditor.Overlays;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     [SerializeField]
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
+
 
     private void Awake()
     {
@@ -46,9 +48,26 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
             transform.localScale = LEFT_DIRECTION;
     }
 
+    private void Update()
+    {
+        if (!GameManager.Main.IsInitialized) return;
+
+        if (playerPosition_cached != (Vector2)transform.position)
+        {
+            playerPosition_cached = transform.position;
+            StartCoroutine(MapGenerator.Main.GenerateTerrainCoroutine(transform.position));
+        }
+    }
+
     private void Initialize()
     {
         if (!IsOwner) return;
+        StartCoroutine(InitializeCoroutine());
+    }
+
+    private IEnumerator InitializeCoroutine()
+    {
+        yield return new WaitUntil(() => GameManager.Main.IsInitialized);
 
         // Set control
         InputManager.Main.InputActions.Player.SetCallbacks(this);
