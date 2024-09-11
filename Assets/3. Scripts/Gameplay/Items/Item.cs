@@ -22,7 +22,6 @@ public class Item : NetworkBehaviour
     private NetworkVariable<FixedString128Bytes> Property = new NetworkVariable<FixedString128Bytes>();
     private ItemProperty currentProperty;
 
-    [SerializeField]
     private Transform currentPicker;
     private float nextPickupStop;
 
@@ -37,6 +36,7 @@ public class Item : NetworkBehaviour
 
     public bool CanBePickedUpValue => CanBePickedUp.Value;
     public ItemProperty CurrentProperty => currentProperty;
+    public Transform CurrentPicker => currentPicker;
 
     private void Awake()
     {
@@ -84,8 +84,10 @@ public class Item : NetworkBehaviour
         StartCoroutine(PickupRecovery());
     }    
 
-    public void PickUpItem(Transform newPicker)
+    public void PickUpItemOnServer(Transform newPicker)
     {
+        if (!IsServer) return;
+
         currentPicker = newPicker;
         nextPickupStop = Time.time + pickupDuration;
         CanBePickedUp.Value = false;

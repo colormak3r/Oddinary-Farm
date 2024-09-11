@@ -95,7 +95,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         if (context.performed)
         {
-            playerInventory.DropItem(0, lookPosition);
+            playerInventory.DropItem(playerInventory.CurrentHotbarIndex, lookPosition);
         }
     }
 

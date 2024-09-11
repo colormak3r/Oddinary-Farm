@@ -25,7 +25,7 @@ public class PlayerInteraction : NetworkBehaviour
                 {
                     if (!item.CanBePickedUpValue) continue;
 
-                    item.PickUpItem(transform);
+                    item.PickUpItemOnServer(transform);
                 }
             }
         }
