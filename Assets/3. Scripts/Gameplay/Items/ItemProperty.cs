@@ -17,4 +17,18 @@ public class ItemProperty : ScriptableObject
     public int MaxStack => maxStack;
     public float PrimaryCdr => primaryCdr;
     public float SecondaryCdr => secondaryCdr;
+
+    public virtual void OnPrimaryAction(Vector2 position, PlayerInventory inventory)
+    {
+
+    }
+
+    public virtual void OnSecondaryAction(Vector2 position)
+    {
+
+    }
+    public virtual void OnAlternativeAction(Vector2 position)
+    {
+
+    }
 }

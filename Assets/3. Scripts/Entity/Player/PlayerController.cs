@@ -3,6 +3,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEditor.Overlays;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerActions
@@ -24,6 +25,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         movement = GetComponent<EntityMovement>();
         playerInventory = GetComponent<PlayerInventory>();
+        playerInventory.OnCurrentItemPropertyChanged.AddListener(HandleCurrentItemPropertyChanged);
     }
 
     public override void OnNetworkSpawn()
@@ -100,14 +102,21 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     [SerializeField]
     private GameObject plantPrefab;
 
+    private void HandleCurrentItemPropertyChanged()
+    {
+
+    }
+
+    #region Player Action
+
     public void OnPrimary(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            GameObject go = Instantiate(plantPrefab, lookPosition.SnapToGrid(), Quaternion.identity);
+            /*GameObject go = Instantiate(plantPrefab, lookPosition.SnapToGrid(), Quaternion.identity);
             go.GetComponent<NetworkObject>().Spawn();
             var plant = go.GetComponent<Plant>();
-            plant.MockPropertyChange();
+            plant.MockPropertyChange();*/
         }
     }
 
@@ -120,4 +129,44 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         
     }
+
+    #endregion
+
+    #region Hotbar
+
+    public void OnHotbar(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            var value = int.Parse(context.control.name);
+            ChangeHotbarIndex(value);
+        }
+    }
+
+    public void OnHotbarScroll(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            var value = playerInventory.CurrentHotbarIndex - (int)Mathf.Sign(context.ReadValue<float>());
+            ChangeHotbarIndex(value);
+        }
+    }
+
+    private void ChangeHotbarIndex(int value)
+    {
+        // Clamp and loop the hotbar item keys from 0-9
+        if (value > 9)
+            value = 0;
+        else if (value < 0)
+            value = 9;
+
+        // Hotbar index change locally, stored in PlayerInventory
+        playerInventory.ChangeHotBarIndex(value);
+    }
+
+    #endregion
+
+    #region Tools
+
+    #endregion
 }

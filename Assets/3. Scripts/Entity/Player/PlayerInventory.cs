@@ -5,15 +5,18 @@ using Unity.Netcode;
 using Unity.Collections;
 using System;
 using ColorMak3r.Utility;
+using UnityEngine.Events;
 
 [System.Serializable]
 public struct ItemStack : IEquatable<ItemStack>, INetworkSerializable
 {
+    [SerializeField]
     private FixedString128Bytes propertyName;
+    [SerializeField]
     private int count;
 
     public ItemProperty Property => (ItemProperty)AssetManager.Main.GetAssetByName(propertyName.ToString());
-    public int Count => count;  
+    public int Count => count;
 
     public ItemStack(string propertyName, int count = 1)
     {
@@ -54,24 +57,68 @@ public class PlayerInventory : NetworkBehaviour
     private LayerMask itemLayer;
     [SerializeField]
     private GameObject itemPrefab;
+    [SerializeField]
+    private SpriteRenderer itemRenderer;
 
     [Header("Debugs")]
     [SerializeField]
+    private int currentHotbarIndex;
+    [SerializeField]
     private NetworkList<ItemStack> Inventory;
     [SerializeField]
-    private NetworkVariable<int> CurrentHotbarPosition;
+    private NetworkVariable<ItemStack> CurrentItemStack = new NetworkVariable<ItemStack>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    [SerializeField]
+    private ItemProperty currentItemProperty;
 
-    public int CurrentHotbarPositionValue => CurrentHotbarPosition.Value;
+    [HideInInspector]
+    public UnityEvent OnCurrentItemPropertyChanged;
+    public int CurrentHotbarIndex => currentHotbarIndex;
+    public ItemProperty CurrentItemProperty => currentItemProperty;
 
     private void Awake()
     {
         Inventory = new NetworkList<ItemStack>();
     }
 
+    public override void OnNetworkSpawn()
+    {
+        HandleCurrentItemStackChanged(CurrentItemStack.Value, CurrentItemStack.Value);
+        CurrentItemStack.OnValueChanged += HandleCurrentItemStackChanged;
+    }
+
+
+
+    public override void OnNetworkDespawn()
+    {
+        CurrentItemStack.OnValueChanged -= HandleCurrentItemStackChanged;
+    }
+
+    private void HandleCurrentItemStackChanged(ItemStack previous, ItemStack current)
+    {
+        if (current.Count == 0)
+        {
+            // Hand
+        }
+        else
+        {
+            currentItemProperty = CurrentItemStack.Value.Property;
+            if (currentItemProperty == null)
+            {
+                //Hand
+            }
+            else
+            {
+                itemRenderer.sprite = currentItemProperty.Sprite;
+                OnCurrentItemPropertyChanged?.Invoke();
+            }
+        }
+    }
+
     private void Update()
     {
         if (!IsServer) return;
 
+        // Automatically try to pick up Items in the close proximity
         var hits = Physics2D.OverlapCircleAll(transform.PositionHalfUp(), inventoryRadius, itemLayer);
         if (hits.Length > 0)
         {
@@ -119,10 +166,24 @@ public class PlayerInventory : NetworkBehaviour
         {
             Inventory[itemPosition].DecreaseCount();
         }
-        
-        var item = Instantiate(itemPrefab, dropPosition, Quaternion.identity);        
+
+        var item = Instantiate(itemPrefab, dropPosition, Quaternion.identity);
         item.GetComponent<Item>().Initialize(itemStack.Property);
         item.GetComponent<NetworkObject>().Spawn();
+    }
+
+    public void ChangeHotBarIndex(int index)
+    {
+        currentHotbarIndex = index;
+
+        if (Inventory.Count > index)
+        {
+            CurrentItemStack.Value = Inventory[index];
+        }
+        else
+        {
+            // Hand
+        }
     }
 
     private void OnDrawGizmos()
