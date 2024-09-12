@@ -43,14 +43,9 @@ public class AssetManager : MonoBehaviour
 
     public ScriptableObject GetAssetByName(string name)
     {
-        if (name == "")
+        if (!nameToScriptableObject.ContainsKey(name))
         {
             return null;
-        }
-        else if (!nameToScriptableObject.ContainsKey(name))
-        {
-            Debug.Log("Unidentified property loaded");
-            return unidentifiedItemProperty;
         }
         else
         {

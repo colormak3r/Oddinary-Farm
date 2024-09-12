@@ -45,6 +45,8 @@ public class PlayerInventory : NetworkBehaviour
 
     [Header("Debugs")]
     [SerializeField]
+    private bool debug;
+    [SerializeField]
     private int currentHotbarIndex;
     [SerializeField]
     private ItemStack[] inventory = new ItemStack[MAX_INVENTORY_SLOTS];
@@ -54,11 +56,12 @@ public class PlayerInventory : NetworkBehaviour
             default,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Owner);
-    private ItemProperty currentItem;
+    private ItemStack currentItemStack;
 
     [HideInInspector]
     public UnityEvent OnCurrentItemPropertyChanged;
     public int CurrentHotbarIndex => currentHotbarIndex;
+    public ItemStack CurrentItemStack => currentItemStack;
 
     public override void OnNetworkSpawn()
     {
@@ -72,7 +75,8 @@ public class PlayerInventory : NetworkBehaviour
 
     private void HandleCurrentItemChanged(FixedString128Bytes previous, FixedString128Bytes current)
     {
-        currentItem = (ItemProperty)AssetManager.Main.GetAssetByName(current.ToString());
+        var currentItem = (ItemProperty)AssetManager.Main.GetAssetByName(current.ToString());
+        currentItemStack = inventory[currentHotbarIndex];
 
         if (currentItem != null)
         {
@@ -117,7 +121,7 @@ public class PlayerInventory : NetworkBehaviour
     private void AddItem(ItemProperty property, int amount = 1)
     {
         // Find the index of the property
-        var found = GetStackIndex(inventory, property, out int index);
+        var found = FindIncompleteStackIndex(inventory, property, out int index);
         if (found)
         {
             // Determine if the hotbar is empty and the player just pick up a new item
@@ -128,20 +132,36 @@ public class PlayerInventory : NetworkBehaviour
             inventory[index].Property = property;
             inventory[index].Count += amount;
 
-            Debug.Log($"Added {property.name} to index {index}. New count = {inventory[index].Count}");
+            if (debug) Debug.Log($"Added {property.name} to index {index}. New count = {inventory[index].Count}");
 
-            if (firstPickup) ChangeHotBarIndex(index);            
+            if (firstPickup) ChangeHotBarIndex(index);
         }
         else
         {
-            Debug.Log("Inventory full. Cannot add " + property.name);
+            if (debug) Debug.Log("Inventory full. Cannot add " + property.name);
         }
     }
 
-
-    public void RemoveItem(ItemProperty property, int count = 1)
+    public void RemoveInventoryItem(ItemProperty property, int amount = 1)
     {
+        // Todo
+    }
 
+    public void RemoveHotbarItem(ItemStack stack, int amount = 1)
+    {
+        if (!inventory.Contains(stack)) return;
+
+        var isHoldingItem = stack == currentItemStack;
+
+        stack.Count -= amount;
+        if (stack.Count <= 0)
+        {
+            stack.Property = null;
+            stack.Count = 0;
+
+            if (isHoldingItem)
+                CurrentItemName.Value = "";
+        }
     }
 
     /// <summary>
@@ -162,7 +182,7 @@ public class PlayerInventory : NetworkBehaviour
     /// 2. If no stack is found, it checks for an empty slot (where property is null).
     /// Both loops start at index 1, skipping item at 0 which will always be the hand.
     /// </remarks>
-    private bool GetStackIndex(ItemStack[] inventory, ItemProperty property, out int index)
+    private bool FindIncompleteStackIndex(ItemStack[] inventory, ItemProperty property, out int index)
     {
         index = -1;
 
@@ -189,15 +209,37 @@ public class PlayerInventory : NetworkBehaviour
         return false;
     }
 
+    private bool FindStackIndex(ItemStack[] inventory, ItemProperty property, out int index)
+    {
+        index = -1;
+
+        for (int i = 1; i < inventory.Length; i++)
+        {
+            var stack = inventory[i];
+            if (stack.Property == property && stack.Count > 0)
+            {
+                index = i;
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     public void DropItem(int itemPosition, Vector2 dropPosition)
     {
-        var itemStack = inventory[itemPosition];
-        if (itemStack.Property == null || itemStack.Count <= 0) return;
+        var stack = inventory[itemPosition];
+        if (stack.IsStackEmpty) return;
 
-        itemStack.Count--;
+        DropItemRpc(stack.Property.name, dropPosition);
 
-        DropItemRpc(itemStack.Property.name, dropPosition);
+        stack.Count--;
+        if (stack.Count <= 0)
+        {
+            stack.Property = null;
+            stack.Count = 0;
+            CurrentItemName.Value = "";
+        }
     }
 
     [Rpc(SendTo.Server)]
@@ -212,9 +254,10 @@ public class PlayerInventory : NetworkBehaviour
     {
         currentHotbarIndex = index;
 
-        if (inventory[index].Property != null && inventory[index].Count > 0)
+        var stack = inventory[index];
+        if (!stack.IsStackEmpty)
         {
-            CurrentItemName.Value = inventory[index].Property.name;
+            CurrentItemName.Value = stack.Property.name;
         }
         else
         {

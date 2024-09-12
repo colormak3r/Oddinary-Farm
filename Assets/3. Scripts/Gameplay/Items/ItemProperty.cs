@@ -7,14 +7,18 @@ public class ItemProperty : ScriptableObject
     [SerializeField]
     private Sprite sprite;
     [SerializeField]
+    private bool isConsummable;
+    [SerializeField]
     private int maxStack = 99;
     [SerializeField]
     private float primaryCdr = 0.25f;
     [SerializeField]
     private float secondaryCdr = 0.25f;
-    
+
+
     public Sprite Sprite => sprite;
     public int MaxStack => maxStack;
+    public bool IsConsummable => isConsummable;
     public float PrimaryCdr => primaryCdr;
     public float SecondaryCdr => secondaryCdr;
 
@@ -27,6 +31,7 @@ public class ItemProperty : ScriptableObject
     {
 
     }
+
     public virtual void OnAlternativeAction(Vector2 position)
     {
 

@@ -99,12 +99,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         }
     }
 
-    [SerializeField]
-    private GameObject plantPrefab;
-
     private void HandleCurrentItemPropertyChanged()
     {
-
+        // Todo: Cache item for more efficient memory use
     }
 
     #region Player Action
@@ -113,10 +110,18 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         if (context.performed)
         {
-            /*GameObject go = Instantiate(plantPrefab, lookPosition.SnapToGrid(), Quaternion.identity);
-            go.GetComponent<NetworkObject>().Spawn();
-            var plant = go.GetComponent<Plant>();
-            plant.MockPropertyChange();*/
+            var stack = playerInventory.CurrentItemStack;
+            if (stack == null || stack.IsStackEmpty) return;
+
+            stack.Property.OnPrimaryAction(lookPosition, playerInventory);
+
+            if (stack.Property.IsConsummable)
+            {
+                if (!stack.IsStackEmpty)
+                    playerInventory.RemoveHotbarItem(stack);
+                else
+                    return;
+            }
         }
     }
 
