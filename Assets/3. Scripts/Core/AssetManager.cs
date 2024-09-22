@@ -17,17 +17,24 @@ public class AssetManager : MonoBehaviour
         FetchAssets();
     }
 
+    [Header("Settings")]
     [SerializeField]
     private string assetPath;
+
+    [Header("Common Assets")]
     [SerializeField]
+    private GameObject farmPlotPrefab;
+    /*[SerializeField]
     private ItemProperty unidentifiedItemProperty;
     [SerializeField]
-    private PlantProperty unidentifiedPlantProperty;
+    private PlantProperty unidentifiedPlantProperty;*/
 
     private Dictionary<string, ScriptableObject> nameToScriptableObject = new Dictionary<string, ScriptableObject>();
 
-    public ItemProperty UnidentifiedItemProperty => unidentifiedItemProperty; 
-    public PlantProperty UnidentifiedPlantProperty => unidentifiedPlantProperty;
+    /*public ItemProperty UnidentifiedItemProperty => unidentifiedItemProperty; 
+    public PlantProperty UnidentifiedPlantProperty => unidentifiedPlantProperty;*/
+    public GameObject FarmPlotPrefab => farmPlotPrefab;
+
 
     [ContextMenu("Fetch Assets")]
     public void FetchAssets()

@@ -10,9 +10,14 @@ public class TerrainProperty : ScriptableObject
     private Sprite sprite;
     [SerializeField]
     private MinMaxFloat elevation;
+    [SerializeField]
+    private bool isAccessible = true;
 
     public Sprite Sprite => sprite;
     public MinMaxFloat Elevation => elevation;
+    public bool IsAccessible => isAccessible;
+
+
     public bool Match(float elevation)
     {
         return elevation >= this.elevation.min && elevation < this.elevation.max;

@@ -422,10 +422,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.0006816633
+    x: 0
     y: 0
-    width: 0.997955
-    height: 0.9986996
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -666,8 +666,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   assetPath: Assets/4. Scriptable Object
-  unidentifiedItemProperty: {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
-  unidentifiedPlantProperty: {fileID: 11400000, guid: dbd800054bbb8104cb11cf3d67c8ac49, type: 2}
+  farmPlotPrefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
 --- !u!4 &875643468
 Transform:
   m_ObjectHideFlags: 0
@@ -716,10 +715,12 @@ MonoBehaviour:
   itemPrefab: {fileID: 5937313573806529732, guid: 259003fb8e1dfcb40856b505877aed0f, type: 3}
   itemProperties:
   - {fileID: 11400000, guid: 96c5d0ada8939d74aa77a028293a03b7, type: 2}
+  - {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
   - {fileID: 11400000, guid: 12c97f6d640590f41acf4e752260d02f, type: 2}
   - {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
+  - {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
   - {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
-  - {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
+  - {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
 --- !u!4 &1119948593
 Transform:
   m_ObjectHideFlags: 0

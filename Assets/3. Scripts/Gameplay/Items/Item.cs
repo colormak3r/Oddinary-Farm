@@ -66,7 +66,7 @@ public class Item : NetworkBehaviour
     private void HandlePropertyChanged(string item)
     {
         currentProperty = (ItemProperty)AssetManager.Main.GetAssetByName(item);
-        if (currentProperty == null) currentProperty = AssetManager.Main.UnidentifiedItemProperty;
+        if (currentProperty == null) return;        
 
         spriteRenderer.sprite = currentProperty.Sprite;
     }

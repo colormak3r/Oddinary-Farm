@@ -113,9 +113,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
             var stack = playerInventory.CurrentItemStack;
             if (stack == null || stack.IsStackEmpty) return;
 
-            stack.Property.OnPrimaryAction(lookPosition, playerInventory);
+            var success = stack.Property.OnPrimaryAction(lookPosition, playerInventory);
 
-            if (stack.Property.IsConsummable)
+            if (stack.Property.IsConsummable && success)
             {
                 if (!stack.IsStackEmpty)
                     playerInventory.RemoveHotbarItem(stack);

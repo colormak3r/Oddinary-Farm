@@ -22,18 +22,18 @@ public class ItemProperty : ScriptableObject
     public float PrimaryCdr => primaryCdr;
     public float SecondaryCdr => secondaryCdr;
 
-    public virtual void OnPrimaryAction(Vector2 position, PlayerInventory inventory)
+    public virtual bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
     {
-
+        return false;
     }
 
-    public virtual void OnSecondaryAction(Vector2 position)
+    public virtual bool OnSecondaryAction(Vector2 position)
     {
-
+        return false;
     }
 
-    public virtual void OnAlternativeAction(Vector2 position)
+    public virtual bool OnAlternativeAction(Vector2 position)
     {
-
+        return false;
     }
 }

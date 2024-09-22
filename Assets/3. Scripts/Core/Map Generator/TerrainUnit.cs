@@ -10,12 +10,15 @@ public class TerrainUnit : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
+    public TerrainProperty Property => property;
+
     private void Awake()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
     public void Initialize(TerrainProperty property)
     {
-        spriteRenderer.sprite = property.Sprite;
+        this.property = property;
+        spriteRenderer.sprite = this.property.Sprite;
     }
 }

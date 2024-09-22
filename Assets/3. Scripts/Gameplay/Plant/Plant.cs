@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
-public class Plant : NetworkBehaviour
+public class Plant : NetworkBehaviour, IWaterable
 {
     [Header("Settings")]
     [SerializeField]
@@ -43,7 +40,7 @@ public class Plant : NetworkBehaviour
     private void HandlePropertyChanged(string item)
     {
         currentProperty = (PlantProperty)AssetManager.Main.GetAssetByName(item);
-        if (currentProperty == null) currentProperty = AssetManager.Main.UnidentifiedPlantProperty;
+        if (currentProperty == null) return;
 
         HandleStageChanged(CurrentStage.Value);
     }
@@ -65,5 +62,23 @@ public class Plant : NetworkBehaviour
     {
         if (!IsHost) return;
         Property.Value = mockProperty.name;
+    }
+
+    public void Initialize(PlantProperty property)
+    {
+        Property.Value = property.name;
+        CurrentStage.Value = 0;
+    }
+
+    public void GetWatered()
+    {
+        GetWateredRpc();
+    }
+
+    [Rpc(SendTo.Server)]
+    private void GetWateredRpc()
+    {
+        if (CurrentStage.Value < currentProperty.Stages.Length - 1)
+            CurrentStage.Value++;
     }
 }

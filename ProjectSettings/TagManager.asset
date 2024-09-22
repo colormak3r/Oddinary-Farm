@@ -12,6 +12,9 @@ TagManager:
   - Water
   - UI
   - Item
+  - Terrain
+  - Farm Plot
+  - Plant
   - 
   - 
   - 
@@ -33,10 +36,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
+  - Player
   m_SortingLayers:
   - name: Underlay
     uniqueID: 1792883339

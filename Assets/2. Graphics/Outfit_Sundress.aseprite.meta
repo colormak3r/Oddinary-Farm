@@ -270,7 +270,7 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: Outfit_Sundress_Frame_0
+    - name: Frame_0
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
@@ -279,7 +279,7 @@ ScriptedImporter:
         width: 11
         height: 5
       spriteId: b6b20555594855a41bc9e21749cb69f9
-    - name: Outfit_Sundress_Frame_1
+    - name: Frame_1
       frameIndex: 1
       additiveSortOrder: 0
       cellRect:
@@ -288,7 +288,7 @@ ScriptedImporter:
         width: 24
         height: 21
       spriteId: 993aa5918d776c04fb6cd7c4df2a0710
-    - name: Outfit_Sundress_Frame_2
+    - name: Frame_2
       frameIndex: 2
       additiveSortOrder: 0
       cellRect:
@@ -297,7 +297,7 @@ ScriptedImporter:
         width: 16
         height: 10
       spriteId: 50e54b3e4594942409df115ae59a3ee9
-    - name: Outfit_Sundress_Frame_3
+    - name: Frame_3
       frameIndex: 3
       additiveSortOrder: 0
       cellRect:
@@ -306,7 +306,7 @@ ScriptedImporter:
         width: 8
         height: 4
       spriteId: bad98f46c21e96b42963752408a0a1e2
-    - name: Outfit_Sundress_Frame_4
+    - name: Frame_4
       frameIndex: 4
       additiveSortOrder: 0
       cellRect:
@@ -315,7 +315,7 @@ ScriptedImporter:
         width: 8
         height: 4
       spriteId: c5a9078511f435c42a37885dcd1414d9
-    - name: Outfit_Sundress_Frame_5
+    - name: Frame_5
       frameIndex: 5
       additiveSortOrder: 0
       cellRect:
@@ -324,7 +324,7 @@ ScriptedImporter:
         width: 4
         height: 4
       spriteId: cf5be4b40dff1e344ba473ad024ce00c
-    - name: Outfit_Sundress_Frame_6
+    - name: Frame_6
       frameIndex: 6
       additiveSortOrder: 0
       cellRect:

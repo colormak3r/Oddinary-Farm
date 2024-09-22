@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 753083e396a222d44b4a7f93d68a3e11
+guid: c511b6f8fa2b71242bc69cc8f12de38b
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -121,58 +121,18 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: AppleTree_Frame_0
+  - name: Farm_Plot
     originalName: 
-    pivot: {x: 0.5882353, y: -0.52380955}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 44
-      y: 61
-      width: 17
-      height: 21
-    spriteID: d7e5f8c894fd83e409c728779204b432
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 44, y: 61}
-  - name: AppleTree_Frame_1
-    originalName: 
-    pivot: {x: 0.53125, y: -0.2702703}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 4
-      y: 61
-      width: 32
-      height: 37
-    spriteID: 6cd8c8c088dc3064ca3f77ea8aad49a0
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 4, y: 61}
-  - name: AppleTree_Frame_2
-    originalName: 
-    pivot: {x: 0.46808508, y: -0.20408162}
+    pivot: {x: 0.5, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 47
-      height: 49
-    spriteID: 1201db34bd754004fae5b97335a5f190
+      width: 16
+      height: 16
+    spriteID: 7d6c98fa8588f5f4280edc416adea335
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -181,75 +141,40 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
-  - name: AppleTree_Frame_3
-    originalName: 
-    pivot: {x: 0.46808508, y: -0.20408162}
-    alignment: 9
-    border: {x: 0, y: 0, z: 0, w: 0}
-    rect:
-      serializedVersion: 2
-      x: 59
-      y: 4
-      width: 47
-      height: 49
-    spriteID: ac03b9255565fad44b3f7777ff0e4703
-    spriteBone: []
-    spriteOutline: []
-    vertices: []
-    spritePhysicsOutline: []
-    indices: 
-    edges: []
-    tessellationDetail: 0
-    uvTransform: {x: 59, y: 4}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: 1615883990
-    name: AppleTree
+    guid: -246583372
+    name: Farm_Plot
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: Frame_0
+    - name: Farm_Plot
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 22
-        y: 11
-        width: 17
-        height: 21
-      spriteId: d7e5f8c894fd83e409c728779204b432
-    - name: Frame_1
-      frameIndex: 1
-      additiveSortOrder: 0
-      cellRect:
-        x: 15
-        y: 10
-        width: 32
-        height: 37
-      spriteId: 6cd8c8c088dc3064ca3f77ea8aad49a0
-    - name: Frame_2
-      frameIndex: 2
-      additiveSortOrder: 0
-      cellRect:
-        x: 10
-        y: 10
-        width: 47
-        height: 49
-      spriteId: 1201db34bd754004fae5b97335a5f190
-    - name: Frame_3
-      frameIndex: 3
-      additiveSortOrder: 0
-      cellRect:
-        x: 10
-        y: 10
-        width: 47
-        height: 49
-      spriteId: ac03b9255565fad44b3f7777ff0e4703
+        x: 0
+        y: 0
+        width: 16
+        height: 16
+      spriteId: 7d6c98fa8588f5f4280edc416adea335
     linkedCells: []
     parentIndex: -1
-  platformSettings: []
+  platformSettings:
+  - name: Default
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 64, y: 64}
+  canvasSize: {x: 16, y: 16}

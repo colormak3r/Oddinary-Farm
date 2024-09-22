@@ -12,11 +12,36 @@ public class SeedProperty : ItemProperty
     private GameObject plantPrefab;
     [SerializeField]
     private PlantProperty plantProperty;
+    [SerializeField]
+    private LayerMask farmPlotLayer;
+    [SerializeField]
+    private LayerMask plantLayer;
 
-    public override void OnPrimaryAction(Vector2 position, PlayerInventory inventory)
+    public override bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
     {
         base.OnPrimaryAction(position, inventory);
-        SpawnPlant(position);
+
+        position = position.SnapToGrid();
+        var farmPlotHits = Physics2D.OverlapPointAll(position, farmPlotLayer);
+        if (farmPlotHits.Length > 0)
+        {
+            var plantHits = Physics2D.OverlapPointAll(position, plantLayer);
+            if (plantHits.Length > 0)
+            {
+                Debug.Log("A plant already exist");
+                return false;
+            }
+            else
+            {
+                SpawnPlant(position);
+                return true;                
+            }            
+        }
+        else
+        {
+            Debug.Log("Need Farm Plot, use the Hoe to create Farm Plot at this location");
+            return false;
+        }
     }
 
     [Rpc(SendTo.Server)]
@@ -25,6 +50,6 @@ public class SeedProperty : ItemProperty
         GameObject go = Instantiate(plantPrefab, position.SnapToGrid(), Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
         var plant = go.GetComponent<Plant>();
-        plant.MockPropertyChange();
+        plant.Initialize(plantProperty);
     }
 }

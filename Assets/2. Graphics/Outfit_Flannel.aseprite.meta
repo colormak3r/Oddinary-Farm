@@ -270,7 +270,7 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: Outfit_Flannel_Frame_0
+    - name: Frame_0
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
@@ -279,7 +279,7 @@ ScriptedImporter:
         width: 9
         height: 5
       spriteId: 96fa48a84e001e244add6cfb8a9ac016
-    - name: Outfit_Flannel_Frame_1
+    - name: Frame_1
       frameIndex: 1
       additiveSortOrder: 0
       cellRect:
@@ -288,7 +288,7 @@ ScriptedImporter:
         width: 18
         height: 14
       spriteId: e85d6387d8c6ba44ca13777fd5be4796
-    - name: Outfit_Flannel_Frame_2
+    - name: Frame_2
       frameIndex: 2
       additiveSortOrder: 0
       cellRect:
@@ -297,7 +297,7 @@ ScriptedImporter:
         width: 14
         height: 11
       spriteId: 7d654f4da973bac4db6ee95232d78817
-    - name: Outfit_Flannel_Frame_3
+    - name: Frame_3
       frameIndex: 3
       additiveSortOrder: 0
       cellRect:
@@ -306,7 +306,7 @@ ScriptedImporter:
         width: 8
         height: 4
       spriteId: 83a6893872c0f68448c197f58f2ed0c5
-    - name: Outfit_Flannel_Frame_4
+    - name: Frame_4
       frameIndex: 4
       additiveSortOrder: 0
       cellRect:
@@ -315,7 +315,7 @@ ScriptedImporter:
         width: 8
         height: 4
       spriteId: f3f95d17ed015ba4bb918a1e6fa28c64
-    - name: Outfit_Flannel_Frame_5
+    - name: Frame_5
       frameIndex: 5
       additiveSortOrder: 0
       cellRect:
@@ -324,7 +324,7 @@ ScriptedImporter:
         width: 4
         height: 3
       spriteId: 504532c314997a14eb2e282296de71bb
-    - name: Outfit_Flannel_Frame_6
+    - name: Frame_6
       frameIndex: 6
       additiveSortOrder: 0
       cellRect:
