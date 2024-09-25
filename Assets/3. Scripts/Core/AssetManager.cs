@@ -48,7 +48,7 @@ public class AssetManager : MonoBehaviour
         }
     }
 
-    public ScriptableObject GetAssetByName(string name)
+    public T GetScriptableObjectByName<T>(string name) where T : ScriptableObject
     {
         if (!nameToScriptableObject.ContainsKey(name))
         {
@@ -56,7 +56,7 @@ public class AssetManager : MonoBehaviour
         }
         else
         {
-            return nameToScriptableObject[name];
+            return (T)nameToScriptableObject[name];
         }
     }
 

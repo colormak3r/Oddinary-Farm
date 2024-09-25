@@ -14,18 +14,19 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsServer) return;
+        // Run on the server only
+        if(!IsServer) return;
 
         var hits = Physics2D.OverlapCircleAll(transform.PositionHalfUp(), pickupRadius, itemLayer);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)
             {
-                if (hit.TryGetComponent(out Item item))
+                if (hit.TryGetComponent(out ItemReplica itemReplica))
                 {
-                    if (!item.CanBePickedUpValue) continue;
+                    if (!itemReplica.CanBePickedUpValue) continue;
 
-                    item.PickUpItemOnServer(transform);
+                    itemReplica.PickUpItem(transform, NetworkObject);
                 }
             }
         }

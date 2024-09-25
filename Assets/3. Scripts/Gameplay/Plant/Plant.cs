@@ -39,7 +39,7 @@ public class Plant : NetworkBehaviour, IWaterable
 
     private void HandlePropertyChanged(string item)
     {
-        currentProperty = (PlantProperty)AssetManager.Main.GetAssetByName(item);
+        currentProperty = AssetManager.Main.GetScriptableObjectByName<PlantProperty>(item);
         if (currentProperty == null) return;
 
         HandleStageChanged(CurrentStage.Value);

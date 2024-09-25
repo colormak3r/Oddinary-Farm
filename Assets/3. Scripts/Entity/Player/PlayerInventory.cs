@@ -1,13 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Unity.Netcode;
-using Unity.Collections;
-using System;
 using ColorMak3r.Utility;
-using UnityEngine.Events;
-using static UnityEditor.Progress;
-using System.Linq;
+using System;
+using UnityEngine;
+using Unity.Collections.LowLevel.Unsafe;
 
 [System.Serializable]
 public class ItemStack
@@ -21,6 +16,40 @@ public class ItemStack
     {
         Property = property;
         Count = count;
+    }
+}
+
+[System.Serializable]
+public struct ItemRefElement : INetworkSerializable, IEquatable<ItemRefElement>
+{
+    public int Index;
+    public NetworkBehaviourReference ItemRef;
+
+    public ItemRefElement(int index, NetworkBehaviourReference itemRef)
+    {
+        Index = index;
+        ItemRef = itemRef;
+    }
+
+    public bool Equals(ItemRefElement other)
+    {
+        return Index == other.Index && ItemRef.Equals(other.ItemRef);
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        if (serializer.IsReader)
+        {
+            var reader = serializer.GetFastBufferReader();
+            reader.ReadValueSafe(out Index);
+            reader.ReadValueSafe(out ItemRef);
+        }
+        else
+        {
+            var writer = serializer.GetFastBufferWriter();
+            writer.WriteValueSafe(Index);
+            writer.WriteValueSafe(ItemRef);
+        }
     }
 }
 
@@ -39,7 +68,9 @@ public class PlayerInventory : NetworkBehaviour
     [SerializeField]
     private LayerMask itemLayer;
     [SerializeField]
-    private GameObject itemPrefab;
+    private Transform inventoryTransform;
+    [SerializeField]
+    private GameObject itemReplicaPrefab;
     [SerializeField]
     private SpriteRenderer itemRenderer;
 
@@ -49,50 +80,52 @@ public class PlayerInventory : NetworkBehaviour
     [SerializeField]
     private int currentHotbarIndex;
     [SerializeField]
-    private ItemStack[] inventory = new ItemStack[MAX_INVENTORY_SLOTS];
+    private ItemStack[] inventory;
     [SerializeField]
-    private NetworkVariable<FixedString128Bytes> CurrentItemName =
-        new NetworkVariable<FixedString128Bytes>(
-            default,
-            NetworkVariableReadPermission.Everyone,
-            NetworkVariableWritePermission.Owner);
-    private ItemStack currentItemStack;
+    private Item[] itemRefs;
 
-    [HideInInspector]
-    public UnityEvent OnCurrentItemPropertyChanged;
+    [SerializeField]
+    private NetworkVariable<NetworkBehaviourReference> CurrentItem =
+        new NetworkVariable<NetworkBehaviourReference>(default, default, NetworkVariableWritePermission.Owner);
+    [SerializeField]
+    private Item currentItem;
+
+    public Item CurrentItemValue => currentItem;
     public int CurrentHotbarIndex => currentHotbarIndex;
-    public ItemStack CurrentItemStack => currentItemStack;
+
+    private void Awake()
+    {
+        inventory = new ItemStack[MAX_INVENTORY_SLOTS];
+        itemRefs = new Item[MAX_INVENTORY_SLOTS];
+        for (int i = 0; i < MAX_INVENTORY_SLOTS; i++)
+        {
+            inventory[i] = new ItemStack();
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
-        HandleCurrentItemChanged(CurrentItemName.Value, CurrentItemName.Value);
-        CurrentItemName.OnValueChanged += HandleCurrentItemChanged;
+        CurrentItem.OnValueChanged += HandleCurrentItemChanged;
     }
+
     public override void OnNetworkDespawn()
     {
-        CurrentItemName.OnValueChanged -= HandleCurrentItemChanged;
+        CurrentItem.OnValueChanged -= HandleCurrentItemChanged;
     }
 
-    private void HandleCurrentItemChanged(FixedString128Bytes previous, FixedString128Bytes current)
+    private void HandleCurrentItemChanged(NetworkBehaviourReference previousValue, NetworkBehaviourReference newValue)
     {
-        var currentItem = (ItemProperty)AssetManager.Main.GetAssetByName(current.ToString());
-        currentItemStack = inventory[currentHotbarIndex];
-
-        if (currentItem != null)
+        if (newValue.TryGet(out Item item))
         {
-            itemRenderer.sprite = currentItem.Sprite;
+            currentItem = item;
+            itemRenderer.sprite = item.PropertyValue.Sprite;
         }
-        else
-        {
-            itemRenderer.sprite = null;
-        }
-
-        OnCurrentItemPropertyChanged?.Invoke();
     }
 
     private void Update()
     {
-        if (!IsServer) return;
+        // Run on client only
+        if (!IsClient) return;
 
         // Automatically try to pick up Items in the close proximity
         var hits = Physics2D.OverlapCircleAll(transform.PositionHalfUp(), inventoryRadius, itemLayer);
@@ -100,67 +133,83 @@ public class PlayerInventory : NetworkBehaviour
         {
             foreach (var hit in hits)
             {
-                if (hit.TryGetComponent(out Item item) && item.CurrentPicker == transform)
+                if (hit.TryGetComponent(out ItemReplica itemReplica) && itemReplica.OwnerValue == NetworkObject)
                 {
-                    // Must use ClientRpc since this is on the server
-                    AddItemRpc(item.CurrentProperty.name);
+                    // Todo: Ask to add item;
+
+                    // Add an item on client side
+                    AddItemOnClient(itemReplica.CurrentProperty);
 
                     // Todo: Recycle using network object pooling
-                    Destroy(item.gameObject);
+                    Destroy(itemReplica.gameObject);
                 }
             }
         }
     }
 
-    [Rpc(SendTo.Owner)]
-    private void AddItemRpc(FixedString128Bytes itemPropertyName)
+    private bool AddItemOnClient(ItemProperty property, int amount = 1)
     {
-        AddItem((ItemProperty)AssetManager.Main.GetAssetByName(itemPropertyName.ToString()));
-    }
+        if (!IsClient) return false;
 
-    private void AddItem(ItemProperty property, int amount = 1)
-    {
         // Find the index of the property
         var found = FindIncompleteStackIndex(inventory, property, out int index);
         if (found)
         {
-            // Determine if the hotbar is empty and the player just pick up a new item
-            var firstPickup = false;
-            if (inventory[index].Property == null && index <= 9)
-                firstPickup = true;
+            var itemStack = inventory[index];
+            itemStack.Property = property;
+            UpdateItemRefRpc(index, property);
 
-            inventory[index].Property = property;
-            inventory[index].Count += amount;
+            var stackProperty = itemStack.Property;
+            if (itemStack.Count + amount < stackProperty.MaxStack)
+            {
+                inventory[index].Count += amount;
+            }
+            else
+            {
+                // Recursively add the overflow item
+                AddItemOnClient(property, itemStack.Count + amount - stackProperty.MaxStack);
+            }
 
             if (debug) Debug.Log($"Added {property.name} to index {index}. New count = {inventory[index].Count}");
-
-            if (firstPickup) ChangeHotBarIndex(index);
+            return true;
         }
         else
         {
             if (debug) Debug.Log("Inventory full. Cannot add " + property.name);
+            //Todo: A server RPC to spawn the leftover item
+            return false;
         }
     }
 
-    public void RemoveInventoryItem(ItemProperty property, int amount = 1)
+    [Rpc(SendTo.Server)]
+    private void UpdateItemRefRpc(int index, ItemProperty property)
     {
-        // Todo
+        if (itemRefs[index] != null)
+        {
+
+        }
+        else
+        {
+            // Create a networked Item at this position
+            var item = Instantiate(property.Prefab, inventoryTransform);
+
+            var networkObject = item.GetComponent<NetworkObject>();
+            networkObject.Spawn();
+            networkObject.TrySetParent(inventoryTransform, false);
+
+            var itemRef = item.GetComponent<Item>();
+            itemRef.PropertyValue = property;
+
+            UpdateItemRefRpc(index, itemRef);
+        }
     }
 
-    public void RemoveHotbarItem(ItemStack stack, int amount = 1)
+    [Rpc(SendTo.Owner)]
+    private void UpdateItemRefRpc(int index, NetworkBehaviourReference itemRef)
     {
-        if (!inventory.Contains(stack)) return;
-
-        var isHoldingItem = stack == currentItemStack;
-
-        stack.Count -= amount;
-        if (stack.Count <= 0)
+        if (itemRef.TryGet(out Item item))
         {
-            stack.Property = null;
-            stack.Count = 0;
-
-            if (isHoldingItem)
-                CurrentItemName.Value = "";
+            itemRefs[index] = item;
         }
     }
 
@@ -209,59 +258,12 @@ public class PlayerInventory : NetworkBehaviour
         return false;
     }
 
-    private bool FindStackIndex(ItemStack[] inventory, ItemProperty property, out int index)
-    {
-        index = -1;
-
-        for (int i = 1; i < inventory.Length; i++)
-        {
-            var stack = inventory[i];
-            if (stack.Property == property && stack.Count > 0)
-            {
-                index = i;
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public void DropItem(int itemPosition, Vector2 dropPosition)
-    {
-        var stack = inventory[itemPosition];
-        if (stack.IsStackEmpty) return;
-
-        DropItemRpc(stack.Property.name, dropPosition);
-
-        stack.Count--;
-        if (stack.Count <= 0)
-        {
-            stack.Property = null;
-            stack.Count = 0;
-            CurrentItemName.Value = "";
-        }
-    }
-
-    [Rpc(SendTo.Server)]
-    private void DropItemRpc(FixedString128Bytes itemPropertyName, Vector2 dropPosition)
-    {
-        var item = Instantiate(itemPrefab, dropPosition, Quaternion.identity);
-        item.GetComponent<Item>().Initialize((ItemProperty)AssetManager.Main.GetAssetByName(itemPropertyName.ToString()));
-        item.GetComponent<NetworkObject>().Spawn();
-    }
-
     public void ChangeHotBarIndex(int index)
     {
         currentHotbarIndex = index;
-
-        var stack = inventory[index];
-        if (!stack.IsStackEmpty)
+        if (itemRefs[index] != null)
         {
-            CurrentItemName.Value = stack.Property.name;
-        }
-        else
-        {
-            // Hand
+            CurrentItem.Value = itemRefs[index];
         }
     }
 

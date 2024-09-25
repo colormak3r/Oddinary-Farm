@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 3497622455922979039}
   - component: {fileID: 4138184307597425321}
   m_Layer: 6
-  m_Name: Item
+  m_Name: Item Replica
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -279,11 +279,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5937313573806529732}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0f07e0afa09b6d4999f3b7d3889bd0a, type: 3}
+  m_Script: {fileID: 11500000, guid: 75e8375cbb81e674da771db34b72288f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mockProperty: {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
-  pickupSpeed: 400
+  mockProperty: {fileID: 0}
+  pickupSpeed: 300
   pickupDuration: 3
   pickupRecovery: 3
   Property:
@@ -423,9 +423,8 @@ MonoBehaviour:
         byte0123: 0
         byte0124: 0
         byte0125: 0
-  currentPicker: {fileID: 0}
   CanBePickedUp:
-    m_InternalValue: 1
+    m_InternalValue: 0
 --- !u!61 &3497622455922979039
 BoxCollider2D:
   m_ObjectHideFlags: 0

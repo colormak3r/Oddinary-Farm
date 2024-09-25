@@ -1,32 +1,45 @@
 using ColorMak3r.Utility;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Hoe Property", menuName = "Scriptable Objects/Item/Hoe")]
-public class HoeProperty : ToolProperty
+public class Hoe : Item
 {
-    [Header("Hoe Settings")]
-    [SerializeField]
-    private LayerMask hoeableLayer;
+    private HoeProperty property;
+
+    public override void OnNetworkSpawn()
+    {
+        Property.OnValueChanged += HandleOnPropertyChanged;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        Property.OnValueChanged -= HandleOnPropertyChanged;
+    }
+
+    private void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
+    {
+        property = (HoeProperty)newValue;
+    }
 
     public override bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
     {
         base.OnPrimaryAction(position, inventory);
         position = position.SnapToGrid();
-        var hits = Physics2D.OverlapPointAll(position, hoeableLayer);
-        if(hits.Length > 0)
+        var hits = Physics2D.OverlapPointAll(position, property.HoeableLayer);
+        if (hits.Length > 0)
         {
             foreach (var hit in hits)
             {
-                if(hit.TryGetComponent<TerrainUnit>(out var terrain))
+                if (hit.TryGetComponent<TerrainUnit>(out var terrain))
                 {
                     if (terrain.Property.IsAccessible)
                     {
-                        Hoe(terrain.transform.position);
+                        HoeRpc(terrain.transform.position);
                         return true;
-                    }                        
+                    }
                 }
             }
         }
@@ -43,7 +56,7 @@ public class HoeProperty : ToolProperty
 
 
     [Rpc(SendTo.Server)]
-    private void Hoe(Vector2 position)
+    private void HoeRpc(Vector2 position)
     {
         GameObject go = Instantiate(AssetManager.Main.FarmPlotPrefab, position, Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();

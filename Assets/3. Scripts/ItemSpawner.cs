@@ -18,8 +18,8 @@ public class ItemSpawner : MonoBehaviour
         var randomPos = 2 * (Vector2)Random.onUnitSphere;
         GameObject go = Instantiate(itemPrefab, transform.position + (Vector3)randomPos, Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
-        var item = go.GetComponent<Item>();
-        item.Initialize(itemProperties[spawnIndex]);
+        var itemReplica = go.GetComponent<ItemReplica>();
+        itemReplica.Initialize(itemProperties[spawnIndex]);
     }
 
     [ContextMenu("Spawn All")]
@@ -30,8 +30,8 @@ public class ItemSpawner : MonoBehaviour
             var randomPos = 2 * (Vector2)Random.onUnitSphere;
             GameObject go = Instantiate(itemPrefab, transform.position + (Vector3)randomPos, Quaternion.identity);
             go.GetComponent<NetworkObject>().Spawn();
-            var item = go.GetComponent<Item>();
-            item.Initialize(property);
+            var itemReplica = go.GetComponent<ItemReplica>();
+            itemReplica.Initialize(property);
         }
     }
 }

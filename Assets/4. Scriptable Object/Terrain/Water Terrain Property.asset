@@ -16,3 +16,4 @@ MonoBehaviour:
   elevation:
     min: 0
     max: 0.5
+  isAccessible: 0

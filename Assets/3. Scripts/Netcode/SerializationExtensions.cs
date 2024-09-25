@@ -9,6 +9,26 @@ public static class SerializationExtensions
 {
     private static string NULL_STRING = "null";
 
+    public static void WriteValueSafe(this FastBufferWriter writer, in ItemProperty obj)
+    {
+        writer.WriteValueSafe(obj == null ? NULL_STRING : obj.name);
+    }
+
+    public static void ReadValueSafe(this FastBufferReader reader, out ItemProperty obj)
+    {
+        reader.ReadValueSafe(out string objName);
+        if (objName == NULL_STRING)
+            obj = null;
+        else
+            obj = AssetManager.Main.GetScriptableObjectByName<ItemProperty>(objName);
+    }
+
+    public static void DuplicateValue (in ItemProperty value, ref ItemProperty duplicatedValue)
+    {
+        duplicatedValue = value;
+    }
+
+
     /*public static void ReadValueSafe(this FastBufferReader reader, out NetworkedScriptableObject obj)
     {
         reader.ReadValueSafe(out string val);

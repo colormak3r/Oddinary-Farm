@@ -1,11 +1,14 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = " Property", menuName = "Scriptable Objects/Item/Item(Test Only)")]
-public class ItemProperty : ScriptableObject
+public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
 {
     [Header("Item Settings")]
     [SerializeField]
     private Sprite sprite;
+    [SerializeField]
+    private GameObject prefab;
     [SerializeField]
     private bool isConsummable;
     [SerializeField]
@@ -15,25 +18,15 @@ public class ItemProperty : ScriptableObject
     [SerializeField]
     private float secondaryCdr = 0.25f;
 
-
     public Sprite Sprite => sprite;
+    public GameObject Prefab => prefab;
     public int MaxStack => maxStack;
     public bool IsConsummable => isConsummable;
     public float PrimaryCdr => primaryCdr;
     public float SecondaryCdr => secondaryCdr;
 
-    public virtual bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
+    public bool Equals(ItemProperty other)
     {
-        return false;
-    }
-
-    public virtual bool OnSecondaryAction(Vector2 position)
-    {
-        return false;
-    }
-
-    public virtual bool OnAlternativeAction(Vector2 position)
-    {
-        return false;
+        return other == this;
     }
 }

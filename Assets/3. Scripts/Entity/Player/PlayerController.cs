@@ -25,7 +25,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         movement = GetComponent<EntityMovement>();
         playerInventory = GetComponent<PlayerInventory>();
-        playerInventory.OnCurrentItemPropertyChanged.AddListener(HandleCurrentItemPropertyChanged);
+        //playerInventory.OnCurrentItemPropertyChanged.AddListener(HandleCurrentItemPropertyChanged);
     }
 
     public override void OnNetworkSpawn()
@@ -95,7 +95,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         if (context.performed)
         {
-            playerInventory.DropItem(playerInventory.CurrentHotbarIndex, lookPosition);
+            //playerInventory.DropItem(playerInventory.CurrentHotbarIndex, lookPosition);
         }
     }
 
@@ -110,10 +110,15 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         if (context.performed)
         {
-            var stack = playerInventory.CurrentItemStack;
-            if (stack == null || stack.IsStackEmpty) return;
+            if (playerInventory.CurrentItemValue != null)
+            {
+                playerInventory.CurrentItemValue.OnPrimaryAction(lookPosition, playerInventory);
+            }
 
-            var success = stack.Property.OnPrimaryAction(lookPosition, playerInventory);
+            //var stack = playerInventory.CurrentItemStack;
+            //if (stack == null || stack.IsStackEmpty) return;
+
+            /*var success = stack.Property.OnPrimaryAction(lookPosition, playerInventory);
 
             if (stack.Property.IsConsummable && success)
             {
@@ -121,18 +126,18 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
                     playerInventory.RemoveHotbarItem(stack);
                 else
                     return;
-            }
+            }*/
         }
     }
 
     public void OnSecondary(InputAction.CallbackContext context)
     {
-        
+
     }
 
     public void OnAlternative(InputAction.CallbackContext context)
     {
-        
+
     }
 
     #endregion
