@@ -15,7 +15,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     private Vector2 playerPosition_cached = Vector2.one;
 
     private EntityMovement movement;
-    private PlayerInventory playerInventory;
+    private PlayerInventory inventory;
 
     [SerializeField]
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
@@ -24,7 +24,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     private void Awake()
     {
         movement = GetComponent<EntityMovement>();
-        playerInventory = GetComponent<PlayerInventory>();
+        inventory = GetComponent<PlayerInventory>();
         //playerInventory.OnCurrentItemPropertyChanged.AddListener(HandleCurrentItemPropertyChanged);
     }
 
@@ -110,23 +110,19 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         if (context.performed)
         {
-            if (playerInventory.CurrentItemValue != null)
+            var currentItem = inventory.CurrentItemValue;
+            if (currentItem != null)
             {
-                playerInventory.CurrentItemValue.OnPrimaryAction(lookPosition, playerInventory);
-            }
-
-            //var stack = playerInventory.CurrentItemStack;
-            //if (stack == null || stack.IsStackEmpty) return;
-
-            /*var success = stack.Property.OnPrimaryAction(lookPosition, playerInventory);
-
-            if (stack.Property.IsConsummable && success)
-            {
-                if (!stack.IsStackEmpty)
-                    playerInventory.RemoveHotbarItem(stack);
+                if (currentItem .PropertyValue.IsConsummable)
+                {
+                    if(inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex))
+                        currentItem.OnPrimaryAction(lookPosition, inventory);
+                }
                 else
-                    return;
-            }*/
+                {
+                    currentItem .OnPrimaryAction(lookPosition, inventory);
+                }                
+            }
         }
     }
 
@@ -157,7 +153,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         if (context.performed)
         {
-            var value = playerInventory.CurrentHotbarIndex - (int)Mathf.Sign(context.ReadValue<float>());
+            var value = inventory.CurrentHotbarIndex - (int)Mathf.Sign(context.ReadValue<float>());
             ChangeHotbarIndex(value);
         }
     }
@@ -171,7 +167,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
             value = 9;
 
         // Hotbar index change locally, stored in PlayerInventory
-        playerInventory.ChangeHotBarIndex(value);
+        inventory.ChangeHotBarIndex(value);
     }
 
     #endregion

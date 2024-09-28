@@ -17,6 +17,12 @@ public class ItemStack
         Property = property;
         Count = count;
     }
+
+    public void EmptyStack()
+    {
+        Property = null;
+        Count = 0;
+    }
 }
 
 [System.Serializable]
@@ -58,13 +64,13 @@ public struct ItemRefElement : INetworkSerializable, IEquatable<ItemRefElement>
 [GenerateSerializationForType(typeof(byte))]
 public class PlayerInventory : NetworkBehaviour
 {
-    private static int MAX_INVENTORY_SLOTS = 40;
+    private static int MAX_INVENTORY_SLOTS = 20;
 
     [Header("Settings")]
     [SerializeField]
     private float inventoryRadius = 1f;
-    [SerializeField]
-    private int inventorySlot = 20;
+    /*[SerializeField]
+    private int inventorySlot = 10;*/
     [SerializeField]
     private LayerMask itemLayer;
     [SerializeField]
@@ -76,7 +82,7 @@ public class PlayerInventory : NetworkBehaviour
 
     [Header("Debugs")]
     [SerializeField]
-    private bool debug;
+    private bool showDebug;
     [SerializeField]
     private int currentHotbarIndex;
     [SerializeField]
@@ -108,7 +114,7 @@ public class PlayerInventory : NetworkBehaviour
         if (IsServer)
         {
             inventory[0].Property = handProperty;
-            UpdateItemRefRpc(0, handProperty);
+            CreateItemRefServerRpc(0, handProperty);
         }
 
         CurrentItem.OnValueChanged += HandleCurrentItemChanged;
@@ -131,7 +137,7 @@ public class PlayerInventory : NetworkBehaviour
     private void Update()
     {
         // Run on client only
-        if (!IsClient) return;
+        if (!IsOwner) return;
 
         // Automatically try to pick up Items in the close proximity
         var hits = Physics2D.OverlapCircleAll(transform.PositionHalfUp(), inventoryRadius, itemLayer);
@@ -141,13 +147,13 @@ public class PlayerInventory : NetworkBehaviour
             {
                 if (hit.TryGetComponent(out ItemReplica itemReplica) && itemReplica.OwnerValue == NetworkObject)
                 {
-                    // Todo: Ask to add item;
-
                     // Add an item on client side
-                    AddItemOnClient(itemReplica.CurrentProperty);
+                    if (AddItemOnClient(itemReplica.CurrentProperty))
+                    {
+                        itemReplica.gameObject.SetActive(false);
+                        itemReplica.DestroyRpc();   // Todo: Recycle using network object pooling
+                    }
 
-                    // Todo: Recycle using network object pooling
-                    Destroy(itemReplica.gameObject);
                 }
             }
         }
@@ -155,63 +161,149 @@ public class PlayerInventory : NetworkBehaviour
 
     private bool AddItemOnClient(ItemProperty property, int amount = 1)
     {
-        if (!IsClient) return false;
+        if (!IsOwner) return false;
+        if (amount <= 0) return false;
 
         // Find the index of the property
-        var found = FindIncompleteStackIndex(inventory, property, out int index);
+        var found = FindPartialStackIndex(inventory, property, out int index);
         if (found)
         {
             var itemStack = inventory[index];
             itemStack.Property = property;
-            UpdateItemRefRpc(index, property);
+            CreateItemRefServerRpc(index, property);
 
             var stackProperty = itemStack.Property;
-            if (itemStack.Count + amount < stackProperty.MaxStack)
+            if (itemStack.Count + amount <= stackProperty.MaxStack)
             {
                 inventory[index].Count += amount;
             }
             else
             {
                 // Recursively add the overflow item
-                AddItemOnClient(property, itemStack.Count + amount - stackProperty.MaxStack);
+                return AddItemOnClient(property, itemStack.Count + amount - stackProperty.MaxStack);
             }
 
-            if (debug) Debug.Log($"Added {property.name} to index {index}. New count = {inventory[index].Count}");
+            if (showDebug) Debug.Log($"Added {property.name} to index {index}. New count = {inventory[index].Count}");
             return true;
         }
         else
         {
-            if (debug) Debug.Log("Inventory full. Cannot add " + property.name);
+            if (showDebug) Debug.Log("Inventory full. Cannot add " + property.name);
             //Todo: A server RPC to spawn the leftover item
             return false;
         }
     }
 
-    [Rpc(SendTo.Server)]
-    private void UpdateItemRefRpc(int index, ItemProperty property)
+    public bool CanConsumeItemOnClient(int index, int amount = 1)
     {
-        if (itemRefs[index] != null)
-        {
+        if (!IsOwner) return false;
+        if (amount <= 0) return false;
+        if (index < 0 || index >= inventory.Length) return false;
 
+        var itemStack = inventory[index];
+        var itemProperty = itemStack.Property;
+
+        int total = 0;
+
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i].Property == itemProperty)
+            {
+                total += inventory[i].Count;
+                if (total >= amount)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public bool ConsumeItemOnClient(int index, int amount = 1)
+    {
+        if (!IsOwner) return false;
+        if (amount <= 0) return false;
+        if (index < 0 || index >= inventory.Length) return false;
+
+        var itemStack = inventory[index];
+        var itemProperty = itemStack.Property;
+
+        if (itemStack.Count - amount > 0)
+        {
+            itemStack.Count -= amount;
+            return true;
         }
         else
         {
-            // Create a networked Item at this position
-            var item = Instantiate(property.Prefab, inventoryTransform);
+            var amountNeeded = amount - itemStack.Count;
 
-            var networkObject = item.GetComponent<NetworkObject>();
-            networkObject.Spawn();
-            networkObject.TrySetParent(inventoryTransform, false);
+            // Remove the current item stack
+            itemStack.EmptyStack();
+            if (index == currentHotbarIndex) CurrentItem.Value = itemRefs[0];
+            RemoveItemRefServerRpc(index);
 
-            var itemRef = item.GetComponent<Item>();
-            itemRef.PropertyValue = property;
-
-            UpdateItemRefRpc(index, itemRef);
+            // Further recursively consume item if needed
+            if (amountNeeded > 0)
+            {
+                if (FindNearestStackIndex(inventory, itemProperty, index, out var nextIndex))
+                    return ConsumeItemOnClient(nextIndex, amountNeeded);
+                else
+                    return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 
+    [Rpc(SendTo.Server)]
+    private void RemoveItemRefServerRpc(int index)
+    {
+        if (showDebug) Debug.Log($"Removing Item Ref #{index} on server");
+        Destroy(itemRefs[index].gameObject);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void CreateItemRefServerRpc(int index, ItemProperty property)
+    {
+        var itemRef = itemRefs[index];
+        if (itemRef != null)
+        {
+            if (itemRef.PropertyValue != null && itemRef.PropertyValue == property)
+            {
+                // Same property, new property does not need to be created
+            }
+            else
+            {
+                Destroy(itemRef.gameObject);
+                CreateItemOnServer(index, property);
+            }
+        }
+        else
+        {
+            CreateItemOnServer(index, property);
+        }
+    }
+
+    private void CreateItemOnServer(int index, ItemProperty property)
+    {
+        if (!IsServer) return;
+
+        // Create a networked Item at this position
+        var item = Instantiate(property.Prefab, inventoryTransform);
+
+        var networkObject = item.GetComponent<NetworkObject>();
+        networkObject.Spawn();
+        networkObject.TrySetParent(inventoryTransform, false);
+
+        var itemRef = item.GetComponent<Item>();
+        itemRef.PropertyValue = property;
+        itemRefs[index] = itemRef;
+
+        UpdateItemRefClientRpc(index, itemRef);
+    }
+
     [Rpc(SendTo.Owner)]
-    private void UpdateItemRefRpc(int index, NetworkBehaviourReference itemRef)
+    private void UpdateItemRefClientRpc(int index, NetworkBehaviourReference itemRef)
     {
         if (itemRef.TryGet(out Item item))
         {
@@ -237,19 +329,23 @@ public class PlayerInventory : NetworkBehaviour
     /// 2. If no stack is found, it checks for an empty slot (where property is null).
     /// Both loops start at index 1, skipping item at 0 which will always be the hand.
     /// </remarks>
-    private bool FindIncompleteStackIndex(ItemStack[] inventory, ItemProperty property, out int index)
+    private bool FindPartialStackIndex(ItemStack[] inventory, ItemProperty property, out int index)
     {
         index = -1;
 
         // First loop to check if there is any stack with the property that is not full
-        for (int i = 1; i < inventory.Length; i++)
+        if(property.IsStackable)
         {
-            if (inventory[i].Property == property && !inventory[i].IsStackFull)
+            for (int i = 1; i < inventory.Length; i++)
             {
-                index = i;
-                return true;
+                if (inventory[i].Property == property && !inventory[i].IsStackFull)
+                {
+                    index = i;
+                    return true;
+                }
             }
         }
+        
 
         // Second loop to check for the first available slot
         for (int i = 1; i < inventory.Length; i++)
@@ -258,6 +354,34 @@ public class PlayerInventory : NetworkBehaviour
             {
                 index = i;
                 return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool FindNearestStackIndex(ItemStack[] inventory, ItemProperty property, int initialIndex, out int index)
+    {
+        index = -1;
+
+        for (int offset = 0; offset < inventory.Length; offset++)
+        {
+            int indexToCheck;
+
+            // Check positive and negative offsets
+            if (offset % 2 == 0)
+                indexToCheck = initialIndex + (offset / 2);
+            else
+                indexToCheck = initialIndex - ((offset + 1) / 2);
+
+            // Ensure the index is within bounds
+            if (indexToCheck >= 0 && indexToCheck < inventory.Length)
+            {
+                if (inventory[indexToCheck].Property == property)
+                {
+                    index = indexToCheck;
+                    return true;
+                }
             }
         }
 

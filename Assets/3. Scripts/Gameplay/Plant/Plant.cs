@@ -87,6 +87,7 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
     private void GetWateredRpc()
     {
         if (isWatered.Value) return;
+        isWatered.Value = true;
 
         if (CurrentStage.Value < Property.Value.Stages.Length - 1)
         {

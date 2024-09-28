@@ -4,11 +4,12 @@ using UnityEngine;
 using Unity.Netcode;
 using Unity.Properties;
 using ColorMak3r.Utility;
+using System;
 
 public class FarmPlot : NetworkBehaviour, IWaterable
 {
     [SerializeField]
-    private NetworkVariable<bool> isWatered;
+    private NetworkVariable<bool> IsWatered;
 
     private SpriteRenderer spriteRenderer;
 
@@ -16,6 +17,24 @@ public class FarmPlot : NetworkBehaviour, IWaterable
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
+
+    public override void OnNetworkSpawn()
+    {
+        HandleIsWateredChanged(IsWatered.Value, IsWatered.Value);
+        IsWatered.OnValueChanged += HandleIsWateredChanged;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        IsWatered.OnValueChanged -= HandleIsWateredChanged;
+    }
+
+    private void HandleIsWateredChanged(bool previousValue, bool newValue)
+    {
+        var colorValue = newValue ? 0.5f : 1f;
+        spriteRenderer.color = new Color(colorValue, colorValue, colorValue);
+    }
+
 
     public void GetWatered(float duration)
     {
@@ -25,20 +44,15 @@ public class FarmPlot : NetworkBehaviour, IWaterable
     [Rpc(SendTo.Server)]
     private void GetWateredRpc(float duration)
     {
-        if (isWatered.Value) StopAllCoroutines();
-
-        isWatered.Value = true;
+        if (IsWatered.Value) StopAllCoroutines();
+        IsWatered.Value = true;
 
         StartCoroutine(WateredCoroutine(duration));
     }
 
     private IEnumerator WateredCoroutine(float duration)
     {
-        spriteRenderer.color = new Color(0.5f, 0.5f, 0.5f);
         yield return new WaitForSeconds(duration);
-
-        spriteRenderer.color = new Color(1f, 1f, 1f);
-
-        isWatered.Value = false;
+        IsWatered.Value = false;
     }
 }

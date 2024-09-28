@@ -18,6 +18,11 @@ public class Item : NetworkBehaviour
         return false;
     }
 
+    public virtual bool CanPrimaryAction(Vector2 position, PlayerInventory inventory)
+    {
+        return false;
+    }
+
     public virtual bool OnSecondaryAction(Vector2 position)
     {
         return false;

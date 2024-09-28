@@ -69,7 +69,6 @@ public class ItemReplica : NetworkBehaviour
 
     private void HandlePropertyChanged(ItemProperty property)
     {
-        //AssetManager.Main.GetScriptableObjectByName<ItemProperty>(property);
         currentProperty = property;
         if (currentProperty == null) return;
 
@@ -121,7 +120,6 @@ public class ItemReplica : NetworkBehaviour
 
     private IEnumerator PickupRecovery()
     {
-        //collider2D.enabled = value;
         yield return new WaitForSeconds(pickupRecovery);
         CanBePickedUp.Value = true;
     }
@@ -129,5 +127,11 @@ public class ItemReplica : NetworkBehaviour
     public void AddRandomForce()
     {
         rbody.AddForce(Random.insideUnitCircle * Random.Range(0, 10), ForceMode2D.Impulse);
+    }
+
+    [Rpc(SendTo.Server)]
+    public void DestroyRpc()
+    {
+        Destroy(gameObject);
     }
 }

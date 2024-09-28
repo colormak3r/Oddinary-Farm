@@ -12,7 +12,7 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     [SerializeField]
     private bool isConsummable;
     [SerializeField]
-    private int maxStack = 99;
+    private int maxStack = 20;
     [SerializeField]
     private float primaryCdr = 0.25f;
     [SerializeField]
@@ -24,6 +24,8 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     public bool IsConsummable => isConsummable;
     public float PrimaryCdr => primaryCdr;
     public float SecondaryCdr => secondaryCdr;
+
+    public bool IsStackable => maxStack > 1;
 
     public bool Equals(ItemProperty other)
     {
