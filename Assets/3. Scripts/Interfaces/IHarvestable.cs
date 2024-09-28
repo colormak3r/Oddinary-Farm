@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IWaterable
+public interface IHarvestable 
 {
-    public void GetWatered(float duration);
+    public void GetHarvested();
 }

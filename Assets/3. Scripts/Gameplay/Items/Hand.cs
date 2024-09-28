@@ -1,13 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.Properties;
 using UnityEngine;
 
-public class WateringCan : Item
+public class Hand : Item
 {
-    private WateringCanProperty property;
-    private int currentCharge;
+    private HandProperty property;
 
     public override void OnNetworkSpawn()
     {
@@ -21,29 +19,26 @@ public class WateringCan : Item
 
     private void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
     {
-        property = (WateringCanProperty)newValue;
+        property = (HandProperty)newValue;
     }
 
     public override bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
     {
-        //if (currentCharge <= 0) return;
-        base.OnPrimaryAction(position, inventory);
-
-        WaterRpc(position);
+        HandRpc(position);
         return true;
     }
 
     [Rpc(SendTo.Server)]
-    private void WaterRpc(Vector2 position)
+    private void HandRpc(Vector2 position)
     {
-        var hits = Physics2D.OverlapCircleAll(position, property.Radius, property.WaterableLayer);
+        var hits = Physics2D.OverlapCircleAll(position, property.Radius);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)
             {
-                if (hit.TryGetComponent<IWaterable>(out var waterable))
+                if (hit.TryGetComponent<IHarvestable>(out var harvestable))
                 {
-                    waterable.GetWatered(3f);
+                    harvestable.GetHarvested();
                 }
             }
         }

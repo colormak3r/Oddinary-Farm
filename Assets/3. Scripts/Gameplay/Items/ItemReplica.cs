@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ItemReplica : NetworkBehaviour
 {
@@ -82,7 +83,7 @@ public class ItemReplica : NetworkBehaviour
         Property.Value = mockProperty;
     }
 
-    public void Initialize(ItemProperty property)
+    public void SetProperty(ItemProperty property)
     {
         Property.Value = property;
         StartCoroutine(PickupRecovery());
@@ -123,5 +124,10 @@ public class ItemReplica : NetworkBehaviour
         //collider2D.enabled = value;
         yield return new WaitForSeconds(pickupRecovery);
         CanBePickedUp.Value = true;
+    }
+
+    public void AddRandomForce()
+    {
+        rbody.AddForce(Random.insideUnitCircle * Random.Range(0, 10), ForceMode2D.Impulse);
     }
 }

@@ -9,6 +9,7 @@ public static class SerializationExtensions
 {
     private static string NULL_STRING = "null";
 
+    #region Item Property
     public static void WriteValueSafe(this FastBufferWriter writer, in ItemProperty obj)
     {
         writer.WriteValueSafe(obj == null ? NULL_STRING : obj.name);
@@ -27,6 +28,28 @@ public static class SerializationExtensions
     {
         duplicatedValue = value;
     }
+    #endregion
+
+    #region PlantProperty
+    public static void WriteValueSafe(this FastBufferWriter writer, in PlantProperty obj)
+    {
+        writer.WriteValueSafe(obj == null ? NULL_STRING : obj.name);
+    }
+
+    public static void ReadValueSafe(this FastBufferReader reader, out PlantProperty obj)
+    {
+        reader.ReadValueSafe(out string objName);
+        if (objName == NULL_STRING)
+            obj = null;
+        else
+            obj = AssetManager.Main.GetScriptableObjectByName<PlantProperty>(objName);
+    }
+
+    public static void DuplicateValue(in PlantProperty value, ref PlantProperty duplicatedValue)
+    {
+        duplicatedValue = value;
+    }
+    #endregion
 
 
     /*public static void ReadValueSafe(this FastBufferReader reader, out NetworkedScriptableObject obj)

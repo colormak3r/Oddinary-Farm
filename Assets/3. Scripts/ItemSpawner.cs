@@ -19,7 +19,7 @@ public class ItemSpawner : MonoBehaviour
         GameObject go = Instantiate(itemPrefab, transform.position + (Vector3)randomPos, Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
         var itemReplica = go.GetComponent<ItemReplica>();
-        itemReplica.Initialize(itemProperties[spawnIndex]);
+        itemReplica.SetProperty(itemProperties[spawnIndex]);
     }
 
     [ContextMenu("Spawn All")]
@@ -31,7 +31,7 @@ public class ItemSpawner : MonoBehaviour
             GameObject go = Instantiate(itemPrefab, transform.position + (Vector3)randomPos, Quaternion.identity);
             go.GetComponent<NetworkObject>().Spawn();
             var itemReplica = go.GetComponent<ItemReplica>();
-            itemReplica.Initialize(property);
+            itemReplica.SetProperty(property);
         }
     }
 }

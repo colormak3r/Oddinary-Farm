@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stages:
   - sprite: {fileID: 1155793255, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
-    duration: 3
+    duration: 1
     isHarvestStage: 0
     nextStage: 1
   - sprite: {fileID: 1345531618, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
-    duration: 3
+    duration: 1
     isHarvestStage: 0
     nextStage: 1
   - sprite: {fileID: 1471501572, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
-    duration: 3
+    duration: 1
     isHarvestStage: 0
     nextStage: 1
   - sprite: {fileID: -435341045, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
-    duration: 3
+    duration: 1
     isHarvestStage: 1
     nextStage: 0

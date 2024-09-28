@@ -213,8 +213,9 @@ GameObject:
   - component: {fileID: 888831618389870335}
   - component: {fileID: 920368688514997986}
   - component: {fileID: 522058045809341280}
-  - component: {fileID: 8506527699138507506}
   - component: {fileID: 85431059599336174}
+  - component: {fileID: 8506527699138507506}
+  - component: {fileID: 4354009276847991936}
   m_Layer: 9
   m_Name: Plant
   m_TagString: Untagged
@@ -302,19 +303,6 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &8506527699138507506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4773706747441023441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c95d3774a562e30439a49cd1b6a4db6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mockProperty: {fileID: 11400000, guid: 8bd3d05bf993007488f09da389bddebc, type: 2}
 --- !u!61 &85431059599336174
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -360,3 +348,37 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &8506527699138507506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4773706747441023441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c95d3774a562e30439a49cd1b6a4db6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mockProperty: {fileID: 11400000, guid: 8bd3d05bf993007488f09da389bddebc, type: 2}
+  farmPlotLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  CurrentStage:
+    m_InternalValue: 0
+  isWatered:
+    m_InternalValue: 0
+--- !u!114 &4354009276847991936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4773706747441023441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 032e7984a7dc3cf4696e7d8d29647e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lootTable: {fileID: 11400000, guid: 9713338d69df681458c236f6e3a827f9, type: 2}
+  loots: []

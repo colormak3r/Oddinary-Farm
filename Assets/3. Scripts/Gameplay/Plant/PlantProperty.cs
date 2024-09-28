@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,10 +13,15 @@ public struct PlantStage
 }
 
 [CreateAssetMenu(fileName = " Property", menuName = "Scriptable Objects/Plant/Plant(Test Only)")]
-public class PlantProperty : ScriptableObject
+public class PlantProperty : ScriptableObject, IEquatable<PlantProperty>
 {
     [SerializeField]
     private PlantStage[] stages;
 
     public PlantStage[] Stages => stages;
+
+    public bool Equals(PlantProperty other)
+    {
+        return this == other;
+    }
 }

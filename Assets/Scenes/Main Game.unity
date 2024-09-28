@@ -667,6 +667,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   assetPath: Assets/4. Scriptable Object
   farmPlotPrefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+  itemReplicaPrefab: {fileID: 5937313573806529732, guid: 259003fb8e1dfcb40856b505877aed0f, type: 3}
 --- !u!4 &875643468
 Transform:
   m_ObjectHideFlags: 0

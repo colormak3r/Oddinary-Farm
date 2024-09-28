@@ -24,6 +24,8 @@ public class AssetManager : MonoBehaviour
     [Header("Common Assets")]
     [SerializeField]
     private GameObject farmPlotPrefab;
+    [SerializeField]
+    private GameObject itemReplicaPrefab;
     /*[SerializeField]
     private ItemProperty unidentifiedItemProperty;
     [SerializeField]
@@ -34,7 +36,7 @@ public class AssetManager : MonoBehaviour
     /*public ItemProperty UnidentifiedItemProperty => unidentifiedItemProperty; 
     public PlantProperty UnidentifiedPlantProperty => unidentifiedPlantProperty;*/
     public GameObject FarmPlotPrefab => farmPlotPrefab;
-
+    public GameObject ItemReplicaPrefab => itemReplicaPrefab;
 
     [ContextMenu("Fetch Assets")]
     public void FetchAssets()

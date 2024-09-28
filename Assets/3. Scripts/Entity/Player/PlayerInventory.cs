@@ -70,7 +70,7 @@ public class PlayerInventory : NetworkBehaviour
     [SerializeField]
     private Transform inventoryTransform;
     [SerializeField]
-    private GameObject itemReplicaPrefab;
+    private HandProperty handProperty;
     [SerializeField]
     private SpriteRenderer itemRenderer;
 
@@ -105,6 +105,12 @@ public class PlayerInventory : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        if (IsServer)
+        {
+            inventory[0].Property = handProperty;
+            UpdateItemRefRpc(0, handProperty);
+        }
+
         CurrentItem.OnValueChanged += HandleCurrentItemChanged;
     }
 
@@ -264,6 +270,10 @@ public class PlayerInventory : NetworkBehaviour
         if (itemRefs[index] != null)
         {
             CurrentItem.Value = itemRefs[index];
+        }
+        else
+        {
+            CurrentItem.Value = itemRefs[0];
         }
     }
 

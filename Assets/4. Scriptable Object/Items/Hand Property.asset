@@ -9,18 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9055da22a0bc5e04298de329421a3de7, type: 3}
-  m_Name: Watering Can Property
+  m_Script: {fileID: 11500000, guid: e9d102d6fc7069c4c8dea1bfbea0948c, type: 3}
+  m_Name: Hand Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: 585355834, guid: 0cefbb5fdff3c5740b36113fa3e01276, type: 3}
-  prefab: {fileID: 6818938842726724790, guid: b9a70defc8f9c0d419779d5a09fd64be, type: 3}
+  sprite: {fileID: 21300000, guid: e31a1a024b988be4b8bd6411900ed584, type: 3}
+  prefab: {fileID: 278873172899980473, guid: 6c458cf87ac56e34f932ddc4d95aa583, type: 3}
   isConsummable: 0
   maxStack: 99
   primaryCdr: 0.25
   secondaryCdr: 0.25
   range: 10
   radius: 0.5
-  maxCharge: 3
-  waterableLayer:
-    serializedVersion: 2
-    m_Bits: 768

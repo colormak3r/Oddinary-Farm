@@ -38,5 +38,17 @@ namespace ColorMak3r.Utility
             int count = collection.Count();
             return collection.ElementAt(Random.Range(0, count));
         }
+
+        #region Color Utility
+        public static Color SetAlpha(this Color rgbColor, float alpha)
+        {
+            return new Color(rgbColor.r, rgbColor.g, rgbColor.b, alpha);
+        }
+
+        public static Color RandomColor(this Color color)
+        {
+            return new Color(Random.value, Random.value, Random.value);
+        }
+        #endregion
     }
 }

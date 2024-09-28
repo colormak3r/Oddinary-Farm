@@ -10,7 +10,7 @@ public class GameManager : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField]
-    private GameObject playerPrefab;
+    private GameObject playerPrefab;    
 
     [Header("Debugs")]
     [SerializeField]
