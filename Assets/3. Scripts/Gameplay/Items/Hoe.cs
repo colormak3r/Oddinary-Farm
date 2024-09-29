@@ -47,9 +47,9 @@ public class Hoe : Item
         return false;
     }
 
-    public override bool OnSecondaryAction(Vector2 position)
+    public override bool OnSecondaryAction(Vector2 position, PlayerInventory inventory)
     {
-        return base.OnSecondaryAction(position);
+        return base.OnSecondaryAction(position, inventory);
 
         // Remove Garden Plot
     }

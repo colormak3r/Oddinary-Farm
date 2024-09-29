@@ -23,12 +23,12 @@ public class Item : NetworkBehaviour
         return false;
     }
 
-    public virtual bool OnSecondaryAction(Vector2 position)
+    public virtual bool OnSecondaryAction(Vector2 position, PlayerInventory inventory)
     {
         return false;
     }
 
-    public virtual bool OnAlternativeAction(Vector2 position)
+    public virtual bool OnAlternativeAction(Vector2 position, PlayerInventory inventory)
     {
         return false;
     }

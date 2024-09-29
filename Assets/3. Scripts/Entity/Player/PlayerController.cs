@@ -128,7 +128,11 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     public void OnSecondary(InputAction.CallbackContext context)
     {
-
+        var currentItem = inventory.CurrentItemValue;
+        if (currentItem != null)
+        {
+            currentItem.OnSecondaryAction(lookPosition, inventory);
+        }
     }
 
     public void OnAlternative(InputAction.CallbackContext context)
