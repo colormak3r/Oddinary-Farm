@@ -422,10 +422,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.0022091311
-    y: 0.002617801
-    width: 0.99558175
-    height: 0.9947644
+    x: 0
+    y: 0
+    width: 0.4719764
+    height: 0.6290957
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -980,6 +980,9 @@ MonoBehaviour:
   chunkSize: 5
   renderDistance: 5
   renderXOffset: 3
+  starterShaping: 0.5
+  starterArea: {x: 40, y: 40}
+  starterBound: {x: 50, y: 50}
   elevationMapOrigin: {x: 625, y: 1252}
   elevationMapScale: 2
   octaves: 3

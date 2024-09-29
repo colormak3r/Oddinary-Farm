@@ -52,7 +52,14 @@ public class MapGenerator : MonoBehaviour
     [SerializeField]
     private int renderDistance = 3;
     [SerializeField]
-    private int renderXOffset = 4;    
+    private int renderXOffset = 4;
+    [SerializeField]
+    private float starterShaping = 0.5f;
+    [SerializeField]
+    private Vector2Int starterArea = new Vector2Int(50, 50);
+    [SerializeField]
+    private Vector2Int starterBound = new Vector2Int(100, 100);
+
 
     [Header("Elevation Map")]
     [SerializeField]
@@ -121,7 +128,7 @@ public class MapGenerator : MonoBehaviour
             for (int j = lowerLimit; j < upperLimit; j++)
             {
                 var pos = new Vector2(position.x + i, position.y + j);
-                var property = GetProperty(pos.x,pos.y);
+                var property = GetProperty(pos.x, pos.y);
                 var terrainObj = Instantiate(terrainPrefab, pos, Quaternion.identity, transform);
                 terrainObj.GetComponent<TerrainUnit>().Initialize(property);
                 chunk.blocks.Add(terrainObj);
@@ -165,13 +172,44 @@ public class MapGenerator : MonoBehaviour
     public TerrainProperty GetProperty(float x, float y)
     {
         TerrainProperty candidate = null;
-
         var noise = GetNoise(x, y, elevationMapOrigin, dimension,
                     elevationMapScale, octaves, persistence, frequencyBase, exp);
 
-        foreach (var p in terrainProperties)
+        // Check if the coordinates are within the starter boundary
+        if (x > -starterBound.x && x < starterBound.x && y > -starterBound.y && y < starterBound.y)
         {
-            if (p.Match(noise)) candidate = p;
+            // Normalize x and y to the range [-1, 1] within the starter boundary
+            float normalizedBoundaryX = x / starterBound.x;
+            float normalizedBoundaryY = y / starterBound.y;
+
+            // Apply a fall-off function to create a smooth transition at the boundary
+            float exponent = 2f; // Adjust this exponent to control the fall-off rate
+            float falloffBoundaryX = 1 - Mathf.Pow(Mathf.Abs(normalizedBoundaryX), exponent);
+            float falloffBoundaryY = 1 - Mathf.Pow(Mathf.Abs(normalizedBoundaryY), exponent);
+            float boundaryFalloff = Mathf.Clamp01(falloffBoundaryX * falloffBoundaryY);
+
+            // Determine if additional shaping should be applied based on the fall-off
+            bool applyShaping = Mathf.Lerp(noise, boundaryFalloff, starterShaping) > 0.5f;
+
+            if (applyShaping)
+            {
+                // Normalize x and y to the range [-1, 1] within the starter area
+                float normalizedAreaX = x / starterArea.x;
+                float normalizedAreaY = y / starterArea.y;
+
+                // Apply a fall-off function to create a smooth transition within the starter area
+                float falloffAreaX = 1 - Mathf.Pow(Mathf.Abs(normalizedAreaX), exponent);
+                float falloffAreaY = 1 - Mathf.Pow(Mathf.Abs(normalizedAreaY), exponent);
+                float areaFalloff = Mathf.Clamp01(falloffAreaX * falloffAreaY);
+
+                // Blend the base noise with the area fall-off using the starterShaping factor
+                noise = Mathf.Lerp(noise, areaFalloff, starterShaping);
+            }
+        }
+
+        foreach (var property in terrainProperties)
+        {
+            if (property.Match(noise)) candidate = property;
         }
 
         if (candidate == null)

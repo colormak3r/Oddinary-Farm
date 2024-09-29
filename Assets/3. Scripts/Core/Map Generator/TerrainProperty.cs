@@ -20,6 +20,6 @@ public class TerrainProperty : ScriptableObject
 
     public bool Match(float elevation)
     {
-        return elevation >= this.elevation.min && elevation < this.elevation.max;
+        return elevation >= this.elevation.min && elevation <= this.elevation.max;
     }
 }
