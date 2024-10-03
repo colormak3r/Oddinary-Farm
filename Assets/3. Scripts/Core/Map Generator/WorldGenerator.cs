@@ -5,9 +5,9 @@ using UnityEngine;
 using static UnityEngine.UI.Image;
 using UnityEngine.UIElements;
 
-public class MapGenerator : MonoBehaviour
+public class WorldGenerator : MonoBehaviour
 {
-    public static MapGenerator Main;
+    public static WorldGenerator Main;
 
     private void Awake()
     {

@@ -1,9 +1,6 @@
-using ColorMak3r.Utility;
 using System.Collections;
 using Unity.Netcode;
-using UnityEditor.Overlays;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerActions
@@ -53,12 +50,15 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     private void Update()
     {
+        // Run Client-Side only
+        if (!IsOwner) return;
+
         if (!GameManager.Main.IsInitialized) return;
 
         if (playerPosition_cached != (Vector2)transform.position)
         {
             playerPosition_cached = transform.position;
-            StartCoroutine(MapGenerator.Main.GenerateTerrainCoroutine(transform.position));
+            StartCoroutine(WorldGenerator.Main.GenerateTerrainCoroutine(transform.position));
         }
     }
 

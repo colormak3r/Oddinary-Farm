@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(MapGenerator))]
+[CustomEditor(typeof(WorldGenerator))]
 public class MapGeneratorEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -9,7 +9,7 @@ public class MapGeneratorEditor : Editor
         // Draw the default inspector options
         DrawDefaultInspector();
 
-        MapGenerator script = (MapGenerator)target;
+        WorldGenerator script = (WorldGenerator)target;
 
         /*if (GUILayout.Button("Generate"))
         {

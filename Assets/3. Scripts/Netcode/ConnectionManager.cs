@@ -16,7 +16,7 @@ public class ConnectionManager : MonoBehaviour
     {
         if (networkManager == null) return;
 
-        GUILayout.BeginArea(new Rect(10, 10, 300, 300));
+        GUILayout.BeginArea(new Rect(10, 10, 200, 100));
         if (!networkManager.IsClient && !networkManager.IsServer)
         {
             StartButtons();

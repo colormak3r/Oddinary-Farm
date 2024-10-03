@@ -492,7 +492,7 @@ MonoBehaviour:
   inventoryTransform: {fileID: 2746253684418572068}
   handProperty: {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
   itemRenderer: {fileID: 6421985585592328691}
-  showDebug: 0
+  showDebug: 1
   currentHotbarIndex: 0
   inventory: []
   itemRefs: []

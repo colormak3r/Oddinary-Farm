@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor.EditorTools;
 using UnityEngine;
 
 public class LootGenerator : MonoBehaviour

@@ -34,4 +34,22 @@ public class ItemSpawner : MonoBehaviour
             itemReplica.SetProperty(property);
         }
     }
+
+    private void OnGUI()
+    {
+        if(!NetworkManager.Singleton.IsHost) return;
+        // Button size
+        int buttonWidth = 100;
+        int buttonHeight = 30;
+
+        // Calculate position for top-right alignment
+        float xPosition = Screen.width - buttonWidth - 10;  // 10px padding from the right
+        float yPosition = 10;  // 10px padding from the top
+
+        // Create button in the top-right corner
+        if (GUI.Button(new Rect(xPosition, yPosition, buttonWidth, buttonHeight), "Spawn All"))
+        {
+            SpawnAll();
+        }
+    }
 }

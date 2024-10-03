@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -14,7 +15,11 @@ public class AssetManager : MonoBehaviour
         else
             Destroy(Main.gameObject);
 
-        FetchAssets();
+#if UNITY_EDITOR
+        if(scriptableObjectList.Count == 0 )
+            FetchAssets();
+#endif
+        PopulateDictionary();
     }
 
     [Header("Settings")]
@@ -30,7 +35,9 @@ public class AssetManager : MonoBehaviour
     private ItemProperty unidentifiedItemProperty;
     [SerializeField]
     private PlantProperty unidentifiedPlantProperty;*/
-
+    [Header("Debugs")]
+    [SerializeField]
+    private List<ScriptableObject> scriptableObjectList = new List<ScriptableObject>();
     private Dictionary<string, ScriptableObject> nameToScriptableObject = new Dictionary<string, ScriptableObject>();
 
     /*public ItemProperty UnidentifiedItemProperty => unidentifiedItemProperty; 
@@ -38,28 +45,19 @@ public class AssetManager : MonoBehaviour
     public GameObject FarmPlotPrefab => farmPlotPrefab;
     public GameObject ItemReplicaPrefab => itemReplicaPrefab;
 
+#if UNITY_EDITOR
     [ContextMenu("Fetch Assets")]
     public void FetchAssets()
     {
         var assets = LoadAllScriptableObjectsInFolder<ScriptableObject>(assetPath);
-        string assetNames = "Loaded assets:";
+        string assetNames = "Fetched assets:";
         foreach (var asset in assets)
         {
-            nameToScriptableObject[asset.name] = asset;
+            scriptableObjectList.Add(asset);
             assetNames += "\n" + asset.name;
         }
-    }
-
-    public T GetScriptableObjectByName<T>(string name) where T : ScriptableObject
-    {
-        if (!nameToScriptableObject.ContainsKey(name))
-        {
-            return null;
-        }
-        else
-        {
-            return (T)nameToScriptableObject[name];
-        }
+        // Force the list to register update: https://docs.unity3d.com/ScriptReference/EditorUtility.SetDirty.html
+        EditorUtility.SetDirty(this);
     }
 
     public static T[] LoadAllScriptableObjectsInFolder<T>(string folderPath) where T : ScriptableObject
@@ -77,5 +75,31 @@ public class AssetManager : MonoBehaviour
             .ToArray();
 
         return scriptableObjects;
+    }
+#endif
+
+    private void PopulateDictionary()
+    {
+        //Debug.Log("scriptableObjectList = " + scriptableObjectList.Count);
+        //string assetNames = "Loaded Assets:";
+        foreach (var asset in scriptableObjectList)
+        {
+            nameToScriptableObject[asset.name] = asset;
+            //assetNames += "\n" + asset.name;
+        }
+        //Debug.Log(assetNames);
+    }
+
+    public T GetScriptableObjectByName<T>(string name) where T : ScriptableObject
+    {
+        if (!nameToScriptableObject.ContainsKey(name))
+        {
+            Debug.Log("Asset does not contains " + name);
+            return null;
+        }
+        else
+        {
+            return (T)nameToScriptableObject[name];
+        }
     }
 }

@@ -45,7 +45,7 @@ public class GameManager : NetworkBehaviour
         isInitializing = true;
 
         yield return TransitionUI.Main.ShowCoroutine();
-        yield return MapGenerator.Main.GenerateTerrainCoroutine(Vector2.zero);
+        yield return WorldGenerator.Main.GenerateTerrainCoroutine(Vector2.zero);
         yield return TransitionUI.Main.UnShowCoroutine();
 
         isInitializing = false;

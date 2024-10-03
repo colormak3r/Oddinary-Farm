@@ -334,7 +334,7 @@ public class PlayerInventory : NetworkBehaviour
         index = -1;
 
         // First loop to check if there is any stack with the property that is not full
-        if(property.IsStackable)
+        if (property.IsStackable)
         {
             for (int i = 1; i < inventory.Length; i++)
             {
@@ -345,7 +345,7 @@ public class PlayerInventory : NetworkBehaviour
                 }
             }
         }
-        
+
 
         // Second loop to check for the first available slot
         for (int i = 1; i < inventory.Length; i++)
