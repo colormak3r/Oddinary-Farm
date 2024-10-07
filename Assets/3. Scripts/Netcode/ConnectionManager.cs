@@ -6,6 +6,7 @@ using UnityEngine;
 public class ConnectionManager : MonoBehaviour
 {
     private NetworkManager networkManager;
+    private bool launched = false;
 
     private void Start()
     {
@@ -19,10 +20,11 @@ public class ConnectionManager : MonoBehaviour
         GUILayout.BeginArea(new Rect(10, 10, 200, 100));
         if (!networkManager.IsClient && !networkManager.IsServer)
         {
-            StartButtons();
+            if (!launched) StartButtons();
         }
         else
         {
+            launched = false;
             StatusLabels();
         }
 
@@ -44,13 +46,23 @@ public class ConnectionManager : MonoBehaviour
     {
         if (GUILayout.Button("Host"))
         {
-            networkManager.StartHost();
+            StartCoroutine(LaunchCoroutine(true));
 
         }
 
         if (GUILayout.Button("Client"))
         {
-            networkManager.StartClient();
+            StartCoroutine(LaunchCoroutine(false));
         }
+    }
+
+    private IEnumerator LaunchCoroutine(bool isHost)
+    {
+        launched = true;
+        yield return TransitionUI.Main.ShowCoroutine();
+        if (isHost)
+            networkManager.StartHost();
+        else
+            networkManager.StartClient();
     }
 }

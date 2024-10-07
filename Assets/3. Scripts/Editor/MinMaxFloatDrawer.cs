@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System;
+using ColorMak3r.Utility;
 
 [CustomPropertyDrawer(typeof(MinMaxFloat))]
 public class MinMaxFloatDrawer : PropertyDrawer
@@ -24,27 +25,29 @@ public class MinMaxFloatDrawer : PropertyDrawer
         // Adjust position for the slider
         position.x += position.width;
         var valueWidth = width - position.width;
-        var inputWidth = valueWidth / 8;
-        var sliderWidth = valueWidth * 6 / 8;
+        var inputWidth = EditorGUIUtility.fieldWidth;
+        var sliderWidth = valueWidth - inputWidth * 2 - 3;
 
         // Create min input field
         position.width = inputWidth;
         minValue = EditorGUI.FloatField(position, minValue);
-        minValue = (float)Math.Round(minValue,2);
-        if(minValue > maxValue)
+        minValue = (float)Math.Round(minValue, 2);
+        if (minValue > maxValue)
             minValue = maxValue;
 
         // Create the MinMaxSlider
         position.x += inputWidth + 2;
-        position.width = sliderWidth - 4;       
-        EditorGUI.MinMaxSlider(position, ref minValue, ref maxValue, 0f, 1f);
+        position.width = sliderWidth - 4;
+        var maxSliderValue = maxValue.RoundToNextPowerOf10();
+        maxSliderValue = maxValue > maxSliderValue - maxSliderValue * 0.1f ? (maxValue * 10).RoundToNextPowerOf10() : maxSliderValue;
+        EditorGUI.MinMaxSlider(position, ref minValue, ref maxValue, 0f, maxSliderValue);
 
         // Create max input field
         position.x += sliderWidth;
         position.width = inputWidth;
         maxValue = EditorGUI.FloatField(position, maxValue);
-        maxValue = (float)Math.Round(maxValue,2);
-        if(maxValue < minValue)
+        maxValue = (float)Math.Round(maxValue, 2);
+        if (maxValue < minValue)
             maxValue = minValue;
 
         // Update the property values
