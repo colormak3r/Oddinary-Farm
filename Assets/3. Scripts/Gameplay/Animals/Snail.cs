@@ -15,7 +15,6 @@ public class Snail : Animal
     private IdleBehaviour idleBehaviour;
     private HuntBehaviour huntBehaviour;
 
-    private Transform currentPrey;
     private IAnimalBehavior currentBehavior;
 
     private void Awake()
@@ -44,8 +43,6 @@ public class Snail : Animal
 
     private void HandlePreyDetected(Transform prey)
     {
-        currentPrey = prey;
-
         currentBehavior.ExitBehavior();
         currentBehavior = huntBehaviour;
         currentBehavior.StartBehavior();
@@ -54,8 +51,6 @@ public class Snail : Animal
 
     private void HandlePreyExited(Transform prey)
     {
-        currentPrey = null;
-
         currentBehavior.ExitBehavior();
         currentBehavior = idleBehaviour;
         currentBehavior.StartBehavior();

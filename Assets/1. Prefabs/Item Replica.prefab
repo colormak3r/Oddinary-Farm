@@ -231,7 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 144085540
+  GlobalObjectIdHash: 4050846417
   InScenePlacedSourceGlobalObjectIdHash: 4050846417
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mockProperty: {fileID: 0}
-  pickupSpeed: 300
+  pickupSpeed: 800
   pickupDuration: 1
   pickupRecovery: 1
   Property:

@@ -4,5 +4,7 @@ using UnityEngine;
 
 public interface IHarvestable 
 {
+    public bool IsHarvestable();
+
     public void GetHarvested();
 }

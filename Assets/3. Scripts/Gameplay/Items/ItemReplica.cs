@@ -12,7 +12,7 @@ public class ItemReplica : NetworkBehaviour
     [SerializeField]
     private ItemProperty mockProperty;
     [SerializeField]
-    private float pickupSpeed = 300f;
+    private float pickupSpeed = 800f;
     [SerializeField]
     private float pickupDuration = 3f;
     [SerializeField]
@@ -90,7 +90,7 @@ public class ItemReplica : NetworkBehaviour
 
     public void PickUpItem(Transform newPicker, NetworkObject networkObject)
     {
-        currentPicker = newPicker;        
+        currentPicker = newPicker;
         nextPickupStop = Time.time + pickupDuration;
         CanBePickedUp.Value = false;
         OwnerReference.Value = networkObject;
@@ -114,7 +114,7 @@ public class ItemReplica : NetworkBehaviour
 
     private void FlyToward(Vector3 position)
     {
-        var targetVelocity = (position - transform.position) * pickupSpeed * Time.deltaTime;
+        var targetVelocity = (position - transform.position).normalized * pickupSpeed * Time.deltaTime;
         rbody.velocity = Vector3.SmoothDamp(rbody.velocity, targetVelocity, ref dummyVelocity, 0.01f);
     }
 

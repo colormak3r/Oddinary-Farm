@@ -77,6 +77,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
         // Set camera
         Camera.main.transform.parent = transform;
+        Camera.main.transform.localPosition = Camera.main.transform.position;
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -113,15 +114,15 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
             var currentItem = inventory.CurrentItemValue;
             if (currentItem != null)
             {
-                if (currentItem .PropertyValue.IsConsummable)
+                if (currentItem.PropertyValue.IsConsummable)
                 {
-                    if(inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex))
+                    if (inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex))
                         currentItem.OnPrimaryAction(lookPosition, inventory);
                 }
                 else
                 {
-                    currentItem .OnPrimaryAction(lookPosition, inventory);
-                }                
+                    currentItem.OnPrimaryAction(lookPosition, inventory);
+                }
             }
         }
     }

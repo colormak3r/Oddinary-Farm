@@ -23,7 +23,7 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
     private SpriteRenderer spriteRenderer;
     private LootGenerator lootGenerator;
 
-    private bool IsHarvestable => Property.Value.Stages[CurrentStage.Value].isHarvestStage;
+    public bool IsHarvestable() => Property.Value.Stages[CurrentStage.Value].isHarvestStage;
 
     private void Awake()
     {
@@ -113,7 +113,7 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
     [Rpc(SendTo.Server)]
     private void GetHarvestedRpc()
     {
-        if (!IsHarvestable) return;
+        if (!IsHarvestable()) return;
                 
         lootGenerator.DropLoot(true);
         Destroy(gameObject);

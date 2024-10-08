@@ -4,6 +4,26 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
+[System.Flags]
+public enum PreyFilter : byte
+{
+    None = 0,
+    Plant = 1,
+    Animal = 2,
+    Player = 4,
+    Any = Plant | Animal | Player,
+}
+
+[System.Flags]
+public enum PlantFilter : byte
+{
+    None = 0,
+    Harvestable = 1,
+    NotHarvestable = 2,
+    Any = Harvestable | NotHarvestable
+}
+
+
 public class PreyDetector : MonoBehaviour
 {
     [Header("Settings")]
@@ -11,15 +31,25 @@ public class PreyDetector : MonoBehaviour
     private float range = 5f;
     [SerializeField]
     private LayerMask preyMask;
+    [SerializeField]
+    private PreyFilter preyFilter;
+    [SerializeField]
+    private PlantFilter plantFilter;
+
+    [Header("Debugs")]
+    [SerializeField]
+    private Transform currentPrey;
+    [SerializeField]
+    private bool showDebug = false;
 
     [HideInInspector]
     public UnityEvent<Transform> OnPreyDetected;
     [HideInInspector]
     public UnityEvent<Transform> OnPreyExited;
 
-    private Transform currentPrey;
-
     public Transform CurrentPrey => currentPrey;
+
+    private bool preyDetected;
 
     private void Update()
     {
@@ -33,23 +63,34 @@ public class PreyDetector : MonoBehaviour
     /// </summary>
     private void TrackPrey()
     {
-        if(currentPrey == null)
+        if (currentPrey == null)
         {
             var preys = ScanForPrey(transform.position);
-            if (preys.Length <= 0) return;
-
-            currentPrey = ScanForPrey(transform.position)[0];
-            if (currentPrey != null)
+            if (preys.Length > 0)
             {
+                currentPrey = preys[0];
+                preyDetected = true;
+                if(showDebug) Debug.Log($"{currentPrey.gameObject.name} detected");
                 OnPreyDetected?.Invoke(currentPrey);
+            }
+            else
+            {
+                if (preyDetected)
+                {
+                    preyDetected = false;
+                    if (showDebug) Debug.Log("Prey exited");
+                    OnPreyExited?.Invoke(null);
+                }
             }
         }
         else
         {
-            if(Vector3.Distance(currentPrey.position, transform.position) > range)
+            if (Vector3.Distance(currentPrey.position, transform.position) > range)
             {
                 currentPrey = null;
-                OnPreyExited?.Invoke(currentPrey);
+                preyDetected = false;
+                if (showDebug) Debug.Log("Prey exited");
+                OnPreyExited?.Invoke(null); // Pass null or the specific prey if needed
             }
         }
     }
@@ -62,12 +103,43 @@ public class PreyDetector : MonoBehaviour
     private Transform[] ScanForPrey(Vector3 position)
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(position, range, preyMask);
-        Transform[] result = new Transform[hits.Length];
+        List<Transform> result = new List<Transform>();
+        result.Capacity = hits.Length;
+
         for (int i = 0; i < hits.Length; i++)
         {
-            result[i] = hits[i].transform;
+            if (preyFilter.HasFlag(PreyFilter.Plant))
+            {
+                if (hits[i].TryGetComponent<IHarvestable>(out var harvestable))
+                {
+                    if (plantFilter.HasFlag(PlantFilter.Harvestable))
+                    {
+                        if (harvestable.IsHarvestable()) result.Add(hits[i].transform);
+                    }
+                    else if (plantFilter.HasFlag(PlantFilter.NotHarvestable))
+                    {
+                        if (!harvestable.IsHarvestable()) result.Add(hits[i].transform);
+                    }
+                }
+            }
+
+            if (preyFilter.HasFlag(PreyFilter.Animal))
+            {
+                if (hits[i].TryGetComponent<Animal>(out var animal))
+                {
+                    result.Add(hits[i].transform);
+                }
+            }
+
+            if (preyFilter.HasFlag(PreyFilter.Player))
+            {
+                if (hits[i].TryGetComponent<PlayerStatus>(out var player))
+                {
+                    result.Add(hits[i].transform);
+                }
+            }
         }
 
-        return result;
+        return result.ToArray();
     }
 }

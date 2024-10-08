@@ -7,16 +7,24 @@ public class EntityMovement : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField]
-    private float speed = 300f;
+    private float moveSpeed = 5f;
     [SerializeField]
-    private float smoothTime = 0.01f;
+    private float maxSpeed = 10f;
+    [SerializeField]
+    private float smoothTime = 0.1f;
     [SerializeField]
     private float arrivalThreshold = 0.1f; // Distance threshold to consider as "arrived"
+    [SerializeField]
+    private float knockback = 100f;
+    [SerializeField]
+    private float knockbackCdr = 3f;
 
     [Header("Debugs")]
+    [SerializeField]
+    private float velocity;
+
     private Vector2 movementDirection;
     private Vector2 movementDirection_cached;
-    private Vector2 velocity;
 
     private Rigidbody2D rbody;
 
@@ -30,6 +38,16 @@ public class EntityMovement : MonoBehaviour
     private void Start()
     {
         rbody = GetComponent<Rigidbody2D>();
+    }
+
+    float nextKnockback;
+    private void Update()
+    {
+        if (Time.time > nextKnockback)
+        {
+            nextKnockback = Time.time + knockbackCdr;
+            rbody.AddForce(knockback * UnityEngine.Random.insideUnitCircle.normalized, ForceMode2D.Impulse);
+        }
     }
 
     private void FixedUpdate()
@@ -47,9 +65,18 @@ public class EntityMovement : MonoBehaviour
             }
         }
 
-        // Apply movement
-        var targetVelocity = speed * movementDirection * Time.deltaTime;
-        rbody.velocity = Vector2.SmoothDamp(rbody.velocity, targetVelocity, ref velocity, smoothTime);
+        if (movementDirection != Vector2.zero)
+        {
+            rbody.AddForce(movementDirection * moveSpeed * Time.deltaTime);
+        }
+
+        velocity = rbody.velocity.magnitude;
+
+        // Clamp the velocity to the maximum speed
+        if (rbody.velocity.magnitude > maxSpeed)
+        {
+            rbody.velocity = rbody.velocity.normalized * maxSpeed;
+        }
     }
 
     /// <summary>
@@ -64,7 +91,7 @@ public class EntityMovement : MonoBehaviour
             movementDirection_cached = movementDirection;
         }
 
-        movementDirection = newMovementDirection;
+        movementDirection = newMovementDirection.normalized;
 
         // If movement direction is zero and not moving to a target, restore cached direction
         if (movementDirection == Vector2.zero && !isMovingToTarget)
