@@ -23,15 +23,17 @@ public class SpriteBlender : MonoBehaviour
     private BlendRules rules;
     [SerializeField]
     private LayerMask blendLayer;
-
+    [SerializeField]
     private SpriteRenderer spriteRenderer;
+
     private PolygonCollider2D collider2D;
 
     public BlendRules Rules => rules;
 
     private void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
         collider2D = GetComponentInParent<PolygonCollider2D>();
     }
 
@@ -93,7 +95,7 @@ public class SpriteBlender : MonoBehaviour
         {
             StartCoroutine(DelayBlendNeighbor(neigborBlenders));
         }
-        else
+        else if (collider2D)
         {
             // Reshape the collider
             List<Vector2> physicsShape = new List<Vector2>();

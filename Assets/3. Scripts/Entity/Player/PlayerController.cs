@@ -6,7 +6,11 @@ using UnityEngine.InputSystem;
 public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerActions
 {
     private static Vector3 LEFT_DIRECTION = new Vector3(-1, 1, 1);
+    private static Vector3 RIGHT_DIRECTION = new Vector3(1, 1, 1);
 
+    [Header("Settings")]
+    [SerializeField]
+    private bool spriteFacingRight;
     [SerializeField]
     private Vector2 lookPosition;
     private Vector2 playerPosition_cached = Vector2.one;
@@ -43,9 +47,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         var isFacingRight = current;
         if (isFacingRight)
-            transform.localScale = Vector3.one;
+            transform.localScale = spriteFacingRight ? RIGHT_DIRECTION : LEFT_DIRECTION;
         else
-            transform.localScale = LEFT_DIRECTION;
+            transform.localScale = spriteFacingRight ? LEFT_DIRECTION : RIGHT_DIRECTION;
     }
 
     private void Update()

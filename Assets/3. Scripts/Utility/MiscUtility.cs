@@ -33,6 +33,18 @@ namespace ColorMak3r.Utility
             return shuffledList;
         }
 
+        public static float SumUpTo(this float[] array, int element)
+        {
+            float total = 0f;
+            int i = 0;
+            while (i < element)
+            {
+                total += array[i];
+                i++;
+            }
+            return total;
+        }
+
         public static T GetRandomElement<T>(this IEnumerable<T> collection)
         {
             if (collection == null || !collection.Any())

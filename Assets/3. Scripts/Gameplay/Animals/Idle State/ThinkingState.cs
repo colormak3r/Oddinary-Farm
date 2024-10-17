@@ -2,23 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Thinking", menuName = "Scriptable Objects/Behavior State/Idle/Thinking")]
-public class ThinkingState : IdleStateData
+public class ThinkingState : AnimalState
 {
-    private float stateDuration;
-
-    public override void Enter(IdleBehaviour idleBehaviour)
+    public ThinkingState(Animal animal) : base(animal)
     {
-        base.Enter(idleBehaviour);
-        stateDuration = Duration.value;
     }
 
-    public override void Execute(IdleBehaviour idleBehaviour)
+    public override void EnterState()
     {
-        base.Execute(idleBehaviour);
-        if (stateTimer >= stateDuration)
-        {
-            idleBehaviour.ChooseNextState();
-        }
+        base.EnterState();
+    }
+
+    public override void ExitState()
+    {
+        base.ExitState();
     }
 }

@@ -12,6 +12,10 @@ public class PlayerInteraction : NetworkBehaviour
     [SerializeField]
     private LayerMask itemLayer;
 
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showGizmos;
+
     private void Update()
     {
         // Run on the server only
@@ -34,6 +38,8 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void OnDrawGizmos()
     {
+        if (!showGizmos) return;
+
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.PositionHalfUp(), pickupRadius);
     }

@@ -24,12 +24,13 @@ public class Fence : Structure
         RemoveRpc();
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.ClientsAndHost)]
     private void RemoveRpc()
     {
         collider2D.enabled = false;
         spriteBlender.ReblendNeighbors();
-        Destroy(gameObject);
+        if(IsServer)
+            Destroy(gameObject);
     }
 }
 

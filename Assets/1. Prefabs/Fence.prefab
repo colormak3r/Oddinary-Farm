@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6066686701764870872}
   - component: {fileID: 3608521828551919829}
   - component: {fileID: 2746122183548440078}
+  - component: {fileID: 4923286859819435741}
   m_Layer: 10
   m_Name: Fence
   m_TagString: Untagged
@@ -149,6 +150,20 @@ PolygonCollider2D:
       - {x: 0.1875, y: -0.3125}
       - {x: 0.1875, y: 0}
   m_UseDelaunayMesh: 0
+--- !u!114 &4923286859819435741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737704494243597508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dc9dcf7df3ec624b91d39dbcb9b77fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 5
+  iframeDuration: 0.1
 --- !u!1 &3221076355038008428
 GameObject:
   m_ObjectHideFlags: 0

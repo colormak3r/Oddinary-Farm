@@ -11,6 +11,7 @@ public class Hammer : Item
 
     public override void OnNetworkSpawn()
     {
+        HandleOnPropertyChanged(null, PropertyValue);
         Property.OnValueChanged += HandleOnPropertyChanged;
     }
 

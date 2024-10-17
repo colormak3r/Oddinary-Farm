@@ -2,44 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Roaming", menuName = "Scriptable Objects/Behavior State/Idle/Roaming")]
-public class RoamingState : IdleStateData
+
+public class RoamingState : AnimalState
 {
-    [Header("Roaming Settings")]
-    public float roamRange = 5f;
-
-    private Vector2 destination;
-    private float stateDuration;
-
-    public override void Enter(IdleBehaviour idleBehaviour)
+    public RoamingState(Animal animal) : base(animal)
     {
-        base.Enter(idleBehaviour);
-        destination = (Vector2)Random.insideUnitSphere * roamRange;
-        stateDuration = Duration.value;
-        idleBehaviour.Animator.SetBool("IsMoving", true);
+        
     }
 
-    public override void Execute(IdleBehaviour idleBehaviour)
+    public override void EnterState()
     {
-        base.Execute(idleBehaviour);
-
-        idleBehaviour.EntityMovement.MoveTo(destination);
-
-        if (Vector2.Distance(idleBehaviour.transform.position, destination) < 0.1f)
-        {
-            idleBehaviour.ChooseNextState();
-        }
-
-        if (stateTimer >= stateDuration)
-        {
-            if (idleBehaviour.ShowDebug) Debug.Log($"{idleBehaviour.gameObject.name} got bored of moving.", this);
-            idleBehaviour.ChooseNextState();
-        }
+        base.EnterState();
+        animal.Animator.SetBool("IsMoving", true);
+        animal.MoveTo(animal.GetRandomPointInRange());
+        animal.OnDestinationReached.AddListener(HandleOnDestinationReached);
     }
 
-    public override void Exit(IdleBehaviour idleBehaviour)
+    public override void ExecuteState()
     {
-        base.Exit(idleBehaviour);
-        idleBehaviour.Animator.SetBool("IsMoving", false);
+        base.ExecuteState();         
+    }
+
+    public override void ExitState()
+    {
+        base.ExitState();
+        animal.Animator.SetBool("IsMoving", false);
+        animal.StopMovement();
+        animal.OnDestinationReached.RemoveListener(HandleOnDestinationReached);
+    }
+
+    private void HandleOnDestinationReached()
+    {
+        animal.MoveTo(animal.GetRandomPointInRange());
     }
 }
+

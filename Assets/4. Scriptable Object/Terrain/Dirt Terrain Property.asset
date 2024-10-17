@@ -12,8 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce3fd5dab9e9b14d93d6efb2658f06d, type: 3}
   m_Name: Dirt Terrain Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: -1451682542, guid: 497f3dab3c7f1bd44837ae7ae3aae18f, type: 3}
   elevation:
-    min: 0.5
+    min: 0.55
     max: 0.6
   isAccessible: 1
+  overlaySprite:
+  - {fileID: 739865222, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: 1204355908, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -1051719314, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -484743900, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -651814469, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  baseSprite:
+  - {fileID: -1550966934, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  underlaySprite:
+  - {fileID: -1901750342, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}

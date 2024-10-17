@@ -1,73 +1,84 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode.Components;
 using UnityEngine;
-using UnityEngine.Events;
-
-
+using ColorMak3r.Utility;
 
 public class Snail : Animal
 {
-    private PreyDetector preyDetector;
+    [Header("Snail Settings")]
+    [SerializeField]
+    private HandProperty handProperty;
+    [SerializeField]
+    private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
+    private float nextIdleStateChange;
 
-    private List<IAnimalBehavior> behaviours = new List<IAnimalBehavior>();
-    private IdleBehaviour idleBehaviour;
-    private HuntBehaviour huntBehaviour;
+    private static int STATE_COUNT = 3;
+    private float[] selectedCounts = new float[STATE_COUNT];
+    private float[] adjustedWeights = new float[STATE_COUNT];
 
-    private IAnimalBehavior currentBehavior;
-
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
-        preyDetector = GetComponent<PreyDetector>();
-
-        idleBehaviour = GetComponent<IdleBehaviour>();
-        huntBehaviour = GetComponent<HuntBehaviour>();
-
-        behaviours.Add(idleBehaviour);
-        behaviours.Add(huntBehaviour);
+        base.OnNetworkSpawn();
+        if (IsServer)
+            Item.PropertyValue = handProperty;
     }
 
-
-    private void OnEnable()
+    protected override void HandleTransitions()
     {
-        preyDetector.OnPreyDetected.AddListener(HandlePreyDetected);
-        preyDetector.OnPreyExited.AddListener(HandlePreyExited);
-    }
-
-    private void OnDisable()
-    {
-        preyDetector.OnPreyDetected.RemoveAllListeners();
-    }
-
-
-    private void HandlePreyDetected(Transform prey)
-    {
-        currentBehavior.ExitBehavior();
-        currentBehavior = huntBehaviour;
-        currentBehavior.StartBehavior();
-    }
-
-
-    private void HandlePreyExited(Transform prey)
-    {
-        currentBehavior.ExitBehavior();
-        currentBehavior = idleBehaviour;
-        currentBehavior.StartBehavior();
-    }
-
-
-    protected override void Update()
-    {
-        base.Update();
-
-        if (!IsServer) return;
-
-        if(currentBehavior == null)
+        if (PreyDetector.CurrentPrey == null)
         {
-            currentBehavior = idleBehaviour;
-        }      
+            // Idle States
+            if (Time.time > nextIdleStateChange)
+            {
+                nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
 
-        currentBehavior.ExecuteBehavior();
+                float totalWeight = 0f;
+                for (int i = 0; i < STATE_COUNT; i++)
+                {
+                    adjustedWeights[i] = (float)STATE_COUNT / (1f + selectedCounts[i]);
+                    totalWeight += adjustedWeights[i];
+                }
+
+                var rng = Random.Range(0, totalWeight);
+                if (rng < adjustedWeights[0])
+                {
+                    if (ShowDebug) Debug.Log("Change state to Thinking State");
+                    ChangeState(new ThinkingState(this));
+                    selectedCounts[0]++;
+                }
+                else if (rng < adjustedWeights.SumUpTo(1))
+                {
+                    if (ShowDebug) Debug.Log("Change state to Nibbling State");
+                    ChangeState(new NibblingState(this));
+                    selectedCounts[1]++;
+                }
+                else
+                {
+                    if (ShowDebug) Debug.Log("Change state to Roaming State");
+                    ChangeState(new RoamingState(this));
+                    selectedCounts[2]++;
+                }
+            }
+        }
+        else
+        {
+            nextIdleStateChange = 0;
+            if (PreyDetector.DistanceToPrey > handProperty.Range)
+            {
+                if (currentState is not ChasingState)
+                {
+                    if (ShowDebug) Debug.Log("Change state to Chasing State");
+                    ChangeState(new ChasingState(this));
+                }
+            }
+            else
+            {
+                if (currentState is not AttackPrimaryState)
+                {
+                    if (ShowDebug) Debug.Log("Change state to AttackPrimary State");
+                    ChangeState(new AttackPrimaryState(this));
+                }
+            }
+        }
     }
 }
+
+

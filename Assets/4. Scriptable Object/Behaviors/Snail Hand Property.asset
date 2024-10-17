@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9d102d6fc7069c4c8dea1bfbea0948c, type: 3}
+  m_Name: Snail Hand Property
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 0}
+  prefab: {fileID: 278873172899980473, guid: 6c458cf87ac56e34f932ddc4d95aa583, type: 3}
+  isConsummable: 0
+  maxStack: 1
+  primaryCdr: 0.25
+  secondaryCdr: 0.25
+  range: 1
+  radius: 0.1

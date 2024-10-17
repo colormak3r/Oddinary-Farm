@@ -2,30 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Nibbling", menuName = "Scriptable Objects/Behavior State/Idle/Nibbling")]
-public class NibblingState : IdleStateData
+
+public class NibblingState : AnimalState
 {
-    private float stateDuration;
-
-    public override void Enter(IdleBehaviour idleBehaviour)
+    public NibblingState(Animal animal) : base(animal)
     {
-        base.Enter(idleBehaviour);
-        stateDuration = Duration.value;
-        idleBehaviour.Animator.SetBool("IsNibbling", true);
+    }
+    public override void EnterState()
+    {
+        base.EnterState();
+        animal.Animator.SetBool("IsNibbling", true);
     }
 
-    public override void Execute(IdleBehaviour idleBehaviour)
+    public override void ExitState()
     {
-        base.Execute(idleBehaviour);
-        if (stateTimer >= stateDuration)
-        {
-            idleBehaviour.ChooseNextState();
-        }
-    }
-
-    public override void Exit(IdleBehaviour idleBehaviour)
-    {
-        base.Exit(idleBehaviour);
-        idleBehaviour.Animator.SetBool("IsNibbling", false);
+        base.ExitState();
+        animal.Animator.SetBool("IsNibbling", false);
     }
 }

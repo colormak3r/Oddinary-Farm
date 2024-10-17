@@ -2,17 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BurrowingState : MonoBehaviour
+public class BurrowingState : AnimalState
 {
-    // Start is called before the first frame update
-    void Start()
+    public BurrowingState(Animal animal) : base(animal)
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void EnterState()
     {
-        
+        base.EnterState();
+        animal.Animator.SetBool("IsBurrowing", true);
+    }
+
+    public override void ExitState()
+    {
+        base.ExitState();
+        animal.Animator.SetBool("IsBurrowing", false);
     }
 }

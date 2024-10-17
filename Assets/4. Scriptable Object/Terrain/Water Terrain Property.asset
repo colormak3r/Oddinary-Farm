@@ -12,8 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce3fd5dab9e9b14d93d6efb2658f06d, type: 3}
   m_Name: Water Terrain Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: 248521819, guid: 497f3dab3c7f1bd44837ae7ae3aae18f, type: 3}
   elevation:
     min: 0
-    max: 0.5
+    max: 0.4
   isAccessible: 0
+  overlaySprite:
+  - {fileID: -1688970406, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -1577913362, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -472659378, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -644541894, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -240749585, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  baseSprite:
+  - {fileID: 534781604, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  underlaySprite:
+  - {fileID: 616414024, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}

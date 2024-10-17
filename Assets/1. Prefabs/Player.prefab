@@ -322,6 +322,8 @@ GameObject:
   - component: {fileID: 8578118405527705988}
   - component: {fileID: 8205256396036253032}
   - component: {fileID: 2546670360964751076}
+  - component: {fileID: -2378473744370691564}
+  - component: {fileID: 8721706005401832729}
   - component: {fileID: 6332147781516178474}
   - component: {fileID: 3602106504410570466}
   - component: {fileID: 5505243102094532865}
@@ -377,7 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 569683485
+  GlobalObjectIdHash: 3310549321
   InScenePlacedSourceGlobalObjectIdHash: 569683485
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -444,6 +446,32 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &-2378473744370691564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5447349809502746784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8721706005401832729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5447349809502746784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 199c496ef2ab99348add3d96d2e3cb78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 5
+  iframeDuration: 0.1
 --- !u!114 &6332147781516178474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -456,6 +484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c44acfe779f2de3499eca404616f9a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteFacingRight: 1
   lookPosition: {x: 0, y: 0}
   IsFacingRight:
     m_InternalValue: 0
@@ -475,8 +504,6 @@ MonoBehaviour:
   maxSpeed: 50
   smoothTime: 0.01
   arrivalThreshold: 0.1
-  knockback: 0
-  knockbackCdr: 3
   velocity: 0
 --- !u!114 &5505243102094532865
 MonoBehaviour:

@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ce3fd5dab9e9b14d93d6efb2658f06d, type: 3}
+  m_Name: Sand Terrain Property
+  m_EditorClassIdentifier: 
+  elevation:
+    min: 0.4
+    max: 0.55
+  isAccessible: 1
+  overlaySprite:
+  - {fileID: -1983206874, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: 1016051077, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -1298952572, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -1753141128, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: 1232314948, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  baseSprite:
+  - {fileID: -1061490942, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  underlaySprite:
+  - {fileID: 1796333005, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}

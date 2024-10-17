@@ -5,6 +5,8 @@ using Unity.Netcode;
 
 public class Item : NetworkBehaviour
 {
+    [Header("Debugs")]
+    [SerializeField]
     protected NetworkVariable<ItemProperty> Property = new NetworkVariable<ItemProperty>();
 
     public ItemProperty PropertyValue

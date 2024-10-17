@@ -276,11 +276,10 @@ GameObject:
   - component: {fileID: 213752093422335021}
   - component: {fileID: 349391432776453688}
   - component: {fileID: 1713903147799318877}
-  - component: {fileID: 6798763064382791233}
-  - component: {fileID: 796427601682073834}
   - component: {fileID: 1274597906311756651}
-  - component: {fileID: 978403046449275363}
-  m_Layer: 0
+  - component: {fileID: 3404009979996066212}
+  - component: {fileID: 5862499223730954318}
+  m_Layer: 11
   m_Name: Snail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -317,7 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3659060768
+  GlobalObjectIdHash: 3128669074
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -424,8 +423,6 @@ MonoBehaviour:
   maxSpeed: 50
   smoothTime: 0.01
   arrivalThreshold: 0.1
-  knockback: 0
-  knockbackCdr: 3
   velocity: 0
 --- !u!58 &2502610467928102923
 CircleCollider2D:
@@ -501,44 +498,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 565fafb8a633f7d42998611ea9e746bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6798763064382791233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7918673031090584114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13c198e111df901448480b0a5db61bf5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  idleStrategy: 0
-  idleStateProbabilities:
-  - Data: {fileID: 11400000, guid: 9e1bcaf502e5b8b4c9a89765fa39c11e, type: 2}
-    BaseProbability: 0.3
-    SelectionCount: 0
-  - Data: {fileID: 11400000, guid: 872341e7eecb29643ba5d4567c5c2d82, type: 2}
-    BaseProbability: 0.3
-    SelectionCount: 0
-  - Data: {fileID: 11400000, guid: 42269ffed160dd64fb5883c678aa0092, type: 2}
-    BaseProbability: 0.3
-    SelectionCount: 0
-  resetThreshold: 10
   showDebug: 0
-  currentState: {fileID: 0}
---- !u!114 &796427601682073834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7918673031090584114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 141319bc35883de4fb6b6ed14d1aa91b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  spriteFacingRight: 1
+  roamRadius: 5
+  handProperty: {fileID: 11400000, guid: 3e0aa12a44f859341bec5c14da95dbc9, type: 2}
+  idleStateChangeCdr:
+    min: 3
+    max: 5
 --- !u!114 &1274597906311756651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -555,17 +521,13 @@ MonoBehaviour:
   preyMask:
     serializedVersion: 2
     m_Bits: 512
-  preyFilter: 1
-  plantFilter: 1
-  currentPrey: {fileID: 0}
-  showDebug: 0
   OnPreyDetected:
     m_PersistentCalls:
       m_Calls: []
   OnPreyExited:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &978403046449275363
+--- !u!114 &3404009979996066212
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -574,10 +536,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 7918673031090584114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 459e739a2fcc8224a9fb97372500cc2a, type: 3}
+  m_Script: {fileID: 11500000, guid: 100ed1854e0dcd7418071ec6d60156e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 0.5
-  plantLayer:
-    serializedVersion: 2
-    m_Bits: 512
+--- !u!114 &5862499223730954318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7918673031090584114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8ea954f2c02bc14fbbccf6c0b8b28b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 3
+  iframeDuration: 0.1

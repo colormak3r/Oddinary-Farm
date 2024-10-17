@@ -84,6 +84,8 @@ public class PlayerInventory : NetworkBehaviour
     [SerializeField]
     private bool showDebug;
     [SerializeField]
+    private bool showGizmos;
+    [SerializeField]
     private int currentHotbarIndex;
     [SerializeField]
     private ItemStack[] inventory;
@@ -403,7 +405,9 @@ public class PlayerInventory : NetworkBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.PositionHalfUp(), inventoryRadius);
+        if (!showGizmos) return;
+        if (currentItem == null) return;
+        /*Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, currentItem.PropertyValue.);*/
     }
 }
