@@ -3,16 +3,17 @@ using ColorMak3r.Utility;
 using System;
 using UnityEngine;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class ItemStack
 {
     public ItemProperty Property;
-    public int Count;
+    public uint Count;
     public bool IsStackFull => Count >= Property.MaxStack;
     public bool IsStackEmpty => Property == null || Count <= 0;
 
-    public ItemStack(ItemProperty property = null, int count = 0)
+    public ItemStack(ItemProperty property = null, uint count = 0)
     {
         Property = property;
         Count = count;
@@ -62,6 +63,7 @@ public struct ItemRefElement : INetworkSerializable, IEquatable<ItemRefElement>
 // Must include this line [GenerateSerializationForType(typeof(byte))] somewhere in the project
 // See: https://github.com/Unity-Technologies/com.unity.netcode.gameobjects/issues/2920#issuecomment-2173886545
 [GenerateSerializationForType(typeof(byte))]
+[RequireComponent(typeof(ItemSpawner))]
 public class PlayerInventory : NetworkBehaviour
 {
     private static int MAX_INVENTORY_SLOTS = 20;
@@ -98,11 +100,21 @@ public class PlayerInventory : NetworkBehaviour
     [SerializeField]
     private Item currentItem;
 
+    [SerializeField]
+    private NetworkVariable<ulong> Coins = new NetworkVariable<ulong>(999, default, NetworkVariableWritePermission.Owner);
+    [HideInInspector]
+    public UnityEvent<ulong> OnCoinsValueChanged;
+
+    private ItemSpawner itemSpawner;
+
     public Item CurrentItemValue => currentItem;
     public int CurrentHotbarIndex => currentHotbarIndex;
+    public ulong CoinsValue => Coins.Value;
 
     private void Awake()
     {
+        itemSpawner = GetComponent<ItemSpawner>();
+
         inventory = new ItemStack[MAX_INVENTORY_SLOTS];
         itemRefs = new Item[MAX_INVENTORY_SLOTS];
         for (int i = 0; i < MAX_INVENTORY_SLOTS; i++)
@@ -120,11 +132,13 @@ public class PlayerInventory : NetworkBehaviour
         }
 
         CurrentItem.OnValueChanged += HandleCurrentItemChanged;
+        Coins.OnValueChanged += HandleCoinValueChanged;
     }
 
     public override void OnNetworkDespawn()
     {
         CurrentItem.OnValueChanged -= HandleCurrentItemChanged;
+        Coins.OnValueChanged -= HandleCoinValueChanged;
     }
 
     private void HandleCurrentItemChanged(NetworkBehaviourReference previousValue, NetworkBehaviourReference newValue)
@@ -135,6 +149,12 @@ public class PlayerInventory : NetworkBehaviour
             itemRenderer.sprite = item.PropertyValue.Sprite;
         }
     }
+
+    private void HandleCoinValueChanged(ulong previousValue, ulong newValue)
+    {
+        OnCoinsValueChanged?.Invoke(newValue);
+    }
+
 
     private void Update()
     {
@@ -155,16 +175,14 @@ public class PlayerInventory : NetworkBehaviour
                         itemReplica.gameObject.SetActive(false);
                         itemReplica.DestroyRpc();   // Todo: Recycle using network object pooling
                     }
-
                 }
             }
         }
     }
 
-    private bool AddItemOnClient(ItemProperty property, int amount = 1)
+    public bool AddItemOnClient(ItemProperty property, uint amount = 1)
     {
         if (!IsOwner) return false;
-        if (amount <= 0) return false;
 
         // Find the index of the property
         var found = FindPartialStackIndex(inventory, property, out int index);
@@ -191,12 +209,11 @@ public class PlayerInventory : NetworkBehaviour
         else
         {
             if (showDebug) Debug.Log("Inventory full. Cannot add " + property.name);
-            //Todo: A server RPC to spawn the leftover item
             return false;
         }
     }
 
-    public bool CanConsumeItemOnClient(int index, int amount = 1)
+    /*public bool CanConsumeItemOnClient(int index, uint amount = 1)
     {
         if (!IsOwner) return false;
         if (amount <= 0) return false;
@@ -205,7 +222,7 @@ public class PlayerInventory : NetworkBehaviour
         var itemStack = inventory[index];
         var itemProperty = itemStack.Property;
 
-        int total = 0;
+        uint total = 0;
 
         for (int i = 0; i < inventory.Length; i++)
         {
@@ -217,9 +234,9 @@ public class PlayerInventory : NetworkBehaviour
             }
         }
         return false;
-    }
+    }*/
 
-    public bool ConsumeItemOnClient(int index, int amount = 1)
+    public bool ConsumeItemOnClient(int index, uint amount = 1)
     {
         if (!IsOwner) return false;
         if (amount <= 0) return false;
@@ -401,6 +418,12 @@ public class PlayerInventory : NetworkBehaviour
         {
             CurrentItem.Value = itemRefs[0];
         }
+    }
+
+    public void ConsumeCoins(ulong value)
+    {
+        if (Coins.Value - value < 0) return;
+        Coins.Value -= value;
     }
 
     private void OnDrawGizmos()

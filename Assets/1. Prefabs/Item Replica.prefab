@@ -296,9 +296,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mockProperty: {fileID: 0}
-  pickupSpeed: 800
+  pickupSpeed: 500
   pickupDuration: 1
-  pickupRecovery: 1
+  pickupRecovery: 3
   Property:
     m_InternalValue: {fileID: 0}
   CanBePickedUp:
@@ -361,7 +361,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 3
+  m_LinearDrag: 5
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}

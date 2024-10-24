@@ -46,7 +46,7 @@ public class LootGenerator : MonoBehaviour
         {
             if (Random.value > rngGod.probability) continue;
 
-            ItemStack itemStack = new ItemStack(rngGod.item, Random.Range(rngGod.minMaxCount.min, rngGod.minMaxCount.max));
+            ItemStack itemStack = new ItemStack(rngGod.item, (uint)Random.Range(rngGod.minMaxCount.min, rngGod.minMaxCount.max));
             loots.Add(itemStack);
         }
 

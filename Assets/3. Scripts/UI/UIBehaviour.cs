@@ -12,52 +12,53 @@ public class UIBehaviour : MonoBehaviour
 
     [Header("Debugs")]
     [SerializeField]
-    public bool isShowing;
+    private bool isShowing;
+    [SerializeField]
+    private bool isAnimating;
+
+    public bool IsShowing => isShowing;
+    public bool IsAnimating => isAnimating;
 
     private void Awake()
     {
         isShowing = container.activeSelf;
     }
 
-    public IEnumerator ShowCoroutine()
+    public IEnumerator ShowCoroutine(bool fade = true)
     {
         if (isShowing) yield break;
         isShowing = true;
 
         container.SetActive(true);
-        yield return container.UIFadeCoroutine(0, 1, fadeDuration);
+
+        isAnimating = true;
+        yield return container.UIFadeCoroutine(0, 1, fade ? fadeDuration : 0);
+        isAnimating = false;
     }
 
-    public IEnumerator UnShowCoroutine()
+    public IEnumerator UnShowCoroutine(bool fade = true)
     {
         if (!isShowing) yield break;
 
-        yield return container.UIFadeCoroutine(1, 0, fadeDuration);
+        isAnimating = true;
+        yield return container.UIFadeCoroutine(1, 0, fade ? fadeDuration : 0);
+        isAnimating = false;
+
         container.SetActive(false);
-        
+
         isShowing = false;
     }
 
     [ContextMenu("Toggle Show")]
-    public void ToggleShow()
+    public virtual void ToggleShow()
     {
-        if(isShowing)
+        if (isAnimating) return;
+
+        if (isShowing)
             StartCoroutine(UnShowCoroutine());
         else
             StartCoroutine(ShowCoroutine());
 
         // isShowing = !isShowing;
-    }
-
-    public void ShowNoFade()
-    {
-        StartCoroutine(transform.UIFadeCoroutine(1, 1, 0));
-        container.SetActive(true);
-    }
-
-    public void UnShowNoFade()
-    {
-        StartCoroutine(transform.UIFadeCoroutine(0, 0, 0));
-        container.SetActive(false);
     }
 }

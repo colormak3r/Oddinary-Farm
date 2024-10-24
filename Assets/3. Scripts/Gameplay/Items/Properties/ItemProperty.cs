@@ -12,15 +12,16 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     [SerializeField]
     private bool isConsummable;
     [SerializeField]
-    private int maxStack = 20;
+    private uint maxStack = 20;
     [SerializeField]
     private float primaryCdr = 0.25f;
     [SerializeField]
     private float secondaryCdr = 0.25f;
 
+    public string Name => name.Replace(" Property", "");
     public Sprite Sprite => sprite;
     public GameObject Prefab => prefab;
-    public int MaxStack => maxStack;
+    public uint MaxStack => maxStack;
     public bool IsConsummable => isConsummable;
     public float PrimaryCdr => primaryCdr;
     public float SecondaryCdr => secondaryCdr;

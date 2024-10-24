@@ -27,7 +27,7 @@ public class ItemReplica : NetworkBehaviour
     private float nextPickupStop;
 
     [SerializeField]
-    private NetworkVariable<bool> CanBePickedUp = new NetworkVariable<bool>();
+    private NetworkVariable<bool> CanBePickedUp = new NetworkVariable<bool>(false);
     [SerializeField]
     private NetworkVariable<NetworkObjectReference> OwnerReference = new NetworkVariable<NetworkObjectReference>();
 
@@ -85,7 +85,7 @@ public class ItemReplica : NetworkBehaviour
     public void SetProperty(ItemProperty property)
     {
         Property.Value = property;
-        StartCoroutine(PickupRecovery());
+        StartCoroutine(PickupRecoveryCoroutine());
     }
 
     public void PickUpItem(Transform newPicker, NetworkObject networkObject)
@@ -99,8 +99,7 @@ public class ItemReplica : NetworkBehaviour
     private void FixedUpdate()
     {
         if (!IsServer || currentPicker == null) return;
-
-        if (Time.time < nextPickupStop)
+        if (Time.time < nextPickupStop && (transform.position - currentPicker.position).sqrMagnitude > 0.25f)
         {
             FlyToward(currentPicker.transform.position);
         }
@@ -108,7 +107,7 @@ public class ItemReplica : NetworkBehaviour
         {
             currentPicker = null;
             CanBePickedUp.Value = false;
-            StartCoroutine(PickupRecovery());
+            StartCoroutine(PickupRecoveryCoroutine());
         }
     }
 
@@ -118,7 +117,7 @@ public class ItemReplica : NetworkBehaviour
         rbody.velocity = Vector3.SmoothDamp(rbody.velocity, targetVelocity, ref dummyVelocity, 0.01f);
     }
 
-    private IEnumerator PickupRecovery()
+    private IEnumerator PickupRecoveryCoroutine()
     {
         yield return new WaitForSeconds(pickupRecovery);
         CanBePickedUp.Value = true;

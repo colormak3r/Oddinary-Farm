@@ -11,14 +11,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     [Header("Settings")]
     [SerializeField]
     private bool spriteFacingRight;
-    [SerializeField]
+
     private Vector2 lookPosition;
     private Vector2 playerPosition_cached = Vector2.one;
 
     private EntityMovement movement;
     private PlayerInventory inventory;
+    private PlayerInteraction interaction;
 
-    [SerializeField]
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
 
@@ -26,6 +26,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     {
         movement = GetComponent<EntityMovement>();
         inventory = GetComponent<PlayerInventory>();
+        interaction = GetComponent<PlayerInteraction>();
         //playerInventory.OnCurrentItemPropertyChanged.AddListener(HandleCurrentItemPropertyChanged);
     }
 
@@ -101,6 +102,13 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         if (context.performed)
         {
             //playerInventory.DropItem(playerInventory.CurrentHotbarIndex, lookPosition);
+        }
+    }
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            interaction.Interact();
         }
     }
 

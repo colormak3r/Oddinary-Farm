@@ -4,7 +4,7 @@ using UnityEngine;
 [CustomEditor(typeof(ItemSpawner))]
 public class ItemSpawnerEditor : Editor
 {
-    public override void OnInspectorGUI()
+    /*public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
@@ -27,7 +27,7 @@ public class ItemSpawnerEditor : Editor
         // Draw the Spawn button
         if (GUILayout.Button("Spawn"))
         {
-            spawner.Spawn();
+            //spawner.Spawn();
         }
 
         // End the horizontal group
@@ -36,9 +36,9 @@ public class ItemSpawnerEditor : Editor
         // Draw the Spawn All button
         if (GUILayout.Button("Spawn All"))
         {
-            spawner.SpawnAll();
+            //spawner.SpawnAll();
         }
 
         serializedObject.ApplyModifiedProperties();
-    }
+    }*/
 }

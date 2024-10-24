@@ -34,7 +34,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Interactable
   - Movement Collider
   - Player
   m_SortingLayers:
