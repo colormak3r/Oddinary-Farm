@@ -55,6 +55,11 @@ public class EntityMovement : MonoBehaviour
 
     public void Knockback(float knockbackForce, Transform source)
     {
-        rbody.AddForce(knockbackForce * (transform.position - source.position).normalized, ForceMode2D.Impulse);
+        // Calculate the knockback direction as a normalized 2D vector
+        Vector2 knockbackDirection = (transform.position - source.position).normalized;
+
+        // Apply the force to the Rigidbody2D
+        rbody.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
     }
+
 }

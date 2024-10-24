@@ -164,9 +164,9 @@ public class WorldGenerator : MonoBehaviour
         {
             positionToChunk[pos].Destroy();
             positionToChunk.Remove(pos);
-        }
 
-        yield return null;
+            yield return null;
+        }
     }
 
     public TerrainProperty GetProperty(float x, float y)

@@ -103,7 +103,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntityDeathOnServer()
     {
-        Destroy(gameObject);
+        NetworkObject.Despawn();
     }
 
     protected virtual void OnEntityDeathOnClient()

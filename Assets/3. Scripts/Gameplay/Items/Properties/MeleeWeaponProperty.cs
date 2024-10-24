@@ -8,6 +8,8 @@ public class MeleeWeaponProperty : ItemProperty
     [SerializeField]
     private float range = 2f;
     [SerializeField]
+    private float radius = 1f;
+    [SerializeField]
     private int damage = 1;
     [SerializeField]
     private DamageType damageType;
@@ -17,6 +19,7 @@ public class MeleeWeaponProperty : ItemProperty
     private LayerMask damageableLayer;
 
     public float Range => range;
+    public float Radius => radius;
     public int Damage => damage;
     public DamageType DamageType => damageType;
     public float KnockbackForce => knockbackForce;
