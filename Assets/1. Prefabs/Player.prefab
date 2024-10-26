@@ -577,7 +577,7 @@ MonoBehaviour:
   itemRefs: []
   currentItem: {fileID: 0}
   Coins:
-    m_InternalValue: 999
+    m_InternalValue: 10
   OnCoinsValueChanged:
     m_PersistentCalls:
       m_Calls: []

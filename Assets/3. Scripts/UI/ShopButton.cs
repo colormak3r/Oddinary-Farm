@@ -14,19 +14,28 @@ public class ShopButton : MonoBehaviour
     [SerializeField]
     private TMP_Text priceText;
     [SerializeField]
+    private TMP_Text amountText;
+    [SerializeField]
     private Button button;
 
-    private ShopEntry shopEntry;
+    private ItemProperty itemProperty;
 
-    public void SetShopEntry(ShopEntry shopEntry, ShopUI shopUI)
+    public void SetShopEntry(ItemProperty itemProperty, ShopUI shopUI, ShopMode shopMode, int index, uint amount)
     {
-        this.shopEntry = shopEntry;
+        this.itemProperty = itemProperty;
 
-        displayImage.sprite = shopEntry.Item.Sprite;
-        nameText.text = shopEntry.Item.Name;
-        priceText.text = "$" + shopEntry.Price;
+        displayImage.sprite = itemProperty.Sprite;
+        nameText.text = itemProperty.Name;
+        priceText.text = (shopMode == ShopMode.Buy ? "<color=#a53030>" : " <color=#75a743>")
+            + (shopMode == ShopMode.Buy ? "-" : "+") + "$" + itemProperty.Price;
+        amountText.text = amount == 0 ? "" : "x" + amount;
 
-        button.onClick.AddListener(() => shopUI.HandleOnButtonClick(shopEntry));
+        button.onClick.AddListener(() => shopUI.HandleOnButtonClick(itemProperty, this, index));
+    }
+
+    public void UpdateEntry(uint amount)
+    {
+        amountText.text = amount == 0 ? "" : "x" + amount;
     }
 
     public void Remove()

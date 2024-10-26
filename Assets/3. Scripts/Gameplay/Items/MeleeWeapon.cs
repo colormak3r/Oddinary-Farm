@@ -21,12 +21,11 @@ public class MeleeWeapon : Item
         var hits = Physics2D.CircleCastAll(transform.position, meleeWeaponProperty.Radius, position - (Vector2)transform.position, meleeWeaponProperty.Range, meleeWeaponProperty.DamageableLayer);
         if (hits.Length > 0)
         {
-            Debug.Log("Hit " + hits.Length + " entities");
             foreach (var hit in hits)
             {
                 var collider = hit.collider;
                 if (collider.gameObject == gameObject) continue;
-                Debug.Log("Hit " + collider.name);
+
                 if (IsServer && collider.TryGetComponent<IDamageable>(out var damageable))
                 {
                     damageable.GetDamaged(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType);

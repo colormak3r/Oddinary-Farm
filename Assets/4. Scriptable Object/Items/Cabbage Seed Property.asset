@@ -18,6 +18,8 @@ MonoBehaviour:
   maxStack: 20
   primaryCdr: 0.25
   secondaryCdr: 0.25
+  range: 5
+  price: 1
   plantPrefab: {fileID: 4773706747441023441, guid: 6e849e9e46e06ad449bd7c16c7acfa40, type: 3}
   plantProperty: {fileID: 11400000, guid: 8bd3d05bf993007488f09da389bddebc, type: 2}
   farmPlotLayer:

@@ -18,3 +18,5 @@ MonoBehaviour:
   maxStack: 1
   primaryCdr: 0.25
   secondaryCdr: 0.25
+  range: 5
+  price: 1

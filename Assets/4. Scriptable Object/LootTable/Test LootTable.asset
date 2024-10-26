@@ -23,7 +23,7 @@ MonoBehaviour:
     minMaxCount:
       min: 5
       max: 5
-  - item: {fileID: 11400000, guid: a4cc8bf6113c92e41bf4d20dbfce3219, type: 2}
+  - item: {fileID: 11400000, guid: 76d2c63355af9a245b265f0bf2a6667c, type: 2}
     probability: 1
     minMaxCount:
       min: 5

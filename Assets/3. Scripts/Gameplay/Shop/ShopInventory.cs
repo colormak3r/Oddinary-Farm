@@ -8,8 +8,8 @@ public class ShopInventory : ScriptableObject
     [SerializeField]
     private string shopName;
     [SerializeField]
-    private ShopEntry[] shopEntries;
+    private ItemProperty[] itemProperties;
 
     public string ShopName => shopName;
-    public ShopEntry[] ShopEntries => shopEntries;
+    public ItemProperty[] ItemProperties => itemProperties;
 }

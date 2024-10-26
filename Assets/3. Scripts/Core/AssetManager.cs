@@ -19,7 +19,8 @@ public class AssetManager : MonoBehaviour
         // Scan and fetch all assets in the specified folder. In Editor mode only.
         FetchAssets();
 #endif
-        PopulateDictionary();
+        PopulateAssetDictionary();
+        PopulateCurrencyDictionary();
     }
 
     [Header("Settings")]
@@ -35,6 +36,11 @@ public class AssetManager : MonoBehaviour
     private ItemProperty unidentifiedItemProperty;
     [SerializeField]
     private PlantProperty unidentifiedPlantProperty;*/
+    [SerializeField]
+    private List<CurrencyTypeProperty> currencyProperties = new List<CurrencyTypeProperty>();
+    private Dictionary<CurrencyType, CurrencyProperty> currencyTypeToProperty = new Dictionary<CurrencyType, CurrencyProperty>();
+    private Dictionary<CurrencyProperty, CurrencyType> currencyPropertyToType = new Dictionary<CurrencyProperty, CurrencyType>();
+
     [Header("Debugs")]
     [SerializeField]
     private List<ScriptableObject> scriptableObjectList = new List<ScriptableObject>();
@@ -80,7 +86,16 @@ public class AssetManager : MonoBehaviour
     }
 #endif
 
-    private void PopulateDictionary()
+    private void PopulateCurrencyDictionary()
+    {
+        foreach (var currencyProperty in currencyProperties)
+        {
+            currencyTypeToProperty[currencyProperty.currencyType] = currencyProperty.currencyProperty;
+            currencyPropertyToType[currencyProperty.currencyProperty] = currencyProperty.currencyType;
+        }
+    }
+
+    private void PopulateAssetDictionary()
     {
         //Debug.Log("scriptableObjectList = " + scriptableObjectList.Count);
         //string assetNames = "Loaded Assets:";
@@ -103,5 +118,15 @@ public class AssetManager : MonoBehaviour
         {
             return (T)nameToScriptableObject[name];
         }
+    }
+
+    public CurrencyProperty GetCurrencyPropertyFromType(CurrencyType currencyType)
+    {
+        return currencyTypeToProperty[currencyType];
+    }
+
+    public CurrencyType GetCurrencyTypeFromProperty(CurrencyProperty currencyProperty)
+    {
+        return currencyPropertyToType[currencyProperty];
     }
 }

@@ -9,14 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c6c6e8598510074f95411ce32156514, type: 3}
+  m_Script: {fileID: 11500000, guid: c71a7665b2465a3489b5a7b5a382fd9c, type: 3}
   m_Name: Gold Coin Property
   m_EditorClassIdentifier: 
-  type: 1
   sprite: {fileID: -44257859, guid: 0cefbb5fdff3c5740b36113fa3e01276, type: 3}
   prefab: {fileID: 5946523988359981913, guid: c29f190b773ff4c4f820e99df1368cf7, type: 3}
-  isConsummable: 0
-  maxStack: 99
+  isConsummable: 1
+  maxStack: 10
   primaryCdr: 0.25
   secondaryCdr: 0.25
-  value: 10
+  range: 3
+  prefabToSpawn: {fileID: 5937313573806529732, guid: 259003fb8e1dfcb40856b505877aed0f, type: 3}
+  value: 100

@@ -4,6 +4,8 @@ using System;
 using UnityEngine;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine.Events;
+using System.Collections.Generic;
+using static UnityEngine.Rendering.DebugUI;
 
 [System.Serializable]
 public class ItemStack
@@ -103,7 +105,7 @@ public class PlayerInventory : NetworkBehaviour
     private Item currentItem;
 
     [SerializeField]
-    private NetworkVariable<ulong> Coins = new NetworkVariable<ulong>(999, default, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<ulong> Coins = new NetworkVariable<ulong>(10, default, NetworkVariableWritePermission.Owner);
     [HideInInspector]
     public UnityEvent<ulong> OnCoinsValueChanged;
 
@@ -112,6 +114,7 @@ public class PlayerInventory : NetworkBehaviour
     public Item CurrentItemValue => currentItem;
     public int CurrentHotbarIndex => currentHotbarIndex;
     public ulong CoinsValue => Coins.Value;
+    public ItemStack[] Inventory => inventory;
 
     private void Awake()
     {
@@ -194,6 +197,13 @@ public class PlayerInventory : NetworkBehaviour
     {
         if (!IsOwner) return false;
 
+        if (property is CurrencyProperty) 
+        {
+            var value = ((CurrencyProperty)property).Value * amount;
+            AddCoinsOnClient(value);
+            return true;
+        }
+
         // Find the index of the property
         var found = FindPartialStackIndex(inventory, property, out int index);
         if (found)
@@ -246,10 +256,23 @@ public class PlayerInventory : NetworkBehaviour
         return false;
     }*/
 
+    public bool ConsumeItemOnClient(ItemProperty property, uint amount = 1)
+    {
+        if (!IsOwner) return false;
+
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i].Property == property)
+            {
+                return ConsumeItemOnClient(i, amount);
+            }
+        }
+        return false;
+    }
+
     public bool ConsumeItemOnClient(int index, uint amount = 1)
     {
         if (!IsOwner) return false;
-        if (amount <= 0) return false;
         if (index < 0 || index >= inventory.Length) return false;
 
         var itemStack = inventory[index];
@@ -328,11 +351,11 @@ public class PlayerInventory : NetworkBehaviour
         itemRef.PropertyValue = property;
         itemRefs[index] = itemRef;
 
-        UpdateItemRefClientRpc(index, itemRef);
+        UpdateItemRefOwnerRpc(index, itemRef);
     }
 
     [Rpc(SendTo.Owner)]
-    private void UpdateItemRefClientRpc(int index, NetworkBehaviourReference itemRef)
+    private void UpdateItemRefOwnerRpc(int index, NetworkBehaviourReference itemRef)
     {
         if (itemRef.TryGet(out Item item))
         {
@@ -374,7 +397,6 @@ public class PlayerInventory : NetworkBehaviour
                 }
             }
         }
-
 
         // Second loop to check for the first available slot
         for (int i = 1; i < inventory.Length; i++)
@@ -430,7 +452,12 @@ public class PlayerInventory : NetworkBehaviour
         }
     }
 
-    public void ConsumeCoins(ulong value)
+    public void AddCoinsOnClient(uint value)
+    {
+        Coins.Value += value;
+    }
+
+    public void ConsumeCoinsOnClient(ulong value)
     {
         if (Coins.Value - value < 0) return;
         Coins.Value -= value;

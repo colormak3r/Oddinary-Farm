@@ -13,16 +13,10 @@ MonoBehaviour:
   m_Name: Test Shop Inventory
   m_EditorClassIdentifier: 
   shopName: Test Shop
-  shopEntries:
-  - Item: {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
-    Price: 5
-  - Item: {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
-    Price: 5
-  - Item: {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
-    Price: 5
-  - Item: {fileID: 11400000, guid: 12c97f6d640590f41acf4e752260d02f, type: 2}
-    Price: 5
-  - Item: {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
-    Price: 5
-  - Item: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
-    Price: 1
+  itemProperties:
+  - {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
+  - {fileID: 11400000, guid: 12c97f6d640590f41acf4e752260d02f, type: 2}
+  - {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
+  - {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
+  - {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
+  - {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}

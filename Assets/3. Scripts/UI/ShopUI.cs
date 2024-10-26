@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+
+public enum ShopMode
+{
+    Buy,
+    Sell
+}
 
 public class ShopUI : UIBehaviour
 {
@@ -28,30 +35,95 @@ public class ShopUI : UIBehaviour
     private TMP_Text shopNameText;
     [SerializeField]
     private TMP_Text coinText;
+    [SerializeField]
+    private Image buyImage;
+    [SerializeField]
+    private Image sellImage;
+    [SerializeField]
+    private Sprite selectedSprite;
+    [SerializeField]
+    private Sprite unselectedSprite;
+
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showDebug;
+    [SerializeField]
+    private ShopMode shopMode = ShopMode.Buy;
 
     private PlayerInventory playerInventory;
+    private ShopInventory shopInventory;
     private ItemSpawner shopSpawner;
+
+    public void ShopModeBuy()
+    {
+        shopMode = ShopMode.Buy;
+        buyImage.sprite = selectedSprite;
+        sellImage.sprite = unselectedSprite;
+
+        foreach (Transform child in contentContainer)
+        {
+            child.GetComponent<ShopButton>().Remove();
+        }
+
+        foreach (var entry in shopInventory.ItemProperties)
+        {
+            var shopButton = Instantiate(shopButtonPrefab, contentContainer);
+            shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, 0, 0);
+        }
+    }
+
+    public void ShopModeSell()
+    {
+        shopMode = ShopMode.Sell;
+        buyImage.sprite = unselectedSprite;
+        sellImage.sprite = selectedSprite;
+
+        foreach (Transform child in contentContainer)
+        {
+            child.GetComponent<ShopButton>().Remove();
+        }
+
+        var index = 0;
+        foreach (var entry in playerInventory.Inventory)
+        {
+            if (!entry.IsStackEmpty)
+            {
+                var shopButton = Instantiate(shopButtonPrefab, contentContainer);
+                shopButton.GetComponent<ShopButton>().SetShopEntry(entry.Property, this, shopMode, index, entry.Count);
+            }
+            index++;
+        }
+    }
 
     public void OpenShop(PlayerInventory playerInventory, ShopInventory shopInventory, ItemSpawner shopSpawner)
     {
         if (IsAnimating) return;
         if (IsShowing) return;
 
+        this.shopInventory = shopInventory;
         shopNameText.text = shopInventory.ShopName;
+
         this.shopSpawner = shopSpawner;
 
         this.playerInventory = playerInventory;
         HandleCoinValueChanged(playerInventory.CoinsValue);
         playerInventory.OnCoinsValueChanged.AddListener(HandleCoinValueChanged);
 
-        foreach (var entry in shopInventory.ShopEntries)
+        if (shopMode == ShopMode.Buy)
         {
-            var shopButton = Instantiate(shopButtonPrefab, contentContainer);
-            shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this);
+            ShopModeBuy();
+        }
+        else
+        {
+            ShopModeSell();
         }
 
         StartCoroutine(ShowCoroutine());
     }
+
+
+
+
 
     public void CloseShop()
     {
@@ -60,8 +132,8 @@ public class ShopUI : UIBehaviour
 
         playerInventory.OnCoinsValueChanged.RemoveListener(HandleCoinValueChanged);
         playerInventory = null;
-
-        this.shopSpawner = null;
+        shopSpawner = null;
+        shopInventory = null;
 
         StartCoroutine(CloseShopCoroutine());
     }
@@ -76,21 +148,36 @@ public class ShopUI : UIBehaviour
         yield return UnShowCoroutine();
     }
 
-    public void HandleOnButtonClick(ShopEntry shopEntry)
+    public void HandleOnButtonClick(ItemProperty itemProperty, ShopButton button, int index)
     {
-        //Debug.Log($"Shop Entry {shopEntry.Item} Clicked");
-        var price = shopEntry.Price;
-        if (playerInventory.CoinsValue - price < 0)
+        if (shopMode == ShopMode.Buy)
         {
-            Debug.Log($"Cannot afford {shopEntry.Item}");
-            return;
+            var price = itemProperty.Price;
+            if (playerInventory.CoinsValue < price)
+            {
+                if (showDebug) Debug.Log($"Cannot afford {itemProperty.Name}");
+            }
+            else
+            {
+                playerInventory.ConsumeCoinsOnClient(itemProperty.Price);
+                if (!playerInventory.AddItemOnClient(itemProperty))
+                {
+                    shopSpawner.Spawn(itemProperty, 0.5f, false, shopSpawner.transform.position - new Vector3(0, 1));
+                }
+
+                if (showDebug) Debug.Log($"Bought 1x{itemProperty.Name} for {itemProperty.Price}");
+            }
         }
-        playerInventory.ConsumeCoins(shopEntry.Price);
-        if (!playerInventory.AddItemOnClient(shopEntry.Item))
+        else
         {
-            shopSpawner.Spawn(shopEntry.Item, 0.5f, false, shopSpawner.transform.position - new Vector3(0, 1));
+            playerInventory.ConsumeItemOnClient(index);
+            playerInventory.AddCoinsOnClient(itemProperty.Price);
+
+            button.UpdateEntry(playerInventory.Inventory[index].Count);
+
+            if (playerInventory.Inventory[index].IsStackEmpty)
+                button.Remove();
         }
-        //Debug.Log($"Bought {shopEntry.Item}");
     }
 
     private void HandleCoinValueChanged(ulong value)
