@@ -81,6 +81,8 @@ public class PlayerInventory : NetworkBehaviour
     private HandProperty handProperty;
     [SerializeField]
     private SpriteRenderer itemRenderer;
+    [SerializeField]
+    private ItemStack[] defaultInventory;
 
     [Header("Debugs")]
     [SerializeField]
@@ -129,6 +131,14 @@ public class PlayerInventory : NetworkBehaviour
         {
             inventory[0].Property = handProperty;
             CreateItemRefServerRpc(0, handProperty);
+        }
+
+        if (IsOwner)
+        {
+            foreach (var itemStack in defaultInventory)
+            {
+                AddItemOnClient(itemStack.Property, itemStack.Count);
+            }
         }
 
         CurrentItem.OnValueChanged += HandleCurrentItemChanged;

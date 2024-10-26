@@ -3,36 +3,30 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Hand : Item
+public class Hand : MeleeWeapon
 {
-    private HandProperty property;
+    private HandProperty handProperty;
 
-    public override void OnNetworkSpawn()
+    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
     {
-        HandleOnPropertyChanged(null, PropertyValue);
-        Property.OnValueChanged += HandleOnPropertyChanged;
+        base.HandleOnPropertyChanged(previousValue, newValue);
+        handProperty = (HandProperty)newValue;
     }
 
-    public override void OnNetworkDespawn()
+    public override bool CanPrimaryAction(Vector2 position)
     {
-        Property.OnValueChanged -= HandleOnPropertyChanged;
+        return IsInRange(position);
     }
 
-    private void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
-    {
-        property = (HandProperty)newValue;
-    }
-
-    public override bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
+    public override void OnPrimaryAction(Vector2 position)
     {
         HandRpc(position);
-        return true;
     }
 
     [Rpc(SendTo.Server)]
     private void HandRpc(Vector2 position)
     {
-        var hits = Physics2D.OverlapCircleAll(position, property.Radius);
+        var hits = Physics2D.OverlapCircleAll(position, handProperty.Radius);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)
@@ -43,5 +37,7 @@ public class Hand : Item
                 }
             }
         }
+
+        DealDamageRpc(position);
     }
 }

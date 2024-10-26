@@ -6,38 +6,29 @@ using UnityEngine;
 
 public class WateringCan : Item
 {
-    private WateringCanProperty property;
+    private WateringCanProperty wateringCanProperty;
     private int currentCharge;
 
-    public override void OnNetworkSpawn()
+    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
     {
-        HandleOnPropertyChanged(null, PropertyValue);
-        Property.OnValueChanged += HandleOnPropertyChanged;
+        base.HandleOnPropertyChanged(previousValue, newValue);
+        wateringCanProperty = (WateringCanProperty)newValue;
     }
 
-    public override void OnNetworkDespawn()
+    public override bool CanPrimaryAction(Vector2 position)
     {
-        Property.OnValueChanged -= HandleOnPropertyChanged;
+        return IsInRange(position);
     }
 
-    private void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
+    public override void OnPrimaryAction(Vector2 position)
     {
-        property = (WateringCanProperty)newValue;
-    }
-
-    public override bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
-    {
-        //if (currentCharge <= 0) return;
-        base.OnPrimaryAction(position, inventory);
-
         WaterRpc(position);
-        return true;
     }
 
     [Rpc(SendTo.Server)]
     private void WaterRpc(Vector2 position)
     {
-        var hits = Physics2D.OverlapCircleAll(position, property.Radius, property.WaterableLayer);
+        var hits = Physics2D.OverlapCircleAll(position, wateringCanProperty.Radius, wateringCanProperty.WaterableLayer);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)

@@ -18,7 +18,7 @@ public class PlayerStatusUI : UIBehaviour
     [SerializeField]
     private TMP_Text healthText;
 
-    public void UpdateHealth(int health)
+    public void UpdateHealth(uint health)
     {
         healthText.text = $"Health: {health}";
     }

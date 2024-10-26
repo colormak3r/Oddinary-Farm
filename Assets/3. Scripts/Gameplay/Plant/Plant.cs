@@ -75,6 +75,7 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
     public void Initialize(PlantProperty property)
     {
         Property.Value = property;
+        lootGenerator.Initialize(property.LootTable);
         CurrentStage.Value = 0;
     }
 
@@ -115,7 +116,7 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
     {
         if (!IsHarvestable()) return;
                 
-        lootGenerator.DropLoot(true);
+        lootGenerator.DropLoot();
         Destroy(gameObject);
     }
 }

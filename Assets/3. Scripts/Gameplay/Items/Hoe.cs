@@ -7,29 +7,28 @@ using UnityEngine;
 
 public class Hoe : Item
 {
-    private HoeProperty property;
+    private HoeProperty hoeProperty;
 
-    public override void OnNetworkSpawn()
+    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
     {
-        HandleOnPropertyChanged(null, PropertyValue);
-        Property.OnValueChanged += HandleOnPropertyChanged;
+        base.HandleOnPropertyChanged(previousValue, newValue);
+        hoeProperty = (HoeProperty)newValue;
     }
 
-    public override void OnNetworkDespawn()
+    public override bool CanPrimaryAction(Vector2 position)
     {
-        Property.OnValueChanged -= HandleOnPropertyChanged;
-    }
+        if (!IsInRange(position)) return false;
 
-    private void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
-    {
-        property = (HoeProperty)newValue;
-    }
-
-    public override bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
-    {
-        base.OnPrimaryAction(position, inventory);
         position = position.SnapToGrid();
-        var hits = Physics2D.OverlapPointAll(position, property.HoeableLayer);
+
+        var hits = Physics2D.OverlapPointAll(position, hoeProperty.UnhoeableLayer);
+        if (hits.Length > 0)
+        {
+            if(showDebug) Debug.Log($"Cannot hoe at {position}, {hits[0].name} is blocking");
+            return false;
+        }
+
+        hits = Physics2D.OverlapPointAll(position, hoeProperty.HoeableLayer);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)
@@ -38,8 +37,13 @@ public class Hoe : Item
                 {
                     if (terrain.Property.IsAccessible)
                     {
-                        HoeRpc(terrain.transform.position);
+                        if (showDebug) Debug.Log($"Hoe success at {position}");
                         return true;
+                    }
+                    else
+                    {
+                        if (showDebug) Debug.Log($"Cannot hoe at {position}, {terrain.name} is not accessible");
+                        return false;
                     }
                 }
             }
@@ -48,11 +52,10 @@ public class Hoe : Item
         return false;
     }
 
-    public override bool OnSecondaryAction(Vector2 position, PlayerInventory inventory)
+    public override void OnPrimaryAction(Vector2 position)
     {
-        return base.OnSecondaryAction(position, inventory);
-
-        // Remove Garden Plot
+        position = position.SnapToGrid();
+        HoeRpc(position);
     }
 
 

@@ -23,7 +23,7 @@ public class PlayerStatus : EntityStatus
         }        
     }
 
-    protected override void HandleCurrentHealthChange(int previousValue, int newValue)
+    protected override void HandleCurrentHealthChange(uint previousValue, uint newValue)
     {
         base.HandleCurrentHealthChange(previousValue, newValue);
         if (!IsOwner) return;

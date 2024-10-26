@@ -4,54 +4,10 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Axe : Item
+public class Axe : MeleeWeapon
 {
-    [SerializeField]
-    private AxeProperty property;
-
-    public override void OnNetworkSpawn()
+    public override void OnPrimaryAction(Vector2 position)
     {
-        HandleOnPropertyChanged(null, PropertyValue);
-        Property.OnValueChanged += HandleOnPropertyChanged;
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        Property.OnValueChanged -= HandleOnPropertyChanged;
-    }
-
-    private void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
-    {
-        property = (AxeProperty)newValue;
-    }
-
-    public override bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
-    {
-        AxePrimaryRpc(position);
-        return true;
-    }
-
-    [Rpc(SendTo.Everyone)]
-    private void AxePrimaryRpc(Vector2 position)
-    {
-        var hits = Physics2D.CircleCastAll(position, property.Radius, (Vector2)transform.position - position, property.Range, property.DamageableLayer);
-        if (hits.Length > 0)
-        {
-            foreach (var hit in hits)
-            {
-                var collider = hit.collider;
-                if (collider.gameObject == gameObject) continue;
-
-                if (IsServer && collider.TryGetComponent<IDamageable>(out var damageable))
-                {
-                    damageable.GetDamaged(property.Damage, property.DamageType);
-                }
-
-                if (collider.TryGetComponent<EntityMovement>(out var movement))
-                {
-                    movement.Knockback(property.KnockbackForce, transform);
-                }
-            }
-        }
+        DealDamageRpc(position);
     }
 }

@@ -2,36 +2,73 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.UIElements;
 
 public class Item : NetworkBehaviour
 {
     [Header("Debugs")]
     [SerializeField]
+    protected bool showDebug;
+    [SerializeField]
+    protected bool showGizmos;
+    [SerializeField]
     protected NetworkVariable<ItemProperty> Property = new NetworkVariable<ItemProperty>();
+    private ItemProperty property;
 
     public ItemProperty PropertyValue
     {
         get { return Property.Value; }
         set { Property.Value = value; }
-    }   
-
-    public virtual bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
-    {
-        return false;
     }
 
-    public virtual bool CanPrimaryAction(Vector2 position, PlayerInventory inventory)
+    public override void OnNetworkSpawn()
     {
-        return false;
+        HandleOnPropertyChanged(null, PropertyValue);
+        Property.OnValueChanged += HandleOnPropertyChanged;
     }
 
-    public virtual bool OnSecondaryAction(Vector2 position, PlayerInventory inventory)
+    public override void OnNetworkDespawn()
     {
-        return false;
+        Property.OnValueChanged -= HandleOnPropertyChanged;
     }
 
-    public virtual bool OnAlternativeAction(Vector2 position, PlayerInventory inventory)
+    protected virtual void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
     {
-        return false;
+        property = newValue;
+    }
+
+    public virtual bool CanPrimaryAction(Vector2 position)
+    {
+        return true;
+    }
+
+    public virtual void OnPrimaryAction(Vector2 position)
+    {
+
+    }
+
+    public virtual bool CanSecondaryAction(Vector2 position)
+    {
+        return true;
+    }
+
+    public virtual void OnSecondaryAction(Vector2 position)
+    {
+
+    }
+
+    public virtual bool CanAlternativeAction(Vector2 position)
+    {
+        return true;
+    }
+
+    public virtual void OnAlternativeAction(Vector2 position)
+    {
+
+    }
+
+    protected bool IsInRange(Vector2 position)
+    {
+        return ((Vector2)transform.position - position).magnitude < property.Range;
     }
 }

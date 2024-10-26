@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1538901856
+  GlobalObjectIdHash: 2056771476
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -360,7 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c95d3774a562e30439a49cd1b6a4db6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mockProperty: {fileID: 11400000, guid: 8bd3d05bf993007488f09da389bddebc, type: 2}
+  mockProperty: {fileID: 0}
   farmPlotLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -380,5 +380,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 032e7984a7dc3cf4696e7d8d29647e33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lootTable: {fileID: 11400000, guid: 9713338d69df681458c236f6e3a827f9, type: 2}
-  loots: []
+  lootTable: {fileID: 0}

@@ -14,11 +14,16 @@ public class LootGenerator : MonoBehaviour
         DropLoot(true);
     }
 
-    public void DropLoot(bool addForce)
+    public void Initialize(LootTable lootTable)
+    {
+        this.lootTable = lootTable;
+    }
+
+    public void DropLoot(bool addForce = true)
     {
         if (lootTable == null) return;
 
-        var loots = GenerateLoot();
+        var loots = GenerateLoot(lootTable);
         var position = transform.position;
 
         foreach (ItemStack loot in loots)
@@ -38,7 +43,7 @@ public class LootGenerator : MonoBehaviour
         }
     }
 
-    private List<ItemStack> GenerateLoot()
+    private List<ItemStack> GenerateLoot(LootTable lootTable)
     {
         List<ItemStack> loots = new List<ItemStack>();
 
@@ -51,10 +56,5 @@ public class LootGenerator : MonoBehaviour
         }
 
         return loots;
-    }
-
-    public void SetLootTable(LootTable lootTable)
-    {
-        this.lootTable = lootTable;
     }
 }

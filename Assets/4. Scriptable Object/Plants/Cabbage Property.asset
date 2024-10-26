@@ -29,3 +29,4 @@ MonoBehaviour:
     duration: 1
     isHarvestStage: 1
     nextStage: 0
+  lootTable: {fileID: 11400000, guid: 9713338d69df681458c236f6e3a827f9, type: 2}

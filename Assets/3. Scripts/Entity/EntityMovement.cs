@@ -10,8 +10,6 @@ public class EntityMovement : MonoBehaviour
     private float maxSpeed = 10f;
     [SerializeField]
     private float smoothTime = 0.1f;
-    [SerializeField]
-    private float arrivalThreshold = 0.1f; // Distance threshold to consider as "arrived"
 
     [Header("Debugs")]
     [SerializeField]

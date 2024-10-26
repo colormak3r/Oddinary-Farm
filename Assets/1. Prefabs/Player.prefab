@@ -508,6 +508,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 5
   iframeDuration: 0.1
+  isInvincible: 0
   CurrentHealth:
     m_InternalValue: 0
 --- !u!114 &6332147781516178474
@@ -538,7 +539,6 @@ MonoBehaviour:
   moveSpeed: 4000
   maxSpeed: 50
   smoothTime: 0.01
-  arrivalThreshold: 0.1
   velocity: 0
 --- !u!114 &5505243102094532865
 MonoBehaviour:
@@ -559,6 +559,17 @@ MonoBehaviour:
   inventoryTransform: {fileID: 2746253684418572068}
   handProperty: {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
   itemRenderer: {fileID: 6421985585592328691}
+  defaultInventory:
+  - Property: {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
+    Count: 1
+  - Property: {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
+    Count: 1
+  - Property: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
+    Count: 4
+  - Property: {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
+    Count: 1
+  - Property: {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
+    Count: 1
   showDebug: 0
   showGizmos: 0
   currentHotbarIndex: 0
@@ -567,6 +578,9 @@ MonoBehaviour:
   currentItem: {fileID: 0}
   Coins:
     m_InternalValue: 999
+  OnCoinsValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &9034817965285367963
 MonoBehaviour:
   m_ObjectHideFlags: 0

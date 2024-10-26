@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae510f77fbe60324cbaae35dc50522c5, type: 3}
-  m_Name: Test LootTable
+  m_Name: Cabbage LootTable
   m_EditorClassIdentifier: 
   Table:
   - item: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
@@ -21,10 +21,5 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: 4861b0c465e13f24585f6b10f6cfe85d, type: 2}
     probability: 1
     minMaxCount:
-      min: 5
-      max: 5
-  - item: {fileID: 11400000, guid: a4cc8bf6113c92e41bf4d20dbfce3219, type: 2}
-    probability: 1
-    minMaxCount:
-      min: 5
-      max: 5
+      min: 1
+      max: 1

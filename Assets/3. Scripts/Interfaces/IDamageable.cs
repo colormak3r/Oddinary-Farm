@@ -10,5 +10,5 @@ public enum DamageType
 
 public interface IDamageable
 {
-    public void GetDamaged(int damage, DamageType type);
+    public void GetDamaged(uint damage, DamageType type);
 }

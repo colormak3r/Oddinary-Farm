@@ -20,7 +20,7 @@ public class AttackPrimaryState : AnimalState
         base.ExecuteState();
         if (Time.time > nextAction)
         {
-            animal.Item.OnPrimaryAction(animal.PreyDetector.CurrentPrey.position, null);
+            animal.Item.OnPrimaryAction(animal.PreyDetector.CurrentPrey.position);
             nextAction = Time.time + animal.Item.PropertyValue.PrimaryCdr;
         }
     }

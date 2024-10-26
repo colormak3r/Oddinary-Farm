@@ -7,58 +7,53 @@ using UnityEngine;
 
 public class Seed : Item
 {
-    private SeedProperty property;
+    private SeedProperty seedProperty;
 
-    public override void OnNetworkSpawn()
+    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
     {
-        HandleOnPropertyChanged(null, PropertyValue);
-        Property.OnValueChanged += HandleOnPropertyChanged;
+        base.HandleOnPropertyChanged(previousValue, newValue);
+        seedProperty = (SeedProperty)newValue;
     }
 
-    public override void OnNetworkDespawn()
+    public override bool CanPrimaryAction(Vector2 position)
     {
-        Property.OnValueChanged -= HandleOnPropertyChanged;
-    }
-
-    private void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
-    {
-        property = (SeedProperty)newValue;
-    }
-
-
-    public override bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
-    {
-        base.OnPrimaryAction(position, inventory);
+        if (!IsInRange(position)) return false;
 
         position = position.SnapToGrid();
-        var farmPlotHits = Physics2D.OverlapPointAll(position, property.FarmPlotLayer);
+        var farmPlotHits = Physics2D.OverlapPointAll(position, seedProperty.FarmPlotLayer);
         if (farmPlotHits.Length > 0)
         {
-            var plantHits = Physics2D.OverlapPointAll(position, property.PlantLayer);
+            var plantHits = Physics2D.OverlapPointAll(position, seedProperty.PlantLayer);
             if (plantHits.Length > 0)
             {
-                Debug.Log("A plant already exist");
+                if(showDebug) Debug.Log($"A plant already exist at {position}");
                 return false;
             }
             else
             {
-                SpawnPlantRpc(position);
+                if (showDebug) Debug.Log($"A crop is created at {position}");
                 return true;
             }
         }
         else
         {
-            Debug.Log("Need Farm Plot, use the Hoe to create Farm Plot at this location");
+            if (showDebug) Debug.Log($"Need Farm Plot, use the Hoe to create Farm Plot at {position}");
             return false;
         }
+    }
+
+    public override void OnPrimaryAction(Vector2 position)
+    {
+        position = position.SnapToGrid();
+        SpawnPlantRpc(position);
     }
 
     [Rpc(SendTo.Server)]
     private void SpawnPlantRpc(Vector2 position)
     {
-        GameObject go = Instantiate(property.PlantPrefab, position.SnapToGrid(), Quaternion.identity);
+        GameObject go = Instantiate(seedProperty.PlantPrefab, position.SnapToGrid(), Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
         var plant = go.GetComponent<Plant>();
-        plant.Initialize(property.PlantProperty);
+        plant.Initialize(seedProperty.PlantProperty);
     }
 }

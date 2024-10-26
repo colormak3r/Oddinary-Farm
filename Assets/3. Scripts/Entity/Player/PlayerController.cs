@@ -15,12 +15,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     private Vector2 lookPosition;
     private Vector2 playerPosition_cached = Vector2.one;
 
+    private float nextPrimary;
+    private float nextSecondary;
+
     private EntityMovement movement;
     private PlayerInventory inventory;
     private PlayerInteraction interaction;
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
-
 
     private void Awake()
     {
@@ -124,16 +126,24 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         if (context.performed)
         {
             var currentItem = inventory.CurrentItemValue;
-            if (currentItem != null)
+            if (currentItem != null && Time.time > nextPrimary)
             {
-                if (currentItem.PropertyValue.IsConsummable)
+                var itemProperty = currentItem.PropertyValue;
+                nextPrimary = Time.time + itemProperty.PrimaryCdr;
+
+                if (currentItem.CanPrimaryAction(lookPosition))
                 {
-                    if (inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex))
-                        currentItem.OnPrimaryAction(lookPosition, inventory);
-                }
-                else
-                {
-                    currentItem.OnPrimaryAction(lookPosition, inventory);
+                    if (itemProperty.IsConsummable)
+                    {
+                        if (inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex))
+                            currentItem.OnPrimaryAction(lookPosition);
+                        else
+                            Debug.Log("Failed to consume item");
+                    }
+                    else
+                    {
+                        currentItem.OnPrimaryAction(lookPosition);
+                    }
                 }
             }
         }
@@ -144,7 +154,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         var currentItem = inventory.CurrentItemValue;
         if (currentItem != null)
         {
-            currentItem.OnSecondaryAction(lookPosition, inventory);
+            currentItem.OnSecondaryAction(lookPosition);
         }
     }
 

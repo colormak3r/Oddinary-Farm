@@ -8,13 +8,15 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 {
     [Header("Entity Settings")]
     [SerializeField]
-    private int maxHealth;
+    private uint maxHealth;
     [SerializeField]
     private float iframeDuration = 0.1f;
+    [SerializeField]
+    private bool isInvincible;
     [Header("Debugs")]
     [SerializeField]
-    private NetworkVariable<int> CurrentHealth = new NetworkVariable<int>();
-    public int CurrentHealthValue => CurrentHealth.Value;
+    private NetworkVariable<uint> CurrentHealth = new NetworkVariable<uint>();
+    public uint CurrentHealthValue => CurrentHealth.Value;
 
     private bool isDamageable;
     private float nextDamagable;
@@ -22,7 +24,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     private void Update()
     {
         if (!IsServer) return;
-        if (Time.time > nextDamagable)
+        if (Time.time > nextDamagable && ! isInvincible)
             isDamageable = true;
     }
 
@@ -45,22 +47,24 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         CurrentHealth.OnValueChanged -= HandleCurrentHealthChange;
     }
 
-    protected virtual void HandleCurrentHealthChange(int previousValue, int newValue)
+    protected virtual void HandleCurrentHealthChange(uint previousValue, uint newValue)
     {
 
     }
 
-    public void GetDamaged(int damage, DamageType type)
+    public void GetDamaged(uint damage, DamageType type)
     {
         GetDamagedServerRpc(damage, type);
     }
 
     [Rpc(SendTo.Server)]
-    private void GetDamagedServerRpc(int damage, DamageType type)
+    private void GetDamagedServerRpc(uint damage, DamageType type)
     {
+        if (!isDamageable) return;
+
         GetDamagedClientRpc(damage, type);
 
-        if (CurrentHealthValue - damage >= 0)
+        if (CurrentHealthValue > damage)
         {
             CurrentHealth.Value -= damage;
             nextDamagable = Time.time + iframeDuration;
@@ -75,11 +79,11 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    private void GetDamagedClientRpc(int damage, DamageType type)
+    private void GetDamagedClientRpc(uint damage, DamageType type)
     {
         if (!IsOwner) return;
 
-        if (CurrentHealthValue - damage > 0)
+        if (CurrentHealthValue > damage)
         {
             OnEntityDamagedOnClient();
         }

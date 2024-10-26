@@ -6,55 +6,48 @@ using UnityEngine;
 
 public class Hammer : Item
 {
-    private HammerProperty property;
-    private int currentCharge;
+    private HammerProperty hammerProperty;
 
-    public override void OnNetworkSpawn()
+    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
     {
-        HandleOnPropertyChanged(null, PropertyValue);
-        Property.OnValueChanged += HandleOnPropertyChanged;
+        base.HandleOnPropertyChanged(previousValue, newValue);
+        hammerProperty = (HammerProperty)newValue;
     }
 
-    public override void OnNetworkDespawn()
+    public override bool CanPrimaryAction(Vector2 position)
     {
-        Property.OnValueChanged -= HandleOnPropertyChanged;
+        return IsInRange(position);
     }
 
-    private void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
+    public override void OnPrimaryAction(Vector2 position)
     {
-        property = (HammerProperty)newValue;
-    }
-
-    public override bool OnPrimaryAction(Vector2 position, PlayerInventory inventory)
-    {
-        base.OnPrimaryAction(position, inventory);
-
         position = position.SnapToGrid();
         HammerPrimaryRpc(position);
-        return true;
     }
 
-    public override bool OnSecondaryAction(Vector2 position, PlayerInventory inventory)
+    public override bool CanSecondaryAction(Vector2 position)
     {
-        base.OnSecondaryAction(position, inventory);
+        return IsInRange(position);
+    }
 
+    public override void OnSecondaryAction(Vector2 position)
+    {
         position = position.SnapToGrid();
         HammerSecondaryRpc(position);
-        return true;
     }
 
     [Rpc(SendTo.Server)]
     private void HammerPrimaryRpc(Vector2 position)
     {
-        var hits = Physics2D.OverlapCircleAll(position, property.Radius, property.InvalidLayers);
+        var hits = Physics2D.OverlapCircleAll(position, hammerProperty.Radius, hammerProperty.InvalidLayers);
         if (hits.Length > 0) return;
 
-        var hit = Physics2D.OverlapPoint(position, property.TerrainLayers);
+        var hit = Physics2D.OverlapPoint(position, hammerProperty.TerrainLayers);
         if (hit && hit.TryGetComponent(out TerrainUnit t))
         {
             if (t.Property.IsAccessible)
             {
-                GameObject go = Instantiate(property.Structures[0], position, Quaternion.identity);
+                GameObject go = Instantiate(hammerProperty.Structures[0], position, Quaternion.identity);
                 go.GetComponent<NetworkObject>().Spawn();
             }
         }
@@ -63,7 +56,7 @@ public class Hammer : Item
     [Rpc(SendTo.Server)]
     private void HammerSecondaryRpc(Vector2 position)
     {
-        var hit = Physics2D.OverlapCircle(position, property.Radius, property.StructureLayers);
+        var hit = Physics2D.OverlapCircle(position, hammerProperty.Radius, hammerProperty.StructureLayers);
         if (hit && hit.TryGetComponent(out Structure structure))
         {
             structure.Remove();

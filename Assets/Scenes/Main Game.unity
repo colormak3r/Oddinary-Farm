@@ -1216,7 +1216,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 5.9375
+  orthographic size: 8.4375
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1661,6 +1661,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cd267a9b4d75f83478b4a4406c8eea92, type: 2}
   - {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
   - {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
+  - {fileID: 11400000, guid: 4861b0c465e13f24585f6b10f6cfe85d, type: 2}
+  - {fileID: 11400000, guid: a4cc8bf6113c92e41bf4d20dbfce3219, type: 2}
+  - {fileID: 11400000, guid: c348f4dba0c0bfd40b0999e0bfbab831, type: 2}
+  - {fileID: 11400000, guid: 37c8adf5f6d0701409f63a57165374c6, type: 2}
+  - {fileID: 11400000, guid: 7528e3ecf8325414b8fb13d23132a30c, type: 2}
   - {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
   - {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
   - {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
@@ -1668,11 +1673,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
   - {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
   - {fileID: 11400000, guid: 9713338d69df681458c236f6e3a827f9, type: 2}
+  - {fileID: 11400000, guid: 75022dd3437619e4ea967aa4cef24b21, type: 2}
   - {fileID: 11400000, guid: 8bd3d05bf993007488f09da389bddebc, type: 2}
   - {fileID: 11400000, guid: dbd800054bbb8104cb11cf3d67c8ac49, type: 2}
+  - {fileID: 11400000, guid: e0b20477f0821794e855dcb5dbf0aafc, type: 2}
   - {fileID: 11400000, guid: 9e0450cfc4038544487df375cc2091af, type: 2}
   - {fileID: 11400000, guid: 541faeadd70e4e84cbcbcb16c76e1d39, type: 2}
   - {fileID: 11400000, guid: 9d7075498e4b06141b5398d65b8edc73, type: 2}
+  - {fileID: 11400000, guid: d911fce547ec5df4c8967959a22cdaac, type: 2}
+  - {fileID: 11400000, guid: 2e0f68b5b9a38e44784d98fa11d1a5f6, type: 2}
   - {fileID: 11400000, guid: cdfb8f13db1fb6341aff37d65cae2cc5, type: 2}
 --- !u!4 &875643468
 Transform:

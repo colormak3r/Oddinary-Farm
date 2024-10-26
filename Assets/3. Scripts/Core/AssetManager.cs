@@ -16,8 +16,8 @@ public class AssetManager : MonoBehaviour
             Destroy(Main.gameObject);
 
 #if UNITY_EDITOR
-        if(scriptableObjectList.Count == 0 )
-            FetchAssets();
+        // Scan and fetch all assets in the specified folder. In Editor mode only.
+        FetchAssets();
 #endif
         PopulateDictionary();
     }
@@ -49,6 +49,8 @@ public class AssetManager : MonoBehaviour
     [ContextMenu("Fetch Assets")]
     public void FetchAssets()
     {
+        scriptableObjectList.Clear();
+        
         var assets = LoadAllScriptableObjectsInFolder<ScriptableObject>(assetPath);
         string assetNames = "Fetched assets:";
         foreach (var asset in assets)
