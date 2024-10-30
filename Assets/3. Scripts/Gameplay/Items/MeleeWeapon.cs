@@ -15,8 +15,8 @@ public class MeleeWeapon : Item
         meleeWeaponProperty = (MeleeWeaponProperty)newValue;
     }
 
-    [Rpc(SendTo.Server)]
-    protected virtual void DealDamageRpc(Vector2 position)
+    // This method can run on both server and client
+    protected virtual void DealDamage(Vector2 position)
     {
         var hits = Physics2D.CircleCastAll(transform.position, meleeWeaponProperty.Radius, position - (Vector2)transform.position, meleeWeaponProperty.Range, meleeWeaponProperty.DamageableLayer);
         if (hits.Length > 0)
@@ -26,7 +26,7 @@ public class MeleeWeapon : Item
                 var collider = hit.collider;
                 if (collider.gameObject == gameObject) continue;
 
-                if (IsServer && collider.TryGetComponent<IDamageable>(out var damageable))
+                if (collider.TryGetComponent<IDamageable>(out var damageable))
                 {
                     damageable.GetDamaged(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType);
                 }

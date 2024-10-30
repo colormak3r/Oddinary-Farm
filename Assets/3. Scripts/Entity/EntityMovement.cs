@@ -1,7 +1,8 @@
-using System;
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class EntityMovement : MonoBehaviour
+public class EntityMovement : NetworkBehaviour
 {
     [Header("Settings")]
     [SerializeField]
@@ -13,16 +14,21 @@ public class EntityMovement : MonoBehaviour
 
     [Header("Debugs")]
     [SerializeField]
+    private bool showDebugs = false;
+    [SerializeField]
     private float velocity;
 
     private Vector2 movementDirection;
 
     private Rigidbody2D rbody;
     private Vector2 dummy;
+    private ClientNetworkTransform clientNetworkTransform;
 
     private void Start()
     {
         rbody = GetComponent<Rigidbody2D>();
+        clientNetworkTransform = GetComponent<ClientNetworkTransform>();
+        Debug.Log(gameObject.name + " ClientNetworkTransform: " + clientNetworkTransform);
     }
 
     private void FixedUpdate()
@@ -53,11 +59,41 @@ public class EntityMovement : MonoBehaviour
 
     public void Knockback(float knockbackForce, Transform source)
     {
+        // TODO: client authoritative, server side prediction
+        if (!clientNetworkTransform)
+        {
+            // Server authoritative movement
+            if (showDebugs) Debug.Log(gameObject.name + " KnockbackServerRpc");
+            KnockbackServerRpc(knockbackForce, source.position);
+        }
+        else
+        {
+            // Client authoritative movement
+            if (showDebugs) Debug.Log(gameObject.name + " KnockbackClientRpc");
+            KnockbackClientRpc(knockbackForce, source.position);
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    private void KnockbackServerRpc(float knockbackForce, Vector2 sourcePosition)
+    {
+        if (showDebugs) Debug.Log(gameObject.name + " KnockbackServerRpc recieved");
+        KnockbackInternal(knockbackForce, sourcePosition);
+    }
+
+    [Rpc(SendTo.Owner)]
+    private void KnockbackClientRpc(float knockbackForce, Vector2 sourcePosition)
+    {
+        if (showDebugs) Debug.Log(gameObject.name + " KnockbackClientRpc recieved");
+        KnockbackInternal(knockbackForce, sourcePosition);
+    }
+
+    private void KnockbackInternal(float knockbackForce, Vector2 sourcePosition)
+    {
         // Calculate the knockback direction as a normalized 2D vector
-        Vector2 knockbackDirection = (transform.position - source.position).normalized;
+        Vector2 knockbackDirection = ((Vector2)transform.position - sourcePosition).normalized;
 
         // Apply the force to the Rigidbody2D
         rbody.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
     }
-
 }

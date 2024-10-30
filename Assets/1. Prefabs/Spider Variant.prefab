@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 1343188877
+      value: 564385764
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
@@ -87,6 +87,10 @@ PrefabInstance:
     - target: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Name
       value: Spider Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8210972803629294697, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: guid
+      value: 20caa070-3e83-4704-85de-751e05c68787
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1713903147799318877, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
@@ -142,6 +146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 764ff69df5af2394ba51b3cfb5fa6a0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showDebug: 0
+  showGizmos: 0
   Property:
     m_InternalValue: {fileID: 0}
-  property: {fileID: 0}
+  meleeWeaponProperty: {fileID: 0}

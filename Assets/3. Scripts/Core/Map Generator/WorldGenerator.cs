@@ -21,22 +21,12 @@ public class WorldGenerator : MonoBehaviour
     {
         public Vector2 position;
         public int size;
-        public List<GameObject> blocks;
+        public List<GameObject> terrainUnits;
 
         public Chunk(Vector2 position, int size)
         {
             this.position = position;
-            blocks = new List<GameObject>();
-        }
-
-        public void Destroy()
-        {
-            while (blocks.Count > 0)
-            {
-                var obj = blocks[0];
-                blocks.RemoveAt(0);
-                UnityEngine.Object.Destroy(obj);
-            }
+            terrainUnits = new List<GameObject>();
         }
     }
 
@@ -85,6 +75,13 @@ public class WorldGenerator : MonoBehaviour
 
     private Vector2 closetChunkPosition_cached = Vector2.one;
 
+    private LocalObjectPooling localObjectPooling;
+
+    private void Start()
+    {
+        localObjectPooling = LocalObjectPooling.Main;
+    }
+
     public IEnumerator GenerateTerrainCoroutine(Vector2 position)
     {
         position = position.SnapToGrid();
@@ -98,6 +95,15 @@ public class WorldGenerator : MonoBehaviour
         if (isGenerating) yield break;
         isGenerating = true;
 
+        yield return GenerateChunks(closetChunkPosition);
+
+        yield return RemoveExcessChunks(closetChunkPosition);
+
+        isGenerating = false;
+    }
+
+    private IEnumerator GenerateChunks(Vector2 closetChunkPosition)
+    {
         for (int i = -(renderDistance + renderXOffset); i < renderDistance + 1 + renderXOffset; i++)
         {
             for (int j = -renderDistance + 1; j < renderDistance; j++)
@@ -106,14 +112,11 @@ public class WorldGenerator : MonoBehaviour
 
                 if (!positionToChunk.ContainsKey(chunkPos))
                 {
-                    yield return GenerateChunk(chunkPos, chunkSize, positionToChunk);
+                    StartCoroutine(GenerateChunk(chunkPos, chunkSize, positionToChunk));
                 }
             }
         }
-
-        yield return RemoveExcessChunks(closetChunkPosition);
-
-        isGenerating = false;
+        yield return null;
     }
 
     private IEnumerator GenerateChunk(Vector2 position, int chunkSize, Dictionary<Vector2, Chunk> positionToChunk)
@@ -129,9 +132,11 @@ public class WorldGenerator : MonoBehaviour
             {
                 var pos = new Vector2(position.x + i, position.y + j);
                 var property = GetProperty(pos.x, pos.y);
-                var terrainObj = Instantiate(terrainPrefab, pos, Quaternion.identity, transform);
+                var terrainObj = localObjectPooling.Spawn(terrainPrefab);
+                terrainObj.transform.position = pos;
+                terrainObj.transform.parent = transform;
                 terrainObj.GetComponent<TerrainUnit>().Initialize(property);
-                chunk.blocks.Add(terrainObj);
+                chunk.terrainUnits.Add(terrainObj);
             }
         }
         yield return null;
@@ -162,11 +167,15 @@ public class WorldGenerator : MonoBehaviour
         // Remove the identified chunks
         foreach (var pos in positionsToRemove)
         {
-            positionToChunk[pos].Destroy();
-            positionToChunk.Remove(pos);
+            foreach (var terrainUnit in positionToChunk[pos].terrainUnits)
+            {
+                localObjectPooling.Despawn(terrainUnit);
+            }
 
-            yield return null;
+            positionToChunk.Remove(pos);
         }
+
+        yield return null;
     }
 
     public TerrainProperty GetProperty(float x, float y)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Hand : MeleeWeapon
 {
@@ -20,11 +21,17 @@ public class Hand : MeleeWeapon
 
     public override void OnPrimaryAction(Vector2 position)
     {
-        HandRpc(position);
+        HandAction(position);
     }
 
-    [Rpc(SendTo.Server)]
-    private void HandRpc(Vector2 position)
+
+    private void HandAction(Vector2 position)
+    {
+        Harvest(position);
+        DealDamage(position);
+    }
+
+    private void Harvest(Vector2 position)
     {
         var hits = Physics2D.OverlapCircleAll(position, handProperty.Radius);
         if (hits.Length > 0)
@@ -37,7 +44,5 @@ public class Hand : MeleeWeapon
                 }
             }
         }
-
-        DealDamageRpc(position);
     }
 }

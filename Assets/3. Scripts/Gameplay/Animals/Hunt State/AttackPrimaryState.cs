@@ -12,7 +12,6 @@ public class AttackPrimaryState : AnimalState
     public override void EnterState()
     {
         base.EnterState();
-        animal.NetworkAnimator.SetTrigger("PrimaryAction");
     }
 
     public override void ExecuteState()
@@ -22,6 +21,7 @@ public class AttackPrimaryState : AnimalState
         {
             animal.Item.OnPrimaryAction(animal.PreyDetector.CurrentPrey.position);
             nextAction = Time.time + animal.Item.PropertyValue.PrimaryCdr;
+            animal.NetworkAnimator.SetTrigger("PrimaryAction");
         }
     }
 }

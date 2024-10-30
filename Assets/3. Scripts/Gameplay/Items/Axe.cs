@@ -8,6 +8,6 @@ public class Axe : MeleeWeapon
 {
     public override void OnPrimaryAction(Vector2 position)
     {
-        DealDamageRpc(position);
+        DealDamage(position);
     }
 }
