@@ -71,4 +71,21 @@ public class Item : NetworkBehaviour
     {
         return ((Vector2)transform.position - position).magnitude < property.Range;
     }
+
+    public void SetGizmosVisibility(bool value)
+    {
+        showGizmos = value;
+    }
+
+    public void SetDebugVisibility(bool value)
+    {
+        showDebug = value;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!showGizmos) return;
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, property.Range);
+    }
 }

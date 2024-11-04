@@ -10,5 +10,6 @@ public enum DamageType
 
 public interface IDamageable
 {
+    public uint GetCurrentHealth();
     public void GetDamaged(uint damage, DamageType type);
 }

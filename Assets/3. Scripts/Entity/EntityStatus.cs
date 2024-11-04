@@ -95,6 +95,11 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     }
 
+    public uint GetCurrentHealth()
+    {
+        return CurrentHealthValue;
+    }
+
     protected virtual void OnEntityDamagedOnClient()
     {
         // Damaged effects

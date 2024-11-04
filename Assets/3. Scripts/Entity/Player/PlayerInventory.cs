@@ -92,6 +92,10 @@ public class PlayerInventory : NetworkBehaviour
     [SerializeField]
     private bool showGizmos;
     [SerializeField]
+    private bool showItemDebug;
+    [SerializeField]
+    private bool showItemGizmos;
+    [SerializeField]
     private int currentHotbarIndex;
     [SerializeField]
     private ItemStack[] inventory;
@@ -160,6 +164,21 @@ public class PlayerInventory : NetworkBehaviour
         {
             currentItem = item;
             itemRenderer.sprite = item.PropertyValue.Sprite;
+
+#if UNITY_EDITOR
+            if (showItemGizmos || showItemDebug)
+            {
+                var items = GetComponentsInChildren<Item>();
+                foreach (var i in items)
+                {
+                    i.SetGizmosVisibility(false);
+                    i.SetDebugVisibility(false);
+                }
+
+                item.SetGizmosVisibility(showItemGizmos);
+                item.SetDebugVisibility(showItemDebug);
+            }
+#endif
         }
     }
 
@@ -342,6 +361,7 @@ public class PlayerInventory : NetworkBehaviour
 
         // Create a networked Item at this position
         var item = Instantiate(property.Prefab, inventoryTransform);
+        item.transform.localPosition = Vector3.zero;
 
         var networkObject = item.GetComponent<NetworkObject>();
         networkObject.Spawn();
@@ -360,6 +380,7 @@ public class PlayerInventory : NetworkBehaviour
         if (itemRef.TryGet(out Item item))
         {
             itemRefs[index] = item;
+            item.transform.localPosition = Vector3.zero;
         }
     }
 

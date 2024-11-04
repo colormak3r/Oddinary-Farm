@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 074aff17f661ad0468c1e773674714ad, type: 3}
+  m_Name: Dirt Terrain Block Property
+  m_EditorClassIdentifier: 
+  sprite: {fileID: -495350828, guid: 0cefbb5fdff3c5740b36113fa3e01276, type: 3}
+  prefab: {fileID: 3839026878329018364, guid: a808fcbc4ede4204ab9b7c1f376d245d, type: 3}
+  isConsummable: 1
+  maxStack: 20
+  primaryCdr: 0.25
+  secondaryCdr: 0.25
+  range: 5
+  price: 1
+  placeableLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  unitProperty: {fileID: 11400000, guid: 541faeadd70e4e84cbcbcb16c76e1d39, type: 2}

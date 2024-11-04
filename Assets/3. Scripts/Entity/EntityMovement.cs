@@ -28,7 +28,7 @@ public class EntityMovement : NetworkBehaviour
     {
         rbody = GetComponent<Rigidbody2D>();
         clientNetworkTransform = GetComponent<ClientNetworkTransform>();
-        Debug.Log(gameObject.name + " ClientNetworkTransform: " + clientNetworkTransform);
+        if (showDebugs) Debug.Log(gameObject.name + " ClientNetworkTransform: " + clientNetworkTransform);
     }
 
     private void FixedUpdate()

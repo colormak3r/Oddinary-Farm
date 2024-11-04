@@ -24,6 +24,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
+    public static Vector2 LookPosition;
+
     private void Awake()
     {
         movement = GetComponent<EntityMovement>();
@@ -77,14 +79,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     private IEnumerator InitializeCoroutine()
     {
+        // Set camera
+        Camera.main.transform.parent = transform;
+        Camera.main.transform.localPosition = Camera.main.transform.position;
+
         yield return new WaitUntil(() => GameManager.Main.IsInitialized);
 
         // Set control
         InputManager.Main.InputActions.Player.SetCallbacks(this);
-
-        // Set camera
-        Camera.main.transform.parent = transform;
-        Camera.main.transform.localPosition = Camera.main.transform.position;
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -96,6 +98,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     public void OnLook(InputAction.CallbackContext context)
     {
         lookPosition = Camera.main.ScreenToWorldPoint(context.ReadValue<Vector2>());
+        LookPosition = lookPosition;
         IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;
     }
 
@@ -114,9 +117,12 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         }
     }
 
-    private void HandleCurrentItemPropertyChanged()
+    public void OnMap(InputAction.CallbackContext context)
     {
-        // Todo: Cache item for more efficient memory use
+        if (context.performed)
+        {
+            MapUI.Main.ToggleShow();
+        }
     }
 
     #region Player Action

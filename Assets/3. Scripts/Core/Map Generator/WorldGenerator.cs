@@ -4,8 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.UI.Image;
 using UnityEngine.UIElements;
+using System;
+using Unity.Netcode;
+using static UnityEditor.PlayerSettings;
 
-public class WorldGenerator : MonoBehaviour
+public class WorldGenerator : NetworkBehaviour
 {
     public static WorldGenerator Main;
 
@@ -28,21 +31,44 @@ public class WorldGenerator : MonoBehaviour
             this.position = position;
             terrainUnits = new List<GameObject>();
         }
+
+        public GameObject GetUnit(Vector2 position)
+        {
+            var debug = $"Chunk position = {this.position}, size = {size}, query = {position}";
+            foreach (var unit in terrainUnits)
+            {
+                debug += $"\n   unit = {(Vector2)unit.transform.position}, {(Vector2)unit.transform.position == position}";
+                if ((Vector2)unit.transform.position == position)
+                {
+                    return unit;
+                }
+            }
+            Debug.Log(debug);
+            return null;
+        }
     }
 
-    [Header("Settings")]
+    [Header("Terrain Settings")]
     [SerializeField]
-    private TerrainProperty[] terrainProperties;
+    private TerrainUnitProperty[] terrainUnitProperties;
     [SerializeField]
-    private GameObject terrainPrefab;
+    private GameObject terrainUnitPrefab;
 
-    [Header("Map Settings")]
+    [Header("Generation Settings")]
     [SerializeField]
-    private int chunkSize = 4;
+    private int chunkSize = 5;
     [SerializeField]
     private int renderDistance = 3;
     [SerializeField]
     private int renderXOffset = 4;
+
+    [Header("Map Settings")]
+    [SerializeField]
+    private Vector2Int mapSize = new Vector2Int(500, 500);
+    [SerializeField]
+    private TerrainUnitProperty voidUnitProperty;
+
+    [Header("Starter Area Settings")]
     [SerializeField]
     private float starterShaping = 0.5f;
     [SerializeField]
@@ -50,24 +76,27 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField]
     private Vector2Int starterBound = new Vector2Int(100, 100);
 
-
-    [Header("Elevation Map")]
+    [Header("Elevation Map Settings")]
     [SerializeField]
-    private Vector2 elevationMapOrigin;
+    private Vector2 elevationOrigin = new Vector2(1264, 234);
     [SerializeField]
-    private float elevationMapScale = 1.0f;
+    private Vector2Int elevationDimension;
     [SerializeField]
-    private int octaves = 3;
+    private float elevationScale = 1.0f;
     [SerializeField]
-    private float persistence = 0.5f;
+    private int elevationOctaves = 3;
     [SerializeField]
-    private float frequencyBase = 2f;
+    private float elevationPersistence = 0.5f;
     [SerializeField]
-    private Vector2Int dimension;
+    private float elevationFrequencyBase = 2f;
     [SerializeField]
-    private float exp = 1f;
+    private float elevationExp = 1f;
 
     [Header("Debug")]
+    [SerializeField]
+    private bool showDebug;
+    [SerializeField]
+    private bool showGizmos;
     [SerializeField]
     private bool isGenerating;
 
@@ -77,9 +106,41 @@ public class WorldGenerator : MonoBehaviour
 
     private LocalObjectPooling localObjectPooling;
 
+    private TerrainUnitProperty[][] terrainMap;
+    int halfMapSizeX;
+    int halfMapSizeY;
+
+    private Sprite terrainMapSprite;
+
     private void Start()
     {
         localObjectPooling = LocalObjectPooling.Main;
+        GenerateMap();
+    }
+
+    [ContextMenu("Generate Map")]
+    private void GenerateMap()
+    {
+        var terrainMapTexture = new Texture2D(mapSize.x, mapSize.y);
+
+        halfMapSizeX = mapSize.x / 2;
+        halfMapSizeY = mapSize.y / 2;
+        terrainMap = new TerrainUnitProperty[mapSize.x][];
+        for (int i = 0; i < mapSize.x; i++)
+        {
+            terrainMap[i] = new TerrainUnitProperty[mapSize.y];
+            for (int j = 0; j < mapSize.y; j++)
+            {
+                terrainMap[i][j] = GetDefaultProperty(i - halfMapSizeX, j - halfMapSizeY);
+                terrainMapTexture.SetPixel(i, j, terrainMap[i][j].MapColor);
+            }
+        }
+
+        terrainMapTexture.Apply();
+        terrainMapSprite = Sprite.Create(terrainMapTexture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
+        terrainMapSprite.texture.filterMode = FilterMode.Point;
+
+        MapUI.Main.UpdateMap(terrainMapSprite);
     }
 
     public IEnumerator GenerateTerrainCoroutine(Vector2 position)
@@ -130,13 +191,9 @@ public class WorldGenerator : MonoBehaviour
         {
             for (int j = lowerLimit; j < upperLimit; j++)
             {
-                var pos = new Vector2(position.x + i, position.y + j);
-                var property = GetProperty(pos.x, pos.y);
-                var terrainObj = localObjectPooling.Spawn(terrainPrefab);
-                terrainObj.transform.position = pos;
-                terrainObj.transform.parent = transform;
-                terrainObj.GetComponent<TerrainUnit>().Initialize(property);
-                chunk.terrainUnits.Add(terrainObj);
+                var pos = new Vector2Int((int)position.x + i, (int)position.y + j);
+                var property = GetMappedProperty(pos.x + halfMapSizeX, pos.y + halfMapSizeY);
+                SpawnNewTerrainUnit(pos, chunk, property);
             }
         }
         yield return null;
@@ -178,11 +235,97 @@ public class WorldGenerator : MonoBehaviour
         yield return null;
     }
 
-    public TerrainProperty GetProperty(float x, float y)
+    private TerrainUnitProperty GetMappedProperty(int i, int j)
     {
-        TerrainProperty candidate = null;
-        var noise = GetNoise(x, y, elevationMapOrigin, dimension,
-                    elevationMapScale, octaves, persistence, frequencyBase, exp);
+        //Debug.Log($"GetMappedProperty {x}, {y}");
+        if (i >= mapSize.x || i < 0 || j >= mapSize.y || j < 0)
+        {
+            return voidUnitProperty;
+        }
+        else
+        {
+            try
+            {
+                return terrainMap[i][j];
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"GetMappedProperty i = {i}, j = {j}");
+                throw e;
+            }
+        }
+    }
+
+    public bool CanPlaceBlock(Vector2 position)
+    {
+        position = position.SnapToGrid();
+        var i = (int)position.x + halfMapSizeX;
+        var j = (int)position.y + halfMapSizeY;
+        if (i >= mapSize.x || i < 0 || j >= mapSize.y || j < 0)
+        {
+            return false;
+        }
+        else
+        {
+            return !terrainMap[i][j].IsAccessible;
+        }
+    }
+
+    public void PlaceBlock(Vector2 position, TerrainUnitProperty newProperty)
+    {
+        PlaceBlockRpc(position, newProperty);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void PlaceBlockRpc(Vector2 position, TerrainUnitProperty newProperty)
+    {
+        ReplaceMappedProperty(position, newProperty);
+        ReplaceMappedUnit(position, newProperty);
+    }
+
+    private void ReplaceMappedProperty(Vector2 position, TerrainUnitProperty newProperty)
+    {
+        var pos = new Vector2Int((int)position.x, (int)position.y);
+        var i = pos.x + halfMapSizeX;
+        var j = pos.y + halfMapSizeY;
+        terrainMap[i][j] = newProperty;
+    }
+
+    private void ReplaceMappedUnit(Vector2 position, TerrainUnitProperty newProperty)
+    {
+        var closetChunkPosition = position.SnapToGrid(chunkSize);
+
+        if (!positionToChunk.ContainsKey(closetChunkPosition)) return;
+        var chunk = positionToChunk[closetChunkPosition];
+        var unit = chunk.GetUnit(position);
+
+        // Remove the old unit
+        localObjectPooling.Despawn(unit);
+        chunk.terrainUnits.Remove(unit);
+
+        // Spawn a new unit
+        SpawnNewTerrainUnit(position, chunk, newProperty);
+    }
+
+    public void RemoveBlock(Vector2 position)
+    {
+        PlaceBlockRpc(position, voidUnitProperty);
+    }
+
+    private void SpawnNewTerrainUnit(Vector2 position, Chunk chunk, TerrainUnitProperty property)
+    {
+        var terrainObj = localObjectPooling.Spawn(terrainUnitPrefab);
+        terrainObj.transform.position = position;
+        terrainObj.transform.parent = transform;
+        terrainObj.GetComponent<TerrainUnit>().Initialize(property);
+        chunk.terrainUnits.Add(terrainObj);
+    }
+
+    private TerrainUnitProperty GetDefaultProperty(float x, float y)
+    {
+        TerrainUnitProperty candidate = null;
+        var noise = GetNoise(x, y, elevationOrigin, elevationDimension,
+                    elevationScale, elevationOctaves, elevationPersistence, elevationFrequencyBase, elevationExp);
 
         // Check if the coordinates are within the starter boundary
         if (x > -starterBound.x && x < starterBound.x && y > -starterBound.y && y < starterBound.y)
@@ -216,14 +359,14 @@ public class WorldGenerator : MonoBehaviour
             }
         }
 
-        foreach (var property in terrainProperties)
+        foreach (var property in terrainUnitProperties)
         {
             if (property.Match(noise)) candidate = property;
         }
 
         if (candidate == null)
         {
-            candidate = terrainProperties[0];
+            candidate = terrainUnitProperties[0];
             Debug.Log($"Cannot match property at {x}, {y}, noise = {noise}");
         }
 
@@ -251,4 +394,22 @@ public class WorldGenerator : MonoBehaviour
 
         return Mathf.Pow(total / maxValue, exp);
     }
+
+    private void OnDrawGizmos()
+    {
+        if (!showGizmos) return;
+        Gizmos.color = Color.blue;
+        foreach (var entry in positionToChunk)
+        {
+            Gizmos.DrawWireCube(entry.Key, Vector3.one * chunkSize);
+        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(PlayerController.LookPosition.SnapToGrid(), Vector3.one);
+    }
+
+    /*private void OnGUI()
+    {
+        if (chunkSize % 2 == 0)
+            chunkSize++;
+    }*/
 }

@@ -11,6 +11,9 @@ namespace ColorMak3r.Utility
     {
         public static Vector2 SnapToGrid(this Vector2 position, int size = 1)
         {
+            if (size == 0)
+                throw new ArgumentException("Grid size cannot be zero.", nameof(size));
+
             return new Vector2(
                 size * Mathf.RoundToInt(position.x / size),
                 size * Mathf.RoundToInt(position.y / size));

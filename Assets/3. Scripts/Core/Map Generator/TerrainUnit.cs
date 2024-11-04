@@ -16,11 +16,11 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
 
     [Header("Debugs")]
     [SerializeField]
-    private TerrainProperty property;
+    private TerrainUnitProperty property;
 
-    public TerrainProperty Property => property;
+    public TerrainUnitProperty Property => property;
 
-    public void Initialize(TerrainProperty property)
+    public void Initialize(TerrainUnitProperty property)
     {
         this.property = property;
 

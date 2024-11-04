@@ -34,11 +34,14 @@ public class LocalObjectPooling : MonoBehaviour
             for (int i = 0; i < 10; i++)
             {
                 var newObj = Instantiate(prefab, pool);
+                newObj.GetComponent<LocalObjectController>().LocalDespawn();
+                newObj.SetActive(false);
             }
         }
 
         var obj = pool.GetChild(0).gameObject;
         obj.GetComponent<LocalObjectController>().LocalSpawn();
+        obj.SetActive(true);
         return obj;
     }
 
@@ -46,9 +49,12 @@ public class LocalObjectPooling : MonoBehaviour
     {
         if (!obj.TryGetComponent<LocalObjectController>(out var controller))
         {
-            Debug.LogError("Prefab does not have LocalObjectController component.", obj);
+            Debug.LogError("Object does not have LocalObjectController component.", obj);
+            return;
         }
+
         controller.LocalDespawn();
+        obj.SetActive(false);
         var pool = GetPool(controller.Guid);
         if (pool)
         {

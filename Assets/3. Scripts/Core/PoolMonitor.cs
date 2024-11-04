@@ -17,6 +17,7 @@ public class PoolMonitor : MonoBehaviour
 
     private void Update()
     {
+        // TODO: calculate average pool size
         var childCount = transform.childCount;
         gameObject.name = originalName + " (" + childCount + ")";
 

@@ -12,16 +12,12 @@ public static class SerializationExtensions
     #region Item Property
     public static void WriteValueSafe(this FastBufferWriter writer, in ItemProperty obj)
     {
-        writer.WriteValueSafe(obj == null ? NULL_STRING : obj.name);
+        writer.WriteValueSafeInternal(obj);
     }
 
     public static void ReadValueSafe(this FastBufferReader reader, out ItemProperty obj)
     {
-        reader.ReadValueSafe(out string objName);
-        if (objName == NULL_STRING)
-            obj = null;
-        else
-            obj = AssetManager.Main.GetScriptableObjectByName<ItemProperty>(objName);
+        reader.ReadValueSafeInternal(out obj);
     }
 
     public static void DuplicateValue (in ItemProperty value, ref ItemProperty duplicatedValue)
@@ -33,19 +29,53 @@ public static class SerializationExtensions
     #region PlantProperty
     public static void WriteValueSafe(this FastBufferWriter writer, in PlantProperty obj)
     {
-        writer.WriteValueSafe(obj == null ? NULL_STRING : obj.name);
+        writer.WriteValueSafeInternal(obj);
     }
 
     public static void ReadValueSafe(this FastBufferReader reader, out PlantProperty obj)
+    {
+        reader.ReadValueSafeInternal(out obj);
+    }
+
+    public static void DuplicateValue(in PlantProperty value, ref PlantProperty duplicatedValue)
+    {
+        DuplicateValueInternal(value, ref duplicatedValue);
+    }
+    #endregion
+
+    #region TerrainUnitProperty
+    public static void WriteValueSafe(this FastBufferWriter writer, in TerrainUnitProperty obj)
+    {
+        writer.WriteValueSafeInternal(obj);
+    }
+
+    public static void ReadValueSafe(this FastBufferReader reader, out TerrainUnitProperty obj)
+    {
+        reader.ReadValueSafeInternal(out obj);
+    }
+
+    public static void DuplicateValue(in TerrainUnitProperty value, ref TerrainUnitProperty duplicatedValue)
+    {
+        DuplicateValueInternal(value, ref duplicatedValue);
+    }
+    #endregion
+
+    #region Internal
+    private static void WriteValueSafeInternal<T>(this FastBufferWriter writer, in T obj) where T : ScriptableObject
+    {
+        writer.WriteValueSafe(obj == null ? NULL_STRING : obj.name);
+    }
+    
+    private static void ReadValueSafeInternal<T>(this FastBufferReader reader, out T obj) where T : ScriptableObject
     {
         reader.ReadValueSafe(out string objName);
         if (objName == NULL_STRING)
             obj = null;
         else
-            obj = AssetManager.Main.GetScriptableObjectByName<PlantProperty>(objName);
+            obj = AssetManager.Main.GetScriptableObjectByName<T>(objName);
     }
 
-    public static void DuplicateValue(in PlantProperty value, ref PlantProperty duplicatedValue)
+    private static void DuplicateValueInternal<T>(in T value, ref T duplicatedValue) where T : ScriptableObject
     {
         duplicatedValue = value;
     }

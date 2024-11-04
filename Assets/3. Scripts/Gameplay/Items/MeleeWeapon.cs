@@ -31,6 +31,8 @@ public class MeleeWeapon : Item
                     damageable.GetDamaged(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType);
                 }
 
+                if (damageable.GetCurrentHealth() == 0) continue;
+
                 if (collider.TryGetComponent<EntityMovement>(out var movement))
                 {
                     movement.Knockback(meleeWeaponProperty.KnockbackForce, transform);

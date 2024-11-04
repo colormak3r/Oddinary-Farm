@@ -9,25 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ce3fd5dab9e9b14d93d6efb2658f06d, type: 3}
+  m_Script: {fileID: 11500000, guid: d1e5fd2c0583c894ba5fc8fad3a93211, type: 3}
   m_Name: Dirt Terrain Property
   m_EditorClassIdentifier: 
+  mapColor: {r: 0.4784314, g: 0.26666668, b: 0.2901961, a: 1}
   elevation:
-    min: 0.55
-    max: 0.6
+    min: 0.5
+    max: 0.55
   isAccessible: 1
+  blockProperty: {fileID: 11400000, guid: cae112df666cda34cb83978a88571cf6, type: 2}
+  overlaySpriteChance: 0.3
   overlaySprite:
   - {fileID: 739865222, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   - {fileID: 1204355908, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   - {fileID: -1051719314, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   - {fileID: -484743900, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   - {fileID: -651814469, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   baseSprite:
   - {fileID: -1550966934, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
-  underlaySprite:
-  - {fileID: -1901750342, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  underlaySprite: []

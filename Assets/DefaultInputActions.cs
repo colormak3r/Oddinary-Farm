@@ -107,6 +107,15 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Map"",
+                    ""type"": ""Button"",
+                    ""id"": ""883819f5-f20e-41ed-8329-bfc5e5e23936"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -351,6 +360,17 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fa2f405a-18f4-48da-aabb-e4dcb9b25ee0"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Map"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -424,6 +444,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         m_Player_HotbarScroll = m_Player.FindAction("Hotbar Scroll", throwIfNotFound: true);
         m_Player_Hotbar = m_Player.FindAction("Hotbar", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_Map = m_Player.FindAction("Map", throwIfNotFound: true);
         // Dialogue
         m_Dialogue = asset.FindActionMap("Dialogue", throwIfNotFound: true);
         m_Dialogue_Newaction = m_Dialogue.FindAction("New action", throwIfNotFound: true);
@@ -507,6 +528,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_HotbarScroll;
     private readonly InputAction m_Player_Hotbar;
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_Map;
     public struct PlayerActions
     {
         private @DefaultInputActions m_Wrapper;
@@ -520,6 +542,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         public InputAction @HotbarScroll => m_Wrapper.m_Player_HotbarScroll;
         public InputAction @Hotbar => m_Wrapper.m_Player_Hotbar;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @Map => m_Wrapper.m_Player_Map;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -556,6 +579,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @Map.started += instance.OnMap;
+            @Map.performed += instance.OnMap;
+            @Map.canceled += instance.OnMap;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -587,6 +613,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @Map.started -= instance.OnMap;
+            @Map.performed -= instance.OnMap;
+            @Map.canceled -= instance.OnMap;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -707,6 +736,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         void OnHotbarScroll(InputAction.CallbackContext context);
         void OnHotbar(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnMap(InputAction.CallbackContext context);
     }
     public interface IDialogueActions
     {

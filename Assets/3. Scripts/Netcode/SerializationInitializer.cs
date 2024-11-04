@@ -15,6 +15,10 @@ public class SerializationInitializer : MonoBehaviour
         UserNetworkVariableSerialization<PlantProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<PlantProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
 
+        UserNetworkVariableSerialization<TerrainUnitProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<TerrainUnitProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
+        UserNetworkVariableSerialization<TerrainUnitProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
         /*UserNetworkVariableSerialization<NetworkedScriptableObject>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<NetworkedScriptableObject>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<NetworkedScriptableObject>.DuplicateValue = (in NetworkedScriptableObject val, ref NetworkedScriptableObject dup) =>
