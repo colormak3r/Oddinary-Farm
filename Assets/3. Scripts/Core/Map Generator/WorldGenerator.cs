@@ -2,11 +2,9 @@ using ColorMak3r.Utility;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UI.Image;
-using UnityEngine.UIElements;
 using System;
 using Unity.Netcode;
-using static UnityEditor.PlayerSettings;
+
 
 public class WorldGenerator : NetworkBehaviour
 {
@@ -106,7 +104,7 @@ public class WorldGenerator : NetworkBehaviour
 
     private LocalObjectPooling localObjectPooling;
 
-    private TerrainUnitProperty[][] terrainMap;
+    private TerrainUnitProperty[,] terrainMap;
     int halfMapSizeX;
     int halfMapSizeY;
 
@@ -125,14 +123,13 @@ public class WorldGenerator : NetworkBehaviour
 
         halfMapSizeX = mapSize.x / 2;
         halfMapSizeY = mapSize.y / 2;
-        terrainMap = new TerrainUnitProperty[mapSize.x][];
+        terrainMap = new TerrainUnitProperty[mapSize.x, mapSize.y];
         for (int i = 0; i < mapSize.x; i++)
         {
-            terrainMap[i] = new TerrainUnitProperty[mapSize.y];
             for (int j = 0; j < mapSize.y; j++)
             {
-                terrainMap[i][j] = GetDefaultProperty(i - halfMapSizeX, j - halfMapSizeY);
-                terrainMapTexture.SetPixel(i, j, terrainMap[i][j].MapColor);
+                terrainMap[i,j] = GetDefaultProperty(i - halfMapSizeX, j - halfMapSizeY);
+                terrainMapTexture.SetPixel(i, j, terrainMap[i,j].MapColor);
             }
         }
 
@@ -173,11 +170,10 @@ public class WorldGenerator : NetworkBehaviour
 
                 if (!positionToChunk.ContainsKey(chunkPos))
                 {
-                    StartCoroutine(GenerateChunk(chunkPos, chunkSize, positionToChunk));
+                    yield return GenerateChunk(chunkPos, chunkSize, positionToChunk);
                 }
             }
         }
-        yield return null;
     }
 
     private IEnumerator GenerateChunk(Vector2 position, int chunkSize, Dictionary<Vector2, Chunk> positionToChunk)
@@ -230,9 +226,8 @@ public class WorldGenerator : NetworkBehaviour
             }
 
             positionToChunk.Remove(pos);
-        }
-
-        yield return null;
+            yield return null;
+        }        
     }
 
     private TerrainUnitProperty GetMappedProperty(int i, int j)
@@ -246,7 +241,7 @@ public class WorldGenerator : NetworkBehaviour
         {
             try
             {
-                return terrainMap[i][j];
+                return terrainMap[i,j];
             }
             catch (Exception e)
             {
@@ -267,7 +262,7 @@ public class WorldGenerator : NetworkBehaviour
         }
         else
         {
-            return !terrainMap[i][j].IsAccessible;
+            return !terrainMap[i,j].IsAccessible;
         }
     }
 
@@ -288,7 +283,7 @@ public class WorldGenerator : NetworkBehaviour
         var pos = new Vector2Int((int)position.x, (int)position.y);
         var i = pos.x + halfMapSizeX;
         var j = pos.y + halfMapSizeY;
-        terrainMap[i][j] = newProperty;
+        terrainMap[i,j] = newProperty;
     }
 
     private void ReplaceMappedUnit(Vector2 position, TerrainUnitProperty newProperty)

@@ -12,7 +12,7 @@ public class LocalObjectController : MonoBehaviour
     private ILocalObjectPoolingBehaviour[] behaviours;
 
     public string Guid => guid;
-
+#if UNITY_EDITOR
     [ContextMenu("Generate GUID")]
     public void GenerateGUID()
     {
@@ -22,11 +22,12 @@ public class LocalObjectController : MonoBehaviour
         Undo.RecordObject(this, "Generate GUID");
         EditorUtility.SetDirty(this);
     }
+#endif
 
     private void Awake()
     {
         behaviours = GetComponentsInChildren<ILocalObjectPoolingBehaviour>(true);
-        if(guid == "") Debug.LogError("GUID is empty.", gameObject);
+        if (guid == "") Debug.LogError("GUID is empty.", gameObject);
     }
 
     public void LocalSpawn()

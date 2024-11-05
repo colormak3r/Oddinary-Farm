@@ -31,12 +31,13 @@ public class LocalObjectPooling : MonoBehaviour
 
         if (pool.childCount == 0)
         {
-            for (int i = 0; i < 10; i++)
+            var newObj = Instantiate(prefab, pool);
+            newObj.GetComponent<LocalObjectController>().LocalDespawn();
+            newObj.SetActive(false);
+            /*for (int i = 0; i < 10; i++)
             {
-                var newObj = Instantiate(prefab, pool);
-                newObj.GetComponent<LocalObjectController>().LocalDespawn();
-                newObj.SetActive(false);
-            }
+                
+            }*/
         }
 
         var obj = pool.GetChild(0).gameObject;
