@@ -23,6 +23,12 @@ public class TimeManager : NetworkBehaviour
     [Header("Settings")]
     [SerializeField]
     private float timeScale = 1;
+    [SerializeField]
+    private float nightStartTime = 20;
+    public bool IsNight => hour_cached >= nightStartTime || hour_cached < dayStartTime;
+    [SerializeField]
+    private float dayStartTime = 6;
+    public bool IsDay => hour_cached >= dayStartTime && hour_cached < nightStartTime;
 
     [Header("Offset")]
     [SerializeField]
@@ -52,6 +58,10 @@ public class TimeManager : NetworkBehaviour
     public UnityEvent<int> OnDayChanged;
     [HideInInspector]
     public UnityEvent<int> OnHourChanged;
+    [HideInInspector]
+    public UnityEvent OnDayStart;
+    [HideInInspector]
+    public UnityEvent OnNightStart;
 
     private void Start()
     {
@@ -98,6 +108,15 @@ public class TimeManager : NetworkBehaviour
             {
                 hour_cached = timeSpan.Hours;
                 OnHourChanged?.Invoke(hour_cached);
+
+                if (hour_cached == nightStartTime)
+                {
+                    OnNightStart?.Invoke();
+                }
+                else if (hour_cached == dayStartTime)
+                {
+                    OnDayStart?.Invoke();
+                }
             }
         }
     }

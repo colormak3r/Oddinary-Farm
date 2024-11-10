@@ -97,6 +97,7 @@ public class WorldGenerator : NetworkBehaviour
     private bool showGizmos;
     [SerializeField]
     private bool isGenerating;
+    public bool IsGenerating => isGenerating;
 
     private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
 

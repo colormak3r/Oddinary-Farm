@@ -3,16 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EntityStatus : NetworkBehaviour, IDamageable
 {
     [Header("Entity Settings")]
+    [SerializeField]
+    private Hostility hostility;
+    public Hostility Hostility => hostility;
     [SerializeField]
     private uint maxHealth;
     [SerializeField]
     private float iframeDuration = 0.1f;
     [SerializeField]
     private bool isInvincible;
+    [SerializeField]
+    protected GameObject damagedEffectPrefab;
+    [SerializeField]
+    protected GameObject deathEffectPrefab;
+
+    [HideInInspector]
+    public UnityEvent OnDeathOnServer;
+
     [Header("Debugs")]
     [SerializeField]
     private NetworkVariable<uint> CurrentHealth = new NetworkVariable<uint>();
@@ -24,7 +36,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     private void Update()
     {
         if (!IsServer) return;
-        if (Time.time > nextDamagable && ! isInvincible)
+        if (Time.time > nextDamagable && !isInvincible)
             isDamageable = true;
     }
 
@@ -39,7 +51,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         else
         {
             OnEntitySpawnOnClient();
-        }        
+        }
     }
 
     public override void OnNetworkDespawn()
@@ -52,8 +64,10 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     }
 
-    public void GetDamaged(uint damage, DamageType type)
+    public void GetDamaged(uint damage, DamageType type, Hostility hostility)
     {
+        if (Hostility == hostility) return;
+
         GetDamagedServerRpc(damage, type);
     }
 
@@ -78,10 +92,10 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         }
     }
 
-    [Rpc(SendTo.ClientsAndHost)]
+    [Rpc(SendTo.Everyone)]
     private void GetDamagedClientRpc(uint damage, DamageType type)
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
 
         if (CurrentHealthValue > damage)
         {
@@ -91,7 +105,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         {
             OnEntityDeathOnClient();
         }
-        
+
 
     }
 
@@ -103,6 +117,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     protected virtual void OnEntityDamagedOnClient()
     {
         // Damaged effects
+        if (damagedEffectPrefab != null)
+            Instantiate(damagedEffectPrefab, transform.position, Quaternion.identity);
     }
 
     protected virtual void OnEntityDamagedOnServer()
@@ -112,12 +128,15 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntityDeathOnServer()
     {
+        OnDeathOnServer?.Invoke();
+        OnDeathOnServer.RemoveAllListeners();
         NetworkObject.Despawn();
     }
 
     protected virtual void OnEntityDeathOnClient()
     {
-        
+        if (deathEffectPrefab != null)
+            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
     }
 
     protected virtual void OnEntitySpawnOnServer()

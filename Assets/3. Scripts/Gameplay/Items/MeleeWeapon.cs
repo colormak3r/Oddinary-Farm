@@ -28,7 +28,7 @@ public class MeleeWeapon : Item
 
                 if (collider.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    damageable.GetDamaged(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType);
+                    damageable.GetDamaged(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType, meleeWeaponProperty.Hostility);
                 }
 
                 if (damageable.GetCurrentHealth() == 0) continue;
@@ -43,9 +43,9 @@ public class MeleeWeapon : Item
 
     private void OnDrawGizmos()
     {
-        if (!showGizmos) return;
+        if (!showGizmos || meleeWeaponProperty == null) return;
 
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.red; 
         Gizmos.DrawWireSphere(transform.position, meleeWeaponProperty.Range);
     }
 }

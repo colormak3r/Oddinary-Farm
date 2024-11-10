@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7136673842313853326
 Transform:
   m_ObjectHideFlags: 0
@@ -39,7 +39,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 654086174901150818}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -111,7 +111,7 @@ Transform:
   m_GameObject: {fileID: 2136685521100048533}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -190,6 +190,55 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &2855597938857917124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6471460459151983001}
+  - component: {fileID: 5869916052223333132}
+  m_Layer: 11
+  m_Name: Hand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6471460459151983001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2855597938857917124}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2438962268882889384}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5869916052223333132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2855597938857917124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100ed1854e0dcd7418071ec6d60156e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebug: 0
+  showGizmos: 0
+  Property:
+    m_InternalValue: {fileID: 0}
+  meleeWeaponProperty: {fileID: 0}
 --- !u!1 &3034646669894491093
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,7 +326,6 @@ GameObject:
   - component: {fileID: 349391432776453688}
   - component: {fileID: 1713903147799318877}
   - component: {fileID: 1274597906311756651}
-  - component: {fileID: 3404009979996066212}
   - component: {fileID: 5862499223730954318}
   m_Layer: 11
   m_Name: Snail
@@ -302,6 +350,7 @@ Transform:
   - {fileID: 4287736005901102148}
   - {fileID: 7136673842313853326}
   - {fileID: 6969224204153367503}
+  - {fileID: 6471460459151983001}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2471980583601986671
@@ -316,8 +365,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 210217700
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 3128669074
+  InScenePlacedSourceGlobalObjectIdHash: 210217700
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -505,6 +554,7 @@ MonoBehaviour:
   OnDestinationReached:
     m_PersistentCalls:
       m_Calls: []
+  currentStateName: 
   handProperty: {fileID: 11400000, guid: 3e0aa12a44f859341bec5c14da95dbc9, type: 2}
   idleStateChangeCdr:
     min: 3
@@ -521,36 +571,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd1c109a41adeb1429a0f8f387051297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectRange: 5
-  escapeRange: 7
+  detectRange: 10
+  escapeRange: 15
   preyMask:
     serializedVersion: 2
     m_Bits: 512
   showGizmos: 0
   currentPrey: {fileID: 0}
+  distanceToPrey: 0
   OnPreyDetected:
     m_PersistentCalls:
       m_Calls: []
   OnPreyExited:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3404009979996066212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7918673031090584114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 100ed1854e0dcd7418071ec6d60156e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showDebug: 0
-  showGizmos: 0
-  Property:
-    m_InternalValue: {fileID: 0}
-  meleeWeaponProperty: {fileID: 0}
 --- !u!114 &5862499223730954318
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -563,8 +597,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8ea954f2c02bc14fbbccf6c0b8b28b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hostility: 1
   maxHealth: 3
   iframeDuration: 0.1
   isInvincible: 0
+  damagedEffectPrefab: {fileID: 7925314111069725825, guid: ad48d17624524fd4db81acbfb3654719, type: 3}
+  deathEffectPrefab: {fileID: 8974835140030421475, guid: 4144d76cc68cc3845a0b657c8e9b0fc7, type: 3}
   CurrentHealth:
     m_InternalValue: 0

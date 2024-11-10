@@ -34,7 +34,9 @@ public abstract class Animal : NetworkBehaviour
     [HideInInspector]
     public UnityEvent OnDestinationReached;
     [SerializeField]
+    protected string currentStateName;
     protected IBehaviourState currentState;
+
 
     private Coroutine moveCoroutine;
 
@@ -66,7 +68,7 @@ public abstract class Animal : NetworkBehaviour
         networkAnimator = GetComponent<NetworkAnimator>();
         movement = GetComponent<EntityMovement>();
         preyDetector = GetComponent<PreyDetector>();
-        item = GetComponent<Item>();
+        item = GetComponentInChildren<Item>();
     }
 
     private void Update()
@@ -83,6 +85,7 @@ public abstract class Animal : NetworkBehaviour
     {
         currentState?.ExitState();
         currentState = newState;
+        currentStateName = newState.GetType().Name;
         currentState.EnterState();
     }
 

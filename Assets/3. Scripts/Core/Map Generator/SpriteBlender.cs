@@ -1,40 +1,50 @@
+using ColorMak3r.Utility;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class SpriteBlender : MonoBehaviour
 {
-    private static Vector3[] SCAN_POSITION = new Vector3[]
+    private static Vector2[] SCAN_POSITION = new Vector2[]
     {
-        new Vector3(-1,1),
-        new Vector3(0,1),
-        new Vector3(1,1),
-        new Vector3(-1,0),
-        new Vector3(0,0),   // #4
-        new Vector3(1,0),
-        new Vector3(-1,-1),
-        new Vector3(0,-1),
-        new Vector3(1,-1),
+        new Vector2(-1,1),
+        new Vector2(0,1),
+        new Vector2(1,1),
+        new Vector2(-1,0),
+        new Vector2(0,0),   // #4
+        new Vector2(1,0),
+        new Vector2(-1,-1),
+        new Vector2(0,-1),
+        new Vector2(1,-1),
     };
 
     [Header("Settings")]
     [SerializeField]
     private BlendRules rules;
     [SerializeField]
+    private Vector2 offset;
+    [SerializeField]
     private LayerMask blendLayer;
     [SerializeField]
     private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private PolygonCollider2D movementBlocker;
 
-    private PolygonCollider2D collider2D;
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showGizmos;
+    [SerializeField]
+    private bool showDebugs;
+
+    private Vector2 position;
 
     public BlendRules Rules => rules;
 
+    private List<Vector2> scannedPosition = new List<Vector2>();
+
     private void Awake()
     {
-        if (spriteRenderer == null)
-            spriteRenderer = GetComponent<SpriteRenderer>();
-        collider2D = GetComponentInParent<PolygonCollider2D>();
+        position = (Vector2)transform.position + offset;
     }
 
     [ContextMenu("Blend")]
@@ -42,12 +52,15 @@ public class SpriteBlender : MonoBehaviour
     {
         IBool[] neighbors = new IBool[9];
         SpriteBlender[] neigborBlenders = new SpriteBlender[9];
+        if(showGizmos) scannedPosition.Clear();
 
         for (int i = 0; i < SCAN_POSITION.Length; i++)
         {
             if (i == 4) continue;
 
-            var hit = Physics2D.OverlapPoint(transform.position + SCAN_POSITION[i], blendLayer);
+            if (showGizmos) scannedPosition.Add(position + SCAN_POSITION[i]);
+
+            var hit = Physics2D.OverlapPoint(position + SCAN_POSITION[i], blendLayer);
             if (hit)
             {
                 var neighbor = hit.GetComponentInChildren<SpriteBlender>();
@@ -76,31 +89,34 @@ public class SpriteBlender : MonoBehaviour
             }
         }
 
-        /*var builder = "Neighbor Actual:\n";
-        for (int i = 0; i < neighbors.Length; i++)
+        if (showDebugs)
         {
-            builder += neighbors[i].ToSymbol(true) + " ";
-            if (i == 2 || i == 5) builder += "\n";
+            var builder = position + "\nNeighbor Actual:\n";
+            for (int i = 0; i < neighbors.Length; i++)
+            {
+                builder += neighbors[i].ToSymbol(true) + " ";
+                if (i == 2 || i == 5) builder += "\n";
+            }
+            Debug.Log(builder);
         }
-        Debug.Log(builder);*/
 
         // Match and set the new sprite
         spriteRenderer.sprite = rules.GetMatchingSprite(neighbors);
 
         if (spriteRenderer.sprite == null)
         {
-            Debug.Log("Cannot find matching sprite", this);
+            if (showDebugs) Debug.Log("Cannot find matching sprite", this);
         }
         else if (reblend)
         {
             StartCoroutine(DelayBlendNeighbor(neigborBlenders));
         }
-        else if (collider2D)
+        else if (movementBlocker)
         {
             // Reshape the collider
             List<Vector2> physicsShape = new List<Vector2>();
             spriteRenderer.sprite.GetPhysicsShape(0, physicsShape);
-            collider2D.SetPath(0, physicsShape);
+            movementBlocker.SetPath(0, physicsShape);
         }
     }
     private IEnumerator DelayBlendNeighbor(SpriteBlender[] neigborBlenders)
@@ -121,7 +137,7 @@ public class SpriteBlender : MonoBehaviour
         {
             if (i == 4) continue;
 
-            var hit = Physics2D.OverlapPoint(transform.position + SCAN_POSITION[i], blendLayer);
+            var hit = Physics2D.OverlapPoint(position + SCAN_POSITION[i], blendLayer);
             if (hit)
             {
                 var neighbor = hit.GetComponentInChildren<SpriteBlender>();
@@ -129,4 +145,16 @@ public class SpriteBlender : MonoBehaviour
             }
         }
     }
+
+    private void OnDrawGizmos()
+    {
+        if (!showGizmos) return;
+
+        Gizmos.color = Color.red;
+        foreach (var pos in scannedPosition)
+        {
+            Gizmos.DrawSphere(pos, 0.1f);
+        }
+    }
+
 }

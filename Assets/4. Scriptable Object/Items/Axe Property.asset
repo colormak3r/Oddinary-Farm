@@ -23,6 +23,7 @@ MonoBehaviour:
   radius: 1
   damage: 1
   damageType: 2
+  hostility: 0
   knockbackForce: 200
   damageableLayer:
     serializedVersion: 2

@@ -13,6 +13,8 @@ public class StructureStatus : EntityStatus
 
     protected override void OnEntityDeathOnServer()
     {
+        OnDeathOnServer?.Invoke();
+        OnDeathOnServer.RemoveAllListeners();
         structure.Remove();
     }
 }

@@ -19,4 +19,12 @@ MonoBehaviour:
   primaryCdr: 0.25
   secondaryCdr: 0.25
   range: 1
+  price: 1
   radius: 0.1
+  damage: 1
+  damageType: 0
+  hostility: 0
+  knockbackForce: 500
+  damageableLayer:
+    serializedVersion: 2
+    m_Bits: 0

@@ -12,6 +12,7 @@ public class AttackPrimaryState : AnimalState
     public override void EnterState()
     {
         base.EnterState();
+
     }
 
     public override void ExecuteState()
@@ -19,6 +20,8 @@ public class AttackPrimaryState : AnimalState
         base.ExecuteState();
         if (Time.time > nextAction)
         {
+            if(animal.Animator.GetBool("IsBurrowing"))
+                animal.Animator.SetBool("IsBurrowing", false);
             animal.Item.OnPrimaryAction(animal.PreyDetector.CurrentPrey.position);
             nextAction = Time.time + animal.Item.PropertyValue.PrimaryCdr;
             animal.NetworkAnimator.SetTrigger("PrimaryAction");

@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerActions
+public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerActions, IControllable
 {
     private static Vector3 LEFT_DIRECTION = new Vector3(-1, 1, 1);
     private static Vector3 RIGHT_DIRECTION = new Vector3(1, 1, 1);
@@ -11,6 +11,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     [Header("Settings")]
     [SerializeField]
     private bool spriteFacingRight;
+
+    private bool isControllable = true;
 
     private Vector2 lookPosition;
     private Vector2 playerPosition_cached = Vector2.one;
@@ -25,6 +27,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
     public static Vector2 LookPosition;
+
 
     private void Awake()
     {
@@ -91,12 +94,16 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (!isControllable) return;
+
         var direction = context.ReadValue<Vector2>().normalized;
         movement.SetDirection(direction);
     }
 
     public void OnLook(InputAction.CallbackContext context)
     {
+        if (!isControllable) return;
+
         lookPosition = Camera.main.ScreenToWorldPoint(context.ReadValue<Vector2>());
         LookPosition = lookPosition;
         IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;
@@ -104,13 +111,17 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     public void OnDrop(InputAction.CallbackContext context)
     {
+        if (!isControllable) return;
+
         if (context.performed)
         {
-            //playerInventory.DropItem(playerInventory.CurrentHotbarIndex, lookPosition);
+            //inventory.DropItem(inventory.CurrentHotbarIndex, lookPosition);
         }
     }
     public void OnInteract(InputAction.CallbackContext context)
     {
+        if (!isControllable) return;
+
         if (context.performed)
         {
             interaction.Interact();
@@ -119,9 +130,21 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     public void OnMap(InputAction.CallbackContext context)
     {
+        if (!isControllable) return;
+
         if (context.performed)
         {
             MapUI.Main.ToggleShow();
+        }
+    }
+
+    public void SetControllable(bool value)
+    {
+        isControllable = value;
+
+        if (!isControllable)
+        {
+            movement.SetDirection(Vector2.zero);
         }
     }
 
@@ -129,6 +152,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     public void OnPrimary(InputAction.CallbackContext context)
     {
+        if (!isControllable) return;
+
         if (context.performed)
         {
             var currentItem = inventory.CurrentItemValue;
@@ -157,6 +182,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     public void OnSecondary(InputAction.CallbackContext context)
     {
+        if (!isControllable) return;
+
         var currentItem = inventory.CurrentItemValue;
         if (currentItem != null)
         {
@@ -166,7 +193,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     public void OnAlternative(InputAction.CallbackContext context)
     {
-
+        if (!isControllable) return;
     }
 
     #endregion
@@ -175,6 +202,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     public void OnHotbar(InputAction.CallbackContext context)
     {
+        if (!isControllable) return;
+
         if (context.performed)
         {
             var value = int.Parse(context.control.name);
@@ -184,6 +213,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     public void OnHotbarScroll(InputAction.CallbackContext context)
     {
+        if (!isControllable) return;
+
         if (context.performed)
         {
             var value = inventory.CurrentHotbarIndex - (int)Mathf.Sign(context.ReadValue<float>());
@@ -202,10 +233,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         // Hotbar index change locally, stored in PlayerInventory
         inventory.ChangeHotBarIndex(value);
     }
-
-    #endregion
-
-    #region Tools
 
     #endregion
 }

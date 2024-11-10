@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class PlayerInteraction : NetworkBehaviour
+public class PlayerInteraction : NetworkBehaviour, IControllable
 {
     [Header("Pickup Settings")]
     [SerializeField]
@@ -26,6 +26,8 @@ public class PlayerInteraction : NetworkBehaviour
     private IInteractable currentInteractable;
     private DistanceComparer distanceComparer;
 
+    private bool isControllable = true;
+
     private void Start()
     {
         distanceComparer = new DistanceComparer(transform);
@@ -36,10 +38,12 @@ public class PlayerInteraction : NetworkBehaviour
     {
         if (IsOwner) ScanClosetInteractable();
 
+        if (!isControllable) return; 
+
         // Run on the server only
         if (!IsServer) return;
 
-        var hits = Physics2D.OverlapCircleAll(transform.PositionHalfUp(), pickupRadius, itemLayer);
+        var hits = Physics2D.OverlapCircleAll(transform.position, pickupRadius, itemLayer);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)
@@ -89,12 +93,23 @@ public class PlayerInteraction : NetworkBehaviour
         }
     }
 
+    public void SetControllable(bool value)
+    {
+        isControllable = value;
+
+        if (!isControllable && currentInteractable != null)
+        {
+            currentInteractable = null;
+            Selector.main.Show(false);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         if (!showGizmos) return;
 
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.PositionHalfUp(), pickupRadius);
+        Gizmos.DrawWireSphere(transform.position, pickupRadius);
     }
 }
 

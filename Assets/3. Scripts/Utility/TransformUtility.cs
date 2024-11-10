@@ -6,12 +6,8 @@ namespace ColorMak3r.Utility
 {
     public static class TransformUtility
     {
-        private static Vector3 HALF_UP = new Vector3(0, 0.5f, 0);
-
-        public static Vector3 PositionHalfUp(this Transform transform)
-        {
-            return transform.position + HALF_UP;
-        }
+        public static Vector3 HALF_UNIT_Y_V3 = new Vector3(0, 0.5f, 0);
+        public static Vector2 HALF_UNIT_Y_V2 = new Vector2(0, 0.5f);
 
         public static IEnumerator DisplaceCoroutine(this Transform transform, Vector3 originalPos,
         float maxX = 0.1f, float maxY = 0.1f, float duration = 0.05f)

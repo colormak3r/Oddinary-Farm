@@ -128,8 +128,13 @@ public class ItemReplica : NetworkBehaviour
         rbody.AddForce(Random.insideUnitCircle * Random.Range(0, 10), ForceMode2D.Impulse);
     }
 
+    public void Destroy()
+    {
+        DestroyServerRpc();
+    }
+
     [Rpc(SendTo.Server)]
-    public void DestroyRpc()
+    private void DestroyServerRpc()
     {
         Destroy(gameObject);
     }

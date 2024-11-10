@@ -26,6 +26,14 @@ public class Shovel : Item
         if (!IsInRange(position)) return false;
 
         position = position.SnapToGrid();
+
+        var invalid = Physics2D.OverlapPoint(position, shovelProperty.UndiggableLayer);
+        if (invalid)
+        {
+            if (showDebug) Debug.Log($"Not Diggable at {position}, invalid terrain unit", invalid.gameObject);
+            return false;
+        }
+
         var hit = Physics2D.OverlapPoint(position, shovelProperty.DiggableLayer);
         if (hit && hit.TryGetComponent(out TerrainUnit terrainUnit))
         {

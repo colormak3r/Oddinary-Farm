@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Spider : Animal
 {
-    [Header("Snail Settings")]
+    [Header("Spider Settings")]
     [SerializeField]
     private AxeProperty axeProperty;
     [SerializeField]
@@ -57,8 +57,16 @@ public class Spider : Animal
                     var rng = Random.Range(0, totalWeight);
                     if (rng < adjustedWeights[0])
                     {
-                        if (ShowDebug) Debug.Log("Change state to Roaming State");
-                        ChangeState(new RoamingState(this));
+                        if (TimeManager.Main.IsDay)
+                        {
+                            if (ShowDebug) Debug.Log("Change state to Burrowing State");
+                            ChangeState(new BurrowingState(this));
+                        }
+                        else
+                        {
+                            if (ShowDebug) Debug.Log("Change state to Roaming State");
+                            ChangeState(new RoamingState(this));
+                        }                      
                         selectedCounts[0]++;
                     }
                     else

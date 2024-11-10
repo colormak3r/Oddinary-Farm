@@ -6,7 +6,7 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
 {
     [Header("Settings")]
     [SerializeField]
-    private BoxCollider2D collider2D;
+    private BoxCollider2D movementBlocker;
     [SerializeField]
     private SpriteRenderer overlayRenderer;
     [SerializeField]
@@ -28,7 +28,7 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
         baseRenderer.sprite = property.BaseSprite;
         //underlayRenderer.sprite = property.UnderlaySprite;
 
-        collider2D.enabled = !property.IsAccessible;
+        movementBlocker.enabled = !property.IsAccessible;
     }
 
     public void LocalSpawn()
@@ -36,7 +36,7 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
         overlayRenderer.enabled = true;
         baseRenderer.enabled = true;
 
-        collider2D.enabled = true;
+        movementBlocker.enabled = true;
     }
 
     public void LocalDespawn()
@@ -44,6 +44,6 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
         overlayRenderer.enabled = false;
         baseRenderer.enabled = false;
 
-        collider2D.enabled = false;
+        movementBlocker.enabled = false;
     }
 }

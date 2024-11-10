@@ -18,10 +18,13 @@ MonoBehaviour:
   maxStack: 1
   primaryCdr: 2
   secondaryCdr: 0.25
-  range: 1
+  range: 1.5
+  price: 1
+  radius: 0.5
   damage: 1
   damageType: 2
+  hostility: 2
   knockbackForce: 200
   damageableLayer:
     serializedVersion: 2
-    m_Bits: 2147483648
+    m_Bits: 2147485184

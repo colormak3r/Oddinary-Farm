@@ -8,8 +8,17 @@ public enum DamageType
     Slash
 }
 
+[System.Serializable]
+public enum Hostility
+{
+    Friendly,
+    Neutral,
+    Enemy,
+}
+
+
 public interface IDamageable
 {
     public uint GetCurrentHealth();
-    public void GetDamaged(uint damage, DamageType type);
+    public void GetDamaged(uint damage, DamageType type, Hostility hostility);
 }

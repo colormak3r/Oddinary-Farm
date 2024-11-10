@@ -1,5 +1,54 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5179185249232924001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6393804495831758586}
+  - component: {fileID: 2437604844209166044}
+  m_Layer: 11
+  m_Name: Axe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6393804495831758586
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5179185249232924001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3945629672685620183}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2437604844209166044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5179185249232924001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 764ff69df5af2394ba51b3cfb5fa6a0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showDebug: 0
+  showGizmos: 1
+  Property:
+    m_InternalValue: {fileID: 0}
+  meleeWeaponProperty: {fileID: 0}
 --- !u!1001 &1664464937133711743
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18,11 +67,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1274597906311756651, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: escapeRange
-      value: 7
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1274597906311756651, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: huntingTime
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1274597906311756651, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: preyMask.m_Bits
-      value: 2147483648
+      value: 2147485184
       objectReference: {fileID: 0}
     - target: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_LocalPosition.x
@@ -30,7 +83,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_LocalPosition.z
@@ -66,24 +119,40 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 564385764
+      value: 1343188877
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 210217700
+      value: 564385764
       objectReference: {fileID: 0}
     - target: {fileID: 3587442703509697360, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 42b0ea66b61e479448c8a39983c71e4c, type: 2}
+    - target: {fileID: 3587442703509697360, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: m_UpdateMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3972324823726692656, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 1050676098, guid: 91b1c20e78b54f740b242a54e1188a7d, type: 3}
     - target: {fileID: 4287736005901102148, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: hostility
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: deathEffectPrefab
+      value: 
+      objectReference: {fileID: 8292219227775401553, guid: 057a0ccc8b19b3e469e34337dfa6b44e, type: 3}
+    - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: damagedEffectPrefab
+      value: 
+      objectReference: {fileID: 1219960550920258598, guid: 642fe77dad2128649af87c7621d6f14f, type: 3}
     - target: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Name
       value: Spider Variant
@@ -95,16 +164,23 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 1713903147799318877, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
     - {fileID: 3404009979996066212, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4007135450909282502, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+    - {fileID: 2855597938857917124, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6393804495831758586}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       insertIndex: 10
       addedObject: {fileID: 5811680737040740820}
-    - targetCorrespondingSourceObject: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 878560161489402020}
   m_SourcePrefab: {fileID: 100100000, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+--- !u!4 &3945629672685620183 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+  m_PrefabInstance: {fileID: 1664464937133711743}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &8862408004728527693 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
@@ -129,25 +205,9 @@ MonoBehaviour:
   OnDestinationReached:
     m_PersistentCalls:
       m_Calls: []
+  currentStateName: 
   axeProperty: {fileID: 11400000, guid: cd267a9b4d75f83478b4a4406c8eea92, type: 2}
   burrowPreventMoveDuration: 0
   idleStateChangeCdr:
-    min: 3
-    max: 5
---- !u!114 &878560161489402020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8862408004728527693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 764ff69df5af2394ba51b3cfb5fa6a0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showDebug: 0
-  showGizmos: 0
-  Property:
-    m_InternalValue: {fileID: 0}
-  meleeWeaponProperty: {fileID: 0}
+    min: 1
+    max: 2

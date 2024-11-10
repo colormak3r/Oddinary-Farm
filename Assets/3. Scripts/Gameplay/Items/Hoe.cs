@@ -21,31 +21,25 @@ public class Hoe : Item
 
         position = position.SnapToGrid();
 
-        var hits = Physics2D.OverlapPointAll(position, hoeProperty.UnhoeableLayer);
-        if (hits.Length > 0)
+        var invalid = Physics2D.OverlapPoint(position, hoeProperty.UnhoeableLayer);
+        if (invalid)
         {
-            if(showDebug) Debug.Log($"Cannot hoe at {position}, {hits[0].name} is blocking");
+            if(showDebug) Debug.Log($"Cannot hoe at {position}, {invalid.name} is blocking");
             return false;
         }
 
-        hits = Physics2D.OverlapPointAll(position, hoeProperty.HoeableLayer);
-        if (hits.Length > 0)
+        var terrainHit = Physics2D.OverlapPoint(position, hoeProperty.HoeableLayer);
+        if (terrainHit && terrainHit.TryGetComponent<TerrainUnit>(out var terrain))
         {
-            foreach (var hit in hits)
+            if (terrain.Property.IsAccessible)
             {
-                if (hit.TryGetComponent<TerrainUnit>(out var terrain))
-                {
-                    if (terrain.Property.IsAccessible)
-                    {
-                        if (showDebug) Debug.Log($"Hoe success at {position}");
-                        return true;
-                    }
-                    else
-                    {
-                        if (showDebug) Debug.Log($"Cannot hoe at {position}, {terrain.name} is not accessible");
-                        return false;
-                    }
-                }
+                if (showDebug) Debug.Log($"Hoe success at {position}");
+                return true;
+            }
+            else
+            {
+                if (showDebug) Debug.Log($"Cannot hoe at {position}, {terrain.name} is not accessible");
+                return false;
             }
         }
 
@@ -54,7 +48,7 @@ public class Hoe : Item
 
     public override void OnPrimaryAction(Vector2 position)
     {
-        position = position.SnapToGrid();
+        
         HoeRpc(position);
     }
 
@@ -62,7 +56,8 @@ public class Hoe : Item
     [Rpc(SendTo.Server)]
     private void HoeRpc(Vector2 position)
     {
-        GameObject go = Instantiate(AssetManager.Main.FarmPlotPrefab, position, Quaternion.identity);
+        position = position.SnapToGrid() - TransformUtility.HALF_UNIT_Y_V2;
+        GameObject go = Instantiate(AssetManager.Main.FarmPlotPrefab, position , Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
     }
 }

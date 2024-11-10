@@ -66,19 +66,19 @@ public struct ItemRefElement : INetworkSerializable, IEquatable<ItemRefElement>
 // See: https://github.com/Unity-Technologies/com.unity.netcode.gameobjects/issues/2920#issuecomment-2173886545
 [GenerateSerializationForType(typeof(byte))]
 [RequireComponent(typeof(ItemSpawner))]
-public class PlayerInventory : NetworkBehaviour
+public class PlayerInventory : NetworkBehaviour, IControllable
 {
     private static int MAX_INVENTORY_SLOTS = 20;
 
     [Header("Settings")]
     [SerializeField]
     private float inventoryRadius = 1f;
+    [SerializeField]
+    private Vector3 inventoryOffset;
     /*[SerializeField]
     private int inventorySlot = 10;*/
     [SerializeField]
     private LayerMask itemLayer;
-    [SerializeField]
-    private Transform inventoryTransform;
     [SerializeField]
     private HandProperty handProperty;
     [SerializeField]
@@ -101,6 +101,8 @@ public class PlayerInventory : NetworkBehaviour
     private ItemStack[] inventory;
     [SerializeField]
     private Item[] itemRefs;
+
+    private bool isControllable = true;
 
     [SerializeField]
     private NetworkVariable<NetworkBehaviourReference> CurrentItem =
@@ -193,8 +195,10 @@ public class PlayerInventory : NetworkBehaviour
         // Run on client only
         if (!IsOwner) return;
 
+        if (!isControllable) return;
+
         // Automatically try to pick up Items in the close proximity
-        var hits = Physics2D.OverlapCircleAll(transform.PositionHalfUp(), inventoryRadius, itemLayer);
+        var hits = Physics2D.OverlapCircleAll(transform.position + inventoryOffset, inventoryRadius, itemLayer);
         if (hits.Length > 0)
         {
             foreach (var hit in hits)
@@ -205,7 +209,7 @@ public class PlayerInventory : NetworkBehaviour
                     if (AddItemOnClient(itemReplica.CurrentProperty))
                     {
                         itemReplica.gameObject.SetActive(false);
-                        itemReplica.DestroyRpc();   // Todo: Recycle using network object pooling
+                        itemReplica.Destroy();   // Todo: Recycle using network object pooling
                     }
                 }
             }
@@ -216,7 +220,9 @@ public class PlayerInventory : NetworkBehaviour
     {
         if (!IsOwner) return false;
 
-        if (property is CurrencyProperty) 
+        if (showDebug) Debug.Log($"Adding {amount}x {property.Name} on client");
+
+        if (property is CurrencyProperty)
         {
             var value = ((CurrencyProperty)property).Value * amount;
             AddCoinsOnClient(value);
@@ -251,29 +257,6 @@ public class PlayerInventory : NetworkBehaviour
             return false;
         }
     }
-
-    /*public bool CanConsumeItemOnClient(int index, uint amount = 1)
-    {
-        if (!IsOwner) return false;
-        if (amount <= 0) return false;
-        if (index < 0 || index >= inventory.Length) return false;
-
-        var itemStack = inventory[index];
-        var itemProperty = itemStack.Property;
-
-        uint total = 0;
-
-        for (int i = 0; i < inventory.Length; i++)
-        {
-            if (inventory[i].Property == itemProperty)
-            {
-                total += inventory[i].Count;
-                if (total >= amount)
-                    return true;
-            }
-        }
-        return false;
-    }*/
 
     public bool ConsumeItemOnClient(ItemProperty property, uint amount = 1)
     {
@@ -360,12 +343,12 @@ public class PlayerInventory : NetworkBehaviour
         if (!IsServer) return;
 
         // Create a networked Item at this position
-        var item = Instantiate(property.Prefab, inventoryTransform);
-        item.transform.localPosition = Vector3.zero;
+        var item = Instantiate(property.Prefab, transform);
+        item.transform.localPosition = inventoryOffset;
 
         var networkObject = item.GetComponent<NetworkObject>();
         networkObject.Spawn();
-        networkObject.TrySetParent(inventoryTransform, false);
+        networkObject.TrySetParent(transform);
 
         var itemRef = item.GetComponent<Item>();
         itemRef.PropertyValue = property;
@@ -380,8 +363,15 @@ public class PlayerInventory : NetworkBehaviour
         if (itemRef.TryGet(out Item item))
         {
             itemRefs[index] = item;
-            item.transform.localPosition = Vector3.zero;
+            item.transform.localPosition = inventoryOffset;
         }
+    }
+
+    public void DropItem(int index)
+    {
+        if (inventory[index].IsStackEmpty) return;
+
+        // TODO: Drop item on the ground
     }
 
     /// <summary>
@@ -476,6 +466,7 @@ public class PlayerInventory : NetworkBehaviour
     public void AddCoinsOnClient(uint value)
     {
         Coins.Value += value;
+        if (showDebug) Debug.Log($"Added {value} coins to inventory. Total coins = {Coins.Value}");
     }
 
     public void ConsumeCoinsOnClient(ulong value)
@@ -484,11 +475,14 @@ public class PlayerInventory : NetworkBehaviour
         Coins.Value -= value;
     }
 
+    public void SetControllable(bool value)
+    {
+        isControllable = value;
+    }
+
     private void OnDrawGizmos()
     {
         if (!showGizmos) return;
-        if (currentItem == null) return;
-        /*Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, currentItem.PropertyValue.);*/
+
     }
 }

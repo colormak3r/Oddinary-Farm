@@ -1,8 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
+
+public enum HuntingTime
+{
+    Neutral,
+    Day,
+    Night
+}
+
 
 public class PreyDetector : NetworkBehaviour
 {
@@ -12,6 +20,8 @@ public class PreyDetector : NetworkBehaviour
     [SerializeField]
     private float escapeRange = 7f;
     [SerializeField]
+    private HuntingTime huntingTime;
+    [SerializeField]
     private LayerMask preyMask;
 
     [Header("Debugs")]
@@ -19,14 +29,58 @@ public class PreyDetector : NetworkBehaviour
     private bool showGizmos;
     [SerializeField]
     private Transform currentPrey;
+    [SerializeField]
+    private float distanceToPrey;
 
     [HideInInspector]
     public UnityEvent<Transform> OnPreyDetected;
     [HideInInspector]
     public UnityEvent<Transform> OnPreyExited;
 
+    private DistanceComparer distanceComparer;
+
     public Transform CurrentPrey => currentPrey;
-    public float DistanceToPrey => currentPrey ? (transform.position - currentPrey.position).magnitude : float.PositiveInfinity;
+    public float DistanceToPrey
+    {
+        get
+        {
+            distanceToPrey = currentPrey ? (transform.position - currentPrey.position).magnitude : float.PositiveInfinity;
+            return distanceToPrey;
+        }
+    }
+
+    private void Start()
+    {
+        distanceComparer = new DistanceComparer(transform);
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsServer)
+        {
+            TimeManager.Main.OnDayStart.AddListener(HandleOnDayStart);
+            TimeManager.Main.OnDayStart.AddListener(HandleOnNightStart);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (IsServer)
+        {
+            TimeManager.Main.OnDayStart.RemoveListener(HandleOnDayStart);
+            TimeManager.Main.OnDayStart.RemoveListener(HandleOnNightStart);
+        }
+    }
+
+    private void HandleOnNightStart()
+    {
+        if(huntingTime == HuntingTime.Day) currentPrey = null;
+    }
+
+    private void HandleOnDayStart()
+    {
+        if(huntingTime == HuntingTime.Night) currentPrey = null;
+    }
 
     private void Update()
     {
@@ -42,12 +96,18 @@ public class PreyDetector : NetworkBehaviour
     {
         if (currentPrey == null)
         {
-            var preys = ScanForPrey(transform.position);
+            var preys = ScanForPreys(transform.position);
             if (preys.Length <= 0) return;
 
-            currentPrey = ScanForPrey(transform.position)[0];
+            currentPrey = preys[Random.Range(0, preys.Length - 1)];
+            var hit = Physics2D.Raycast(transform.position, currentPrey.position - transform.position, detectRange, preyMask);
+            if (hit.transform != null) currentPrey = hit.transform;
+
             if (currentPrey != null)
             {
+                if(currentPrey.gameObject.TryGetComponent<EntityStatus>(out var entityStatus)){
+                    entityStatus.OnDeathOnServer.AddListener(HandleOnPreyDie);
+                }
                 OnPreyDetected?.Invoke(currentPrey);
             }
         }
@@ -61,15 +121,24 @@ public class PreyDetector : NetworkBehaviour
         }
     }
 
+    private void HandleOnPreyDie()
+    {
+        currentPrey = null;
+    }
+
     /// <summary>
     /// Scans for prey within a specified range from a given position.
     /// </summary>
     /// <param name="position">The position to scan from.</param>
     /// <returns>An array of Transforms representing detected prey.</returns>
-    private Transform[] ScanForPrey(Vector3 position)
+    private Transform[] ScanForPreys(Vector3 position)
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(position, detectRange, preyMask);
-        Transform[] result = new Transform[hits.Length];
+        var detectRange = this.detectRange;
+        if (huntingTime == HuntingTime.Day && TimeManager.Main.IsNight || huntingTime == HuntingTime.Night && TimeManager.Main.IsDay)
+            detectRange = 2;
+
+        var hits = Physics2D.OverlapCircleAll(position, detectRange, preyMask);
+        var result = new Transform[hits.Length];
         for (int i = 0; i < hits.Length; i++)
         {
             result[i] = hits[i].transform;
@@ -82,6 +151,9 @@ public class PreyDetector : NetworkBehaviour
     {
         if (!showGizmos) return;
 
+        var detectRange = this.detectRange;
+        if (huntingTime == HuntingTime.Day && TimeManager.Main.IsNight || huntingTime == HuntingTime.Night && TimeManager.Main.IsDay)
+            detectRange = 2;
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectRange);
         Gizmos.color = Color.blue;

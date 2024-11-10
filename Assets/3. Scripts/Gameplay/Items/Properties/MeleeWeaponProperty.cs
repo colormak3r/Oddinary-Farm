@@ -12,6 +12,8 @@ public class MeleeWeaponProperty : ItemProperty
     [SerializeField]
     private DamageType damageType;
     [SerializeField]
+    private Hostility hostility;
+    [SerializeField]
     private float knockbackForce = 500f;
     [SerializeField]
     private LayerMask damageableLayer;
@@ -19,6 +21,7 @@ public class MeleeWeaponProperty : ItemProperty
     public float Radius => radius;
     public uint Damage => damage;
     public DamageType DamageType => damageType;
+    public Hostility Hostility => hostility;
     public float KnockbackForce => knockbackForce;
     public LayerMask DamageableLayer => damageableLayer;
 }
