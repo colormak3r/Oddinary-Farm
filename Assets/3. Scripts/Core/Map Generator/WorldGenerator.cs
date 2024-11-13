@@ -369,7 +369,7 @@ public class WorldGenerator : NetworkBehaviour
         return candidate;
     }
 
-    public float GetNoise(float x, float y, Vector2 origin, Vector2 dimension,
+    public static float GetNoise(float x, float y, Vector2 origin, Vector2 dimension,
         float scale, int octaves, float persistence, float frequencyBase, float exp)
     {
         float xCoord = origin.x + x / dimension.x * scale;

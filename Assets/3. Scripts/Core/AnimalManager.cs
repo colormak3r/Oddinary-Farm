@@ -9,6 +9,8 @@ public class AnimalManager : NetworkBehaviour
 {
     [Header("Monster Settings")]
     [SerializeField]
+    private bool canSpawn = false;
+    [SerializeField]
     private int spawnHour = 20;
     [SerializeField]
     private int wave = 5;
@@ -44,10 +46,10 @@ public class AnimalManager : NetworkBehaviour
 
     private void OnHourChanged(int hour)
     {
-        Debug.Log("OnHourChanged = " + hour);
         if (hour == spawnHour)
         {
-            StartCoroutine(SpawnMonsterWaves());
+            if (canSpawn)
+                StartCoroutine(SpawnMonsterWaves());
         }
 
         hourchanged = true;
@@ -55,7 +57,6 @@ public class AnimalManager : NetworkBehaviour
 
     private IEnumerator SpawnMonsterWaves()
     {
-        Debug.Log("SpawnMonsterWaves");
         currentWave = 0;
         while (currentWave < wave)
         {

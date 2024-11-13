@@ -19,16 +19,17 @@ public class TimeManager : NetworkBehaviour
     public static int SECONDS_A_DAY = 86400;
     public static int SECONDS_AN_HOUR = 3600;
     public static int SECONDS_A_MINUTE = 60;
+    public static int MINUTES_A_DAY = 1440;
 
     [Header("Settings")]
     [SerializeField]
     private float timeScale = 1;
     [SerializeField]
-    private float nightStartTime = 20;
-    public bool IsNight => hour_cached >= nightStartTime || hour_cached < dayStartTime;
-    [SerializeField]
     private float dayStartTime = 6;
     public bool IsDay => hour_cached >= dayStartTime && hour_cached < nightStartTime;
+    [SerializeField]
+    private float nightStartTime = 20;
+    public bool IsNight => hour_cached >= nightStartTime || hour_cached < dayStartTime;
 
     [Header("Offset")]
     [SerializeField]
@@ -50,9 +51,14 @@ public class TimeManager : NetworkBehaviour
     private int hour_cached = -1;
     private int minute_cached = -1;
 
+    private bool isInitialized = false;
+
     private NetworkManager networkManager;
 
     public TimeSpan CurrentTimeSpan => timeSpan;
+    public int Days => timeSpan.Days;
+    public int Hours => timeSpan.Hours;
+    public bool IsInitialized => isInitialized;
 
     [HideInInspector]
     public UnityEvent<int> OnDayChanged;
@@ -73,50 +79,57 @@ public class TimeManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         networkManager = NetworkManager.Singleton;
+        UpdateTime();
+        isInitialized = true;
+
+        WeatherManager.Main.Initialize();
     }
 
     private void Update()
     {
-        if (networkManager != null)
+        if (!isInitialized) return;
+        UpdateTime();
+    }
+
+    private void UpdateTime()
+    {
+        // Get runtime from the server
+        runTime = (float)networkManager.ServerTime.Time;
+
+        // Get runtime after offset
+        var offsetTime = (runTime +
+            dayOffset * SECONDS_A_DAY / timeScale +
+            hourOffset * SECONDS_AN_HOUR / timeScale +
+            minuteOffset * SECONDS_A_MINUTE / timeScale)
+            * timeScale;
+
+        // Get timeSpan and display it in Day 1 - 12:30 format
+        timeSpan = TimeSpan.FromSeconds(offsetTime);
+        if (timeSpan.Minutes % 10 == 0 && timeSpan.Minutes != minute_cached)
         {
-            // Get runtime from the server
-            runTime = (float)networkManager.ServerTime.Time;
+            timeText.text = $"Day {timeSpan.Days} - " + timeSpan.ToString(@"hh\:mm");
+            minute_cached = timeSpan.Minutes;
+        }
 
-            // Get runtime after offset
-            var offsetTime = (runTime +
-                dayOffset * SECONDS_A_DAY / timeScale +
-                hourOffset * SECONDS_AN_HOUR / timeScale +
-                minuteOffset * SECONDS_A_MINUTE / timeScale)
-                * timeScale;
+        // Trigger corresponding day our hour change events
+        if (timeSpan.Days != day_cached)
+        {
+            day_cached = timeSpan.Days;
+            OnDayChanged?.Invoke(day_cached);
+        }
 
-            // Get timeSpan and display it in Day 1 - 12:30 format
-            timeSpan = TimeSpan.FromSeconds(offsetTime);
-            if (timeSpan.Minutes % 10 == 0 && timeSpan.Minutes != minute_cached)
+        if (timeSpan.Hours != hour_cached)
+        {
+            hour_cached = timeSpan.Hours;
+            OnHourChanged?.Invoke(hour_cached);
+
+            if (hour_cached == nightStartTime)
             {
-                timeText.text = $"Day {timeSpan.Days} - " + timeSpan.ToString(@"hh\:mm");
-                minute_cached = timeSpan.Minutes;
+                OnNightStart?.Invoke();
             }
-
-            // Trigger corresponding day our hour change events
-            if (timeSpan.Days != day_cached)
+            else if (hour_cached == dayStartTime)
             {
-                day_cached = timeSpan.Days;
-                OnDayChanged?.Invoke(day_cached);
-            }
-
-            if (timeSpan.Hours != hour_cached)
-            {
-                hour_cached = timeSpan.Hours;
-                OnHourChanged?.Invoke(hour_cached);
-
-                if (hour_cached == nightStartTime)
-                {
-                    OnNightStart?.Invoke();
-                }
-                else if (hour_cached == dayStartTime)
-                {
-                    OnDayStart?.Invoke();
-                }
+                OnDayStart?.Invoke();
             }
         }
     }
