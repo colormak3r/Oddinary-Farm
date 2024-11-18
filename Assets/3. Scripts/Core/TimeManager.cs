@@ -56,8 +56,9 @@ public class TimeManager : NetworkBehaviour
     private NetworkManager networkManager;
 
     public TimeSpan CurrentTimeSpan => timeSpan;
-    public int Days => timeSpan.Days;
-    public int Hours => timeSpan.Hours;
+    public int CurrentDay => timeSpan.Days;
+    public int CurrentHour => timeSpan.Hours;
+    public float HourDuration => SECONDS_AN_HOUR / timeScale;
     public bool IsInitialized => isInitialized;
 
     [HideInInspector]

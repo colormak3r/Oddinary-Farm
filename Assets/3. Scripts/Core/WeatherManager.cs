@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -16,6 +17,10 @@ public class WeatherManager : NetworkBehaviour
         else
             Destroy(gameObject);
     }
+
+    [Header("Required Components")]
+    [SerializeField]
+    private WeatherUI weatherUI;
 
     [Header("Light Settings")]
     [SerializeField]
@@ -46,15 +51,25 @@ public class WeatherManager : NetworkBehaviour
     private float frequency;
     [SerializeField]
     private float exp;
+
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs;
-
+    [SerializeField]
+    private int offset = 0;
     private bool isInitialized = false;
 
     private bool isRainning = false;
+    private bool isRainning_cached = false;
+    [SerializeField]
     private List<float> weatherData = new List<float>();
 
+    [HideInInspector]
+    public UnityEvent OnRainStarted;
+    [HideInInspector]
+    public UnityEvent OnRainStopped;
+
+    public bool IsRainning => isRainning;
 
     private TimeManager timeManager;
 
@@ -67,6 +82,7 @@ public class WeatherManager : NetworkBehaviour
     {
         var totalHours = (float)timeManager.CurrentTimeSpan.TotalHours;
         var currentHour = timeManager.CurrentTimeSpan.Hours;
+        offset = currentHour;
 
         // Populate data for the current day (24 hours)
         var builder = "";
@@ -77,7 +93,7 @@ public class WeatherManager : NetworkBehaviour
             weatherData.Add(value);
             builder += $"Hour {currentHour + i} = {value}\n";
         }
-        if(showDebugs) Debug.Log(builder);
+        if (showDebugs) Debug.Log(builder);
 
         // Populate data for the next 7 days (168 hours) and calculate daily averages
         int totalDays = 7;
@@ -103,7 +119,14 @@ public class WeatherManager : NetworkBehaviour
             }
         }
 
+        weatherUI.Initialize();
+
         isInitialized = true;
+    }
+
+    public float GetWeatherForcast(int hourAhead)
+    {
+        return weatherData[offset + hourAhead];
     }
 
     private float GetAverageRainChance(int dayIndex)
@@ -138,7 +161,10 @@ public class WeatherManager : NetworkBehaviour
     private void UpdateGlobalLight()
     {
         var timeRatio = (timeManager.CurrentTimeSpan.Minutes + timeManager.CurrentTimeSpan.Hours * 60) / (float)TimeManager.MINUTES_A_DAY;
-        sunlightLight.color = Color.Lerp(sunlightLight.color, rainLightColor.Evaluate(timeRatio), Time.deltaTime * transitionSpeed);
+        if (isRainning)
+            sunlightLight.color = Color.Lerp(sunlightLight.color, rainLightColor.Evaluate(timeRatio), Time.deltaTime * transitionSpeed);
+        else
+            sunlightLight.color = Color.Lerp(sunlightLight.color, dryLightColor.Evaluate(timeRatio), Time.deltaTime * transitionSpeed);
     }
 
     private void UpdateRainValue(int currentHour)
@@ -181,10 +207,20 @@ public class WeatherManager : NetworkBehaviour
         // Update current weather based on the new current hour
         isRainning = weatherData[currentHour] > rainThreshold;
 
-        if (isRainning)
-            rainParticleSystem.Play();
-        else
-            rainParticleSystem?.Stop();
+        if (isRainning != isRainning_cached)
+        {
+            isRainning_cached = isRainning;
+            if (isRainning)
+            {
+                OnRainStarted?.Invoke();
+                rainParticleSystem.Play();
+            }
+            else
+            {
+                OnRainStopped?.Invoke();
+                rainParticleSystem?.Stop();
+            }
+        }
     }
 }
 

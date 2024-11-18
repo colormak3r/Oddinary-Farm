@@ -1,7 +1,9 @@
+using ColorMak3r.Utility;
 using System;
 using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class Plant : NetworkBehaviour, IWaterable, IHarvestable
@@ -22,6 +24,7 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
 
     private SpriteRenderer spriteRenderer;
     private LootGenerator lootGenerator;
+    private FarmPlot farmPlot;
 
     public bool IsHarvestable() => Property.Value.Stages[CurrentStage.Value].isHarvestStage;
 
@@ -36,34 +39,43 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
         HandlePropertyChanged(Property.Value, Property.Value);
         Property.OnValueChanged += HandlePropertyChanged;
         CurrentStage.OnValueChanged += HandleStageChanged;
+
+        if (IsServer)
+        {
+            WeatherManager.Main.OnRainStarted.AddListener(HandleRainStarted);
+        }
     }
 
     public override void OnNetworkDespawn()
     {
         Property.OnValueChanged -= HandlePropertyChanged;
+
+        if (IsServer)
+        {
+            WeatherManager.Main.OnRainStarted.RemoveListener(HandleRainStarted);
+        }
     }
 
     private void HandlePropertyChanged(PlantProperty previous, PlantProperty current)
     {
-        HandlePropertyChanged(current);
-    }
-
-    private void HandlePropertyChanged(PlantProperty property)
-    {
-        HandleStageChanged(CurrentStage.Value);
+        HandleStageChanged(0, CurrentStage.Value);
     }
 
     private void HandleStageChanged(int previous, int current)
     {
-        HandleStageChanged(current);
-    }
-
-    private void HandleStageChanged(int stage)
-    {
         if (Property == null || Property.Value == null) return;
 
-        spriteRenderer.sprite = Property.Value.Stages[stage].sprite;
+        spriteRenderer.sprite = Property.Value.Stages[current].sprite;
+
+        if (IsServer)
+            if (WeatherManager.Main.IsRainning) HandleRainStarted();
     }
+
+    private void HandleRainStarted()
+    {
+        GetWateredRpc();
+    }
+
 
     [ContextMenu("Mock Property Change")]
     public void MockPropertyChange()
@@ -77,9 +89,16 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
         Property.Value = property;
         lootGenerator.Initialize(property.LootTable);
         CurrentStage.Value = 0;
+
+        var farmPlotHit = Physics2D.OverlapPoint(((Vector2)transform.position).SnapToGrid(), farmPlotLayer);
+        if (farmPlotHit != null)
+        {
+            farmPlot = farmPlotHit.GetComponent<FarmPlot>();
+            farmPlot.GetDriedOnServer();
+        }        
     }
 
-    public void GetWatered(float duration)
+    public void GetWatered()
     {
         GetWateredRpc();
     }
@@ -104,6 +123,16 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
         CurrentStage.Value++;
 
         isWatered.Value = false;
+
+        if (WeatherManager.Main.IsRainning)
+        {
+            GetWateredRpc();
+        }
+        else
+        {
+            if(!IsHarvestable())
+            farmPlot.GetDriedOnServer();
+        }
     }
 
     public void GetHarvested()
@@ -115,7 +144,9 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
     private void GetHarvestedRpc()
     {
         if (!IsHarvestable()) return;
-                
+
+        if (IsServer) farmPlot.GetDriedOnServer();
+
         lootGenerator.DropLoot();
         Destroy(gameObject);
     }

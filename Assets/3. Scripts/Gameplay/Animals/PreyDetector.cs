@@ -63,7 +63,7 @@ public class PreyDetector : NetworkBehaviour
         }
     }
 
-    private void OnDisable()
+    public override void OnNetworkDespawn()
     {
         if (IsServer)
         {

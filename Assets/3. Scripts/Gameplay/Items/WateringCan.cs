@@ -35,7 +35,7 @@ public class WateringCan : Item
             {
                 if (hit.TryGetComponent<IWaterable>(out var waterable))
                 {
-                    waterable.GetWatered(3f);
+                    waterable.GetWatered();
                 }
             }
         }

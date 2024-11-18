@@ -9,7 +9,7 @@ namespace ColorMak3r.Utility
         public static Vector3 HALF_UNIT_Y_V3 = new Vector3(0, 0.5f, 0);
         public static Vector2 HALF_UNIT_Y_V2 = new Vector2(0, 0.5f);
 
-        public static IEnumerator DisplaceCoroutine(this Transform transform, Vector3 originalPos,
+        public static IEnumerator ShakeCoroutine(this Transform transform, Vector3 originalPos,
         float maxX = 0.1f, float maxY = 0.1f, float duration = 0.05f)
         {
             transform.position = transform.position + new Vector3(Random.value > 0.5f ? -maxX : maxX, Random.value > 0.5f ? -maxY : maxY);
@@ -32,6 +32,42 @@ namespace ColorMak3r.Utility
             }
 
             transform.position = end;
+        }
+
+        /// <summary>
+        /// Smoothly moves a Transform from a start position to an end position over a specified duration.
+        /// </summary>
+        /// <param name="transform">The Transform to move.</param>
+        /// <param name="start">Starting position.</param>
+        /// <param name="end">Ending position.</param>
+        /// <param name="duration">Duration of the movement in seconds.</param>
+        /// <returns>Coroutine IEnumerator.</returns>
+        public static IEnumerator LerpMoveCoroutine(this Transform transform, Vector2 start, Vector2 end, float duration = 0.5f)
+        {
+            // Set the initial position
+            transform.position = new Vector3(start.x, start.y, transform.position.z);
+
+            float elapsedTime = 0f;
+
+            // Continue until the elapsed time exceeds the duration
+            while (elapsedTime < duration)
+            {
+                // Calculate the interpolation factor
+                float t = elapsedTime / duration;
+
+                // Interpolate the position
+                Vector2 newPosition = Vector2.Lerp(start, end, t);
+                transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
+
+                // Increment the elapsed time
+                elapsedTime += Time.deltaTime;
+
+                // Wait for the next frame
+                yield return null;
+            }
+
+            // Ensure the final position is set
+            transform.position = new Vector3(end.x, end.y, transform.position.z);
         }
 
         public static IEnumerator RotateCoroutine(this Transform transform, int rotation, float duration = 0.5f)

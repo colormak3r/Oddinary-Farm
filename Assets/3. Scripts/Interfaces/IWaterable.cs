@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IWaterable
 {
-    public void GetWatered(float duration);
+    public void GetWatered();
 }
