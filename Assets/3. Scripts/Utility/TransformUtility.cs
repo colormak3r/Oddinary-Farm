@@ -63,7 +63,7 @@ namespace ColorMak3r.Utility
                 elapsedTime += Time.deltaTime;
 
                 // Wait for the next frame
-                yield return null;
+                yield return new WaitForFixedUpdate();
             }
 
             // Ensure the final position is set

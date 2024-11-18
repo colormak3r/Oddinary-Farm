@@ -10,6 +10,23 @@ public class WeatherManager : NetworkBehaviour
 {
     public static WeatherManager Main;
 
+    public static int TOTAL_DAY = 7;
+    public static int HOURS_PER_DAY = 24;
+
+    [System.Serializable]
+    private struct WeatherData
+    {
+        public int time;
+        public float rainChance;
+
+        public WeatherData(int time, float rainChance)
+        {
+            this.time = time;
+            this.rainChance = rainChance;
+        }
+    }
+
+
     private void Awake()
     {
         if (Main == null)
@@ -55,14 +72,12 @@ public class WeatherManager : NetworkBehaviour
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs;
-    [SerializeField]
-    private int offset = 0;
+
     private bool isInitialized = false;
 
     private bool isRainning = false;
     private bool isRainning_cached = false;
-    [SerializeField]
-    private List<float> weatherData = new List<float>();
+    private List<WeatherData> weatherData = new List<WeatherData>();
 
     [HideInInspector]
     public UnityEvent OnRainStarted;
@@ -82,51 +97,32 @@ public class WeatherManager : NetworkBehaviour
     {
         var totalHours = (float)timeManager.CurrentTimeSpan.TotalHours;
         var currentHour = timeManager.CurrentTimeSpan.Hours;
-        offset = currentHour;
 
-        // Populate data for the current day (24 hours)
         var builder = "";
-        for (int i = -currentHour; i < 24 - currentHour; i++)
+        for (int i = -currentHour; i < 24 - currentHour + HOURS_PER_DAY * TOTAL_DAY; i++)
         {
-            var value = (float)System.Math.Round(WorldGenerator.GetNoise(0, totalHours + i,
-                origin, dimension, scale, octaves, persistence, frequency, exp), 2);
-            weatherData.Add(value);
-            builder += $"Hour {currentHour + i} = {value}\n";
+            var value = GetWeatherData(totalHours + i);
+            weatherData.Add(new WeatherData(currentHour + i, value));
+            builder += $"Hour {(currentHour + i) %24} = {value}\n";
         }
         if (showDebugs) Debug.Log(builder);
-
-        // Populate data for the next 7 days (168 hours) and calculate daily averages
-        int totalDays = 7;
-        int hoursPerDay = 24;
-        var count = 0;
-        var day = 1; // Starting day count from 1 for readability
-        var sum = 0f;
-
-        for (int i = 24 - currentHour; i < 24 - currentHour + hoursPerDay * totalDays; i++)
-        {
-            var value = (float)System.Math.Round(WorldGenerator.GetNoise(0, totalHours + i,
-                origin, dimension, scale, octaves, persistence, frequency, exp), 2);
-            weatherData.Add(value);
-            sum += value;
-            count++;
-
-            if (count == hoursPerDay)
-            {
-                if (showDebugs) Debug.Log($"Day {day} average = {sum / hoursPerDay}");
-                count = 0;
-                sum = 0;
-                day++;
-            }
-        }
 
         weatherUI.Initialize();
 
         isInitialized = true;
     }
 
+    private float GetWeatherData(float value)
+    {
+        return (float)System.Math.Round(WorldGenerator.GetNoise(0, value,
+                origin, dimension, scale, octaves, persistence, frequency, exp), 2);
+    }
+
     public float GetWeatherForcast(int hourAhead)
     {
-        return weatherData[offset + hourAhead];
+        var currentHour = timeManager.CurrentTimeSpan.Hours;
+        if (showDebugs) Debug.Log($"Forecast {weatherData[currentHour + hourAhead].time} = {weatherData[currentHour + hourAhead].rainChance}");
+        return weatherData[currentHour + hourAhead].rainChance;
     }
 
     private float GetAverageRainChance(int dayIndex)
@@ -138,7 +134,7 @@ public class WeatherManager : NetworkBehaviour
         var sum = 0f;
         for (int i = dayIndex; i < dayIndex + range; i++)
         {
-            sum += weatherData[i];
+            sum += weatherData[i].rainChance;
         }
         return sum / range;
     }
@@ -173,39 +169,27 @@ public class WeatherManager : NetworkBehaviour
         if (currentHour == 0)
         {
             var totalHours = (float)timeManager.CurrentTimeSpan.TotalHours;
-            var sum = 0f;
             for (int i = 0; i < 24; i++)
             {
                 weatherData.RemoveAt(0);
-                var value = (float)System.Math.Round(WorldGenerator.GetNoise(0, 7 * 24 + totalHours + i,
-                origin, dimension, scale, octaves, persistence, frequency, exp), 2);
-                weatherData.Add(value);
-                sum += value;
+                var value = GetWeatherData(HOURS_PER_DAY * TOTAL_DAY + totalHours + i);
+                weatherData.Add(new WeatherData(i, value));
             }
 
             if (showDebugs)
             {
                 var builder = "";
-                sum = 0f;
-                for (int i = -currentHour; i < 24 - currentHour; i++)
+                for (int i = 0; i < weatherData.Count; i++)
                 {
-                    var value = (float)System.Math.Round(WorldGenerator.GetNoise(0, totalHours + i,
-                        origin, dimension, scale, octaves, persistence, frequency, exp), 2);
-                    sum += value;
-                    builder += $"Hour {currentHour + i} = {value}\n";
+                    builder += $"Hour {currentHour + i} = {weatherData[i].rainChance}\n";
                 }
                 Debug.Log(builder);
-                Debug.Log($"Today average = {sum / 24}");
             }
-        }
-        if (showDebugs)
-        {
-            if (currentHour % 4 == 0)
-                Debug.Log($"Hour {currentHour} = {weatherData[currentHour]}");
         }
 
         // Update current weather based on the new current hour
-        isRainning = weatherData[currentHour] > rainThreshold;
+        isRainning = weatherData[currentHour].rainChance >= rainThreshold;
+        if (showDebugs) Debug.Log($"Hour {currentHour} = {weatherData[currentHour].rainChance} - Rainning: {isRainning}");
 
         if (isRainning != isRainning_cached)
         {
