@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae510f77fbe60324cbaae35dc50522c5, type: 3}
+  m_Name: Corn LootTable
+  m_EditorClassIdentifier: 
+  Table:
+  - item: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+    probability: 1
+    minMaxCount:
+      min: 3
+      max: 5
+  - item: {fileID: 11400000, guid: 76d2c63355af9a245b265f0bf2a6667c, type: 2}
+    probability: 1
+    minMaxCount:
+      min: 3
+      max: 5

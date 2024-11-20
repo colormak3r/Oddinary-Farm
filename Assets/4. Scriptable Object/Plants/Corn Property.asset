@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63517db498b643c42b0decdd941ba821, type: 3}
+  m_Name: Corn Property
+  m_EditorClassIdentifier: 
+  stages:
+  - sprite: {fileID: 957528551, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
+    duration: 3
+    isHarvestStage: 0
+    stageIncrement: 1
+  - sprite: {fileID: 94427730, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
+    duration: 3
+    isHarvestStage: 0
+    stageIncrement: 1
+  - sprite: {fileID: -397994332, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
+    duration: 3
+    isHarvestStage: 0
+    stageIncrement: 1
+  - sprite: {fileID: 1202802903, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
+    duration: 3
+    isHarvestStage: 0
+    stageIncrement: 1
+  - sprite: {fileID: 2017731977, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
+    duration: 3
+    isHarvestStage: 0
+    stageIncrement: 1
+  - sprite: {fileID: -1100818058, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
+    duration: 3
+    isHarvestStage: 1
+    stageIncrement: 0
+  lootTable: {fileID: 11400000, guid: d2126c561ac7c0e4b8e8af0947367830, type: 2}

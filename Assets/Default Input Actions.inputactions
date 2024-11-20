@@ -54,7 +54,7 @@
                     "name": "Alternative",
                     "type": "Button",
                     "id": "9ff8bec7-55df-48b2-940a-b6184314f85e",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -90,6 +90,15 @@
                     "name": "Map",
                     "type": "Button",
                     "id": "883819f5-f20e-41ed-8329-bfc5e5e23936",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "af1f4d91-bde9-4c57-a4ff-7cbc4a10a54f",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -347,6 +356,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Map",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b4b9c4f6-efe7-4200-8d7c-e80edad6acd4",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

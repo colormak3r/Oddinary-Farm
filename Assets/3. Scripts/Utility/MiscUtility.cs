@@ -9,15 +9,54 @@ namespace ColorMak3r.Utility
 {
     public static class Helper
     {
-        public static Vector2 SnapToGrid(this Vector2 position, int size = 1)
+        /// <summary>
+        /// Snaps the given position to a grid based on the specified size.
+        /// </summary>
+        /// <param name="position">The original position to be snapped.</param>
+        /// <param name="size">The grid size to snap to. Defaults to 1.</param>
+        /// <param name="rigid">
+        /// If true, the position will be snapped rigidly to the nearest multiple of the grid size.
+        /// If false, the position will be snapped to the nearest integer values or adjusted based on specific rules for size 2.
+        /// Defaults to false.
+        /// </param>
+        /// <returns>A new Vector2 representing the snapped position.</returns>
+        public static Vector2 SnapToGrid(this Vector2 position, int size = 1, bool rigid = false)
         {
-            if (size == 0)
-                throw new ArgumentException("Grid size cannot be zero.", nameof(size));
+            // Special handling when grid size is 2
+            if (size % 2 == 0)
+            {
+                // Round the x and y positions to the nearest integer
+                var snapX = Mathf.RoundToInt(position.x);
+                var snapY = Mathf.RoundToInt(position.y);
 
-            return new Vector2(
-                size * Mathf.RoundToInt(position.x / size),
-                size * Mathf.RoundToInt(position.y / size));
+                // Determine the offset for x based on whether the original position is less than the snapped value
+                var offsetX = position.x < snapX ? -0.5f : 0.5f;
+
+                // Determine the offset for y based on whether the original position is less than the snapped value
+                var offsetY = position.y < snapY ? -0.5f : 0.5f;
+
+                // Return the new snapped position with the calculated offsets
+                return new Vector2(snapX + offsetX, snapY + offsetY);
+            }
+            else
+            {
+                if (rigid)
+                {
+                    // If rigid snapping is enabled, snap to the nearest multiple of the grid size
+                    return new Vector2(
+                        size * Mathf.RoundToInt(position.x / size),
+                        size * Mathf.RoundToInt(position.y / size));
+                }
+                else
+                {
+                    // If rigid snapping is not enabled, simply round the position to the nearest integer
+                    return new Vector2(
+                        Mathf.RoundToInt(position.x),
+                        Mathf.RoundToInt(position.y));
+                }
+            }
         }
+
 
         public static List<T> Shuffle<T>(this List<T> list)
         {
@@ -76,7 +115,7 @@ namespace ColorMak3r.Utility
                 Debug.Log("Input must be a non-negative float.");
                 return x;
             }
-                
+
 
             float exponent = Mathf.Ceil(Mathf.Log10(x));
             return Mathf.Pow(10f, exponent);
@@ -97,7 +136,7 @@ namespace ColorMak3r.Utility
             int exponent = (int)Math.Ceiling(Math.Log10(x));
             return (int)Math.Pow(10, exponent);
         }
-        
+
 
         #region Color Utility
         public static Color SetAlpha(this Color rgbColor, float alpha)

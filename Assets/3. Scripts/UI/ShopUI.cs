@@ -68,7 +68,7 @@ public class ShopUI : UIBehaviour
         foreach (var entry in shopInventory.ItemProperties)
         {
             var shopButton = Instantiate(shopButtonPrefab, contentContainer);
-            shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, 0, 0);
+            shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, 1f, 0, 0);
         }
     }
 
@@ -89,7 +89,7 @@ public class ShopUI : UIBehaviour
             if (!entry.IsStackEmpty)
             {
                 var shopButton = Instantiate(shopButtonPrefab, contentContainer);
-                shopButton.GetComponent<ShopButton>().SetShopEntry(entry.Property, this, shopMode, index, entry.Count);
+                shopButton.GetComponent<ShopButton>().SetShopEntry(entry.Property, this, shopMode, shopInventory.PenaltyMultiplier, index, entry.Count);
             }
             index++;
         }
@@ -120,10 +120,6 @@ public class ShopUI : UIBehaviour
 
         StartCoroutine(ShowCoroutine());
     }
-
-
-
-
 
     public void CloseShop()
     {
@@ -171,7 +167,8 @@ public class ShopUI : UIBehaviour
         else
         {
             playerInventory.ConsumeItemOnClient(index);
-            playerInventory.AddCoinsOnClient(itemProperty.Price);
+            var value = (uint)Mathf.CeilToInt((float)itemProperty.Price * shopInventory.PenaltyMultiplier);
+            playerInventory.AddCoinsOnClient(value);
 
             button.UpdateEntry(playerInventory.Inventory[index].Count);
 

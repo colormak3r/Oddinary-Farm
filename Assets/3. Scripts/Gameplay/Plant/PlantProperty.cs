@@ -9,10 +9,10 @@ public struct PlantStage
     public Sprite sprite;
     public float duration;
     public bool isHarvestStage;
-    public int nextStage;
+    public int stageIncrement;
 }
 
-[CreateAssetMenu(fileName = " Property", menuName = "Scriptable Objects/Plant/Plant(Test Only)")]
+[CreateAssetMenu(fileName = " Property", menuName = "Scriptable Objects/Plant")]
 public class PlantProperty : ScriptableObject, IEquatable<PlantProperty>
 {
     [SerializeField]

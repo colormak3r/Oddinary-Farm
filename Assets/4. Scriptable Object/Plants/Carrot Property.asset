@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63517db498b643c42b0decdd941ba821, type: 3}
-  m_Name: Cabbage Property
+  m_Name: Carrot Property
   m_EditorClassIdentifier: 
   stages:
-  - sprite: {fileID: 1155793255, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
-    duration: 1
+  - sprite: {fileID: -1045316009, guid: 7cd5c6b0e7452cb488e9871dbb777ab3, type: 3}
+    duration: 2
     isHarvestStage: 0
     stageIncrement: 1
-  - sprite: {fileID: 1345531618, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
-    duration: 1
+  - sprite: {fileID: -2014821492, guid: 7cd5c6b0e7452cb488e9871dbb777ab3, type: 3}
+    duration: 2
     isHarvestStage: 0
     stageIncrement: 1
-  - sprite: {fileID: 1471501572, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
-    duration: 1
+  - sprite: {fileID: -1656897597, guid: 7cd5c6b0e7452cb488e9871dbb777ab3, type: 3}
+    duration: 2
     isHarvestStage: 0
     stageIncrement: 1
-  - sprite: {fileID: -435341045, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
-    duration: 1
+  - sprite: {fileID: 538056519, guid: 7cd5c6b0e7452cb488e9871dbb777ab3, type: 3}
+    duration: 2
     isHarvestStage: 1
     stageIncrement: 0
-  lootTable: {fileID: 11400000, guid: 9713338d69df681458c236f6e3a827f9, type: 2}
+  lootTable: {fileID: 11400000, guid: 45c8f01df45ec1141b3121328c99594f, type: 2}

@@ -11,21 +11,31 @@ public class FarmPlot : NetworkBehaviour, IWaterable
     [Header("Settings")]
     [SerializeField]
     private float duration = 50f;
+    [SerializeField]
+    private Sprite singleSprite;
+    [SerializeField]
+    private Sprite multiSprite;
 
+    [Header("Debugs")]
     [SerializeField]
     private NetworkVariable<bool> IsWatered;
+    [SerializeField]
+    private NetworkVariable<Vector2> Size;
 
     private SpriteRenderer spriteRenderer;
+    private BoxCollider2D interactionCollider;
 
     private void Awake()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        interactionCollider = GetComponent<BoxCollider2D>();
     }
 
     public override void OnNetworkSpawn()
     {
         HandleIsWateredChanged(IsWatered.Value, IsWatered.Value);
         IsWatered.OnValueChanged += HandleIsWateredChanged;
+        Size.OnValueChanged += HandleSizeChanged;
 
         if (IsServer)
         {
@@ -35,19 +45,10 @@ public class FarmPlot : NetworkBehaviour, IWaterable
         }
     }
 
-    private void HandleRainStarted()
-    {
-        GetWateredRpc();
-    }
-
-    private void HandleRainStopped()
-    {
-        GetWateredRpc();
-    }
-
     public override void OnNetworkDespawn()
     {
         IsWatered.OnValueChanged -= HandleIsWateredChanged;
+        Size.OnValueChanged -= HandleSizeChanged;
 
         if (IsServer)
         {
@@ -62,9 +63,34 @@ public class FarmPlot : NetworkBehaviour, IWaterable
         spriteRenderer.color = new Color(colorValue, colorValue, colorValue);
     }
 
+    private void HandleSizeChanged(Vector2 previousValue, Vector2 newValue)
+    {
+        spriteRenderer.sprite = newValue == Vector2.one ? singleSprite : multiSprite;
+        spriteRenderer.size = newValue;
+        interactionCollider.size = newValue;
+        interactionCollider.offset = newValue == Vector2.one ? TransformUtility.HALF_UNIT_Y_V2 : Vector2.zero;
+    }
+
+    private void HandleRainStarted()
+    {
+        GetWateredRpc();
+    }
+
+    private void HandleRainStopped()
+    {
+        GetWateredRpc();
+    }
+
     public void GetWatered()
     {
         GetWateredRpc();
+    }
+
+    public void ChangeSizeOnServer(Vector2 value)
+    {
+        if (!IsServer) return;
+
+        Size.Value = value;
     }
 
     public void GetDriedOnServer()

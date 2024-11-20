@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerActions, IControllable
 {
@@ -148,6 +149,16 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         }
     }
 
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if (!isControllable) return;
+
+        if (context.performed)
+        {
+            if(ShopUI.Main.IsShowing) ShopUI.Main.CloseShop();
+        }
+    }
+
     #region Player Action
 
     public void OnPrimary(InputAction.CallbackContext context)
@@ -183,17 +194,26 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
     public void OnSecondary(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
-
-        var currentItem = inventory.CurrentItemValue;
-        if (currentItem != null)
+        if (context.performed)
         {
-            currentItem.OnSecondaryAction(lookPosition);
+            var currentItem = inventory.CurrentItemValue;
+            if (currentItem != null)
+            {
+                currentItem.OnSecondaryAction(lookPosition);
+            }
         }
     }
 
     public void OnAlternative(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
+        if (context.performed)
+        {
+            var currentItem = inventory.CurrentItemValue;
+            {
+                currentItem.OnAlternativeAction(lookPosition);
+            }
+        }
     }
 
     #endregion

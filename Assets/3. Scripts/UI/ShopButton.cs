@@ -20,14 +20,15 @@ public class ShopButton : MonoBehaviour
 
     private ItemProperty itemProperty;
 
-    public void SetShopEntry(ItemProperty itemProperty, ShopUI shopUI, ShopMode shopMode, int index, uint amount)
+    public void SetShopEntry(ItemProperty itemProperty, ShopUI shopUI, ShopMode shopMode, float multiplier, int index, uint amount)
     {
         this.itemProperty = itemProperty;
 
         displayImage.sprite = itemProperty.Sprite;
         nameText.text = itemProperty.Name;
+        var value = (uint)Mathf.Max(Mathf.CeilToInt(itemProperty.Price * multiplier), 1);
         priceText.text = (shopMode == ShopMode.Buy ? "<color=#a53030>" : " <color=#75a743>")
-            + (shopMode == ShopMode.Buy ? "-" : "+") + "$" + itemProperty.Price;
+            + (shopMode == ShopMode.Buy ? "-" : "+") + "$" + value;
         amountText.text = amount == 0 ? "" : "x" + amount;
 
         button.onClick.AddListener(() => shopUI.HandleOnButtonClick(itemProperty, this, index));

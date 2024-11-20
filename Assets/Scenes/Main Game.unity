@@ -6797,10 +6797,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2a5292972f86c744b27fb8e41835ae2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeScale: 1000
+  timeScale: 96
   dayStartTime: 6
   nightStartTime: 20
-  dayOffset: 2
+  dayOffset: 1
   hourOffset: 6
   minuteOffset: 0
   timeText: {fileID: 670024580}

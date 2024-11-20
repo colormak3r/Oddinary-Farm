@@ -123,7 +123,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Corn
     originalName: 
-    pivot: {x: 0.5652174, y: -0.032258064}
+    pivot: {x: 0.5652174, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -131,7 +131,7 @@ ScriptedImporter:
       x: 4
       y: 4
       width: 92
-      height: 31
+      height: 30
     spriteID: fd3e16f44f1887741b480f35814f117e
     spriteBone: []
     spriteOutline: []
@@ -155,9 +155,9 @@ ScriptedImporter:
       additiveSortOrder: 0
       cellRect:
         x: 4
-        y: 1
+        y: 0
         width: 92
-        height: 31
+        height: 30
       spriteId: fd3e16f44f1887741b480f35814f117e
     linkedCells: []
     parentIndex: -1

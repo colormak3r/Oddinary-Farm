@@ -148,7 +148,7 @@ public class WorldGenerator : NetworkBehaviour
     {
         position = position.SnapToGrid();
 
-        var closetChunkPosition = position.SnapToGrid(chunkSize);
+        var closetChunkPosition = position.SnapToGrid(chunkSize, true);
         if (closetChunkPosition_cached != closetChunkPosition)
             closetChunkPosition_cached = closetChunkPosition;
         else
@@ -234,7 +234,7 @@ public class WorldGenerator : NetworkBehaviour
         }
 
         // Remove the identified chunks
-        var coroutines = new List<Coroutine>();        
+        var coroutines = new List<Coroutine>();
         foreach (var pos in positionsToRemove)
         {
             var chunk = positionToChunk[pos];
@@ -255,7 +255,7 @@ public class WorldGenerator : NetworkBehaviour
             localObjectPooling.Despawn(terrainUnit);
             yield return null;
         }
-        
+
         positionToChunk.Remove(chunk.position);
         Destroy(chunk.transform.gameObject);
     }
@@ -318,7 +318,7 @@ public class WorldGenerator : NetworkBehaviour
 
     private void ReplaceMappedUnit(Vector2 position, TerrainUnitProperty newProperty)
     {
-        var closetChunkPosition = position.SnapToGrid(chunkSize);
+        var closetChunkPosition = position.SnapToGrid(chunkSize, true);
 
         if (!positionToChunk.ContainsKey(closetChunkPosition)) return;
         var chunk = positionToChunk[closetChunkPosition];
@@ -431,10 +431,4 @@ public class WorldGenerator : NetworkBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(PlayerController.LookPosition.SnapToGrid(), Vector3.one);
     }
-
-    /*private void OnGUI()
-    {
-        if (chunkSize % 2 == 0)
-            chunkSize++;
-    }*/
 }
