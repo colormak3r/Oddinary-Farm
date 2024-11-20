@@ -9,9 +9,11 @@ public class LocalObjectController : MonoBehaviour
     [SerializeField]
     private string guid;
 
+    private Transform pool;
     private ILocalObjectPoolingBehaviour[] behaviours;
 
     public string Guid => guid;
+    public Transform Pool => pool;
 #if UNITY_EDITOR
     [ContextMenu("Generate GUID")]
     public void GenerateGUID()
@@ -30,12 +32,13 @@ public class LocalObjectController : MonoBehaviour
         if (guid == "") Debug.LogError("GUID is empty.", gameObject);
     }
 
-    public void LocalSpawn()
+    public void LocalSpawn(Transform pool)
     {
         foreach (var localObjectPoolingBehaviour in behaviours)
         {
             localObjectPoolingBehaviour.LocalSpawn();
         }
+        this.pool = pool;
     }
 
     public void LocalDespawn()

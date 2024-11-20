@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Unity.Netcode;
+using static UnityEditor.PlayerSettings;
 
 
 public class WorldGenerator : NetworkBehaviour
@@ -22,12 +23,14 @@ public class WorldGenerator : NetworkBehaviour
     {
         public Vector2 position;
         public int size;
+        public Transform transform;
         public List<GameObject> terrainUnits;
 
-        public Chunk(Vector2 position, int size)
+        public Chunk(Vector2 position, int size, Transform transform)
         {
             this.position = position;
             terrainUnits = new List<GameObject>();
+            this.transform = transform;
         }
 
         public GameObject GetUnit(Vector2 position)
@@ -129,8 +132,8 @@ public class WorldGenerator : NetworkBehaviour
         {
             for (int j = 0; j < mapSize.y; j++)
             {
-                terrainMap[i,j] = GetDefaultProperty(i - halfMapSizeX, j - halfMapSizeY);
-                terrainMapTexture.SetPixel(i, j, terrainMap[i,j].MapColor);
+                terrainMap[i, j] = GetDefaultProperty(i - halfMapSizeX, j - halfMapSizeY);
+                terrainMapTexture.SetPixel(i, j, terrainMap[i, j].MapColor);
             }
         }
 
@@ -159,10 +162,13 @@ public class WorldGenerator : NetworkBehaviour
         yield return RemoveExcessChunks(closetChunkPosition);
 
         isGenerating = false;
+
+        if (showDebug) Debug.Log("Child count = " + transform.childCount);
     }
 
     private IEnumerator GenerateChunks(Vector2 closetChunkPosition)
     {
+        var coroutines = new List<Coroutine>();
         for (int i = -(renderDistance + renderXOffset); i < renderDistance + 1 + renderXOffset; i++)
         {
             for (int j = -renderDistance + 1; j < renderDistance; j++)
@@ -171,15 +177,24 @@ public class WorldGenerator : NetworkBehaviour
 
                 if (!positionToChunk.ContainsKey(chunkPos))
                 {
-                    yield return GenerateChunk(chunkPos, chunkSize, positionToChunk);
+                    coroutines.Add(StartCoroutine(GenerateChunk(chunkPos, chunkSize, positionToChunk)));
+                    yield return null;
                 }
             }
+        }
+
+        foreach (var coroutine in coroutines)
+        {
+            yield return coroutine;
         }
     }
 
     private IEnumerator GenerateChunk(Vector2 position, int chunkSize, Dictionary<Vector2, Chunk> positionToChunk)
     {
-        Chunk chunk = new Chunk(position, chunkSize);
+        var chunkObj = new GameObject("Chunk");
+        chunkObj.transform.parent = transform;
+        chunkObj.transform.position = position;
+        Chunk chunk = new Chunk(position, chunkSize, chunkObj.transform);
         int halfChunkSize = chunkSize / 2;
         int lowerLimit = -halfChunkSize;
         int upperLimit = (chunkSize % 2 == 0) ? halfChunkSize : halfChunkSize + 1;
@@ -191,9 +206,9 @@ public class WorldGenerator : NetworkBehaviour
                 var pos = new Vector2Int((int)position.x + i, (int)position.y + j);
                 var property = GetMappedProperty(pos.x + halfMapSizeX, pos.y + halfMapSizeY);
                 SpawnNewTerrainUnit(pos, chunk, property);
+                yield return null;
             }
         }
-        yield return null;
 
         positionToChunk.Add(position, chunk);
     }
@@ -219,16 +234,30 @@ public class WorldGenerator : NetworkBehaviour
         }
 
         // Remove the identified chunks
+        var coroutines = new List<Coroutine>();        
         foreach (var pos in positionsToRemove)
         {
-            foreach (var terrainUnit in positionToChunk[pos].terrainUnits)
-            {
-                localObjectPooling.Despawn(terrainUnit);
-            }
-
-            positionToChunk.Remove(pos);
+            var chunk = positionToChunk[pos];
+            coroutines.Add(StartCoroutine(RemoveChunk(chunk)));
             yield return null;
-        }        
+        }
+
+        foreach (var coroutine in coroutines)
+        {
+            yield return coroutine;
+        }
+    }
+
+    private IEnumerator RemoveChunk(Chunk chunk)
+    {
+        foreach (var terrainUnit in chunk.terrainUnits)
+        {
+            localObjectPooling.Despawn(terrainUnit);
+            yield return null;
+        }
+        
+        positionToChunk.Remove(chunk.position);
+        Destroy(chunk.transform.gameObject);
     }
 
     private TerrainUnitProperty GetMappedProperty(int i, int j)
@@ -242,7 +271,7 @@ public class WorldGenerator : NetworkBehaviour
         {
             try
             {
-                return terrainMap[i,j];
+                return terrainMap[i, j];
             }
             catch (Exception e)
             {
@@ -263,7 +292,7 @@ public class WorldGenerator : NetworkBehaviour
         }
         else
         {
-            return !terrainMap[i,j].IsAccessible;
+            return !terrainMap[i, j].IsAccessible;
         }
     }
 
@@ -284,7 +313,7 @@ public class WorldGenerator : NetworkBehaviour
         var pos = new Vector2Int((int)position.x, (int)position.y);
         var i = pos.x + halfMapSizeX;
         var j = pos.y + halfMapSizeY;
-        terrainMap[i,j] = newProperty;
+        terrainMap[i, j] = newProperty;
     }
 
     private void ReplaceMappedUnit(Vector2 position, TerrainUnitProperty newProperty)
@@ -312,7 +341,7 @@ public class WorldGenerator : NetworkBehaviour
     {
         var terrainObj = localObjectPooling.Spawn(terrainUnitPrefab);
         terrainObj.transform.position = position;
-        terrainObj.transform.parent = transform;
+        terrainObj.transform.parent = chunk.transform;
         terrainObj.GetComponent<TerrainUnit>().Initialize(property);
         chunk.terrainUnits.Add(terrainObj);
     }

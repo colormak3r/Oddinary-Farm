@@ -8,6 +8,8 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
     [SerializeField]
     private BoxCollider2D movementBlocker;
     [SerializeField]
+    private BoxCollider2D interactionCollider;
+    [SerializeField]
     private SpriteRenderer overlayRenderer;
     [SerializeField]
     private SpriteRenderer baseRenderer;
@@ -33,17 +35,17 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
 
     public void LocalSpawn()
     {
-        overlayRenderer.enabled = true;
+        /*overlayRenderer.enabled = true;
         baseRenderer.enabled = true;
 
-        movementBlocker.enabled = true;
+        movementBlocker.enabled = true;*/
     }
 
     public void LocalDespawn()
     {
-        overlayRenderer.enabled = false;
+        /*overlayRenderer.enabled = false;
         baseRenderer.enabled = false;
 
-        movementBlocker.enabled = false;
+        movementBlocker.enabled = false;*/
     }
 }

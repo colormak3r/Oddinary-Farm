@@ -1,9 +1,6 @@
 using ColorMak3r.Utility;
-using System;
 using System.Collections;
-using Unity.Collections;
 using Unity.Netcode;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class Plant : NetworkBehaviour, IWaterable, IHarvestable

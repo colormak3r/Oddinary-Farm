@@ -109,10 +109,13 @@ public class SpriteBlender : MonoBehaviour
         }
         else if (reblend)
         {
+            if (showDebugs) Debug.Log("Reblending neighbors", this);
             StartCoroutine(DelayBlendNeighbor(neigborBlenders));
         }
-        else if (movementBlocker)
+
+        if (movementBlocker)
         {
+            if (showDebugs) Debug.Log("Reshaping collider", this);
             // Reshape the collider
             List<Vector2> physicsShape = new List<Vector2>();
             spriteRenderer.sprite.GetPhysicsShape(0, physicsShape);

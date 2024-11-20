@@ -123,6 +123,9 @@ MonoBehaviour:
   isInvincible: 0
   damagedEffectPrefab: {fileID: 3303192038522874649, guid: 9bdc915fcce33d04e9b98594dcf5049e, type: 3}
   deathEffectPrefab: {fileID: 2017998240076956080, guid: 92ab43977f9b492419a9652462fec256, type: 3}
+  OnDeathOnServer:
+    m_PersistentCalls:
+      m_Calls: []
   CurrentHealth:
     m_InternalValue: 0
 --- !u!114 &5452321758450969809

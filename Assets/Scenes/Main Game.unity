@@ -857,7 +857,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PresetAsset: {fileID: 0}
   m_PresetReference:
-    rid: 6716733340528410624
+    rid: 6716733340528410626
   m_Scenario:
     rid: -2
   m_IsScenarioSettingsFolded: 1
@@ -867,7 +867,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 6716733340528410624
+    - rid: 6716733340528410626
       type: {class: NetworkSimulatorPreset, ns: Unity.Multiplayer.Tools.NetworkSimulator.Runtime, asm: Unity.Multiplayer.Tools.NetworkSimulator.Runtime}
       data:
         <Name>k__BackingField: None
@@ -8900,7 +8900,7 @@ MonoBehaviour:
   terrainUnitPrefab: {fileID: 1734130187429010102, guid: 5bf6f8e869ce4e5459f9ed6887636bc8, type: 3}
   chunkSize: 5
   renderDistance: 7
-  renderXOffset: 4
+  renderXOffset: 1
   mapSize: {x: 500, y: 500}
   voidUnitProperty: {fileID: 11400000, guid: cdfb8f13db1fb6341aff37d65cae2cc5, type: 2}
   starterShaping: 0.5
