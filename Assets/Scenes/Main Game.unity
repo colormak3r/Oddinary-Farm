@@ -857,7 +857,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PresetAsset: {fileID: 0}
   m_PresetReference:
-    rid: 6716733340528410626
+    rid: 6716733398454108161
   m_Scenario:
     rid: -2
   m_IsScenarioSettingsFolded: 1
@@ -867,7 +867,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 6716733340528410626
+    - rid: 6716733398454108161
       type: {class: NetworkSimulatorPreset, ns: Unity.Multiplayer.Tools.NetworkSimulator.Runtime, asm: Unity.Multiplayer.Tools.NetworkSimulator.Runtime}
       data:
         <Name>k__BackingField: None
@@ -2662,7 +2662,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 55, y: 30, z: 1}
+    m_Scale: {x: 55, y: 40, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -6797,10 +6797,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2a5292972f86c744b27fb8e41835ae2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeScale: 96
+  timeScale: 1000
   dayStartTime: 6
   nightStartTime: 20
-  dayOffset: 1
+  dayOffset: 7
   hourOffset: 6
   minuteOffset: 0
   timeText: {fileID: 670024580}
@@ -7239,7 +7239,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3e0aa12a44f859341bec5c14da95dbc9, type: 2}
   - {fileID: 11400000, guid: cd267a9b4d75f83478b4a4406c8eea92, type: 2}
   - {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
-  - {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
   - {fileID: 11400000, guid: 4861b0c465e13f24585f6b10f6cfe85d, type: 2}
   - {fileID: 11400000, guid: fd5701e992829a54b8f78b176b2df18b, type: 2}
   - {fileID: 11400000, guid: 8dd2be67a005b44409834c3b76ffa615, type: 2}
@@ -7249,17 +7248,30 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
   - {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
   - {fileID: 11400000, guid: 12c97f6d640590f41acf4e752260d02f, type: 2}
+  - {fileID: 11400000, guid: 4730fab78f887a545a3e7218b4a76356, type: 2}
+  - {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
+  - {fileID: 11400000, guid: 9dfd615188d3a5d4ca3bd3e8986fbe39, type: 2}
+  - {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+  - {fileID: 11400000, guid: 4e1333dbc18242842a3696103d4c73cc, type: 2}
+  - {fileID: 11400000, guid: cae112df666cda34cb83978a88571cf6, type: 2}
   - {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
   - {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
+  - {fileID: 11400000, guid: bcad375afb6b130468b2b693736053e4, type: 2}
   - {fileID: 11400000, guid: 9713338d69df681458c236f6e3a827f9, type: 2}
+  - {fileID: 11400000, guid: 45c8f01df45ec1141b3121328c99594f, type: 2}
+  - {fileID: 11400000, guid: d2126c561ac7c0e4b8e8af0947367830, type: 2}
   - {fileID: 11400000, guid: 75022dd3437619e4ea967aa4cef24b21, type: 2}
+  - {fileID: 11400000, guid: 4fd3d5eaac5b7db429b60922c6ccee67, type: 2}
   - {fileID: 11400000, guid: 8bd3d05bf993007488f09da389bddebc, type: 2}
+  - {fileID: 11400000, guid: 8141f54fd3d926a449c7d0bace10e67b, type: 2}
+  - {fileID: 11400000, guid: 743c4c7c6fd2e1947a4f7f305d909e77, type: 2}
   - {fileID: 11400000, guid: dbd800054bbb8104cb11cf3d67c8ac49, type: 2}
   - {fileID: 11400000, guid: e0b20477f0821794e855dcb5dbf0aafc, type: 2}
   - {fileID: 11400000, guid: 9e0450cfc4038544487df375cc2091af, type: 2}
   - {fileID: 11400000, guid: 541faeadd70e4e84cbcbcb16c76e1d39, type: 2}
   - {fileID: 11400000, guid: 9d7075498e4b06141b5398d65b8edc73, type: 2}
   - {fileID: 11400000, guid: d911fce547ec5df4c8967959a22cdaac, type: 2}
+  - {fileID: 11400000, guid: 0353d729a98124d4e8c814a34769aebf, type: 2}
   - {fileID: 11400000, guid: 2e0f68b5b9a38e44784d98fa11d1a5f6, type: 2}
   - {fileID: 11400000, guid: cdfb8f13db1fb6341aff37d65cae2cc5, type: 2}
 --- !u!4 &875643468
@@ -8898,9 +8910,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9d7075498e4b06141b5398d65b8edc73, type: 2}
   - {fileID: 11400000, guid: d911fce547ec5df4c8967959a22cdaac, type: 2}
   terrainUnitPrefab: {fileID: 1734130187429010102, guid: 5bf6f8e869ce4e5459f9ed6887636bc8, type: 3}
-  chunkSize: 5
-  renderDistance: 7
-  renderXOffset: 1
+  chunkSize: 7
+  renderDistance: 5
+  renderXOffset: 0
   mapSize: {x: 500, y: 500}
   voidUnitProperty: {fileID: 11400000, guid: cdfb8f13db1fb6341aff37d65cae2cc5, type: 2}
   starterShaping: 0.5
@@ -8915,6 +8927,7 @@ MonoBehaviour:
   elevationExp: 1
   showDebug: 0
   showGizmos: 1
+  isInitialized: 0
   isGenerating: 0
 --- !u!114 &1454340020
 MonoBehaviour:

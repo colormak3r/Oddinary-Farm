@@ -34,7 +34,6 @@ public class Hoe : Item
         var halfSize = size / 2;
 
         var snap = (int)(size.x < 1 ? 1 : size.x);
-        Debug.Log($"Snap: {snap}");
         position = position.SnapToGrid((snap));
         var pointA = position + halfSize * 0.9f;
         var pointB = position - halfSize * 0.9f;

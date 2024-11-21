@@ -10,7 +10,7 @@ public class GameManager : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField]
-    private GameObject playerPrefab;    
+    private GameObject playerPrefab;
 
     [Header("Debugs")]
     [SerializeField]
@@ -44,6 +44,7 @@ public class GameManager : NetworkBehaviour
         if (isInitializing || isInitialized) yield break;
         isInitializing = true;
 
+        yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
         yield return WorldGenerator.Main.GenerateTerrainCoroutine(Vector2.zero);
         yield return TransitionUI.Main.UnShowCoroutine();
         yield return MapUI.Main.ShowCoroutine();

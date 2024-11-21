@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Unity.Netcode;
-using static UnityEditor.PlayerSettings;
 
 
 public class WorldGenerator : NetworkBehaviour
@@ -99,6 +98,9 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private bool showGizmos;
     [SerializeField]
+    private bool isInitialized;
+    public bool IsInitialized => isInitialized;
+    [SerializeField]
     private bool isGenerating;
     public bool IsGenerating => isGenerating;
 
@@ -142,6 +144,8 @@ public class WorldGenerator : NetworkBehaviour
         terrainMapSprite.texture.filterMode = FilterMode.Point;
 
         MapUI.Main.UpdateMap(terrainMapSprite);
+
+        isInitialized = true;
     }
 
     public IEnumerator GenerateTerrainCoroutine(Vector2 position)
@@ -199,14 +203,23 @@ public class WorldGenerator : NetworkBehaviour
         int lowerLimit = -halfChunkSize;
         int upperLimit = (chunkSize % 2 == 0) ? halfChunkSize : halfChunkSize + 1;
 
-        for (int i = lowerLimit; i < upperLimit; i++)
+        // Iterate over distance from center outwards
+        for (int d = 0; d <= halfChunkSize; d++)
         {
-            for (int j = lowerLimit; j < upperLimit; j++)
+            // Iterate over all positions at distance 'd'
+            for (int i = -d; i <= d; i++)
             {
-                var pos = new Vector2Int((int)position.x + i, (int)position.y + j);
-                var property = GetMappedProperty(pos.x + halfMapSizeX, pos.y + halfMapSizeY);
-                SpawnNewTerrainUnit(pos, chunk, property);
-                yield return null;
+                for (int j = -d; j <= d; j++)
+                {
+                    // Check if the current position is exactly at distance 'd'
+                    if (Mathf.Max(Mathf.Abs(i), Mathf.Abs(j)) == d)
+                    {
+                        Vector2Int pos = new Vector2Int((int)position.x + i, (int)position.y + j);
+                        var property = GetMappedProperty(pos.x, pos.y);
+                        SpawnNewTerrainUnit(pos, chunk, property);
+                        yield return null; // Yield after each terrain unit is spawned
+                    }
+                }
             }
         }
 
@@ -260,10 +273,12 @@ public class WorldGenerator : NetworkBehaviour
         Destroy(chunk.transform.gameObject);
     }
 
-    private TerrainUnitProperty GetMappedProperty(int i, int j)
+    public TerrainUnitProperty GetMappedProperty(int x, int y)
     {
         //Debug.Log($"GetMappedProperty {x}, {y}");
-        if (i >= mapSize.x || i < 0 || j >= mapSize.y || j < 0)
+        x += halfMapSizeX;
+        y += halfMapSizeY;
+        if (x >= mapSize.x || x < 0 || y >= mapSize.y || y < 0)
         {
             return voidUnitProperty;
         }
@@ -271,11 +286,11 @@ public class WorldGenerator : NetworkBehaviour
         {
             try
             {
-                return terrainMap[i, j];
+                return terrainMap[x, y];
             }
             catch (Exception e)
             {
-                Debug.Log($"GetMappedProperty i = {i}, j = {j}");
+                Debug.Log($"GetMappedProperty i = {x}, j = {y}");
                 throw e;
             }
         }

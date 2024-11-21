@@ -20,6 +20,8 @@ public class TerrainUnitProperty : ScriptableObject
     [SerializeField]
     private float overlaySpriteChance = 0.5f;
     [SerializeField]
+    private float outlineSpriteChance = 0.5f;
+    [SerializeField]
     private Sprite[] overlaySprite;
     [SerializeField]
     private Sprite[] baseSprite;
@@ -32,7 +34,9 @@ public class TerrainUnitProperty : ScriptableObject
     public bool IsAccessible => isAccessible;
     public TerrainBlockProperty BlockProperty => blockProperty;
 
-    public Sprite OverlaySprite => Random.value < overlaySpriteChance ? overlaySprite.GetRandomElement() : null;
+    public float OverlaySpriteChance => overlaySpriteChance;
+    public float OutlineSpriteChance => outlineSpriteChance;
+    public Sprite OverlaySprite => overlaySprite.GetRandomElement();
     public Sprite BaseSprite => baseSprite.GetRandomElement();
     public Sprite UnderlaySprite => underlaySprite.GetRandomElement();
 

@@ -664,14 +664,14 @@ MonoBehaviour:
     Count: 1
   showDebug: 0
   showGizmos: 0
-  showItemDebug: 1
-  showItemGizmos: 1
+  showItemDebug: 0
+  showItemGizmos: 0
   currentHotbarIndex: 0
   inventory: []
   itemRefs: []
   currentItem: {fileID: 0}
   Coins:
-    m_InternalValue: 10
+    m_InternalValue: 100000
   OnCoinsValueChanged:
     m_PersistentCalls:
       m_Calls: []

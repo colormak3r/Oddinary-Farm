@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class SpriteBlender : MonoBehaviour
 {
     private static Vector2[] SCAN_POSITION = new Vector2[]
@@ -45,9 +46,15 @@ public class SpriteBlender : MonoBehaviour
     private void Awake()
     {
         position = (Vector2)transform.position + offset;
+        scannedPosition.Capacity = SCAN_POSITION.Length;
     }
 
     [ContextMenu("Blend")]
+    private void Blend()
+    {
+        Blend(false);
+    }
+
     public void Blend(bool reblend = false)
     {
         IBool[] neighbors = new IBool[9];
