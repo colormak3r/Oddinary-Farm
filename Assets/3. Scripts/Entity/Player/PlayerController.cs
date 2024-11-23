@@ -139,16 +139,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         }
     }
 
-    public void SetControllable(bool value)
-    {
-        isControllable = value;
-
-        if (!isControllable)
-        {
-            movement.SetDirection(Vector2.zero);
-        }
-    }
-
     public void OnPause(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
@@ -157,6 +147,22 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         {
             if(ShopUI.Main.IsShowing) ShopUI.Main.CloseShop();
         }
+    }
+
+
+    public void OnInventory(InputAction.CallbackContext context)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void OnHand(InputAction.CallbackContext context)
+    {
+        if (!isControllable) return;
+
+        if (context.performed)
+        {
+            ChangeHotbarIndex(0);
+        }        
     }
 
     #region Player Action
@@ -253,6 +259,15 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         // Hotbar index change locally, stored in PlayerInventory
         inventory.ChangeHotBarIndex(value);
     }
-
     #endregion
+
+    public void SetControllable(bool value)
+    {
+        isControllable = value;
+
+        if (!isControllable)
+        {
+            movement.SetDirection(Vector2.zero);
+        }
+    }
 }

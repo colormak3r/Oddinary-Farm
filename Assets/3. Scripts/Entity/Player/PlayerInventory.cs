@@ -2,10 +2,7 @@ using Unity.Netcode;
 using ColorMak3r.Utility;
 using System;
 using UnityEngine;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine.Events;
-using System.Collections.Generic;
-using static UnityEngine.Rendering.DebugUI;
 
 [System.Serializable]
 public class ItemStack
@@ -68,15 +65,13 @@ public struct ItemRefElement : INetworkSerializable, IEquatable<ItemRefElement>
 [RequireComponent(typeof(ItemSpawner))]
 public class PlayerInventory : NetworkBehaviour, IControllable
 {
-    private static int MAX_INVENTORY_SLOTS = 20;
+    private static int MAX_INVENTORY_SLOTS = 30;
 
     [Header("Settings")]
     [SerializeField]
     private float inventoryRadius = 1f;
     [SerializeField]
     private Vector3 inventoryOffset;
-    /*[SerializeField]
-    private int inventorySlot = 10;*/
     [SerializeField]
     private LayerMask itemLayer;
     [SerializeField]
@@ -116,6 +111,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     public UnityEvent<ulong> OnCoinsValueChanged;
 
     private ItemSpawner itemSpawner;
+    private InventoryUI inventoryUI;
 
     public Item CurrentItemValue => currentItem;
     public int CurrentHotbarIndex => currentHotbarIndex;
@@ -144,10 +140,17 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
         if (IsOwner)
         {
+            // Initialize the inventory UI
+            inventoryUI = InventoryUI.Main;
+
+            // Add the default items to the inventory
             foreach (var itemStack in defaultInventory)
             {
                 AddItemOnClient(itemStack.Property, itemStack.Count);
-            }
+            }          
+            
+            // Set the current item to the Hand
+            ChangeHotBarIndex(0);
         }
 
         CurrentItem.OnValueChanged += HandleCurrentItemChanged;
@@ -241,6 +244,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             if (itemStack.Count + amount <= stackProperty.MaxStack)
             {
                 inventory[index].Count += amount;
+                inventoryUI.UpdateSlot(index, itemStack.Property.Sprite, (int)itemStack.Count);
             }
             else
             {
@@ -283,6 +287,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         if (itemStack.Count - amount > 0)
         {
             itemStack.Count -= amount;
+            inventoryUI.UpdateSlot(index, itemStack.Property.Sprite, (int)itemStack.Count);
             return true;
         }
         else
@@ -291,7 +296,14 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
             // Remove the current item stack
             itemStack.EmptyStack();
+
+            // Update the UI
+            inventoryUI.UpdateSlot(index, null, 0);
+
+            // If the player is holding the item, switch to the default hand
             if (index == currentHotbarIndex) CurrentItem.Value = itemRefs[0];
+
+            // Remove the item reference on the server
             RemoveItemRefServerRpc(index);
 
             // Further recursively consume item if needed
@@ -461,6 +473,8 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         {
             CurrentItem.Value = itemRefs[0];
         }
+
+        inventoryUI.SelectSlot(index);
     }
 
     public void AddCoinsOnClient(uint value)

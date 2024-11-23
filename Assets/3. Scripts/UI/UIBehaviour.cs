@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using ColorMak3r.Utility;
+using UnityEngine.Events;
 
 public class UIBehaviour : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class UIBehaviour : MonoBehaviour
     private bool isShowing;
     [SerializeField]
     private bool isAnimating;
+
+    [HideInInspector]
+    public UnityEvent<bool> OnVisibilityChanged;
 
     public bool IsShowing => isShowing;
     public bool IsAnimating => isAnimating;
@@ -34,6 +38,8 @@ public class UIBehaviour : MonoBehaviour
         isAnimating = true;
         yield return container.UIFadeCoroutine(0, 1, fade ? fadeDuration : 0);
         isAnimating = false;
+
+        OnVisibilityChanged?.Invoke(isShowing);
     }
 
     public IEnumerator UnShowCoroutine(bool fade = true)
@@ -47,6 +53,8 @@ public class UIBehaviour : MonoBehaviour
         container.SetActive(false);
 
         isShowing = false;
+
+        OnVisibilityChanged?.Invoke(isShowing);
     }
 
     [ContextMenu("Toggle Show")]
