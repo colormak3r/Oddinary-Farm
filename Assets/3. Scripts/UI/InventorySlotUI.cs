@@ -2,15 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventorySlotUI : MonoBehaviour
+public class InventorySlotUI : MonoBehaviour, IDropHandler
 {
     [Header("Settings")]
     [SerializeField]
-    private Image itemImage;
+    private bool isInteractable = true;
+    public bool IsInteractable => isInteractable;
     [SerializeField]
     private Image slotImage;
+    [SerializeField]
+    private InventoryItemUI itemUI;
     [SerializeField]
     private TMP_Text itemIndex;
     [SerializeField]
@@ -20,23 +24,27 @@ public class InventorySlotUI : MonoBehaviour
     [SerializeField]
     private Sprite unselectedSprite;
 
-    public void Initialize(int index)
-    {
-        itemIndex.text = index.ToString();
-        if (index > 9)
-        {
-            itemIndex.gameObject.SetActive(false);
-        }
+    private int index;
+    private PlayerInventory playerInventory;
 
-        if (index != 0)
-            UpdateSlot(null, 0);
+    public void Initialize(int index, PlayerInventory playerInventory)
+    {
+        this.index = index;
+        this.playerInventory = playerInventory;
+
+        itemIndex.text = index.ToString();
+        itemUI.Initialize(index, isInteractable);
+
+        // Hide item index if it's greater than 9 (part of the inventory)
+        if (index > 9) itemIndex.gameObject.SetActive(false);
+
+        // Hide item image and amount if it's not the Hand slot
+        if (index != 0) UpdateSlot(null, 0);
     }
 
     public void UpdateSlot(Sprite sprite, int amount)
     {
-        itemImage.sprite = sprite;
-        itemImage.enabled = sprite != null;
-
+        itemUI.UpdateImage(sprite);
         itemAmount.text = amount == 0 ? "" : amount.ToString();
     }
 
@@ -46,11 +54,25 @@ public class InventorySlotUI : MonoBehaviour
         {
             slotImage.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
             slotImage.sprite = selectedSprite;
-        }            
+        }
         else
         {
             slotImage.transform.localScale = Vector3.one;
             slotImage.sprite = unselectedSprite;
+        }
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        if (!isInteractable) return;
+
+        if (eventData.pointerDrag != null)
+        {
+            InventoryItemUI item = eventData.pointerDrag.GetComponent<InventoryItemUI>();
+            if (item != null && item.IsInteractable)
+            {
+                playerInventory.SwapItems(item.Index, index);
+            }
         }
     }
 }

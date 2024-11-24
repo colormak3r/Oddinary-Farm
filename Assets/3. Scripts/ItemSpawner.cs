@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class ItemSpawner : NetworkBehaviour
 {
-    public void Spawn(ItemProperty itemProperty, float randomRange = 2f, bool randomForce = true, Vector2 position = default)
+    public void Spawn(ItemProperty itemProperty, Vector2 position, float randomRange = 2f, bool randomForce = true)
     {
-        SpawnItemRpc(itemProperty, randomRange, randomForce, position);
+        SpawnItemRpc(itemProperty, position, randomRange, randomForce);
     }
 
     [Rpc(SendTo.Server)]
-    private void SpawnItemRpc(ItemProperty itemProperty, float randomRange, bool randomForce, Vector2 position)
+    private void SpawnItemRpc(ItemProperty itemProperty, Vector2 position, float randomRange, bool randomForce)
     {
         var randomPos = randomRange * (Vector2)Random.onUnitSphere;
         position = position == default ? transform.position + (Vector3)randomPos : position + randomPos;

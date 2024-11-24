@@ -496,6 +496,9 @@ MonoBehaviour:
   fadeDuration: 0.25
   isShowing: 0
   isAnimating: 0
+  OnVisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
   mapImage: {fileID: 1209257263}
 --- !u!1 &40691018
 GameObject:
@@ -550,6 +553,9 @@ MonoBehaviour:
   fadeDuration: 0.25
   isShowing: 0
   isAnimating: 0
+  OnVisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
   healthText: {fileID: 1804911640}
 --- !u!1001 &44298055
 PrefabInstance:
@@ -1086,11 +1092,12 @@ GameObject:
   m_Component:
   - component: {fileID: 280522907}
   - component: {fileID: 280522909}
-  - component: {fileID: 280522908}
   - component: {fileID: 280522910}
   - component: {fileID: 280522911}
   - component: {fileID: 280522913}
   - component: {fileID: 280522912}
+  - component: {fileID: 280522914}
+  - component: {fileID: 280522908}
   m_Layer: 0
   m_Name: Network Manager
   m_TagString: Untagged
@@ -1217,7 +1224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PresetAsset: {fileID: 0}
   m_PresetReference:
-    rid: 6716733398454108161
+    rid: 6716733461666463748
   m_Scenario:
     rid: -2
   m_IsScenarioSettingsFolded: 1
@@ -1227,7 +1234,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 6716733398454108161
+    - rid: 6716733461666463748
       type: {class: NetworkSimulatorPreset, ns: Unity.Multiplayer.Tools.NetworkSimulator.Runtime, asm: Unity.Multiplayer.Tools.NetworkSimulator.Runtime}
       data:
         <Name>k__BackingField: None
@@ -1257,6 +1264,21 @@ MonoBehaviour:
     m_PositionLeftToRight: 1
     m_PositionTopToBottom: 1
   <Configuration>k__BackingField: {fileID: 11400000, guid: 8f1b4e3792d8446399527749cfb591a2, type: 2}
+--- !u!114 &280522914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280522905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44dd247a00edbfa44b77868d755af6ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  steamAppId: 480
+  targetSteamId: 0
+  userSteamId: 0
 --- !u!1 &300278764
 GameObject:
   m_ObjectHideFlags: 0
@@ -8612,8 +8634,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Inventory Slot (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 1587196441204961342, guid: c2efbeadd6fa73c48a39beac227ece46, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3302452261052614577, guid: c2efbeadd6fa73c48a39beac227ece46, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3876502486318326134, guid: c2efbeadd6fa73c48a39beac227ece46, type: 3}
+      propertyPath: isInteractable
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6886864428826340185, guid: c2efbeadd6fa73c48a39beac227ece46, type: 3}
@@ -11335,6 +11365,9 @@ MonoBehaviour:
   fadeDuration: 0.25
   isShowing: 0
   isAnimating: 0
+  OnVisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
   shopButtonPrefab: {fileID: 572216259686810493, guid: 7be7fe554bea3da48bca4313660b1b5c, type: 3}
   contentContainer: {fileID: 1075252750}
   shopNameText: {fileID: 366537817}
@@ -11434,6 +11467,9 @@ MonoBehaviour:
   fadeDuration: 1
   isShowing: 0
   isAnimating: 0
+  OnVisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!224 &1484072168 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7503531136921162209, guid: c2efbeadd6fa73c48a39beac227ece46, type: 3}
@@ -17850,7 +17886,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1884348587}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0047f723db683c741b0d134462162fe0, type: 3}
   m_Name: 
@@ -18719,6 +18755,9 @@ MonoBehaviour:
   fadeDuration: 0.25
   isShowing: 0
   isAnimating: 0
+  OnVisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2016779270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18731,10 +18770,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb6995c182e74ea4f8266e138e80c0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  container: {fileID: 0}
+  container: {fileID: 1128154999}
   fadeDuration: 0.25
   isShowing: 0
   isAnimating: 0
+  OnVisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  inventoryBehaviour: {fileID: 2016779269}
   inventorySlots:
   - {fileID: 841793582}
   - {fileID: 2646383067411394009}

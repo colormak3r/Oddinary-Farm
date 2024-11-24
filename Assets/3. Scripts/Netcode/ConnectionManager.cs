@@ -1,16 +1,46 @@
+using Netcode.Transports.Facepunch;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ConnectionManager : MonoBehaviour
 {
+    private static ConnectionManager Main;
+
+    private void Awake()
+    {
+        if (Main == null)
+        {
+            Main = this;            
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        DontDestroyOnLoad(gameObject);
+    }
+
+    [Header("Settings")]
+    [SerializeField]
+    private string mainGameScene = "Main Game";
+
+    [Header("Debugs")]
+    [SerializeField] 
+    private bool showDebugs = false;
+
     private NetworkManager networkManager;
     private bool launched = false;
 
+    private UnityTransport unityTransport;
+    private FacepunchTransport facepunchTransport;
+
     private void Start()
     {
-        networkManager = GetComponent<NetworkManager>();
+        networkManager = GetComponent<NetworkManager>();        
     }
 
     private void OnGUI()
@@ -61,11 +91,27 @@ public class ConnectionManager : MonoBehaviour
         launched = true;
         yield return TransitionUI.Main.ShowCoroutine();
 
+        if (SceneManager.GetActiveScene().name != mainGameScene)
+        {
+            SceneManager.LoadScene(mainGameScene);
+            networkManager.NetworkConfig.NetworkTransport = unityTransport;
+            //networkManager.NetworkConfig.NetworkTransport = facepunchTransport;
+        }
+        else
+        {
+            networkManager.NetworkConfig.NetworkTransport = unityTransport;
+        }
+
         //networkManager.ConnectionApprovalCallback = ApprovalCheck;
         if (isHost)
+        {
             networkManager.StartHost();
+        }            
         else
+        {
             networkManager.StartClient();
+        }
+            
     }
 
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)

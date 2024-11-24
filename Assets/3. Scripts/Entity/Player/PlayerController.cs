@@ -141,7 +141,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
     public void OnPause(InputAction.CallbackContext context)
     {
-        if (!isControllable) return;
+        // Pause bypass controllable
+        // if (!isControllable) return;
 
         if (context.performed)
         {
@@ -149,10 +150,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         }
     }
 
-
     public void OnInventory(InputAction.CallbackContext context)
     {
-        throw new System.NotImplementedException();
+        if (!isControllable) return;
+
+        if (context.performed)
+        {
+            InventoryUI.Main.ToggleInventory();
+        }
     }
 
     public void OnHand(InputAction.CallbackContext context)

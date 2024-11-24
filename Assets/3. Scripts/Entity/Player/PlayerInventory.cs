@@ -142,13 +142,14 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         {
             // Initialize the inventory UI
             inventoryUI = InventoryUI.Main;
+            inventoryUI.Initialize(this);
 
             // Add the default items to the inventory
             foreach (var itemStack in defaultInventory)
             {
                 AddItemOnClient(itemStack.Property, itemStack.Count);
-            }          
-            
+            }
+
             // Set the current item to the Hand
             ChangeHotBarIndex(0);
         }
@@ -262,7 +263,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         }
     }
 
-    public bool ConsumeItemOnClient(ItemProperty property, uint amount = 1)
+    /*public bool ConsumeItemOnClient(ItemProperty property, uint amount = 1)
     {
         if (!IsOwner) return false;
 
@@ -274,7 +275,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             }
         }
         return false;
-    }
+    }*/
 
     public bool ConsumeItemOnClient(int index, uint amount = 1)
     {
@@ -292,7 +293,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         }
         else
         {
-            var amountNeeded = amount - itemStack.Count;
+            return false;
+            // Wrong Implementation
+            /*var amountNeeded = amount - itemStack.Count;
 
             // Remove the current item stack
             itemStack.EmptyStack();
@@ -317,7 +320,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             else
             {
                 return true;
-            }
+            }*/
         }
     }
 
@@ -379,11 +382,41 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         }
     }
 
+    public void SwapItems(int index1, int index2)
+    {
+        if (index1 < 0 || index1 >= inventory.Length || index2 < 0 || index2 >= inventory.Length) return;
+
+        var stack = inventory[index1];
+        inventory[index1] = inventory[index2];
+        inventory[index2] = stack;
+
+        var itemRef = itemRefs[index1];
+        itemRefs[index1] = itemRefs[index2];
+        itemRefs[index2] = itemRef;
+
+        if (!inventory[index1].IsStackEmpty)
+            inventoryUI.UpdateSlot(index1, inventory[index1].Property.Sprite, (int)inventory[index1].Count);
+        else
+            inventoryUI.UpdateSlot(index1, null, 0);
+
+        if (!inventory[index2].IsStackEmpty)
+            inventoryUI.UpdateSlot(index2, inventory[index2].Property.Sprite, (int)inventory[index2].Count);
+        else
+            inventoryUI.UpdateSlot(index2, null, 0);
+
+        if (index1 == currentHotbarIndex || index2 == currentHotbarIndex)
+        {
+            ChangeHotBarIndex(currentHotbarIndex);
+        }
+    }
+
     public void DropItem(int index)
     {
         if (inventory[index].IsStackEmpty) return;
 
-        // TODO: Drop item on the ground
+        var property = inventory[index].Property;
+        ConsumeItemOnClient(index);
+        itemSpawner.Spawn(property, transform.position, 0);
     }
 
     /// <summary>

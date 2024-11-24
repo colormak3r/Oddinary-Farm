@@ -21,15 +21,17 @@ public class InventoryUI : UIBehaviour
 
     [Header("Settings")]
     [SerializeField]
+    private UIBehaviour inventoryBehaviour;
+    [SerializeField]
     private InventorySlotUI[] inventorySlots;
 
     private int selectedIndex;
 
-    private void Start()
+    public void Initialize(PlayerInventory playerInventory)
     {
         for (int i = 0; i < inventorySlots.Length; i++)
         {
-            inventorySlots[i].Initialize(i);
+            inventorySlots[i].Initialize(i, playerInventory);
         }
     }
 
@@ -43,5 +45,15 @@ public class InventoryUI : UIBehaviour
         inventorySlots[selectedIndex].SelectSlot(false);
         selectedIndex = index;
         inventorySlots[selectedIndex].SelectSlot(true);
+    }
+
+    public void ToggleInventory()
+    {
+        inventoryBehaviour.ToggleShow();
+    }
+
+    public void CloseInventory()
+    {
+       StartCoroutine(inventoryBehaviour.UnShowCoroutine());
     }
 }

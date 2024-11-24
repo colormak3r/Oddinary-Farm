@@ -110,6 +110,8 @@ public class ShopUI : UIBehaviour
         HandleCoinValueChanged(playerInventory.CoinsValue);
         playerInventory.OnCoinsValueChanged.AddListener(HandleCoinValueChanged);
 
+        InventoryUI.Main.CloseInventory();
+
         if (shopMode == ShopMode.Buy)
         {
             ShopModeBuy();
@@ -159,7 +161,7 @@ public class ShopUI : UIBehaviour
                 playerInventory.ConsumeCoinsOnClient(itemProperty.Price);
                 if (!playerInventory.AddItemOnClient(itemProperty))
                 {
-                    shopSpawner.Spawn(itemProperty, 0.5f, false, shopSpawner.transform.position - new Vector3(0, 1));
+                    shopSpawner.Spawn(itemProperty, shopSpawner.transform.position - new Vector3(0, 1), 0.5f, false);
                 }
 
                 if (showDebug) Debug.Log($"Bought 1x{itemProperty.Name} for {itemProperty.Price}");
