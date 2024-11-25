@@ -8761,14 +8761,6 @@ MonoBehaviour:
   scriptableObjectList:
   - {fileID: 11400000, guid: 3e0aa12a44f859341bec5c14da95dbc9, type: 2}
   - {fileID: 11400000, guid: cd267a9b4d75f83478b4a4406c8eea92, type: 2}
-  - {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
-  - {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
-  - {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
-  - {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
-  - {fileID: 11400000, guid: 12c97f6d640590f41acf4e752260d02f, type: 2}
-  - {fileID: 11400000, guid: 4e1333dbc18242842a3696103d4c73cc, type: 2}
-  - {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
-  - {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
   - {fileID: 11400000, guid: 4861b0c465e13f24585f6b10f6cfe85d, type: 2}
   - {fileID: 11400000, guid: fd5701e992829a54b8f78b176b2df18b, type: 2}
   - {fileID: 11400000, guid: 8dd2be67a005b44409834c3b76ffa615, type: 2}
@@ -8779,6 +8771,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9dfd615188d3a5d4ca3bd3e8986fbe39, type: 2}
   - {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
   - {fileID: 11400000, guid: cae112df666cda34cb83978a88571cf6, type: 2}
+  - {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
+  - {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
+  - {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
+  - {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
+  - {fileID: 11400000, guid: 12c97f6d640590f41acf4e752260d02f, type: 2}
+  - {fileID: 11400000, guid: 4e1333dbc18242842a3696103d4c73cc, type: 2}
+  - {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
+  - {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
   - {fileID: 11400000, guid: bcad375afb6b130468b2b693736053e4, type: 2}
   - {fileID: 11400000, guid: 9713338d69df681458c236f6e3a827f9, type: 2}
   - {fileID: 11400000, guid: 45c8f01df45ec1141b3121328c99594f, type: 2}
@@ -8799,41 +8799,41 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cdfb8f13db1fb6341aff37d65cae2cc5, type: 2}
   itemIds:
   - id: 1
-    itemProperty: {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
-  - id: 2
-    itemProperty: {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
-  - id: 3
-    itemProperty: {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
-  - id: 4
-    itemProperty: {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
-  - id: 5
-    itemProperty: {fileID: 11400000, guid: 12c97f6d640590f41acf4e752260d02f, type: 2}
-  - id: 6
-    itemProperty: {fileID: 11400000, guid: 4e1333dbc18242842a3696103d4c73cc, type: 2}
-  - id: 7
-    itemProperty: {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
-  - id: 8
-    itemProperty: {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
-  - id: 9
     itemProperty: {fileID: 11400000, guid: 4861b0c465e13f24585f6b10f6cfe85d, type: 2}
-  - id: 10
+  - id: 2
     itemProperty: {fileID: 11400000, guid: fd5701e992829a54b8f78b176b2df18b, type: 2}
-  - id: 11
+  - id: 3
     itemProperty: {fileID: 11400000, guid: 8dd2be67a005b44409834c3b76ffa615, type: 2}
-  - id: 12
+  - id: 4
     itemProperty: {fileID: 11400000, guid: 73db1c966832a4141a69a3fc10eeff50, type: 2}
-  - id: 13
+  - id: 5
     itemProperty: {fileID: 11400000, guid: 76d2c63355af9a245b265f0bf2a6667c, type: 2}
-  - id: 14
+  - id: 6
     itemProperty: {fileID: 11400000, guid: 4730fab78f887a545a3e7218b4a76356, type: 2}
-  - id: 15
+  - id: 7
     itemProperty: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
-  - id: 16
+  - id: 8
     itemProperty: {fileID: 11400000, guid: 9dfd615188d3a5d4ca3bd3e8986fbe39, type: 2}
-  - id: 17
+  - id: 9
     itemProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
-  - id: 18
+  - id: 10
     itemProperty: {fileID: 11400000, guid: cae112df666cda34cb83978a88571cf6, type: 2}
+  - id: 11
+    itemProperty: {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
+  - id: 12
+    itemProperty: {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
+  - id: 13
+    itemProperty: {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
+  - id: 14
+    itemProperty: {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
+  - id: 15
+    itemProperty: {fileID: 11400000, guid: 12c97f6d640590f41acf4e752260d02f, type: 2}
+  - id: 16
+    itemProperty: {fileID: 11400000, guid: 4e1333dbc18242842a3696103d4c73cc, type: 2}
+  - id: 17
+    itemProperty: {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
+  - id: 18
+    itemProperty: {fileID: 11400000, guid: 9488342f64f834e408ea456db95d9b70, type: 2}
   showDebugs: 0
 --- !u!4 &875643468
 Transform:
@@ -11311,7 +11311,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: m_PresetReference
-      value: 6716733497101254805
+      value: 6716733497101254824
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[6716733497101254803]
@@ -11319,6 +11319,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[6716733497101254805]
+      value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[6716733497101254824]
       value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -11330,11 +11334,19 @@ PrefabInstance:
       value: None
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[6716733497101254824].<Name>k__BackingField
+      value: None
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[6716733497101254803].<Description>k__BackingField
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[6716733497101254805].<Description>k__BackingField
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[6716733497101254824].<Description>k__BackingField
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -11346,11 +11358,19 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[6716733497101254824].<PacketDelayMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[6716733497101254803].<PacketJitterMs>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[6716733497101254805].<PacketJitterMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[6716733497101254824].<PacketJitterMs>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -11362,11 +11382,19 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[6716733497101254824].<PacketLossPercent>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[6716733497101254803].<PacketLossInterval>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[6716733497101254805].<PacketLossInterval>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[6716733497101254824].<PacketLossInterval>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
