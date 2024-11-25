@@ -53,7 +53,7 @@ public class ShopUI : UIBehaviour
 
     private PlayerInventory playerInventory;
     private ShopInventory shopInventory;
-    private ItemSpawner shopSpawner;
+    private Transform shopTransform;
 
     public void ShopModeBuy()
     {
@@ -96,7 +96,7 @@ public class ShopUI : UIBehaviour
         }
     }
 
-    public void OpenShop(PlayerInventory playerInventory, ShopInventory shopInventory, ItemSpawner shopSpawner)
+    public void OpenShop(PlayerInventory playerInventory, ShopInventory shopInventory, Transform shopTransform)
     {
         if (IsAnimating) return;
         if (IsShowing) return;
@@ -104,7 +104,7 @@ public class ShopUI : UIBehaviour
         this.shopInventory = shopInventory;
         shopNameText.text = shopInventory.ShopName;
 
-        this.shopSpawner = shopSpawner;
+        this.shopTransform = shopTransform;
 
         this.playerInventory = playerInventory;
         HandleCoinValueChanged(playerInventory.CoinsValue);
@@ -131,8 +131,8 @@ public class ShopUI : UIBehaviour
 
         playerInventory.OnCoinsValueChanged.RemoveListener(HandleCoinValueChanged);
         playerInventory = null;
-        shopSpawner = null;
         shopInventory = null;
+        shopTransform = null;
 
         StartCoroutine(CloseShopCoroutine());
     }
@@ -161,7 +161,7 @@ public class ShopUI : UIBehaviour
                 playerInventory.ConsumeCoinsOnClient(itemProperty.Price);
                 if (!playerInventory.AddItemOnClient(itemProperty))
                 {
-                    shopSpawner.Spawn(itemProperty, shopSpawner.transform.position - new Vector3(0, 1), 0.5f, false);
+                    AssetManager.Main.SpawnItem(itemProperty, shopTransform.transform.position - new Vector3(0, 1), 0.5f, false);
                 }
 
                 if (showDebug) Debug.Log($"Bought 1x{itemProperty.Name} for {itemProperty.Price}");

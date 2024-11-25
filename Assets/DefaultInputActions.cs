@@ -523,6 +523,15 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Scroll To Bottom"",
+                    ""type"": ""Button"",
+                    ""id"": ""2d7d25b5-8d4a-4b7e-8b03-da1f967b058d"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -558,6 +567,17 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Auto Complete"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""33a71df7-649f-402b-b6ec-dbabdfb9de6a"",
+                    ""path"": ""<Keyboard>/end"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll To Bottom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -588,6 +608,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         m_Console_CloseConsole = m_Console.FindAction("Close Console", throwIfNotFound: true);
         m_Console_Submit = m_Console.FindAction("Submit", throwIfNotFound: true);
         m_Console_AutoComplete = m_Console.FindAction("Auto Complete", throwIfNotFound: true);
+        m_Console_ScrollToBottom = m_Console.FindAction("Scroll To Bottom", throwIfNotFound: true);
     }
 
     ~@DefaultInputActions()
@@ -855,6 +876,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Console_CloseConsole;
     private readonly InputAction m_Console_Submit;
     private readonly InputAction m_Console_AutoComplete;
+    private readonly InputAction m_Console_ScrollToBottom;
     public struct ConsoleActions
     {
         private @DefaultInputActions m_Wrapper;
@@ -862,6 +884,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         public InputAction @CloseConsole => m_Wrapper.m_Console_CloseConsole;
         public InputAction @Submit => m_Wrapper.m_Console_Submit;
         public InputAction @AutoComplete => m_Wrapper.m_Console_AutoComplete;
+        public InputAction @ScrollToBottom => m_Wrapper.m_Console_ScrollToBottom;
         public InputActionMap Get() { return m_Wrapper.m_Console; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -880,6 +903,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @AutoComplete.started += instance.OnAutoComplete;
             @AutoComplete.performed += instance.OnAutoComplete;
             @AutoComplete.canceled += instance.OnAutoComplete;
+            @ScrollToBottom.started += instance.OnScrollToBottom;
+            @ScrollToBottom.performed += instance.OnScrollToBottom;
+            @ScrollToBottom.canceled += instance.OnScrollToBottom;
         }
 
         private void UnregisterCallbacks(IConsoleActions instance)
@@ -893,6 +919,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @AutoComplete.started -= instance.OnAutoComplete;
             @AutoComplete.performed -= instance.OnAutoComplete;
             @AutoComplete.canceled -= instance.OnAutoComplete;
+            @ScrollToBottom.started -= instance.OnScrollToBottom;
+            @ScrollToBottom.performed -= instance.OnScrollToBottom;
+            @ScrollToBottom.canceled -= instance.OnScrollToBottom;
         }
 
         public void RemoveCallbacks(IConsoleActions instance)
@@ -936,5 +965,6 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         void OnCloseConsole(InputAction.CallbackContext context);
         void OnSubmit(InputAction.CallbackContext context);
         void OnAutoComplete(InputAction.CallbackContext context);
+        void OnScrollToBottom(InputAction.CallbackContext context);
     }
 }

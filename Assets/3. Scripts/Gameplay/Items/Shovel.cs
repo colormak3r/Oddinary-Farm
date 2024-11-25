@@ -74,11 +74,9 @@ public class Shovel : Item
             return;
         }
 
-        // Spawn the item replica
-        GameObject go = Instantiate(AssetManager.Main.ItemReplicaPrefab, position, Quaternion.identity);
-        go.GetComponent<NetworkObject>().Spawn();
-        var item = go.GetComponent<ItemReplica>();
-        item.SetProperty(hit.GetComponent<TerrainUnit>().Property.BlockProperty);
+        // Spawn terrain item
+        var blockProperty = hit.GetComponent<TerrainUnit>().Property.BlockProperty;
+        AssetManager.Main.SpawnItem(blockProperty, position);
 
         // Destroy the terrain unit
         worldGenerator.RemoveBlock(position);

@@ -31,6 +31,8 @@ public class ConnectionManager : MonoBehaviour
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs = false;
+    [SerializeField]
+    private bool showStatus = false;
 
     private NetworkManager networkManager;
     private bool launched = false;
@@ -65,6 +67,8 @@ public class ConnectionManager : MonoBehaviour
 
     private void StatusLabels()
     {
+        if (!showStatus) return;
+
         var mode = networkManager.IsHost ?
             "Host" : networkManager.IsServer ? "Server" : "Client";
 

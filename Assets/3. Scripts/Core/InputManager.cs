@@ -1,3 +1,5 @@
+using System;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -19,13 +21,12 @@ public class InputManager : MonoBehaviour
         else
             Destroy(gameObject);
 
+        DontDestroyOnLoad(gameObject);
+
         inputActions = new DefaultInputActions();
         gameplayActionMap = inputActions.Gameplay;
         consoleActionMap = inputActions.Console;
-        if (SceneManager.GetActiveScene().name == mainMenuScene)
-            SwitchMap(InputMap.UI);
-        else
-            SwitchMap(InputMap.Gameplay);
+        uiActionMap = inputActions.UI;
     }
 
     [Header("Settings")]
@@ -51,11 +52,26 @@ public class InputManager : MonoBehaviour
     private void OnEnable()
     {
         inputActions.Enable();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
 
     private void OnDisable()
     {
-        inputActions.Disable();
+        inputActions?.Disable();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == mainMenuScene)
+        {
+            SwitchMap(InputMap.UI);
+        }
+        else
+        {
+            SwitchMap(InputMap.Console);
+        }
     }
 
     public void SwitchMap(InputMap map)
@@ -67,6 +83,7 @@ public class InputManager : MonoBehaviour
         }
 
         currentActionMap = GetActionMap(map);
+        currentActionMap.Enable();
     }
 
     public void SwitchToPreviousMap()
@@ -77,6 +94,9 @@ public class InputManager : MonoBehaviour
             var temp = currentActionMap;
             currentActionMap = previousActionMap;
             previousActionMap = temp;
+            currentActionMap.Enable();
+
+            if (showDebugs) Debug.Log("Switched to previous map " + currentActionMap);
         }
     }
 

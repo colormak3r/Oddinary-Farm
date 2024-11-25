@@ -17,6 +17,10 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
     [Header("Settings")]
     [SerializeField]
+    private string version = "v0.1";
+    [SerializeField]
+    private string versionNumber = ".01";
+    [SerializeField]
     private int maxChar = 100000;
     [SerializeField]
     private bool showStackTrace = false;
@@ -50,6 +54,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     private string log;
     private string filename = "";
     private float verticalNormalizedPosition_cached;
+
+    private Coroutine scrollCoroutine;
 
     private void Awake()
     {
@@ -97,7 +103,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         // Prevent backtick
         if (addedChar == '`')
         {
-            CloseConsole();
+            /*// Close the console
+            CloseConsole();*/
 
             // Return '\0' to ignore the character
             return '\0';
@@ -106,9 +113,18 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         // Detect and handle Tab key
         if (addedChar == '\t')
         {
-            HandleTabPress();
+            /*HandleTabPress();*/
 
             // Return '\0' to ignore the character
+            return '\0';
+        }
+
+        // Detect and handle Enter key
+        if (addedChar == '\n' || addedChar == '\r')
+        {
+            //HandleEnterPress();
+
+            // Return '\0' to ignore the character (optional)
             return '\0';
         }
 
@@ -174,6 +190,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
         debugText.text = log;
 
+        if (scrollCoroutine != null)
+            StopCoroutine(scrollCoroutine);
         StartCoroutine(ScrollToBottomNextFrame());
 
         if (logToFile)
@@ -187,7 +205,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                 // Format the DateTime as MMDDYY-HHMMSS
                 string t = now.ToString("MMddyy-HHmmss");
                 string r = UnityEngine.Random.Range(1000, 9999).ToString();
-                filename = d + "/log-" + t + "-" + r + ".txt";
+                filename = d + "/log-" + t + "-" + r + "-" + version + versionNumber + ".txt";
             }
 
             try
@@ -203,14 +221,20 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         }
     }
 
-    private IEnumerator ScrollToBottomNextFrame()
+    float dummy = 0;
+    private IEnumerator ScrollToBottomNextFrame(bool forced = false)
     {
         // Wait for end of frame to let the UI layout update
         yield return new WaitForEndOfFrame();
 
         // Check if the scroll was near the bottom before the update
-        if (verticalNormalizedPosition_cached < 0.01f)
+        if (verticalNormalizedPosition_cached < 0.01f || forced)
         {
+            while (scrollRect.verticalNormalizedPosition >= 0.01f)
+            {
+                scrollRect.verticalNormalizedPosition = Mathf.SmoothDamp(scrollRect.verticalNormalizedPosition, 0, ref dummy, 0.5f);
+                yield return new WaitForEndOfFrame();
+            }
             scrollRect.verticalNormalizedPosition = 0;
         }
     }
@@ -219,6 +243,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     {
         InputManager.Main.SwitchMap(InputMap.Console);
         Show();
+        //StartCoroutine(ScrollToBottomNextFrame(true));
         FocusOnInputField();
     }
 
@@ -230,7 +255,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
     public void OnCloseConsole(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && !IsAnimating)
         {
             CloseConsole();
         }
@@ -254,6 +279,13 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         {
             HandleTabPress();
         }
+    }
+
+    public void OnScrollToBottom(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (scrollCoroutine != null)
+            StopCoroutine(scrollCoroutine);
+        StartCoroutine(ScrollToBottomNextFrame(true));
     }
 
     private void HandleTabPress()
@@ -290,16 +322,20 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     private const string UNKNOWN_COMMAND = "Unknown command";
     private const string UNKNOWN_ARGUMENT = "Unknown argument";
     private string[] commands =
-    {"help",
-    "showstacktrace",
-    "shownetstat",
-    "logtofile"};
+    {"Help",
+    "ShowStackTrace",
+    "ShowNetStat",
+    "LogToFile",
+    "Spawn",
+    "PrintItemIdList"};
 
     private string[] commandHelps =
-    {"help",
-    "showstacktrace [bool]",
-    "shownetstat [bool]",
-    "logtofile [bool]"};
+    {"Help",
+    "ShowStackTrace [bool]",
+    "ShowNetStat [bool]",
+    "LogToFile [bool]",
+    "Spawn [id] [x] [y] [count]",
+    "PrintItemIdList"};
 
     private void ParseCommand(string command)
     {
@@ -320,28 +356,39 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         // Parse the command
         try
         {
-            if (command.Contains(commands[0]))
+            if (command.Contains(commands[0].ToLower()))
             {
                 string builder = "";
                 foreach (var cc in commandHelps) builder += "\n>> " + cc;
                 Debug.Log($"List of commands:{builder}");
             }
-            else if (command.Contains(commands[1]))
+            else if (command.Contains(commands[1].ToLower()))
             {
                 showStackTrace = defaultBool;
             }
-            else if (command.Contains(commands[2]))
+            else if (command.Contains(commands[2].ToLower()))
             {
                 NetworkManager.Singleton.gameObject.GetComponent<RuntimeNetStatsMonitor>().Visible = defaultBool;
             }
-            else if (command.Contains(commands[3]))
+            else if (command.Contains(commands[3].ToLower()))
             {
                 logToFile = defaultBool;
+            }
+            else if (command.Contains(commands[4].ToLower()))
+            {
+                if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
+
+                AssetManager.Main.SpawnByID(int.Parse(args[1]), new Vector2(float.Parse(args[2]), float.Parse(args[3])), int.Parse(args[4]), true);
+            }
+            else if (command.Contains(commands[5].ToLower()))
+            {
+                if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
+                AssetManager.Main.PrintItemIDs();
             }
             else
             {
                 OutputNextFrame(command);
-                Debug.Log(UNKNOWN_COMMAND + $" '{command}'");
+                throw new ArgumentException(UNKNOWN_COMMAND + $" '{command}'");
             }
         }
         catch (IndexOutOfRangeException)
@@ -370,11 +417,11 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
     private string SuggestCommand(string input)
     {
-        foreach (string command in commandHelps)
+        foreach (string helpCommand in commandHelps)
         {
-            if (command.StartsWith(input, StringComparison.OrdinalIgnoreCase))
+            if (helpCommand.ToLower().StartsWith(input, StringComparison.OrdinalIgnoreCase))
             {
-                return command;
+                return helpCommand + " <i>>>[TAB]";
             }
         }
         return ""; // Return empty string if no match is found

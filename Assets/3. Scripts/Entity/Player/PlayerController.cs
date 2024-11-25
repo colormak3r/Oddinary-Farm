@@ -91,6 +91,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         // Set control
         InputManager.Main.InputActions.Gameplay.SetCallbacks(this);
+        InputManager.Main.SwitchMap(InputMap.Gameplay);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -116,7 +117,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (context.performed)
         {
-            //inventory.DropItem(inventory.CurrentHotbarIndex, lookPosition);
+            inventory.DropItem(inventory.CurrentHotbarIndex);
         }
     }
     public void OnInteract(InputAction.CallbackContext context)

@@ -62,7 +62,6 @@ public struct ItemRefElement : INetworkSerializable, IEquatable<ItemRefElement>
 // Must include this line [GenerateSerializationForType(typeof(byte))] somewhere in the project
 // See: https://github.com/Unity-Technologies/com.unity.netcode.gameobjects/issues/2920#issuecomment-2173886545
 [GenerateSerializationForType(typeof(byte))]
-[RequireComponent(typeof(ItemSpawner))]
 public class PlayerInventory : NetworkBehaviour, IControllable
 {
     private static int MAX_INVENTORY_SLOTS = 30;
@@ -110,7 +109,6 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     [HideInInspector]
     public UnityEvent<ulong> OnCoinsValueChanged;
 
-    private ItemSpawner itemSpawner;
     private InventoryUI inventoryUI;
 
     public Item CurrentItemValue => currentItem;
@@ -120,8 +118,6 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     private void Awake()
     {
-        itemSpawner = GetComponent<ItemSpawner>();
-
         inventory = new ItemStack[MAX_INVENTORY_SLOTS];
         itemRefs = new Item[MAX_INVENTORY_SLOTS];
         for (int i = 0; i < MAX_INVENTORY_SLOTS; i++)
@@ -412,11 +408,11 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     public void DropItem(int index)
     {
-        if (inventory[index].IsStackEmpty) return;
+        if (inventory[index].IsStackEmpty || index == 0) return;
 
         var property = inventory[index].Property;
         ConsumeItemOnClient(index);
-        itemSpawner.Spawn(property, transform.position, 0);
+        AssetManager.Main.SpawnItem(property, transform.position, 0);
     }
 
     /// <summary>

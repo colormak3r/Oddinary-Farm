@@ -1,8 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
+
+[Serializable]
+public struct ItemID
+{
+    public int id;
+    public ItemProperty itemProperty;
+
+    public ItemID(int id, ItemProperty itemProperty)
+    {
+        this.id = id;
+        this.itemProperty = itemProperty;
+    }
+}
 
 public class AssetManager : MonoBehaviour
 {
@@ -20,43 +37,52 @@ public class AssetManager : MonoBehaviour
         FetchAssets();
 #endif
         PopulateAssetDictionary();
-        PopulateCurrencyDictionary();
+        //PopulateCurrencyDictionary();
     }
 
     [Header("Settings")]
     [SerializeField]
     private string assetPath;
+    [SerializeField]
+    private string itemPath;
 
     [Header("Common Assets")]
     [SerializeField]
     private GameObject farmPlotPrefab;
+    public GameObject FarmPlotPrefab => farmPlotPrefab;
     [SerializeField]
     private GameObject itemReplicaPrefab;
-    /*[SerializeField]
-    private ItemProperty unidentifiedItemProperty;
-    [SerializeField]
-    private PlantProperty unidentifiedPlantProperty;*/
-    [SerializeField]
-    private List<CurrencyTypeProperty> currencyProperties = new List<CurrencyTypeProperty>();
-    private Dictionary<CurrencyType, CurrencyProperty> currencyTypeToProperty = new Dictionary<CurrencyType, CurrencyProperty>();
-    private Dictionary<CurrencyProperty, CurrencyType> currencyPropertyToType = new Dictionary<CurrencyProperty, CurrencyType>();
+    public GameObject ItemReplicaPrefab => itemReplicaPrefab;
 
-    [Header("Debugs")]
+    [Header("Scriptable Object Assets")]
     [SerializeField]
     private List<ScriptableObject> scriptableObjectList = new List<ScriptableObject>();
     private Dictionary<string, ScriptableObject> nameToScriptableObject = new Dictionary<string, ScriptableObject>();
 
-    /*public ItemProperty UnidentifiedItemProperty => unidentifiedItemProperty; 
-    public PlantProperty UnidentifiedPlantProperty => unidentifiedPlantProperty;*/
-    public GameObject FarmPlotPrefab => farmPlotPrefab;
-    public GameObject ItemReplicaPrefab => itemReplicaPrefab;
+    [Header("Item Properties")]
+    [SerializeField]
+    private List<ItemID> itemIds = new List<ItemID>();
+
+    /*[SerializeField]
+    private ItemProperty unidentifiedItemProperty;
+    [SerializeField]
+    private PlantProperty unidentifiedPlantProperty;*/
+    /*[SerializeField]
+    private List<CurrencyTypeProperty> currencyProperties = new List<CurrencyTypeProperty>();
+    private Dictionary<CurrencyType, CurrencyProperty> currencyTypeToProperty = new Dictionary<CurrencyType, CurrencyProperty>();
+    private Dictionary<CurrencyProperty, CurrencyType> currencyPropertyToType = new Dictionary<CurrencyProperty, CurrencyType>();*/
+
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showDebugs;
 
 #if UNITY_EDITOR
     [ContextMenu("Fetch Assets")]
     public void FetchAssets()
     {
         scriptableObjectList.Clear();
-        
+        itemIds.Clear();
+
         var assets = LoadAllScriptableObjectsInFolder<ScriptableObject>(assetPath);
         string assetNames = "Fetched assets:";
         foreach (var asset in assets)
@@ -64,6 +90,19 @@ public class AssetManager : MonoBehaviour
             scriptableObjectList.Add(asset);
             assetNames += "\n" + asset.name;
         }
+        if (showDebugs) Debug.Log(assetNames);
+
+        var items = LoadAllScriptableObjectsInFolder<ItemProperty>(itemPath);
+        string itemNames = "Fetched items:";
+        int id = 1;
+        foreach (var item in items)
+        {
+            itemIds.Add(new ItemID(id, item));
+            itemNames += "\n" + item.name;
+            id++;
+        }
+        if (showDebugs) Debug.Log(itemNames);
+
         // Force the list to register update: https://docs.unity3d.com/ScriptReference/EditorUtility.SetDirty.html
         EditorUtility.SetDirty(this);
     }
@@ -86,14 +125,14 @@ public class AssetManager : MonoBehaviour
     }
 #endif
 
-    private void PopulateCurrencyDictionary()
+    /*private void PopulateCurrencyDictionary()
     {
         foreach (var currencyProperty in currencyProperties)
         {
             currencyTypeToProperty[currencyProperty.currencyType] = currencyProperty.currencyProperty;
             currencyPropertyToType[currencyProperty.currencyProperty] = currencyProperty.currencyType;
         }
-    }
+    }*/
 
     private void PopulateAssetDictionary()
     {
@@ -120,7 +159,7 @@ public class AssetManager : MonoBehaviour
         }
     }
 
-    public CurrencyProperty GetCurrencyPropertyFromType(CurrencyType currencyType)
+    /*public CurrencyProperty GetCurrencyPropertyFromType(CurrencyType currencyType)
     {
         return currencyTypeToProperty[currencyType];
     }
@@ -128,5 +167,64 @@ public class AssetManager : MonoBehaviour
     public CurrencyType GetCurrencyTypeFromProperty(CurrencyProperty currencyProperty)
     {
         return currencyPropertyToType[currencyProperty];
+    }*/
+
+    public void PrintItemIDs()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < itemIds.Count; i++)
+        {
+            string paddedId = itemIds[i].id.ToString().PadLeft(4, '0');
+            sb.AppendLine($"{paddedId} : {itemIds[i].itemProperty.Name}");
+        }
+
+        Debug.Log(sb.ToString());
+    }
+
+    public void SpawnByID(int id, Vector2 position, int count = 1, bool log = false, float randomRange = 2f, bool randomForce = true)
+    {
+        if (id < 1000)
+        {
+            ItemProperty property = null;
+            for (int i = 0; i < itemIds.Count; i++)
+            {
+                if (itemIds[i].id == id)
+                {
+                    property = itemIds[i].itemProperty;
+                    break;
+                }
+            }
+
+            if (property != null)
+            {
+                for (int i = 0; i < count; i++)
+                {
+                    SpawnItem(property, position, randomRange, randomForce);
+                }
+                if (log) Debug.Log("Spawned " + count + " " + property.Name + " around " + position);
+            }
+            else
+            {
+                Debug.LogError("Item ID not found: " + id);
+            }
+        }
+    }
+
+    public void SpawnItem(ItemProperty itemProperty, Vector2 position, float randomRange = 2f, bool randomForce = true)
+    {
+        SpawnItemRpc(itemProperty, position, randomRange, randomForce);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SpawnItemRpc(ItemProperty itemProperty, Vector2 position, float randomRange, bool randomForce)
+    {
+        var randomPos = randomRange * (Vector2)Random.onUnitSphere;
+        position = position == default ? transform.position + (Vector3)randomPos : position + randomPos;
+        GameObject go = Instantiate(itemReplicaPrefab, position, Quaternion.identity);
+        go.GetComponent<NetworkObject>().Spawn();
+        var itemReplica = go.GetComponent<ItemReplica>();
+        itemReplica.SetProperty(itemProperty);
+        itemReplica.AddRandomForce();
     }
 }

@@ -9,18 +9,11 @@ public class VendingMachine : NetworkBehaviour, IInteractable
     [SerializeField]
     private ShopInventory shopInventory;
 
-    private ItemSpawner itemSpawner;
-
-    private void Awake()
-    {
-        itemSpawner = GetComponent<ItemSpawner>();
-    }
-
     public void Interact(Transform source)
     {
         if (ShopUI.Main.IsShowing)
             ShopUI.Main.CloseShop();
         else
-            ShopUI.Main.OpenShop(source.GetComponent<PlayerInventory>(), shopInventory, itemSpawner);
+            ShopUI.Main.OpenShop(source.GetComponent<PlayerInventory>(), shopInventory, transform);
     }
 }
