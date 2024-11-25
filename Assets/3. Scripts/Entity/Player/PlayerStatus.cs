@@ -82,7 +82,7 @@ public class PlayerStatus : EntityStatus
         yield return TransitionUI.Main.ShowCoroutine();
         transform.position = respawnPos;
         yield return new WaitUntil(() => !WorldGenerator.Main.IsGenerating);
-        yield return TransitionUI.Main.UnShowCoroutine();
+        yield return TransitionUI.Main.HideCoroutine();
 
         var colliders = GetComponentsInChildren<Collider2D>();
         var renderer = GetComponentsInChildren<SpriteRenderer>();

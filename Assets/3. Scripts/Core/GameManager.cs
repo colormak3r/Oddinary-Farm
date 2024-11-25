@@ -25,7 +25,7 @@ public class GameManager : NetworkBehaviour
         if (Main == null)
             Main = this;
         else
-            Destroy(Main.gameObject);
+            Destroy(gameObject);
     }
 
     public override void OnNetworkSpawn()
@@ -46,7 +46,7 @@ public class GameManager : NetworkBehaviour
 
         yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
         yield return WorldGenerator.Main.GenerateTerrainCoroutine(Vector2.zero);
-        yield return TransitionUI.Main.UnShowCoroutine();
+        yield return TransitionUI.Main.HideCoroutine();
         yield return MapUI.Main.ShowCoroutine();
 
         isInitializing = false;

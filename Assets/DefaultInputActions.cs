@@ -24,7 +24,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
     ""name"": ""Default Input Actions"",
     ""maps"": [
         {
-            ""name"": ""Player"",
+            ""name"": ""Gameplay"",
             ""id"": ""b10b338c-edb7-4eb6-a6b6-e7d38b1cdaa4"",
             ""actions"": [
                 {
@@ -139,6 +139,15 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Hand"",
                     ""type"": ""Button"",
                     ""id"": ""5c20edc9-cc0e-44b0-95fb-939fa00bad48"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Open Console"",
+                    ""type"": ""Button"",
+                    ""id"": ""91b48151-1d28-43fe-b877-c81bd1d5c06a"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -442,18 +451,29 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Hand"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d7c3f20e-a19c-40d2-8d50-666b441916ac"",
+                    ""path"": ""<Keyboard>/backquote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Open Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
         {
-            ""name"": ""Dialogue"",
-            ""id"": ""13c1673d-785c-4b02-b0be-1f832f2699fc"",
+            ""name"": ""UI"",
+            ""id"": ""75ae7608-7763-4a55-9d7d-e8624771cc51"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""Open Console"",
                     ""type"": ""Button"",
-                    ""id"": ""e132dffe-1014-4f4a-8300-1b1b3320ad4c"",
-                    ""expectedControlType"": ""Button"",
+                    ""id"": ""6b978a5e-16b9-4bdb-a4a3-9f48ffc92e49"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -462,26 +482,44 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""16477c00-fcb8-46c2-900f-4db2d2addab2"",
-                    ""path"": """",
+                    ""id"": ""dfd39c6e-2191-47e0-ac3b-06620bc409de"",
+                    ""path"": ""<Keyboard>/backquote"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Open Console"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
             ]
         },
         {
-            ""name"": ""Menu"",
+            ""name"": ""Console"",
             ""id"": ""398f0879-21a4-4e8e-aa40-c6c7cdccb4db"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""Close Console"",
                     ""type"": ""Button"",
                     ""id"": ""ffe62ad6-7893-4831-8ee3-d655f056dc28"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Submit"",
+                    ""type"": ""Button"",
+                    ""id"": ""43fed49d-f40e-4faa-9a7f-6a1b62664b00"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Auto Complete"",
+                    ""type"": ""Button"",
+                    ""id"": ""ec4aaeff-9833-468c-bc06-859ab4538b80"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -491,11 +529,33 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""54e585de-47f2-45e2-8481-85beebb607a9"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/backquote"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Close Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09559786-151c-4a27-8a90-5a2bee9ca230"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c26ee951-c609-4254-ba88-38645f8059e4"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Auto Complete"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -504,34 +564,37 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
     ],
     ""controlSchemes"": []
 }");
-        // Player
-        m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-        m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
-        m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
-        m_Player_Primary = m_Player.FindAction("Primary", throwIfNotFound: true);
-        m_Player_Secondary = m_Player.FindAction("Secondary", throwIfNotFound: true);
-        m_Player_Alternative = m_Player.FindAction("Alternative", throwIfNotFound: true);
-        m_Player_HotbarScroll = m_Player.FindAction("Hotbar Scroll", throwIfNotFound: true);
-        m_Player_Hotbar = m_Player.FindAction("Hotbar", throwIfNotFound: true);
-        m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
-        m_Player_Map = m_Player.FindAction("Map", throwIfNotFound: true);
-        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
-        m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
-        m_Player_Hand = m_Player.FindAction("Hand", throwIfNotFound: true);
-        // Dialogue
-        m_Dialogue = asset.FindActionMap("Dialogue", throwIfNotFound: true);
-        m_Dialogue_Newaction = m_Dialogue.FindAction("New action", throwIfNotFound: true);
-        // Menu
-        m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
-        m_Menu_Newaction = m_Menu.FindAction("New action", throwIfNotFound: true);
+        // Gameplay
+        m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
+        m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
+        m_Gameplay_Look = m_Gameplay.FindAction("Look", throwIfNotFound: true);
+        m_Gameplay_Drop = m_Gameplay.FindAction("Drop", throwIfNotFound: true);
+        m_Gameplay_Primary = m_Gameplay.FindAction("Primary", throwIfNotFound: true);
+        m_Gameplay_Secondary = m_Gameplay.FindAction("Secondary", throwIfNotFound: true);
+        m_Gameplay_Alternative = m_Gameplay.FindAction("Alternative", throwIfNotFound: true);
+        m_Gameplay_HotbarScroll = m_Gameplay.FindAction("Hotbar Scroll", throwIfNotFound: true);
+        m_Gameplay_Hotbar = m_Gameplay.FindAction("Hotbar", throwIfNotFound: true);
+        m_Gameplay_Interact = m_Gameplay.FindAction("Interact", throwIfNotFound: true);
+        m_Gameplay_Map = m_Gameplay.FindAction("Map", throwIfNotFound: true);
+        m_Gameplay_Pause = m_Gameplay.FindAction("Pause", throwIfNotFound: true);
+        m_Gameplay_Inventory = m_Gameplay.FindAction("Inventory", throwIfNotFound: true);
+        m_Gameplay_Hand = m_Gameplay.FindAction("Hand", throwIfNotFound: true);
+        m_Gameplay_OpenConsole = m_Gameplay.FindAction("Open Console", throwIfNotFound: true);
+        // UI
+        m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_OpenConsole = m_UI.FindAction("Open Console", throwIfNotFound: true);
+        // Console
+        m_Console = asset.FindActionMap("Console", throwIfNotFound: true);
+        m_Console_CloseConsole = m_Console.FindAction("Close Console", throwIfNotFound: true);
+        m_Console_Submit = m_Console.FindAction("Submit", throwIfNotFound: true);
+        m_Console_AutoComplete = m_Console.FindAction("Auto Complete", throwIfNotFound: true);
     }
 
     ~@DefaultInputActions()
     {
-        UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, DefaultInputActions.Player.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Dialogue.enabled, "This will cause a leak and performance issues, DefaultInputActions.Dialogue.Disable() has not been called.");
-        UnityEngine.Debug.Assert(!m_Menu.enabled, "This will cause a leak and performance issues, DefaultInputActions.Menu.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Gameplay.enabled, "This will cause a leak and performance issues, DefaultInputActions.Gameplay.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, DefaultInputActions.UI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Console.enabled, "This will cause a leak and performance issues, DefaultInputActions.Console.Disable() has not been called.");
     }
 
     public void Dispose()
@@ -590,48 +653,50 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // Player
-    private readonly InputActionMap m_Player;
-    private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_Player_Move;
-    private readonly InputAction m_Player_Look;
-    private readonly InputAction m_Player_Drop;
-    private readonly InputAction m_Player_Primary;
-    private readonly InputAction m_Player_Secondary;
-    private readonly InputAction m_Player_Alternative;
-    private readonly InputAction m_Player_HotbarScroll;
-    private readonly InputAction m_Player_Hotbar;
-    private readonly InputAction m_Player_Interact;
-    private readonly InputAction m_Player_Map;
-    private readonly InputAction m_Player_Pause;
-    private readonly InputAction m_Player_Inventory;
-    private readonly InputAction m_Player_Hand;
-    public struct PlayerActions
+    // Gameplay
+    private readonly InputActionMap m_Gameplay;
+    private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
+    private readonly InputAction m_Gameplay_Move;
+    private readonly InputAction m_Gameplay_Look;
+    private readonly InputAction m_Gameplay_Drop;
+    private readonly InputAction m_Gameplay_Primary;
+    private readonly InputAction m_Gameplay_Secondary;
+    private readonly InputAction m_Gameplay_Alternative;
+    private readonly InputAction m_Gameplay_HotbarScroll;
+    private readonly InputAction m_Gameplay_Hotbar;
+    private readonly InputAction m_Gameplay_Interact;
+    private readonly InputAction m_Gameplay_Map;
+    private readonly InputAction m_Gameplay_Pause;
+    private readonly InputAction m_Gameplay_Inventory;
+    private readonly InputAction m_Gameplay_Hand;
+    private readonly InputAction m_Gameplay_OpenConsole;
+    public struct GameplayActions
     {
         private @DefaultInputActions m_Wrapper;
-        public PlayerActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_Player_Move;
-        public InputAction @Look => m_Wrapper.m_Player_Look;
-        public InputAction @Drop => m_Wrapper.m_Player_Drop;
-        public InputAction @Primary => m_Wrapper.m_Player_Primary;
-        public InputAction @Secondary => m_Wrapper.m_Player_Secondary;
-        public InputAction @Alternative => m_Wrapper.m_Player_Alternative;
-        public InputAction @HotbarScroll => m_Wrapper.m_Player_HotbarScroll;
-        public InputAction @Hotbar => m_Wrapper.m_Player_Hotbar;
-        public InputAction @Interact => m_Wrapper.m_Player_Interact;
-        public InputAction @Map => m_Wrapper.m_Player_Map;
-        public InputAction @Pause => m_Wrapper.m_Player_Pause;
-        public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
-        public InputAction @Hand => m_Wrapper.m_Player_Hand;
-        public InputActionMap Get() { return m_Wrapper.m_Player; }
+        public GameplayActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Move => m_Wrapper.m_Gameplay_Move;
+        public InputAction @Look => m_Wrapper.m_Gameplay_Look;
+        public InputAction @Drop => m_Wrapper.m_Gameplay_Drop;
+        public InputAction @Primary => m_Wrapper.m_Gameplay_Primary;
+        public InputAction @Secondary => m_Wrapper.m_Gameplay_Secondary;
+        public InputAction @Alternative => m_Wrapper.m_Gameplay_Alternative;
+        public InputAction @HotbarScroll => m_Wrapper.m_Gameplay_HotbarScroll;
+        public InputAction @Hotbar => m_Wrapper.m_Gameplay_Hotbar;
+        public InputAction @Interact => m_Wrapper.m_Gameplay_Interact;
+        public InputAction @Map => m_Wrapper.m_Gameplay_Map;
+        public InputAction @Pause => m_Wrapper.m_Gameplay_Pause;
+        public InputAction @Inventory => m_Wrapper.m_Gameplay_Inventory;
+        public InputAction @Hand => m_Wrapper.m_Gameplay_Hand;
+        public InputAction @OpenConsole => m_Wrapper.m_Gameplay_OpenConsole;
+        public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PlayerActions set) { return set.Get(); }
-        public void AddCallbacks(IPlayerActions instance)
+        public static implicit operator InputActionMap(GameplayActions set) { return set.Get(); }
+        public void AddCallbacks(IGameplayActions instance)
         {
-            if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_GameplayActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_GameplayActionsCallbackInterfaces.Add(instance);
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
@@ -671,9 +736,12 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @Hand.started += instance.OnHand;
             @Hand.performed += instance.OnHand;
             @Hand.canceled += instance.OnHand;
+            @OpenConsole.started += instance.OnOpenConsole;
+            @OpenConsole.performed += instance.OnOpenConsole;
+            @OpenConsole.canceled += instance.OnOpenConsole;
         }
 
-        private void UnregisterCallbacks(IPlayerActions instance)
+        private void UnregisterCallbacks(IGameplayActions instance)
         {
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
@@ -714,116 +782,135 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @Hand.started -= instance.OnHand;
             @Hand.performed -= instance.OnHand;
             @Hand.canceled -= instance.OnHand;
+            @OpenConsole.started -= instance.OnOpenConsole;
+            @OpenConsole.performed -= instance.OnOpenConsole;
+            @OpenConsole.canceled -= instance.OnOpenConsole;
         }
 
-        public void RemoveCallbacks(IPlayerActions instance)
+        public void RemoveCallbacks(IGameplayActions instance)
         {
-            if (m_Wrapper.m_PlayerActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_GameplayActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(IPlayerActions instance)
+        public void SetCallbacks(IGameplayActions instance)
         {
-            foreach (var item in m_Wrapper.m_PlayerActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_GameplayActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_PlayerActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_GameplayActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public PlayerActions @Player => new PlayerActions(this);
+    public GameplayActions @Gameplay => new GameplayActions(this);
 
-    // Dialogue
-    private readonly InputActionMap m_Dialogue;
-    private List<IDialogueActions> m_DialogueActionsCallbackInterfaces = new List<IDialogueActions>();
-    private readonly InputAction m_Dialogue_Newaction;
-    public struct DialogueActions
+    // UI
+    private readonly InputActionMap m_UI;
+    private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
+    private readonly InputAction m_UI_OpenConsole;
+    public struct UIActions
     {
         private @DefaultInputActions m_Wrapper;
-        public DialogueActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_Dialogue_Newaction;
-        public InputActionMap Get() { return m_Wrapper.m_Dialogue; }
+        public UIActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @OpenConsole => m_Wrapper.m_UI_OpenConsole;
+        public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(DialogueActions set) { return set.Get(); }
-        public void AddCallbacks(IDialogueActions instance)
+        public static implicit operator InputActionMap(UIActions set) { return set.Get(); }
+        public void AddCallbacks(IUIActions instance)
         {
-            if (instance == null || m_Wrapper.m_DialogueActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_DialogueActionsCallbackInterfaces.Add(instance);
-            @Newaction.started += instance.OnNewaction;
-            @Newaction.performed += instance.OnNewaction;
-            @Newaction.canceled += instance.OnNewaction;
+            if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+            @OpenConsole.started += instance.OnOpenConsole;
+            @OpenConsole.performed += instance.OnOpenConsole;
+            @OpenConsole.canceled += instance.OnOpenConsole;
         }
 
-        private void UnregisterCallbacks(IDialogueActions instance)
+        private void UnregisterCallbacks(IUIActions instance)
         {
-            @Newaction.started -= instance.OnNewaction;
-            @Newaction.performed -= instance.OnNewaction;
-            @Newaction.canceled -= instance.OnNewaction;
+            @OpenConsole.started -= instance.OnOpenConsole;
+            @OpenConsole.performed -= instance.OnOpenConsole;
+            @OpenConsole.canceled -= instance.OnOpenConsole;
         }
 
-        public void RemoveCallbacks(IDialogueActions instance)
+        public void RemoveCallbacks(IUIActions instance)
         {
-            if (m_Wrapper.m_DialogueActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_UIActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(IDialogueActions instance)
+        public void SetCallbacks(IUIActions instance)
         {
-            foreach (var item in m_Wrapper.m_DialogueActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_UIActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_DialogueActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_UIActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public DialogueActions @Dialogue => new DialogueActions(this);
+    public UIActions @UI => new UIActions(this);
 
-    // Menu
-    private readonly InputActionMap m_Menu;
-    private List<IMenuActions> m_MenuActionsCallbackInterfaces = new List<IMenuActions>();
-    private readonly InputAction m_Menu_Newaction;
-    public struct MenuActions
+    // Console
+    private readonly InputActionMap m_Console;
+    private List<IConsoleActions> m_ConsoleActionsCallbackInterfaces = new List<IConsoleActions>();
+    private readonly InputAction m_Console_CloseConsole;
+    private readonly InputAction m_Console_Submit;
+    private readonly InputAction m_Console_AutoComplete;
+    public struct ConsoleActions
     {
         private @DefaultInputActions m_Wrapper;
-        public MenuActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Newaction => m_Wrapper.m_Menu_Newaction;
-        public InputActionMap Get() { return m_Wrapper.m_Menu; }
+        public ConsoleActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @CloseConsole => m_Wrapper.m_Console_CloseConsole;
+        public InputAction @Submit => m_Wrapper.m_Console_Submit;
+        public InputAction @AutoComplete => m_Wrapper.m_Console_AutoComplete;
+        public InputActionMap Get() { return m_Wrapper.m_Console; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(MenuActions set) { return set.Get(); }
-        public void AddCallbacks(IMenuActions instance)
+        public static implicit operator InputActionMap(ConsoleActions set) { return set.Get(); }
+        public void AddCallbacks(IConsoleActions instance)
         {
-            if (instance == null || m_Wrapper.m_MenuActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_MenuActionsCallbackInterfaces.Add(instance);
-            @Newaction.started += instance.OnNewaction;
-            @Newaction.performed += instance.OnNewaction;
-            @Newaction.canceled += instance.OnNewaction;
+            if (instance == null || m_Wrapper.m_ConsoleActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_ConsoleActionsCallbackInterfaces.Add(instance);
+            @CloseConsole.started += instance.OnCloseConsole;
+            @CloseConsole.performed += instance.OnCloseConsole;
+            @CloseConsole.canceled += instance.OnCloseConsole;
+            @Submit.started += instance.OnSubmit;
+            @Submit.performed += instance.OnSubmit;
+            @Submit.canceled += instance.OnSubmit;
+            @AutoComplete.started += instance.OnAutoComplete;
+            @AutoComplete.performed += instance.OnAutoComplete;
+            @AutoComplete.canceled += instance.OnAutoComplete;
         }
 
-        private void UnregisterCallbacks(IMenuActions instance)
+        private void UnregisterCallbacks(IConsoleActions instance)
         {
-            @Newaction.started -= instance.OnNewaction;
-            @Newaction.performed -= instance.OnNewaction;
-            @Newaction.canceled -= instance.OnNewaction;
+            @CloseConsole.started -= instance.OnCloseConsole;
+            @CloseConsole.performed -= instance.OnCloseConsole;
+            @CloseConsole.canceled -= instance.OnCloseConsole;
+            @Submit.started -= instance.OnSubmit;
+            @Submit.performed -= instance.OnSubmit;
+            @Submit.canceled -= instance.OnSubmit;
+            @AutoComplete.started -= instance.OnAutoComplete;
+            @AutoComplete.performed -= instance.OnAutoComplete;
+            @AutoComplete.canceled -= instance.OnAutoComplete;
         }
 
-        public void RemoveCallbacks(IMenuActions instance)
+        public void RemoveCallbacks(IConsoleActions instance)
         {
-            if (m_Wrapper.m_MenuActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_ConsoleActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(IMenuActions instance)
+        public void SetCallbacks(IConsoleActions instance)
         {
-            foreach (var item in m_Wrapper.m_MenuActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_ConsoleActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_MenuActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_ConsoleActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public MenuActions @Menu => new MenuActions(this);
-    public interface IPlayerActions
+    public ConsoleActions @Console => new ConsoleActions(this);
+    public interface IGameplayActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
@@ -838,13 +925,16 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnInventory(InputAction.CallbackContext context);
         void OnHand(InputAction.CallbackContext context);
+        void OnOpenConsole(InputAction.CallbackContext context);
     }
-    public interface IDialogueActions
+    public interface IUIActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnOpenConsole(InputAction.CallbackContext context);
     }
-    public interface IMenuActions
+    public interface IConsoleActions
     {
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnCloseConsole(InputAction.CallbackContext context);
+        void OnSubmit(InputAction.CallbackContext context);
+        void OnAutoComplete(InputAction.CallbackContext context);
     }
 }

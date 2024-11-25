@@ -144,7 +144,7 @@ public class ShopUI : UIBehaviour
             child.GetComponent<ShopButton>().Remove();
         }
         yield return null;
-        yield return UnShowCoroutine();
+        yield return HideCoroutine();
     }
 
     public void HandleOnButtonClick(ItemProperty itemProperty, ShopButton button, int index)

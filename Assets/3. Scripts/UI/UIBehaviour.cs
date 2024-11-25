@@ -10,6 +10,8 @@ public class UIBehaviour : MonoBehaviour
     protected GameObject container;
     [SerializeField]
     protected float fadeDuration = 0.25f;
+    [SerializeField]
+    protected bool delayShow;
 
     [Header("Debugs")]
     [SerializeField]
@@ -31,6 +33,9 @@ public class UIBehaviour : MonoBehaviour
     public IEnumerator ShowCoroutine(bool fade = true)
     {
         if (isShowing) yield break;
+
+        if (delayShow) yield return new WaitForSeconds(fadeDuration);
+
         isShowing = true;
 
         container.SetActive(true);
@@ -42,7 +47,7 @@ public class UIBehaviour : MonoBehaviour
         OnVisibilityChanged?.Invoke(isShowing);
     }
 
-    public IEnumerator UnShowCoroutine(bool fade = true)
+    public IEnumerator HideCoroutine(bool fade = true)
     {
         if (!isShowing) yield break;
 
@@ -57,13 +62,27 @@ public class UIBehaviour : MonoBehaviour
         OnVisibilityChanged?.Invoke(isShowing);
     }
 
+    public void Show()
+    {
+        if (IsShowing || isAnimating) return;
+
+        StartCoroutine(ShowCoroutine());
+    }
+
+    public void Hide()
+    {
+        if (!IsShowing || isAnimating) return;
+
+        StartCoroutine(HideCoroutine());
+    }
+
     [ContextMenu("Toggle Show")]
     public virtual void ToggleShow()
     {
         if (isAnimating) return;
 
         if (isShowing)
-            StartCoroutine(UnShowCoroutine());
+            StartCoroutine(HideCoroutine());
         else
             StartCoroutine(ShowCoroutine());
 

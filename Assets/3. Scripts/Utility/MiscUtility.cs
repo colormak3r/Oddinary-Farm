@@ -149,5 +149,11 @@ namespace ColorMak3r.Utility
             return new Color(Random.value, Random.value, Random.value);
         }
         #endregion
+
+        public static string FormatTimeHHMMSS(double timeLeft)
+        {
+            TimeSpan timeSpan = TimeSpan.FromSeconds(timeLeft);
+            return timeSpan.ToString(@"hh\:mm\:ss");
+        }
     }
 }

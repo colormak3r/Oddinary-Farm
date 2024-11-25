@@ -1,6 +1,6 @@
-using Netcode.Transports.Facepunch;
 using System.Collections;
 using System.Collections.Generic;
+using Netcode.Transports.Facepunch;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
@@ -14,7 +14,7 @@ public class ConnectionManager : MonoBehaviour
     {
         if (Main == null)
         {
-            Main = this;            
+            Main = this;
         }
         else
         {
@@ -29,7 +29,7 @@ public class ConnectionManager : MonoBehaviour
     private string mainGameScene = "Main Game";
 
     [Header("Debugs")]
-    [SerializeField] 
+    [SerializeField]
     private bool showDebugs = false;
 
     private NetworkManager networkManager;
@@ -40,7 +40,9 @@ public class ConnectionManager : MonoBehaviour
 
     private void Start()
     {
-        networkManager = GetComponent<NetworkManager>();        
+        networkManager = GetComponent<NetworkManager>();
+        unityTransport = GetComponent<UnityTransport>();
+        facepunchTransport = GetComponent<FacepunchTransport>();
     }
 
     private void OnGUI()
@@ -74,44 +76,75 @@ public class ConnectionManager : MonoBehaviour
 
     private void StartButtons()
     {
+        if (!Application.isEditor) return;
+
         if (GUILayout.Button("Host"))
         {
-            StartCoroutine(LaunchCoroutine(true));
-
+            StartCoroutine(LaunchCoroutine(true, unityTransport));
         }
 
         if (GUILayout.Button("Client"))
         {
-            StartCoroutine(LaunchCoroutine(false));
+            StartCoroutine(LaunchCoroutine(false, unityTransport));
         }
     }
 
-    private IEnumerator LaunchCoroutine(bool isHost)
+    public void StartGameSinglePlayer()
+    {
+        StartCoroutine(LaunchCoroutine(true, unityTransport));
+    }
+
+    public void StartGameMultiplayerLocalHost()
+    {
+        StartCoroutine(LaunchCoroutine(true, unityTransport));
+    }
+
+    public void StartGameMultiplayerLocalClient()
+    {
+        StartCoroutine(LaunchCoroutine(false, unityTransport));
+    }
+
+    public void StartGameMultiplayerOnlineHost()
+    {
+        StartCoroutine(LaunchCoroutine(true, facepunchTransport));
+    }
+
+    public void StartGameMultiplayerOnlineClient()
+    {
+        StartCoroutine(LaunchCoroutine(false, facepunchTransport));
+    }
+
+    private IEnumerator LaunchCoroutine(bool isHost, NetworkTransport networkTransport)
     {
         launched = true;
         yield return TransitionUI.Main.ShowCoroutine();
 
+        networkManager.NetworkConfig.NetworkTransport = networkTransport;
+
         if (SceneManager.GetActiveScene().name != mainGameScene)
         {
-            SceneManager.LoadScene(mainGameScene);
-            networkManager.NetworkConfig.NetworkTransport = unityTransport;
-            //networkManager.NetworkConfig.NetworkTransport = facepunchTransport;
-        }
-        else
-        {
-            networkManager.NetworkConfig.NetworkTransport = unityTransport;
+            // Load the desired scene asynchronously
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(mainGameScene, LoadSceneMode.Single);
+
+            // Optionally, display a loading progress bar
+            while (!asyncLoad.isDone)
+            {
+                // You can add UI feedback here if desired
+                yield return null;
+            }
         }
 
-        //networkManager.ConnectionApprovalCallback = ApprovalCheck;
+        // TODO: Handle passworded servers
+        // networkManager.ConnectionApprovalCallback = ApprovalCheck;
+
         if (isHost)
         {
             networkManager.StartHost();
-        }            
+        }
         else
         {
             networkManager.StartClient();
         }
-            
     }
 
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)

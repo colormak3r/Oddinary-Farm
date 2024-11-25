@@ -54,6 +54,6 @@ public class InventoryUI : UIBehaviour
 
     public void CloseInventory()
     {
-       StartCoroutine(inventoryBehaviour.UnShowCoroutine());
+       StartCoroutine(inventoryBehaviour.HideCoroutine());
     }
 }

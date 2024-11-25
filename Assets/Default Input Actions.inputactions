@@ -2,7 +2,7 @@
     "name": "Default Input Actions",
     "maps": [
         {
-            "name": "Player",
+            "name": "Gameplay",
             "id": "b10b338c-edb7-4eb6-a6b6-e7d38b1cdaa4",
             "actions": [
                 {
@@ -117,6 +117,15 @@
                     "name": "Hand",
                     "type": "Button",
                     "id": "5c20edc9-cc0e-44b0-95fb-939fa00bad48",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Open Console",
+                    "type": "Button",
+                    "id": "91b48151-1d28-43fe-b877-c81bd1d5c06a",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -420,18 +429,29 @@
                     "action": "Hand",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d7c3f20e-a19c-40d2-8d50-666b441916ac",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Open Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
         {
-            "name": "Dialogue",
-            "id": "13c1673d-785c-4b02-b0be-1f832f2699fc",
+            "name": "UI",
+            "id": "75ae7608-7763-4a55-9d7d-e8624771cc51",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Open Console",
                     "type": "Button",
-                    "id": "e132dffe-1014-4f4a-8300-1b1b3320ad4c",
-                    "expectedControlType": "Button",
+                    "id": "6b978a5e-16b9-4bdb-a4a3-9f48ffc92e49",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -440,26 +460,44 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "16477c00-fcb8-46c2-900f-4db2d2addab2",
-                    "path": "",
+                    "id": "dfd39c6e-2191-47e0-ac3b-06620bc409de",
+                    "path": "<Keyboard>/backquote",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Open Console",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
             ]
         },
         {
-            "name": "Menu",
+            "name": "Console",
             "id": "398f0879-21a4-4e8e-aa40-c6c7cdccb4db",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Close Console",
                     "type": "Button",
                     "id": "ffe62ad6-7893-4831-8ee3-d655f056dc28",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Submit",
+                    "type": "Button",
+                    "id": "43fed49d-f40e-4faa-9a7f-6a1b62664b00",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Auto Complete",
+                    "type": "Button",
+                    "id": "ec4aaeff-9833-468c-bc06-859ab4538b80",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -469,11 +507,33 @@
                 {
                     "name": "",
                     "id": "54e585de-47f2-45e2-8481-85beebb607a9",
-                    "path": "",
+                    "path": "<Keyboard>/backquote",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Close Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "09559786-151c-4a27-8a90-5a2bee9ca230",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Submit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c26ee951-c609-4254-ba88-38645f8059e4",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Auto Complete",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

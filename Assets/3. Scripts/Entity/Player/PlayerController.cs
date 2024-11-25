@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.Rendering.DebugUI;
 
-public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerActions, IControllable
+public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayActions, IControllable
 {
     private static Vector3 LEFT_DIRECTION = new Vector3(-1, 1, 1);
     private static Vector3 RIGHT_DIRECTION = new Vector3(1, 1, 1);
@@ -90,7 +90,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         yield return new WaitUntil(() => GameManager.Main.IsInitialized);
 
         // Set control
-        InputManager.Main.InputActions.Player.SetCallbacks(this);
+        InputManager.Main.InputActions.Gameplay.SetCallbacks(this);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -146,7 +146,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
 
         if (context.performed)
         {
-            if(ShopUI.Main.IsShowing) ShopUI.Main.CloseShop();
+            if (ShopUI.Main.IsShowing) ShopUI.Main.CloseShop();
         }
     }
 
@@ -167,7 +167,18 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IPlayerAct
         if (context.performed)
         {
             ChangeHotbarIndex(0);
-        }        
+        }
+    }
+
+
+    public void OnOpenConsole(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            // Prevent player drifting when opening console
+            // movement.SetDirection(Vector2.zero);
+            ConsoleUI.Main.OpenConsole();
+        }
     }
 
     #region Player Action
