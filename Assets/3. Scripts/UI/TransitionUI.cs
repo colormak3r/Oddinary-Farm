@@ -24,8 +24,10 @@ public class TransitionUI : UIBehaviour
         }
 
         DontDestroyOnLoad(transform.parent.gameObject);
+    }
 
-
+    private void Start()
+    {
         if (revealOnStart)
         {
             StartCoroutine(RevealAfterStartCoroutine());

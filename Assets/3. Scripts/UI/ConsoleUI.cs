@@ -15,6 +15,9 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 {
     public static ConsoleUI Main;
 
+    private static string SHOW_STACK_TRACE = "ShowStackTrace";
+    private static string LOG_TO_FILE = "LogToFile";
+
     [Header("Settings")]
     [SerializeField]
     private string version = "v0.1";
@@ -69,6 +72,9 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         }
 
         DontDestroyOnLoad(transform.parent.gameObject);
+
+        showStackTrace = PlayerPrefs.GetInt(SHOW_STACK_TRACE, 0) == 1;
+        logToFile = PlayerPrefs.GetInt(LOG_TO_FILE, 1) == 1;
     }
 
     private void Start()
@@ -91,45 +97,6 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         inputField.onValueChanged.RemoveListener(OnInputValueChanged);
         inputField.onValidateInput -= ValidateInput;
         Application.logMessageReceived -= HandleLogMessageReceived;
-    }
-
-    private void OnInputValueChanged(string text)
-    {
-        suggestionText.text = text == "" ? "" : SuggestCommand(text);
-    }
-
-    private char ValidateInput(string text, int charIndex, char addedChar)
-    {
-        // Prevent backtick
-        if (addedChar == '`')
-        {
-            /*// Close the console
-            CloseConsole();*/
-
-            // Return '\0' to ignore the character
-            return '\0';
-        }
-
-        // Detect and handle Tab key
-        if (addedChar == '\t')
-        {
-            /*HandleTabPress();*/
-
-            // Return '\0' to ignore the character
-            return '\0';
-        }
-
-        // Detect and handle Enter key
-        if (addedChar == '\n' || addedChar == '\r')
-        {
-            //HandleEnterPress();
-
-            // Return '\0' to ignore the character (optional)
-            return '\0';
-        }
-
-        // Accept all other characters
-        return addedChar;
     }
 
     private void HandleLogMessageReceived(string condition, string stackTrace, LogType type)
@@ -190,9 +157,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
         debugText.text = log;
 
-        if (scrollCoroutine != null)
-            StopCoroutine(scrollCoroutine);
-        StartCoroutine(ScrollToBottomNextFrame());
+        ScrollToBottom();
 
         if (logToFile)
         {
@@ -219,104 +184,6 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                 Debug.Log(e.Message);
             }
         }
-    }
-
-    float dummy = 0;
-    private IEnumerator ScrollToBottomNextFrame(bool forced = false)
-    {
-        // Wait for end of frame to let the UI layout update
-        yield return new WaitForEndOfFrame();
-
-        // Check if the scroll was near the bottom before the update
-        if (verticalNormalizedPosition_cached < 0.01f || forced)
-        {
-            while (scrollRect.verticalNormalizedPosition >= 0.01f)
-            {
-                scrollRect.verticalNormalizedPosition = Mathf.SmoothDamp(scrollRect.verticalNormalizedPosition, 0, ref dummy, 0.5f);
-                yield return new WaitForEndOfFrame();
-            }
-            scrollRect.verticalNormalizedPosition = 0;
-        }
-    }
-
-    public void OpenConsole()
-    {
-        InputManager.Main.SwitchMap(InputMap.Console);
-        Show();
-        //StartCoroutine(ScrollToBottomNextFrame(true));
-        FocusOnInputField();
-    }
-
-    public void CloseConsole()
-    {
-        InputManager.Main.SwitchToPreviousMap();
-        Hide();
-    }
-
-    public void OnCloseConsole(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        if (context.performed && !IsAnimating)
-        {
-            CloseConsole();
-        }
-    }
-
-    public void OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if (inputField.text != "")
-                ParseCommand(inputField.text);
-
-            FocusOnInputField();
-            scrollRect.verticalNormalizedPosition = 0;
-        }
-    }
-
-    public void OnAutoComplete(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            HandleTabPress();
-        }
-    }
-
-    public void OnScrollToBottom(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        if (scrollCoroutine != null)
-            StopCoroutine(scrollCoroutine);
-        StartCoroutine(ScrollToBottomNextFrame(true));
-    }
-
-    private void HandleTabPress()
-    {
-        var command = AutoCompleteCommand(inputField.text);
-        if (command != "") OutputNextFrame(command);
-    }
-
-    private void OutputNextFrame(string text)
-    {
-        StartCoroutine(OutputNextFrameCoroutine(text));
-    }
-    private IEnumerator OutputNextFrameCoroutine(string text)
-    {
-        // Wait for end of frame to let the UI layout update
-        yield return new WaitForEndOfFrame();
-
-        inputField.text = text;
-        FocusOnInputField();
-    }
-
-    private void FocusOnInputField()
-    {
-        // Select the input field
-        inputField.Select();
-
-        // Move the cursor to the end of the text
-        inputField.caretPosition = inputField.text.Length;
-
-        // Activate the input field
-        inputField.ActivateInputField();
     }
 
     private const string UNKNOWN_COMMAND = "Unknown command";
@@ -365,6 +232,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
             else if (command.Contains(commands[1].ToLower()))
             {
                 showStackTrace = defaultBool;
+                PlayerPrefs.SetInt(SHOW_STACK_TRACE, showStackTrace ? 1 : 0);
             }
             else if (command.Contains(commands[2].ToLower()))
             {
@@ -373,6 +241,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
             else if (command.Contains(commands[3].ToLower()))
             {
                 logToFile = defaultBool;
+                PlayerPrefs.SetInt(LOG_TO_FILE, logToFile ? 1 : 0);
             }
             else if (command.Contains(commands[4].ToLower()))
             {
@@ -402,6 +271,131 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
             Debug.Log(e.Message);
         }
     }
+
+
+    #region  Input Actions
+
+    public void OnCloseConsole(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (context.performed && !IsAnimating)
+        {
+            CloseConsole();
+        }
+    }
+
+    public void OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (inputField.text != "")
+                ParseCommand(inputField.text);
+
+            FocusOnInputField();
+            scrollRect.verticalNormalizedPosition = 0;
+        }
+    }
+
+    public void OnAutoComplete(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            HandleTabPress();
+        }
+    }
+
+    public void OnScrollToBottom(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            ScrollToBottom(true);
+        }
+    }
+
+    #endregion
+
+    #region UI features
+
+    private void OnInputValueChanged(string text)
+    {
+        suggestionText.text = text == "" ? "" : SuggestCommand(text);
+    }
+
+    private char ValidateInput(string text, int charIndex, char addedChar)
+    {
+        // Prevent backtick
+        if (addedChar == '`')
+        {
+            /*// Close the console
+            CloseConsole();*/
+
+            // Return '\0' to ignore the character
+            return '\0';
+        }
+
+        // Detect and handle Tab key
+        if (addedChar == '\t')
+        {
+            /*HandleTabPress();*/
+
+            // Return '\0' to ignore the character
+            return '\0';
+        }
+
+        // Detect and handle Enter key
+        if (addedChar == '\n' || addedChar == '\r')
+        {
+            //HandleEnterPress();
+
+            // Return '\0' to ignore the character (optional)
+            return '\0';
+        }
+
+        // Accept all other characters
+        return addedChar;
+    }
+
+    private void ScrollToBottom(bool forced = false)
+    {
+        if (scrollCoroutine != null)
+            StopCoroutine(scrollCoroutine);
+        StartCoroutine(ScrollToBottomNextFrame(forced));
+    }
+
+    float dummy = 0;
+    private IEnumerator ScrollToBottomNextFrame(bool forced = false)
+    {
+        // Wait for end of frame to let the UI layout update
+        yield return new WaitForEndOfFrame();
+
+        // Check if the scroll was near the bottom before the update
+        if (verticalNormalizedPosition_cached < 0.01f || forced)
+        {
+            while (scrollRect.verticalNormalizedPosition >= 0.01f)
+            {
+                scrollRect.verticalNormalizedPosition = Mathf.SmoothDamp(scrollRect.verticalNormalizedPosition, 0, ref dummy, 0.5f);
+                yield return new WaitForEndOfFrame();
+            }
+            scrollRect.verticalNormalizedPosition = 0;
+        }
+    }
+
+    public void OpenConsole()
+    {
+        InputManager.Main.SwitchMap(InputMap.Console);
+        Show();
+        ScrollToBottom(true);
+        FocusOnInputField();
+    }
+
+    public void CloseConsole()
+    {
+        InputManager.Main.SwitchToPreviousMap();
+        Hide();
+    }
+
+    #endregion
+
+    #region Utility
 
     private string AutoCompleteCommand(string input)
     {
@@ -441,4 +435,37 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                 throw new ArgumentException(UNKNOWN_ARGUMENT + $" '{arg}'");
         }
     }
+
+    private void HandleTabPress()
+    {
+        var command = AutoCompleteCommand(inputField.text);
+        if (command != "") OutputNextFrame(command);
+    }
+
+    private void OutputNextFrame(string text)
+    {
+        StartCoroutine(OutputNextFrameCoroutine(text));
+    }
+    private IEnumerator OutputNextFrameCoroutine(string text)
+    {
+        // Wait for end of frame to let the UI layout update
+        yield return new WaitForEndOfFrame();
+
+        inputField.text = text;
+        FocusOnInputField();
+    }
+
+    private void FocusOnInputField()
+    {
+        // Select the input field
+        inputField.Select();
+
+        // Move the cursor to the end of the text
+        inputField.caretPosition = inputField.text.Length;
+
+        // Activate the input field
+        inputField.ActivateInputField();
+    }
+
+    #endregion
 }

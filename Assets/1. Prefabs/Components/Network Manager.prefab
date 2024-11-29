@@ -16,14 +16,13 @@ GameObject:
   - component: {fileID: 3081233137692295269}
   - component: {fileID: 2074793287845341262}
   - component: {fileID: 1726808823562665226}
-  - component: {fileID: 2221581665594707917}
   m_Layer: 0
   m_Name: Network Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2819685107502346686
 Transform:
   m_ObjectHideFlags: 0
@@ -89,6 +88,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainGameScene: Main Game
+  maxPlayer: 8
+  useFacepunchTransport: 1
   showDebugs: 0
   showStatus: 0
 --- !u!114 &8308089946564611574
@@ -138,7 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PresetAsset: {fileID: 0}
   m_PresetReference:
-    rid: 6716733497101254800
+    rid: 810303361397293080
   m_Scenario:
     rid: -2
   m_IsScenarioSettingsFolded: 1
@@ -148,7 +149,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 6716733497101254800
+    - rid: 810303361397293080
       type: {class: NetworkSimulatorPreset, ns: Unity.Multiplayer.Tools.NetworkSimulator.Runtime, asm: Unity.Multiplayer.Tools.NetworkSimulator.Runtime}
       data:
         <Name>k__BackingField: None
@@ -201,15 +202,3 @@ MonoBehaviour:
   steamAppId: 480
   targetSteamId: 0
   userSteamId: 0
---- !u!114 &2221581665594707917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1154090671039255764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65ff4d705e1a7ce4a8d2252f7c2a7517, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
