@@ -9,11 +9,15 @@ public class NetworkManagerBootStrapper : MonoBehaviour
     [SerializeField]
     private GameObject networkManagerObject;
 
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showDebugs;
+
     private void Start()
     {
         if (NetworkManager.Singleton == null)
         {
-            Debug.Log("NetworkManager is null, starting up the scene-placed one", networkManagerObject);
+            if(showDebugs) Debug.Log("NetworkManager is null, starting up the scene-placed one", networkManagerObject);
             networkManagerObject.SetActive(true);
         }
     }

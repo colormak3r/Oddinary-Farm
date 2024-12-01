@@ -34,9 +34,11 @@ namespace ColorMak3r.Utility
 
         public static IEnumerator UIFadeCoroutine(this CanvasRenderer[] renderers, float start, float end, float duration = 0.5f)
         {
+            //if (renderers == null || renderers.Length == 0) yield break;            
+
             foreach (CanvasRenderer renderer in renderers)
             {
-                renderer.SetAlpha(start);
+                if (renderer != null) renderer.SetAlpha(start);
             }
 
             float elapsedTime = 0f;
@@ -49,7 +51,7 @@ namespace ColorMak3r.Utility
 
                 foreach (CanvasRenderer renderer in renderers)
                 {
-                    renderer.SetAlpha(alpha);
+                    if (renderer != null) renderer.SetAlpha(alpha);
                 }
 
                 yield return null;
@@ -57,7 +59,7 @@ namespace ColorMak3r.Utility
 
             foreach (CanvasRenderer renderer in renderers)
             {
-                renderer.SetAlpha(end);
+                if (renderer != null) renderer.SetAlpha(end);
             }
         }
     }

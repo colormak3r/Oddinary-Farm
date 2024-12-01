@@ -29,11 +29,7 @@ public class InputManager : MonoBehaviour
         uiActionMap = inputActions.UI;
     }
 
-    [Header("Settings")]
-    [SerializeField]
-    private string mainGameScene = "Main Game";
-    [SerializeField]
-    private string mainMenuScene = "Main Menu";
+    //[Header("Settings")]
 
     [Header("Debugs")]
     [SerializeField]
@@ -64,7 +60,7 @@ public class InputManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == mainMenuScene)
+        if (scene.buildIndex == 0)
         {
             SwitchMap(InputMap.UI);
         }

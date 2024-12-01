@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 
 public class ConnectionManager : MonoBehaviour
 {
-    private static ConnectionManager Main;
+    public static ConnectionManager Main;
 
     private void Awake()
     {
@@ -28,8 +28,6 @@ public class ConnectionManager : MonoBehaviour
     }
 
     [Header("Settings")]
-    [SerializeField]
-    private string mainGameScene = "Main Game";
     [SerializeField]
     private int maxPlayer = 8;
     [SerializeField]
@@ -54,6 +52,8 @@ public class ConnectionManager : MonoBehaviour
         networkManager = GetComponent<NetworkManager>();
         unityTransport = GetComponent<UnityTransport>();
         facepunchTransport = GetComponent<FacepunchTransport>();
+
+        facepunchTransport.enabled = useFacepunchTransport;
 
         if (useFacepunchTransport)
         {
@@ -98,18 +98,12 @@ public class ConnectionManager : MonoBehaviour
         yield return TransitionUI.Main.ShowCoroutine();
 
         networkManager.NetworkConfig.NetworkTransport = networkTransport;
+        facepunchTransport.enabled = networkTransport == facepunchTransport;
 
-        if (SceneManager.GetActiveScene().name != mainGameScene)
+        if (SceneManager.GetActiveScene().name != SceneDirectory.MAIN_GAME)
         {
-            // Load the desired scene asynchronously
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(mainGameScene, LoadSceneMode.Single);
-
-            // Optionally, display a loading progress bar
-            while (!asyncLoad.isDone)
-            {
-                // You can add UI feedback here if desired
-                yield return null;
-            }
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneDirectory.MAIN_GAME, LoadSceneMode.Single);
+            yield return new WaitUntil(() => asyncLoad.isDone);
         }
 
         // TODO: Handle passworded servers
@@ -119,7 +113,7 @@ public class ConnectionManager : MonoBehaviour
         {
             networkManager.StartHost();
 
-            if (useFacepunchTransport) CreateLobby();
+            if (facepunchTransport.enabled) CreateLobby();
 
         }
         else
@@ -135,9 +129,23 @@ public class ConnectionManager : MonoBehaviour
 
     public void Disconnect()
     {
+        StartCoroutine(DisconnectCoroutine());
+    }
+
+    private IEnumerator DisconnectCoroutine()
+    {
         CurrentLobby?.Leave();
+        yield return TransitionUI.Main.ShowCoroutine();
 
         if (networkManager) networkManager.Shutdown();
+
+        if (SceneManager.GetActiveScene().name != SceneDirectory.MAIN_MENU)
+        {
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneDirectory.MAIN_MENU, LoadSceneMode.Single);
+            yield return new WaitUntil(() => asyncLoad.isDone);
+        }
+
+        TransitionUI.Main.Hide();
     }
 
     #region Steam Callbacks

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class UIBehaviour : MonoBehaviour
 {
-    [Header("General Settings")]
+    [Header("UI Behaviour Settings")]
     [SerializeField]
     protected GameObject container;
     [SerializeField]
@@ -15,30 +15,34 @@ public class UIBehaviour : MonoBehaviour
     protected bool delayShow;
     [SerializeField]
     protected GameObject[] delayShowFadeFirstObjects;
+    [SerializeField]
+    protected GameObject[] ignoreObjects;
 
-    [Header("Debugs")]
+    [Header("UI Behaviour Debugs")]
     [SerializeField]
     private bool isShowing;
+    public bool IsShowing => isShowing;
     [SerializeField]
     private bool isAnimating;
+    public bool IsAnimating => isAnimating;
     [SerializeField]
-    private CanvasRenderer[] renderers;
+    private CanvasRenderer[] allRenderers;
     [SerializeField]
     private CanvasRenderer[] dsffoRenderers;
+    [SerializeField]
+    private CanvasRenderer[] ignoreRenderers;
 
     [HideInInspector]
     public UnityEvent<bool> OnVisibilityChanged;
 
-    public bool IsShowing => isShowing;
-    public bool IsAnimating => isAnimating;
-
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         isShowing = container.activeSelf;
 
-        var renderers = new List<CanvasRenderer>();
-        renderers.AddRange(container.GetComponentsInChildren<CanvasRenderer>(true));
+        var allRenderers = new List<CanvasRenderer>();
+        allRenderers.AddRange(container.GetComponentsInChildren<CanvasRenderer>(true));
         var dsffoRenderers = new List<CanvasRenderer>();
+        var ignoreRenderers = new List<CanvasRenderer>();
 
         if (delayShowFadeFirstObjects != null)
         {
@@ -48,9 +52,19 @@ public class UIBehaviour : MonoBehaviour
             }
         }
 
-        renderers.RemoveAll(renderer => dsffoRenderers.Contains(renderer));
-        this.renderers = renderers.ToArray();
+        if (ignoreObjects != null)
+        {
+            foreach (GameObject obj in ignoreObjects)
+            {
+                ignoreRenderers.AddRange(obj.GetComponentsInChildren<CanvasRenderer>(true));
+            }
+        }
+
+        allRenderers.RemoveAll(renderer => dsffoRenderers.Contains(renderer));
+        allRenderers.RemoveAll(renderer => ignoreRenderers.Contains(renderer));
+        this.allRenderers = allRenderers.ToArray();
         this.dsffoRenderers = dsffoRenderers.ToArray();
+        this.ignoreRenderers = ignoreRenderers.ToArray();
     }
 
     public IEnumerator ShowCoroutine(bool fade = true)
@@ -64,8 +78,10 @@ public class UIBehaviour : MonoBehaviour
         container.SetActive(true);
 
         isAnimating = true;
-        yield return renderers.UIFadeCoroutine(0, 1, fade ? fadeDuration : 0);
-        yield return dsffoRenderers.UIFadeCoroutine(0, 1, fade ? fadeDuration : 0);
+        if (allRenderers != null && allRenderers.Length > 0)
+            yield return allRenderers.UIFadeCoroutine(0, 1, fade ? fadeDuration : 0);
+        if (dsffoRenderers != null && dsffoRenderers.Length > 0)
+            yield return dsffoRenderers.UIFadeCoroutine(0, 1, fade ? fadeDuration : 0);
         isAnimating = false;
 
         OnVisibilityChanged?.Invoke(isShowing);
@@ -76,8 +92,10 @@ public class UIBehaviour : MonoBehaviour
         if (!isShowing) yield break;
 
         isAnimating = true;
-        yield return dsffoRenderers.UIFadeCoroutine(1, 0, fade ? fadeDuration : 0);
-        yield return renderers.UIFadeCoroutine(1, 0, fade ? fadeDuration : 0);
+        if (dsffoRenderers != null && dsffoRenderers.Length > 0)
+            yield return dsffoRenderers.UIFadeCoroutine(1, 0, fade ? fadeDuration : 0);
+        if (allRenderers != null && allRenderers.Length > 0)
+            yield return allRenderers.UIFadeCoroutine(1, 0, fade ? fadeDuration : 0);
         isAnimating = false;
 
         container.SetActive(false);
@@ -122,7 +140,5 @@ public class UIBehaviour : MonoBehaviour
             StartCoroutine(HideCoroutine());
         else
             StartCoroutine(ShowCoroutine());
-
-        // isShowing = !isShowing;
     }
 }

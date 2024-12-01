@@ -85,8 +85,10 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         debugText.text = "";
         suggestionText.text = "";
     }
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         inputField.onValueChanged.AddListener(OnInputValueChanged);
         inputField.onValidateInput += ValidateInput;
         Application.logMessageReceived += HandleLogMessageReceived;

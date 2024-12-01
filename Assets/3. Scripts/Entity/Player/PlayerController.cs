@@ -25,6 +25,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private PlayerInventory inventory;
     private PlayerInteraction interaction;
 
+    private bool isOwner;
+
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
     public static Vector2 LookPosition;
@@ -92,6 +94,17 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         // Set control
         InputManager.Main.InputActions.Gameplay.SetCallbacks(this);
         InputManager.Main.SwitchMap(InputMap.Gameplay);
+
+        isOwner = true;
+    }
+
+    private void OnDestroy()
+    {
+        if (isOwner)
+        {
+            Camera.main.transform.parent = null;
+            InputManager.Main.InputActions.Gameplay.SetCallbacks(null);
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -105,6 +118,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     public void OnLook(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
+
+        if (Camera.main == null) return;
 
         lookPosition = Camera.main.ScreenToWorldPoint(context.ReadValue<Vector2>());
         LookPosition = lookPosition;

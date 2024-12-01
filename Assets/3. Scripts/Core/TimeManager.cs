@@ -14,6 +14,10 @@ public class TimeManager : NetworkBehaviour
             Main = this;
         else
             Destroy(gameObject);
+
+        day_cached = dayOffset;
+        hour_cached = hourOffset;
+        minute_cached = -1;
     }
 
     public static int SECONDS_A_DAY = 86400;
@@ -23,7 +27,7 @@ public class TimeManager : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField]
-    private float timeScale = 1;
+    private float timeScale = 96;
     [SerializeField]
     private float dayStartTime = 6;
     public bool IsDay => hour_cached >= dayStartTime && hour_cached < nightStartTime;
@@ -45,13 +49,14 @@ public class TimeManager : NetworkBehaviour
 
     [Header("Debugs")]
     [SerializeField]
+    private bool isInitialized = false;
+    public bool IsInitialized => isInitialized;
+    [SerializeField]
     private float runTime;
     private TimeSpan timeSpan;
     private int day_cached = -1;
     private int hour_cached = -1;
     private int minute_cached = -1;
-
-    private bool isInitialized = false;
 
     private NetworkManager networkManager;
 
@@ -59,7 +64,6 @@ public class TimeManager : NetworkBehaviour
     public int CurrentDay => timeSpan.Days;
     public int CurrentHour => timeSpan.Hours;
     public float HourDuration => SECONDS_AN_HOUR / timeScale;
-    public bool IsInitialized => isInitialized;
 
     [HideInInspector]
     public UnityEvent<int> OnDayChanged;
@@ -70,20 +74,14 @@ public class TimeManager : NetworkBehaviour
     [HideInInspector]
     public UnityEvent OnNightStart;
 
-    private void Start()
-    {
-        day_cached = dayOffset;
-        hour_cached = hourOffset;
-        minute_cached = -1;
-    }
-
     public override void OnNetworkSpawn()
     {
         networkManager = NetworkManager.Singleton;
         UpdateTime();
         isInitialized = true;
 
-        WeatherManager.Main.Initialize();
+        // Initialize WeatherManager
+        WeatherManager.Main.Initialize(this);
     }
 
     private void Update()

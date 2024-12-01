@@ -27,7 +27,7 @@ public class ShopUI : UIBehaviour
         }
     }
 
-    [Header("Settings")]
+    [Header("Shop UI Settings")]
     [SerializeField]
     private GameObject shopButtonPrefab;
     [SerializeField]
@@ -45,7 +45,7 @@ public class ShopUI : UIBehaviour
     [SerializeField]
     private Sprite unselectedSprite;
 
-    [Header("Debugs")]
+    [Header("Shop UI Debugs")]
     [SerializeField]
     private bool showDebug;
     [SerializeField]

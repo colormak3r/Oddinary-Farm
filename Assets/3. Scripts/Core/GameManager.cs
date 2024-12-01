@@ -52,4 +52,16 @@ public class GameManager : NetworkBehaviour
         isInitializing = false;
         isInitialized = true;
     }
+
+    public void ReturnToMainMenu()
+    {
+        StartCoroutine(ReturnToMainMenuCoroutine());
+    }
+
+    private IEnumerator ReturnToMainMenuCoroutine()
+    {
+        yield return OptionsUI.Main.HideCoroutine();
+
+        ConnectionManager.Main.Disconnect();
+    }
 }

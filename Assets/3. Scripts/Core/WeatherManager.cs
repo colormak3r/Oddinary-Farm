@@ -72,9 +72,10 @@ public class WeatherManager : NetworkBehaviour
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs;
-
+    [SerializeField]
     private bool isInitialized = false;
-
+    public bool IsInitialized => isInitialized;
+    [SerializeField]
     private bool isRainning = false;
     private bool isRainning_cached = false;
     private List<WeatherData> weatherData = new List<WeatherData>();
@@ -88,13 +89,10 @@ public class WeatherManager : NetworkBehaviour
 
     private TimeManager timeManager;
 
-    private void Start()
+    public void Initialize(TimeManager timeManager)
     {
-        timeManager = TimeManager.Main;
-    }
+        this.timeManager = timeManager;
 
-    public void Initialize()
-    {
         var totalHours = (float)timeManager.CurrentTimeSpan.TotalHours;
         var currentHour = timeManager.CurrentTimeSpan.Hours;
 
@@ -151,6 +149,8 @@ public class WeatherManager : NetworkBehaviour
 
     private void Update()
     {
+        if (!isInitialized) return;
+
         UpdateGlobalLight();
     }
 
@@ -165,6 +165,8 @@ public class WeatherManager : NetworkBehaviour
 
     private void UpdateRainValue(int currentHour)
     {
+        if (!isInitialized) return;
+
         // Generate new rain value using Perlin noise
         if (currentHour == 0)
         {

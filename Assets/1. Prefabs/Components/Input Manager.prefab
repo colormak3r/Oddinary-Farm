@@ -44,6 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27525a80b0263b64d9dae70df2603612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainGameScene: Main Game
-  mainMenuScene: Main Menu
   showDebugs: 0
