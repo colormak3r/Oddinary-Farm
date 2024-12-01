@@ -11,7 +11,7 @@ public abstract class Animal : NetworkBehaviour
 
     [Header("Animal Settings")]
     [SerializeField]
-    private bool showDebug; public bool ShowDebug => showDebug;
+    private Transform graphicTransform;
     [SerializeField]
     private bool spriteFacingRight;
     [SerializeField]
@@ -19,16 +19,27 @@ public abstract class Animal : NetworkBehaviour
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
-    private Animator animator; public Animator Animator => animator;
-    private NetworkAnimator networkAnimator; public NetworkAnimator NetworkAnimator => networkAnimator;
-    private EntityMovement movement; public EntityMovement Movement => movement;
-    private PreyDetector preyDetector; public PreyDetector PreyDetector => preyDetector;
+    private Animator animator; 
+    public Animator Animator => animator;
 
-    private Item item; public Item Item => item;
+    private NetworkAnimator networkAnimator; 
+    public NetworkAnimator NetworkAnimator => networkAnimator;
+
+    private EntityMovement movement; 
+    public EntityMovement Movement => movement;
+
+    private PreyDetector preyDetector; 
+    public PreyDetector PreyDetector => preyDetector;
+
+    private Item item; 
+    public Item Item => item;
 
     public float RemainingDistance { get; private set; }
 
     [Header("Debugs")]
+    [SerializeField]
+    private bool showDebug;
+    public bool ShowDebug => showDebug;
     [SerializeField]
     private Vector2 destination;
     [HideInInspector]
@@ -57,9 +68,9 @@ public abstract class Animal : NetworkBehaviour
     {
         var isFacingRight = current;
         if (isFacingRight)
-            transform.localScale = spriteFacingRight ? RIGHT_DIRECTION : LEFT_DIRECTION;
+            graphicTransform.localScale = spriteFacingRight ? RIGHT_DIRECTION : LEFT_DIRECTION;
         else
-            transform.localScale = spriteFacingRight ? LEFT_DIRECTION : RIGHT_DIRECTION;
+            graphicTransform.localScale = spriteFacingRight ? LEFT_DIRECTION : RIGHT_DIRECTION;
     }
 
     protected virtual void Awake()

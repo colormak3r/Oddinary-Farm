@@ -42,10 +42,10 @@ namespace ColorMak3r.Utility
         /// <param name="end">Ending position.</param>
         /// <param name="duration">Duration of the movement in seconds.</param>
         /// <returns>Coroutine IEnumerator.</returns>
-        public static IEnumerator LerpMoveCoroutine(this Transform transform, Vector2 start, Vector2 end, float duration = 0.5f)
+        public static IEnumerator LerpMoveCoroutine(this Transform transform, Vector3 start, Vector3 end, float duration = 0.5f)
         {
             // Set the initial position
-            transform.position = new Vector3(start.x, start.y, transform.position.z);
+            transform.position = start;
 
             float elapsedTime = 0f;
 
@@ -56,18 +56,17 @@ namespace ColorMak3r.Utility
                 float t = elapsedTime / duration;
 
                 // Interpolate the position
-                Vector2 newPosition = Vector2.Lerp(start, end, t);
-                transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
+                transform.position = Vector3.Lerp(start, end, t);
 
                 // Increment the elapsed time
                 elapsedTime += Time.deltaTime;
 
                 // Wait for the next frame
-                yield return new WaitForFixedUpdate();
+                yield return null;
             }
 
             // Ensure the final position is set
-            transform.position = new Vector3(end.x, end.y, transform.position.z);
+            transform.position = end;
         }
 
         public static IEnumerator RotateCoroutine(this Transform transform, int rotation, float duration = 0.5f)

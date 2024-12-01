@@ -196,7 +196,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "ShowNetStat",
     "LogToFile",
     "Spawn",
-    "PrintItemIdList"};
+    "PrintItemIdList",
+    "PrintSpawnableIdList"};
 
     private string[] commandHelps =
     {"Help",
@@ -204,12 +205,14 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "ShowNetStat [bool]",
     "LogToFile [bool]",
     "Spawn [id] [x] [y] [count]",
-    "PrintItemIdList"};
+    "PrintItemIdList",
+    "PrintSpawnableIdList"};
 
-    private void ParseCommand(string command)
+    private void ParseCommand(string input)
     {
-        command = command.ToLower();
-        var args = command.Split(" ");
+        input = input.ToLower();
+        var args = input.Split(" ");
+        var command = args[0];
 
         // Set default value for 1-argument commands
         var defaultBool = true;
@@ -219,58 +222,63 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         }
 
         // Clear the input field
-        Debug.Log(">> " + command);
+        Debug.Log(">> " + input);
         inputField.text = "";
 
         // Parse the command
         try
         {
-            if (command.Contains(commands[0].ToLower()))
+            if (command == commands[0].ToLower())
             {
                 string builder = "";
                 foreach (var cc in commandHelps) builder += "\n>> " + cc;
                 Debug.Log($"List of commands:{builder}");
             }
-            else if (command.Contains(commands[1].ToLower()))
+            else if (command == commands[1].ToLower())
             {
                 showStackTrace = defaultBool;
                 PlayerPrefs.SetInt(SHOW_STACK_TRACE, showStackTrace ? 1 : 0);
             }
-            else if (command.Contains(commands[2].ToLower()))
+            else if (command == commands[2].ToLower())
             {
                 NetworkManager.Singleton.gameObject.GetComponent<RuntimeNetStatsMonitor>().Visible = defaultBool;
             }
-            else if (command.Contains(commands[3].ToLower()))
+            else if (command == commands[3].ToLower())
             {
                 logToFile = defaultBool;
                 PlayerPrefs.SetInt(LOG_TO_FILE, logToFile ? 1 : 0);
             }
-            else if (command.Contains(commands[4].ToLower()))
+            else if (command == commands[4].ToLower())
             {
                 if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
 
                 AssetManager.Main.SpawnByID(int.Parse(args[1]), new Vector2(float.Parse(args[2]), float.Parse(args[3])), int.Parse(args[4]), true);
             }
-            else if (command.Contains(commands[5].ToLower()))
+            else if (command == commands[5].ToLower())
             {
                 if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
                 AssetManager.Main.PrintItemIDs();
             }
+            else if (command == commands[6].ToLower())
+            {
+                if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
+                AssetManager.Main.PrintSpawnableIDs();
+            }
             else
             {
-                OutputNextFrame(command);
-                throw new ArgumentException(UNKNOWN_COMMAND + $" '{command}'");
+                OutputNextFrame(input);
+                throw new ArgumentException(UNKNOWN_COMMAND + $" '{input}'");
             }
         }
-        catch (IndexOutOfRangeException)
+        catch (IndexOutOfRangeException i)
         {
-            OutputNextFrame(command);
-            Debug.Log("Incorrect number of arguments");
+            OutputNextFrame(input);
+            Debug.Log("Incorrect number of arguments: " + i.Message);
         }
         catch (Exception e)
         {
-            OutputNextFrame(command);
-            Debug.Log(e.Message);
+            OutputNextFrame(input);
+            Debug.Log("Error: " + e.Message);
         }
     }
 
@@ -413,11 +421,28 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
     private string SuggestCommand(string input)
     {
+        var args = input.Split(" ");
+        var command = input.Split(" ")[0];
         foreach (string helpCommand in commandHelps)
         {
-            if (helpCommand.ToLower().StartsWith(input, StringComparison.OrdinalIgnoreCase))
+            if (helpCommand.ToLower().StartsWith(command, StringComparison.OrdinalIgnoreCase))
             {
-                return helpCommand + " <i>>>[TAB]";
+                // Highlight the argument
+                var helpArgs = helpCommand.Split(" ");
+                var output = "";
+                for (int i = 0; i < helpArgs.Length; i++)
+                {
+                    if (i == args.Length - 1)
+                    {
+                        output += "<b>" + helpArgs[i] + "</b> ";
+                    }
+                    else
+                    {
+                        output += helpArgs[i] + " ";
+                    }
+                }
+
+                return output + "<i>>>[TAB]";
             }
         }
         return ""; // Return empty string if no match is found

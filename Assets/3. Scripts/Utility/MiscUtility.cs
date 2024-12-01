@@ -57,6 +57,15 @@ namespace ColorMak3r.Utility
             }
         }
 
+        public static Vector2 RandomPointInRange(this Vector2 origin, float range)
+        {
+            var randomPoint = new Vector2(
+                origin.x + Random.Range(-range, range),
+                origin.y + Random.Range(-range, range)
+            );
+
+            return randomPoint;
+        }
 
         public static List<T> Shuffle<T>(this List<T> list)
         {

@@ -11,6 +11,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     [Header("Settings")]
     [SerializeField]
+    private Transform graphicTransform;
+    [SerializeField]
     private bool spriteFacingRight;
 
     private bool isControllable = true;
@@ -58,9 +60,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     {
         var isFacingRight = current;
         if (isFacingRight)
-            transform.localScale = spriteFacingRight ? RIGHT_DIRECTION : LEFT_DIRECTION;
+            graphicTransform.localScale = spriteFacingRight ? RIGHT_DIRECTION : LEFT_DIRECTION;
         else
-            transform.localScale = spriteFacingRight ? LEFT_DIRECTION : RIGHT_DIRECTION;
+            graphicTransform.localScale = spriteFacingRight ? LEFT_DIRECTION : RIGHT_DIRECTION;
     }
 
     private void Update()

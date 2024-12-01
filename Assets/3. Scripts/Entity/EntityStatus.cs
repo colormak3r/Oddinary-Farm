@@ -22,16 +22,23 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     [SerializeField]
     protected GameObject deathEffectPrefab;
 
-    [HideInInspector]
-    public UnityEvent OnDeathOnServer;
-
     [Header("Debugs")]
     [SerializeField]
     private NetworkVariable<uint> CurrentHealth = new NetworkVariable<uint>();
     public uint CurrentHealthValue => CurrentHealth.Value;
 
+    [HideInInspector]
+    public UnityEvent OnDeathOnServer;
+
+    protected HealthBarUI healthBarUI;
+
     private bool isDamageable;
     private float nextDamagable;
+
+    private void Awake()
+    {
+        healthBarUI = GetComponentInChildren<HealthBarUI>();
+    }
 
     private void Update()
     {
@@ -61,7 +68,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void HandleCurrentHealthChange(uint previousValue, uint newValue)
     {
-
+        if (healthBarUI == null) return;
+        healthBarUI.SetValue(newValue, maxHealth);
     }
 
     public void GetDamaged(uint damage, DamageType type, Hostility hostility)

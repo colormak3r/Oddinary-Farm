@@ -22,6 +22,7 @@ namespace ColorMak3r.Utility
         {
             var startColor = renderer.color.SetAlpha(start);
             var endColor = renderer.color.SetAlpha(end);
+
             float lerp = 0;
             while (lerp < 1)
             {
@@ -39,6 +40,7 @@ namespace ColorMak3r.Utility
             var startColor = renderers[0].color.SetAlpha(start);
             var endColor = renderers[0].color.SetAlpha(end);
 
+
             float lerp = 0;
             while (lerp < 1)
             {
@@ -54,6 +56,40 @@ namespace ColorMak3r.Utility
             foreach (var r in renderers)
             {
                 r.color = endColor;
+            }
+        }
+
+        public static IEnumerator SpriteColorCoroutine(this SpriteRenderer renderer, Color start, Color end, float duration = 0.5f)
+        {
+            float lerp = 0;
+            while (lerp < 1)
+            {
+                renderer.color = Color.Lerp(start, end, lerp);
+
+                lerp += Time.deltaTime / duration;
+                yield return null;
+            }
+
+            renderer.color = end;
+        }
+
+        public static IEnumerator SpriteColorCoroutine(this SpriteRenderer[] renderers, Color start, Color end, float duration = 0.5f)
+        {
+            float lerp = 0;
+            while (lerp < 1)
+            {
+                foreach (var r in renderers)
+                {
+                    r.color = Color.Lerp(start, end, lerp);
+                }
+
+                lerp += Time.deltaTime / duration;
+                yield return null;
+            }
+
+            foreach (var r in renderers)
+            {
+                r.color = end;
             }
         }
     }

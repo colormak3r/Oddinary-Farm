@@ -30,14 +30,6 @@ public class PlayerStatus : EntityStatus
         }
     }
 
-    protected override void HandleCurrentHealthChange(uint previousValue, uint newValue)
-    {
-        base.HandleCurrentHealthChange(previousValue, newValue);
-        if (!IsOwner) return;
-
-        PlayerStatusUI.Main.UpdateHealth(CurrentHealthValue);
-    }
-
     protected override void OnEntityDeathOnServer()
     {
         OnDeathOnServer?.Invoke();

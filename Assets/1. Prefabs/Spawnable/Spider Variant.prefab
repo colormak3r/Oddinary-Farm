@@ -176,6 +176,11 @@ PrefabInstance:
       insertIndex: 10
       addedObject: {fileID: 5811680737040740820}
   m_SourcePrefab: {fileID: 100100000, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+--- !u!4 &3213396557102681403 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4287736005901102148, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+  m_PrefabInstance: {fileID: 1664464937133711743}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3945629672685620183 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
@@ -198,9 +203,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fb473b4eddaa734982fdf926bebe87a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDebug: 0
+  graphicTransform: {fileID: 3213396557102681403}
   spriteFacingRight: 0
   roamRadius: 5
+  showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:
     m_PersistentCalls:
