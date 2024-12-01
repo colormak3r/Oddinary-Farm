@@ -98,7 +98,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         isOwner = true;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         if (isOwner)
         {
