@@ -26,12 +26,17 @@ public class MeleeWeapon : Item
                 var collider = hit.collider;
                 if (collider.gameObject == gameObject) continue;
 
+                // Deal damage to the object
                 if (collider.TryGetComponent<IDamageable>(out var damageable))
                 {
                     damageable.GetDamaged(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType, meleeWeaponProperty.Hostility);
                 }
 
+                // Check if the object is already dead
                 if (damageable.GetCurrentHealth() == 0) continue;
+
+                // Check hostility before applying knockback
+                if (damageable.GetHostility() != meleeWeaponProperty.Hostility) continue;
 
                 if (collider.TryGetComponent<EntityMovement>(out var movement))
                 {
@@ -45,7 +50,7 @@ public class MeleeWeapon : Item
     {
         if (!showGizmos || meleeWeaponProperty == null) return;
 
-        Gizmos.color = Color.red; 
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, meleeWeaponProperty.Range);
     }
 }

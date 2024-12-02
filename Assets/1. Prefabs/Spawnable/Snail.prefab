@@ -600,7 +600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8ea954f2c02bc14fbbccf6c0b8b28b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hostility: 1
+  hostility: 0
   maxHealth: 3
   iframeDuration: 0.1
   isInvincible: 0

@@ -289,7 +289,19 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         }
         else
         {
-            return false;
+            // Remove the current item stack
+            itemStack.EmptyStack();
+
+            // Update the UI
+            inventoryUI.UpdateSlot(index, null, 0);
+
+            // If the player is holding the item, switch to the default hand
+            if (index == currentHotbarIndex) CurrentItem.Value = itemRefs[0];
+
+            // Remove the item reference on the server
+            RemoveItemRefServerRpc(index);
+            return true;
+
             // Wrong Implementation
             /*var amountNeeded = amount - itemStack.Count;
 

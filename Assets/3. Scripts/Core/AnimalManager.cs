@@ -46,7 +46,7 @@ public class AnimalManager : NetworkBehaviour
 
     private void OnHourChanged(int hour)
     {
-        if (hour == spawnHour)
+        if (hour == spawnHour && TimeManager.Main.CurrentDay > 2)
         {
             if (canSpawn)
                 StartCoroutine(SpawnMonsterWaves());

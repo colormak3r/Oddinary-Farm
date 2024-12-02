@@ -24,6 +24,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     [Header("Debugs")]
     [SerializeField]
+    private bool showDebugs;
+    [SerializeField]
     private NetworkVariable<uint> CurrentHealth = new NetworkVariable<uint>();
     public uint CurrentHealthValue => CurrentHealth.Value;
 
@@ -74,6 +76,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     public void GetDamaged(uint damage, DamageType type, Hostility hostility)
     {
+        if (showDebugs) Debug.Log($"GetDamaged: {damage} {type} {hostility}");
         if (Hostility == hostility) return;
 
         GetDamagedServerRpc(damage, type);
@@ -120,6 +123,11 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     public uint GetCurrentHealth()
     {
         return CurrentHealthValue;
+    }
+
+    public Hostility GetHostility()
+    {
+        return Hostility;
     }
 
     protected virtual void OnEntityDamagedOnClient()
