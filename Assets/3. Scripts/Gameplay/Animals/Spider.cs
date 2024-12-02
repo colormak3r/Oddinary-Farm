@@ -28,7 +28,6 @@ public class Spider : Animal
         {
             Item.PropertyValue = axeProperty;
         }
-
     }
 
     protected override void HandleTransitions()
@@ -40,10 +39,9 @@ public class Spider : Animal
             {
                 nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
 
-                if(currentState is ChasingState || currentState is AttackPrimaryState)
+                if (currentState is ChasingState || currentState is AttackPrimaryState)
                 {
-                    if (ShowDebug) Debug.Log("Change state to Thinking State");
-                    ChangeState(new ThinkingState(this));
+                    if (currentState is not ThinkingState) ChangeState(new ThinkingState(this));
                 }
                 else
                 {
@@ -59,23 +57,20 @@ public class Spider : Animal
                     {
                         if (TimeManager.Main.IsDay)
                         {
-                            if (ShowDebug) Debug.Log("Change state to Burrowing State");
-                            ChangeState(new BurrowingState(this));
+                            if (currentState is not BurrowingState) ChangeState(new BurrowingState(this));
                         }
                         else
                         {
-                            if (ShowDebug) Debug.Log("Change state to Roaming State");
-                            ChangeState(new RoamingState(this));
-                        }                      
+                            if (currentState is not RoamingState) ChangeState(new RoamingState(this));
+                        }
                         selectedCounts[0]++;
                     }
                     else
                     {
-                        if (ShowDebug) Debug.Log("Change state to Burrowing State");
-                        ChangeState(new BurrowingState(this));
+                        if (currentState is not BurrowingState) ChangeState(new BurrowingState(this));
                         selectedCounts[1]++;
                     }
-                }                
+                }
             }
         }
         else
@@ -83,19 +78,11 @@ public class Spider : Animal
             nextIdleStateChange = 0;
             if (PreyDetector.DistanceToPrey > axeProperty.Range)
             {
-                if (currentState is not ChasingState)
-                {
-                    if (ShowDebug) Debug.Log("Change state to Chasing State");
-                    ChangeState(new ChasingState(this));
-                }
+                if (currentState is not ChasingState) ChangeState(new ChasingState(this));
             }
             else
             {
-                if (currentState is not AttackPrimaryState)
-                {
-                    if (ShowDebug) Debug.Log("Change state to AttackPrimary State");
-                    ChangeState(new AttackPrimaryState(this));
-                }
+                if (currentState is not AttackPrimaryState) ChangeState(new AttackPrimaryState(this));
             }
         }
     }

@@ -45,7 +45,6 @@ public class SpriteBlender : MonoBehaviour
 
     private void Awake()
     {
-        position = (Vector2)transform.position + offset;
         scannedPosition.Capacity = SCAN_POSITION.Length;
     }
 
@@ -59,7 +58,8 @@ public class SpriteBlender : MonoBehaviour
     {
         IBool[] neighbors = new IBool[9];
         SpriteBlender[] neigborBlenders = new SpriteBlender[9];
-        if(showGizmos) scannedPosition.Clear();
+        if (showGizmos) scannedPosition.Clear();
+        position = (Vector2)transform.position + offset;
 
         for (int i = 0; i < SCAN_POSITION.Length; i++)
         {
@@ -129,6 +129,7 @@ public class SpriteBlender : MonoBehaviour
             movementBlocker.SetPath(0, physicsShape);
         }
     }
+
     private IEnumerator DelayBlendNeighbor(SpriteBlender[] neigborBlenders)
     {
         yield return null;

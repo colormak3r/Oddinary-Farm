@@ -242,6 +242,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             {
                 inventory[index].Count += amount;
                 inventoryUI.UpdateSlot(index, itemStack.Property.Sprite, (int)itemStack.Count);
+
+                // Update the current item if the player is holding the item
+                if(index == currentHotbarIndex) ChangeHotBarIndex(index);                
             }
             else
             {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,6 +14,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     public Hostility Hostility => hostility;
     [SerializeField]
     private uint maxHealth;
+    public uint MaxHealth => maxHealth;
     [SerializeField]
     private float iframeDuration = 0.1f;
     [SerializeField]
@@ -33,13 +35,15 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     public UnityEvent OnDeathOnServer;
 
     protected HealthBarUI healthBarUI;
+    protected LootGenerator lootGenerator;
 
     private bool isDamageable;
     private float nextDamagable;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         healthBarUI = GetComponentInChildren<HealthBarUI>();
+        lootGenerator = GetComponent<LootGenerator>();
     }
 
     private void Update()
@@ -51,8 +55,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     public override void OnNetworkSpawn()
     {
-        HandleCurrentHealthChange(0, CurrentHealthValue);
-        CurrentHealth.OnValueChanged += HandleCurrentHealthChange;
+        if (CurrentHealthValue != 0) HandleCurrentHealthChange(0, CurrentHealthValue);
+
         if (IsServer)
         {
             OnEntitySpawnOnServer();
@@ -61,6 +65,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         {
             OnEntitySpawnOnClient();
         }
+
+        CurrentHealth.OnValueChanged += HandleCurrentHealthChange;
     }
 
     public override void OnNetworkDespawn()
@@ -70,8 +76,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void HandleCurrentHealthChange(uint previousValue, uint newValue)
     {
-        if (healthBarUI == null) return;
-        healthBarUI.SetValue(newValue, maxHealth);
+
     }
 
     public void GetDamaged(uint damage, DamageType type, Hostility hostility)
@@ -117,7 +122,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             OnEntityDeathOnClient();
         }
 
-
+        if (healthBarUI == null) return;
+        healthBarUI.SetValue(CurrentHealthValue, maxHealth);
     }
 
     public uint GetCurrentHealth()
@@ -144,6 +150,9 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntityDeathOnServer()
     {
+        if (lootGenerator != null)
+            lootGenerator.DropLootOnServer();
+
         OnDeathOnServer?.Invoke();
         OnDeathOnServer.RemoveAllListeners();
         NetworkObject.Despawn();

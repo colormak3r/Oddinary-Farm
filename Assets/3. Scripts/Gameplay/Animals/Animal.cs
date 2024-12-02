@@ -94,6 +94,7 @@ public abstract class Animal : NetworkBehaviour
 
     public void ChangeState(IBehaviourState newState)
     {
+        if(showDebug) Debug.Log($"Change state from {currentStateName} to {newState.GetType().Name}");
         currentState?.ExitState();
         currentState = newState;
         currentStateName = newState.GetType().Name;

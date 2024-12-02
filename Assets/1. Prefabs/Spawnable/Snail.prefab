@@ -325,8 +325,9 @@ GameObject:
   - component: {fileID: 213752093422335021}
   - component: {fileID: 349391432776453688}
   - component: {fileID: 1713903147799318877}
-  - component: {fileID: 1274597906311756651}
+  - component: {fileID: 3114174111768081107}
   - component: {fileID: 5862499223730954318}
+  - component: {fileID: 6444526639934246005}
   m_Layer: 11
   m_Name: Snail
   m_TagString: Untagged
@@ -366,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3128669074
+  GlobalObjectIdHash: 458788320
   InScenePlacedSourceGlobalObjectIdHash: 210217700
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -561,7 +562,7 @@ MonoBehaviour:
   idleStateChangeCdr:
     min: 3
     max: 5
---- !u!114 &1274597906311756651
+--- !u!114 &3114174111768081107
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -570,9 +571,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7918673031090584114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd1c109a41adeb1429a0f8f387051297, type: 3}
+  m_Script: {fileID: 11500000, guid: 3d3cd0320a998474c836065960aec3d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  raycastPrey: 1
   detectRange: 10
   escapeRange: 15
   huntingTime: 0
@@ -606,11 +608,25 @@ MonoBehaviour:
   isInvincible: 0
   damagedEffectPrefab: {fileID: 7925314111069725825, guid: ad48d17624524fd4db81acbfb3654719, type: 3}
   deathEffectPrefab: {fileID: 8974835140030421475, guid: 4144d76cc68cc3845a0b657c8e9b0fc7, type: 3}
+  showDebugs: 0
   CurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6444526639934246005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7918673031090584114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 032e7984a7dc3cf4696e7d8d29647e33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lootTable: {fileID: 11400000, guid: a09c5fe57ce4c63409c92d2d512614cd, type: 2}
 --- !u!1001 &5288672595647066604
 PrefabInstance:
   m_ObjectHideFlags: 0

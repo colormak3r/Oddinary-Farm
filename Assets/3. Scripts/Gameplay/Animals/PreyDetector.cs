@@ -16,6 +16,8 @@ public class PreyDetector : NetworkBehaviour
 {
     [Header("Settings")]
     [SerializeField]
+    private bool raycastPrey = true;
+    [SerializeField]
     private float detectRange = 5f;
     [SerializeField]
     private float escapeRange = 7f;
@@ -100,8 +102,12 @@ public class PreyDetector : NetworkBehaviour
             if (preys.Length <= 0) return;
 
             currentPrey = preys[Random.Range(0, preys.Length - 1)];
-            var hit = Physics2D.Raycast(transform.position, currentPrey.position - transform.position, detectRange, preyMask);
-            if (hit.transform != null) currentPrey = hit.transform;
+
+            if (raycastPrey)
+            {
+                var hit = Physics2D.Raycast(transform.position, currentPrey.position - transform.position, detectRange, preyMask);
+                if (hit.transform != null) currentPrey = hit.transform;
+            }
 
             if (currentPrey != null)
             {
@@ -121,10 +127,6 @@ public class PreyDetector : NetworkBehaviour
         }
     }
 
-    private void HandleOnPreyDie()
-    {
-        currentPrey = null;
-    }
 
     /// <summary>
     /// Scans for prey within a specified range from a given position.
@@ -141,10 +143,24 @@ public class PreyDetector : NetworkBehaviour
         var result = new Transform[hits.Length];
         for (int i = 0; i < hits.Length; i++)
         {
-            result[i] = hits[i].transform;
+            var prey = hits[i].transform;
+            if (CheckPreyCondition(prey))
+            {
+                result[i] = prey;
+            }           
         }
 
         return result;
+    }
+
+    protected virtual bool CheckPreyCondition(Transform prey)
+    {
+        return true;
+    }
+
+    private void HandleOnPreyDie()
+    {
+        currentPrey = null;
     }
 
     private void OnDrawGizmos()

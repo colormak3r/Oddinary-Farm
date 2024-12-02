@@ -18,6 +18,12 @@ public class Fence : Structure
 
     public override void OnNetworkSpawn()
     {
+        StartCoroutine(DelayBlend());
+    }
+
+    private IEnumerator DelayBlend()
+    {
+        yield return null;
         spriteBlender.Blend(true);
     }
 
@@ -31,7 +37,7 @@ public class Fence : Structure
     {
         movementBlocker.enabled = false;
         spriteBlender.ReblendNeighbors();
-        if(IsServer)
+        if (IsServer)
             Destroy(gameObject);
     }
 }

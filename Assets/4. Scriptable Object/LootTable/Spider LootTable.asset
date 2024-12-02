@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae510f77fbe60324cbaae35dc50522c5, type: 3}
-  m_Name: Apple LootTable
+  m_Name: Spider LootTable
   m_EditorClassIdentifier: 
   Table:
-  - item: {fileID: 11400000, guid: 4730fab78f887a545a3e7218b4a76356, type: 2}
-    probability: 1
+  - item: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
+    probability: 0.5
     minMaxCount:
       min: 1
-      max: 2
-  - item: {fileID: 11400000, guid: 8dd2be67a005b44409834c3b76ffa615, type: 2}
+      max: 1
+  - item: {fileID: 11400000, guid: 4861b0c465e13f24585f6b10f6cfe85d, type: 2}
     probability: 1
     minMaxCount:
-      min: 5
-      max: 10
+      min: 3
+      max: 5

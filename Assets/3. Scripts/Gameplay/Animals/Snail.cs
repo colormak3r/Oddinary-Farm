@@ -40,20 +40,17 @@ public class Snail : Animal
                 var rng = Random.Range(0, totalWeight);
                 if (rng < adjustedWeights[0])
                 {
-                    if (ShowDebug) Debug.Log("Change state to Thinking State");
-                    ChangeState(new ThinkingState(this));
+                    if (currentState is not ThinkingState) ChangeState(new ThinkingState(this));
                     selectedCounts[0]++;
                 }
                 else if (rng < adjustedWeights.SumUpTo(1))
                 {
-                    if (ShowDebug) Debug.Log("Change state to Nibbling State");
-                    ChangeState(new NibblingState(this));
+                    if (currentState is not NibblingState) ChangeState(new NibblingState(this));
                     selectedCounts[1]++;
                 }
                 else
                 {
-                    if (ShowDebug) Debug.Log("Change state to Roaming State");
-                    ChangeState(new RoamingState(this));
+                    if (currentState is not RoamingState) ChangeState(new RoamingState(this));
                     selectedCounts[2]++;
                 }
             }
@@ -63,19 +60,11 @@ public class Snail : Animal
             nextIdleStateChange = 0;
             if (PreyDetector.DistanceToPrey > handProperty.Range)
             {
-                if (currentState is not ChasingState)
-                {
-                    if (ShowDebug) Debug.Log("Change state to Chasing State");
-                    ChangeState(new ChasingState(this));
-                }
+                if (currentState is not ChasingState) ChangeState(new ChasingState(this));
             }
             else
             {
-                if (currentState is not AttackPrimaryState)
-                {
-                    if (ShowDebug) Debug.Log("Change state to AttackPrimary State");
-                    ChangeState(new AttackPrimaryState(this));
-                }
+                if (currentState is not AttackPrimaryState) ChangeState(new AttackPrimaryState(this));
             }
         }
     }

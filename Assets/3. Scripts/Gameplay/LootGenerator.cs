@@ -11,7 +11,7 @@ public class LootGenerator : MonoBehaviour
     [ContextMenu("Drop Loot")]
     public void DropLoot()
     {
-        DropLoot(true);
+        DropLootOnServer(true);
     }
 
     public void Initialize(LootTable lootTable)
@@ -19,7 +19,7 @@ public class LootGenerator : MonoBehaviour
         this.lootTable = lootTable;
     }
 
-    public void DropLoot(bool addForce = true)
+    public void DropLootOnServer(bool addForce = true)
     {
         if (lootTable == null) return;
 

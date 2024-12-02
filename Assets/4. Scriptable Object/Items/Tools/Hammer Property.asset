@@ -18,7 +18,7 @@ MonoBehaviour:
   maxStack: 1
   primaryCdr: 0.25
   secondaryCdr: 0.25
-  range: 10
+  range: 15
   price: 1
   radius: 0.25
   structures:

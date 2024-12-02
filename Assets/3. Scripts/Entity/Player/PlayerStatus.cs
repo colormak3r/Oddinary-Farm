@@ -16,8 +16,9 @@ public class PlayerStatus : EntityStatus
 
     private IControllable[] controllables;
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
         controllables = GetComponentsInChildren<IControllable>();
     }
 
@@ -92,5 +93,7 @@ public class PlayerStatus : EntityStatus
         {
             renderer.enabled = true;
         }
+
+        healthBarUI.SetValue(CurrentHealthValue, MaxHealth);
     }
 }

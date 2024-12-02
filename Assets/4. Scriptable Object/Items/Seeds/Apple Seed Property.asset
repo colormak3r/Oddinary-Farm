@@ -19,7 +19,7 @@ MonoBehaviour:
   primaryCdr: 0.25
   secondaryCdr: 0.25
   range: 5
-  price: 5000
+  price: 10000
   plantPrefab: {fileID: 4773706747441023441, guid: 6e849e9e46e06ad449bd7c16c7acfa40, type: 3}
   plantProperty: {fileID: 11400000, guid: 4fd3d5eaac5b7db429b60922c6ccee67, type: 2}
   farmPlotLayer:

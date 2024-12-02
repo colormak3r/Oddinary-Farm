@@ -6,9 +6,10 @@ public class StructureStatus : EntityStatus
 {
     private Structure structure;
 
-    private void Awake()
+    protected override void Awake()
     {
-        structure = GetComponent<Structure>();    
+        base.Awake();
+        structure = GetComponent<Structure>();
     }
 
     protected override void OnEntityDeathOnServer()
