@@ -17,6 +17,8 @@ public class MeleeWeaponProperty : ItemProperty
     private float knockbackForce = 500f;
     [SerializeField]
     private LayerMask damageableLayer;
+    [SerializeField]
+    private bool canHarvest;
 
     public float Radius => radius;
     public uint Damage => damage;
@@ -24,4 +26,5 @@ public class MeleeWeaponProperty : ItemProperty
     public Hostility Hostility => hostility;
     public float KnockbackForce => knockbackForce;
     public LayerMask DamageableLayer => damageableLayer;
+    public bool CanHarvest => canHarvest;
 }

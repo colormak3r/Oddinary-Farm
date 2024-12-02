@@ -23,7 +23,6 @@ public class Hand : MeleeWeapon
 
     private void HandAction(Vector2 position)
     {
-        Harvest(position);
         DealDamage(position);
     }
 }

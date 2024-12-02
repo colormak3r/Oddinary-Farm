@@ -553,6 +553,8 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         isControllable = value;
     }
 
+#if UNITY_EDITOR
+
     private void OnDrawGizmos()
     {
         if (!showGizmos) return;
@@ -561,4 +563,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         Gizmos.DrawWireSphere(inventoryPos, inventoryRadius);
         Handles.Label(inventoryPos.Add(inventoryRadius), "Inventory\nRadius");
     }
+
+#endif
+
 }

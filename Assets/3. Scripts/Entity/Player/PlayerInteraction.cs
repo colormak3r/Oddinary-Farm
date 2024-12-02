@@ -107,6 +107,8 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
         }
     }
 
+#if UNITY_EDITOR
+
     private void OnDrawGizmos()
     {
         if (!showGizmos) return;
@@ -120,6 +122,9 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
         Gizmos.DrawWireSphere(interactionPos, interactionRadius);
         Handles.Label(interactionPos.Add(interactionRadius), "Interaction\nRadius");
     }
+
+#endif
+
 }
 
 public class DistanceComparer : IComparer<Collider2D>

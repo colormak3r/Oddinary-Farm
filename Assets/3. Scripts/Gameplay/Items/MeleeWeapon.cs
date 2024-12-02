@@ -32,30 +32,25 @@ public class MeleeWeapon : Item
                     damageable.GetDamaged(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType, meleeWeaponProperty.Hostility);
                 }
 
-                // Check if the object is already dead
-                if (damageable.GetCurrentHealth() == 0) continue;
-
-                // Check hostility before applying knockback
-                if (damageable.GetHostility() == meleeWeaponProperty.Hostility) continue;
-
-                if (collider.TryGetComponent<EntityMovement>(out var movement))
+                if (damageable.GetHostility() == meleeWeaponProperty.Hostility)
                 {
-                    movement.Knockback(meleeWeaponProperty.KnockbackForce, transform);
+                    if (meleeWeaponProperty.DamageType == DamageType.Slash || meleeWeaponProperty.CanHarvest)
+                    {
+                        if (collider.TryGetComponent<IHarvestable>(out var harvestable))
+                        {
+                            harvestable.GetHarvested();
+                        }
+                    }
                 }
-            }
-        }
-    }
-
-    protected void Harvest(Vector2 position)
-    {
-        var hits = Physics2D.OverlapCircleAll(position, meleeWeaponProperty.Radius);
-        if (hits.Length > 0)
-        {
-            foreach (var hit in hits)
-            {
-                if (hit.TryGetComponent<IHarvestable>(out var harvestable))
+                else
                 {
-                    harvestable.GetHarvested();
+                    // Check if the object is already dead
+                    if (damageable.GetCurrentHealth() == 0) continue;
+
+                    if (collider.TryGetComponent<EntityMovement>(out var movement))
+                    {
+                        movement.Knockback(meleeWeaponProperty.KnockbackForce, transform);
+                    }
                 }
             }
         }

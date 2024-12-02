@@ -31,4 +31,5 @@ MonoBehaviour:
   knockbackForce: 200
   damageableLayer:
     serializedVersion: 2
-    m_Bits: 3072
+    m_Bits: 3584
+  canHarvest: 1
