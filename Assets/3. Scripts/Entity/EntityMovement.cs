@@ -18,6 +18,7 @@ public class EntityMovement : NetworkBehaviour
     [SerializeField]
     private float velocity;
 
+    private NetworkVariable<bool> CanBeKnockback = new NetworkVariable<bool>(true, default, NetworkVariableWritePermission.Server);
     private Vector2 movementDirection;
 
     private Rigidbody2D rbody;
@@ -57,8 +58,25 @@ public class EntityMovement : NetworkBehaviour
         movementDirection = newMovementDirection.normalized;
     }
 
+    public void SetCanBeKnockback(bool value)
+    {
+        SetCanBeKnockBackRpc(value);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SetCanBeKnockBackRpc(bool value)
+    {
+        CanBeKnockback.Value = value;
+    }
+
     public void Knockback(float knockbackForce, Transform source)
     {
+        if (!CanBeKnockback.Value)
+        {
+            if (showDebugs) Debug.Log(gameObject.name + " Can't be knockbacked");
+            return;
+        }
+
         // TODO: client authoritative, server side prediction
         if (!clientNetworkTransform)
         {

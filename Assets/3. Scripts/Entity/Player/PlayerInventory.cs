@@ -3,6 +3,8 @@ using ColorMak3r.Utility;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using Unity.Collections.LowLevel.Unsafe;
+using UnityEditor;
 
 [System.Serializable]
 public class ItemStack
@@ -70,7 +72,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     [SerializeField]
     private float inventoryRadius = 1f;
     [SerializeField]
-    private Vector3 inventoryOffset;
+    private Vector3 inventoryOffset = new Vector3(0, 0.75f);
     [SerializeField]
     private LayerMask itemLayer;
     [SerializeField]
@@ -143,11 +145,14 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             // Add the default items to the inventory
             foreach (var itemStack in defaultInventory)
             {
-                AddItemOnClient(itemStack.Property, itemStack.Count);
+                AddItemOnClient(itemStack.Property, itemStack.Count, false);
             }
 
             // Set the current item to the Hand
             ChangeHotBarIndex(0);
+
+            // Update the wallet
+            inventoryUI.UpdateWallet(CoinsValue);
         }
 
         CurrentItem.OnValueChanged += HandleCurrentItemChanged;
@@ -216,7 +221,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         }
     }
 
-    public bool AddItemOnClient(ItemProperty property, uint amount = 1)
+    public bool AddItemOnClient(ItemProperty property, uint amount = 1, bool playSound = true)
     {
         if (!IsOwner) return false;
 
@@ -224,8 +229,13 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
         if (property is CurrencyProperty)
         {
-            var value = ((CurrencyProperty)property).Value * amount;
+            var currency = property as CurrencyProperty;
+            var value = currency.Value * amount;
             AddCoinsOnClient(value);
+
+            //Play the pickup sound
+            if (playSound) AudioManager.Main.PlayOneShot(property.PickupSound);
+
             return true;
         }
 
@@ -244,7 +254,10 @@ public class PlayerInventory : NetworkBehaviour, IControllable
                 inventoryUI.UpdateSlot(index, itemStack.Property.Sprite, (int)itemStack.Count);
 
                 // Update the current item if the player is holding the item
-                if(index == currentHotbarIndex) ChangeHotBarIndex(index);                
+                if (index == currentHotbarIndex) ChangeHotBarIndex(index);
+
+                //Play the pickup sound
+                if (playSound) AudioManager.Main.PlayOneShot(property.PickupSound);
             }
             else
             {
@@ -288,6 +301,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         {
             itemStack.Count -= amount;
             inventoryUI.UpdateSlot(index, itemStack.Property.Sprite, (int)itemStack.Count);
+
             return true;
         }
         else
@@ -524,6 +538,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     public void AddCoinsOnClient(uint value)
     {
         Coins.Value += value;
+        inventoryUI.UpdateWallet(Coins.Value);
         if (showDebug) Debug.Log($"Added {value} coins to inventory. Total coins = {Coins.Value}");
     }
 
@@ -541,6 +556,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     private void OnDrawGizmos()
     {
         if (!showGizmos) return;
-
+        Gizmos.color = Color.blue;
+        var inventoryPos = transform.position + inventoryOffset;
+        Gizmos.DrawWireSphere(inventoryPos, inventoryRadius);
+        Handles.Label(inventoryPos.Add(inventoryRadius), "Inventory\nRadius");
     }
 }

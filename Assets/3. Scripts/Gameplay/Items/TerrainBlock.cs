@@ -49,6 +49,7 @@ public class TerrainBlock : Item
 
     public override void OnPrimaryAction(Vector2 position)
     {
+        base.OnPrimaryAction(position);
         position = position.SnapToGrid();
         TerrainBlockPrimaryRpc(position);
     }

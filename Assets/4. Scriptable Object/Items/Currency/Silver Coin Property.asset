@@ -19,5 +19,10 @@ MonoBehaviour:
   primaryCdr: 0.25
   secondaryCdr: 0.25
   range: 3
+  price: 1
+  pickupSound: {fileID: 8300000, guid: f31ffb78ef85bef4595a54e4d35c92ff, type: 3}
+  primarySound: {fileID: 0}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}
   prefabToSpawn: {fileID: 5937313573806529732, guid: 259003fb8e1dfcb40856b505877aed0f, type: 3}
   value: 10

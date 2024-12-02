@@ -22,6 +22,7 @@ public class WateringCan : Item
 
     public override void OnPrimaryAction(Vector2 position)
     {
+        base.OnPrimaryAction(position);
         WaterRpc(position);
     }
 

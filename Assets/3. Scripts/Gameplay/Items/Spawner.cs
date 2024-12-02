@@ -20,6 +20,7 @@ public class Spawner : Item
 
     public override void OnPrimaryAction(Vector2 position)
     {
+        base.OnPrimaryAction(position);
         SpawnRpc(position);
     }
 

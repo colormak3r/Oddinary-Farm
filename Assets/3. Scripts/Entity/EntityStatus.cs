@@ -115,6 +115,9 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
         if (CurrentHealthValue > damage)
         {
+            if (healthBarUI == null) return;
+            healthBarUI.SetValue(CurrentHealthValue - damage, maxHealth);
+
             OnEntityDamagedOnClient();
         }
         else
@@ -122,8 +125,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             OnEntityDeathOnClient();
         }
 
-        if (healthBarUI == null) return;
-        healthBarUI.SetValue(CurrentHealthValue, maxHealth);
+
     }
 
     public uint GetCurrentHealth()

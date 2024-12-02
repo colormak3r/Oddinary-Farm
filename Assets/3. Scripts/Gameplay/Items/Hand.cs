@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Hand : MeleeWeapon
 {
@@ -21,28 +17,13 @@ public class Hand : MeleeWeapon
 
     public override void OnPrimaryAction(Vector2 position)
     {
+        base.OnPrimaryAction(position);
         HandAction(position);
     }
-
 
     private void HandAction(Vector2 position)
     {
         Harvest(position);
         DealDamage(position);
-    }
-
-    private void Harvest(Vector2 position)
-    {
-        var hits = Physics2D.OverlapCircleAll(position, handProperty.Radius);
-        if (hits.Length > 0)
-        {
-            foreach (var hit in hits)
-            {
-                if (hit.TryGetComponent<IHarvestable>(out var harvestable))
-                {
-                    harvestable.GetHarvested();
-                }
-            }
-        }
     }
 }

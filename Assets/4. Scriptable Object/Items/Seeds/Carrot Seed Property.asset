@@ -20,6 +20,10 @@ MonoBehaviour:
   secondaryCdr: 0.25
   range: 5
   price: 100
+  pickupSound: {fileID: 0}
+  primarySound: {fileID: 0}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}
   plantPrefab: {fileID: 4773706747441023441, guid: 6e849e9e46e06ad449bd7c16c7acfa40, type: 3}
   plantProperty: {fileID: 11400000, guid: 8141f54fd3d926a449c7d0bace10e67b, type: 2}
   farmPlotLayer:
@@ -28,3 +32,9 @@ MonoBehaviour:
   plantLayer:
     serializedVersion: 2
     m_Bits: 512
+  plantSuccessSound: {fileID: 8300000, guid: e635d50c429164a468b90dfb2f90b51d, type: 3}
+  plantFailSound: {fileID: 0}
+  plantMatureSound: {fileID: 8300000, guid: 03082e85662cc81428a6c7659c92dfa1, type: 3}
+  plantHarvestSound: {fileID: 8300000, guid: e4e86a920baf81c47a12343cc6fd5ba5, type: 3}
+  plantDestroySound: {fileID: 8300000, guid: 1e6311e6bf912b84eb33edd5dcbd8234, type: 3}
+  plantGrowSound: {fileID: 8300000, guid: 485ab5ca5881b5d4ba3ab26b71ac187f, type: 3}

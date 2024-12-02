@@ -62,6 +62,32 @@ namespace ColorMak3r.Utility
                 if (renderer != null) renderer.SetAlpha(end);
             }
         }
-    }
 
+        public static IEnumerator UIPopCoroutine(this CanvasRenderer renderer, Vector3 originalSize, Vector3 targetSize, float duration = 0.25f)
+        {
+            float elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+
+                renderer.transform.localScale = Vector3.Lerp(originalSize, targetSize, elapsedTime / duration);
+
+                yield return null;
+            }
+
+            elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+
+                renderer.transform.localScale = Vector3.Lerp(targetSize, originalSize, elapsedTime / duration);
+
+                yield return null;
+            }
+
+            renderer.transform.localScale = originalSize;
+        }
+    }
 }

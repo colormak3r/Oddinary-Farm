@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Hammer : Item
+public class Hammer : Tool
 {
     private HammerProperty hammerProperty;
 
@@ -47,6 +47,7 @@ public class Hammer : Item
 
     public override void OnPrimaryAction(Vector2 position)
     {
+        base.OnPrimaryAction(position);
         HammerPrimaryRpc(position);
     }
 
@@ -57,6 +58,7 @@ public class Hammer : Item
 
     public override void OnSecondaryAction(Vector2 position)
     {
+        base.OnSecondaryAction(position);
         HammerSecondaryRpc(position);
     }
 

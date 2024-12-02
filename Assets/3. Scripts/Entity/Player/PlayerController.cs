@@ -218,14 +218,23 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
                     if (itemProperty.IsConsummable)
                     {
                         if (inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex))
+                        {
                             currentItem.OnPrimaryAction(lookPosition);
+                        }
                         else
+                        {
                             Debug.Log("Failed to consume item");
+                            AudioManager.Main.PlaySoundEffect(SoundEffect.UIError);
+                        }
                     }
                     else
                     {
                         currentItem.OnPrimaryAction(lookPosition);
                     }
+                }
+                else
+                {
+                    AudioManager.Main.PlaySoundEffect(SoundEffect.UIError);
                 }
             }
         }
@@ -284,6 +293,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private void ChangeHotbarIndex(int value)
     {
+        AudioManager.Main.PlaySoundEffect(SoundEffect.UIHover);
+
         // Clamp and loop the hotbar item keys from 0-9
         if (value > 9)
             value = 0;

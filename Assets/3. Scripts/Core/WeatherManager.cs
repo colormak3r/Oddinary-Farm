@@ -101,7 +101,7 @@ public class WeatherManager : NetworkBehaviour
         {
             var value = GetWeatherData(totalHours + i);
             weatherData.Add(new WeatherData(currentHour + i, value));
-            builder += $"Hour {(currentHour + i) %24} = {value}\n";
+            builder += $"Hour {(currentHour + i) % 24} = {value}\n";
         }
         if (showDebugs) Debug.Log(builder);
 
@@ -198,11 +198,18 @@ public class WeatherManager : NetworkBehaviour
             isRainning_cached = isRainning;
             if (isRainning)
             {
+                AudioManager.Main.PlayAmbientSound(AmbientTrack.Rain);
+
                 OnRainStarted?.Invoke();
                 rainParticleSystem.Play();
             }
             else
             {
+                if (timeManager.IsDay)
+                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Day);
+                else
+                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Night);
+
                 OnRainStopped?.Invoke();
                 rainParticleSystem?.Stop();
             }

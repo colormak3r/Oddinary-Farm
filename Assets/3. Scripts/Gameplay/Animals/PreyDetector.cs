@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -53,7 +54,7 @@ public class PreyDetector : NetworkBehaviour
 
     private void Start()
     {
-        distanceComparer = new DistanceComparer(transform);
+        distanceComparer = new DistanceComparer(transform, Vector2.zero);
     }
 
     public override void OnNetworkSpawn()
@@ -76,12 +77,12 @@ public class PreyDetector : NetworkBehaviour
 
     private void HandleOnNightStart()
     {
-        if(huntingTime == HuntingTime.Day) currentPrey = null;
+        if (huntingTime == HuntingTime.Day) currentPrey = null;
     }
 
     private void HandleOnDayStart()
     {
-        if(huntingTime == HuntingTime.Night) currentPrey = null;
+        if (huntingTime == HuntingTime.Night) currentPrey = null;
     }
 
     private void Update()
@@ -103,15 +104,17 @@ public class PreyDetector : NetworkBehaviour
 
             currentPrey = preys[Random.Range(0, preys.Length - 1)];
 
-            if (raycastPrey)
-            {
-                var hit = Physics2D.Raycast(transform.position, currentPrey.position - transform.position, detectRange, preyMask);
-                if (hit.transform != null) currentPrey = hit.transform;
-            }
-
             if (currentPrey != null)
             {
-                if(currentPrey.gameObject.TryGetComponent<EntityStatus>(out var entityStatus)){
+                // Raycast to check for more desireable prey in line of sight
+                if (raycastPrey)
+                {
+                    var hit = Physics2D.Raycast(transform.position, currentPrey.position - transform.position, detectRange, preyMask);
+                    if (hit.transform != null) currentPrey = hit.transform;
+                }
+
+                if (currentPrey.gameObject.TryGetComponent<EntityStatus>(out var entityStatus))
+                {
                     entityStatus.OnDeathOnServer.AddListener(HandleOnPreyDie);
                 }
                 OnPreyDetected?.Invoke(currentPrey);
@@ -140,20 +143,22 @@ public class PreyDetector : NetworkBehaviour
             detectRange = 2;
 
         var hits = Physics2D.OverlapCircleAll(position, detectRange, preyMask);
-        var result = new Transform[hits.Length];
+        var result = new List<Transform>();
+        result.Capacity = hits.Length;
+
         for (int i = 0; i < hits.Length; i++)
         {
             var prey = hits[i].transform;
-            if (CheckPreyCondition(prey))
+            if (ValidateValidPrey(prey))
             {
-                result[i] = prey;
-            }           
+                result.Add(prey);
+            }
         }
 
-        return result;
+        return result.ToArray();
     }
 
-    protected virtual bool CheckPreyCondition(Transform prey)
+    protected virtual bool ValidateValidPrey(Transform prey)
     {
         return true;
     }
@@ -170,8 +175,16 @@ public class PreyDetector : NetworkBehaviour
         var detectRange = this.detectRange;
         if (huntingTime == HuntingTime.Day && TimeManager.Main.IsNight || huntingTime == HuntingTime.Night && TimeManager.Main.IsDay)
             detectRange = 2;
+
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectRange);
+
+        if (currentPrey)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, currentPrey.position);
+        }
+
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, escapeRange);
     }

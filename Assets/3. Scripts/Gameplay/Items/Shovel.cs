@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Shovel : Item
+public class Shovel : Tool
 {
     private ShovelProperty shovelProperty;
     private WorldGenerator worldGenerator;
@@ -57,6 +57,7 @@ public class Shovel : Item
 
     public override void OnPrimaryAction(Vector2 position)
     {
+        base.OnPrimaryAction(position);
         position = position.SnapToGrid();
         ShovelPrimaryRpc(position);
     }

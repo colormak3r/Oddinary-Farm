@@ -6,7 +6,9 @@ public class ControllableController : NetworkBehaviour
 {
     private IControllable[] controllables;
 
-    private bool isShopVisible;
+    private bool isShopUIVisible;
+    private bool isOptionsUIVisible;
+    private bool isAudioUIVisible;
 
     private void Awake()
     {
@@ -17,7 +19,9 @@ public class ControllableController : NetworkBehaviour
     {
         if (IsOwner)
         {
-            ShopUI.Main.OnVisibilityChanged.AddListener(OnShopVisibilityChanged);
+            ShopUI.Main.OnVisibilityChanged.AddListener(OnShopUIVisibilityChanged);
+            OptionsUI.Main.OnVisibilityChanged.AddListener(OnOptionsUIVisibilityChanged);
+            AudioUI.Main.OnVisibilityChanged.AddListener(OnAudioUIVisibilityChanged);
         }
     }
 
@@ -26,19 +30,33 @@ public class ControllableController : NetworkBehaviour
     {
         if (IsOwner)
         {
-            ShopUI.Main.OnVisibilityChanged.RemoveListener(OnShopVisibilityChanged);
+            ShopUI.Main.OnVisibilityChanged.RemoveListener(OnShopUIVisibilityChanged);
+            OptionsUI.Main.OnVisibilityChanged.RemoveListener(OnOptionsUIVisibilityChanged);
+            AudioUI.Main.OnVisibilityChanged.RemoveListener(OnAudioUIVisibilityChanged);
         }
     }
 
-    private void OnShopVisibilityChanged(bool isShowing)
+    private void OnShopUIVisibilityChanged(bool isShowing)
     {
-        isShopVisible = isShowing;
+        isShopUIVisible = isShowing;
+        Evaluate();
+    }
+
+    private void OnOptionsUIVisibilityChanged(bool isShowing)
+    {
+        isOptionsUIVisible = isShowing;
+        Evaluate();
+    }
+
+    private void OnAudioUIVisibilityChanged(bool isShowing)
+    {
+        isAudioUIVisible = isShowing;
         Evaluate();
     }
 
     private void Evaluate()
     {
-        bool controllable = !isShopVisible;
+        bool controllable = !isShopUIVisible  && !isOptionsUIVisible && !isAudioUIVisible;
 
         foreach (var controllableItem in controllables)
         {

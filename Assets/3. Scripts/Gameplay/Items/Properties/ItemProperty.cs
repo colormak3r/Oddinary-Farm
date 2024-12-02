@@ -20,7 +20,17 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     [SerializeField]
     private float range = 5f;
     [SerializeField]
-    private uint price = 1;    
+    private uint price = 1;
+
+    [Header("Item Audio")]
+    [SerializeField]
+    private AudioClip pickupSound;
+    [SerializeField]
+    private AudioClip primarySound;
+    [SerializeField]
+    private AudioClip secondarySound;
+    [SerializeField]
+    private AudioClip alternativeSound;
 
     public string Name => name.Replace(" Property", "");
     public Sprite Sprite => sprite;
@@ -31,6 +41,11 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     public float SecondaryCdr => secondaryCdr;
     public float Range => range;
     public uint Price => price;
+
+    public AudioClip PickupSound => pickupSound;
+    public AudioClip PrimarySound => primarySound;
+    public AudioClip SecondarySound => secondarySound;
+    public AudioClip AlternativeSound => alternativeSound;
 
     public bool IsStackable => maxStack > 1;
 

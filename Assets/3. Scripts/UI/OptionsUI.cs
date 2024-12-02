@@ -58,12 +58,19 @@ public class OptionsUI : UIBehaviour
         }
     }
 
+    public void AudioButtonClicked()
+    {
+        AudioUI.Main.Initialize();
+        HideNoFade();
+        AudioUI.Main.Show();
+    }
+
     public void LeaveButtonClicked()
     {
         GameManager.Main.ReturnToMainMenu();
     }
 
-    private void BackButtonClicked()
+    public void BackButtonClicked()
     {
         HideNoFade();
         MainMenuUI.Main.Show();

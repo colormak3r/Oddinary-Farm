@@ -57,6 +57,16 @@ namespace ColorMak3r.Utility
             }
         }
 
+        public static float Snap(this float value, float size = 0.1f)
+        {
+            return size * Mathf.RoundToInt(value / size);
+        }
+
+        public static Vector3 Add(this Vector3 vector, float x = 0, float y = 0, float z = 0)
+        {
+            return new Vector3(vector.x + x, vector.y + y, vector.z + z);
+        }
+
         public static Vector2 RandomPointInRange(this Vector2 origin, float range)
         {
             var randomPoint = new Vector2(

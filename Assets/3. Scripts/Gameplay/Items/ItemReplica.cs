@@ -17,6 +17,8 @@ public class ItemReplica : NetworkBehaviour
     private float pickupDuration = 3f;
     [SerializeField]
     private float pickupRecovery = 3f;
+    [SerializeField]
+    private Vector3 targetOffset;
 
     [Header("Debugs")]
     [SerializeField]
@@ -99,9 +101,11 @@ public class ItemReplica : NetworkBehaviour
     private void FixedUpdate()
     {
         if (!IsServer || currentPicker == null) return;
-        if (Time.time < nextPickupStop && (transform.position - currentPicker.position).sqrMagnitude > 0.25f)
+
+        var pickerPos = currentPicker.position + targetOffset;
+        if (Time.time < nextPickupStop && (transform.position - pickerPos).sqrMagnitude > 0.25f)
         {
-            FlyToward(currentPicker.transform.position);
+            FlyToward(pickerPos);
         }
         else
         {
@@ -113,8 +117,8 @@ public class ItemReplica : NetworkBehaviour
 
     private void FlyToward(Vector3 position)
     {
-        var targetVelocity = (position - transform.position).normalized * pickupSpeed * Time.deltaTime;
-        rbody.velocity = Vector3.SmoothDamp(rbody.velocity, targetVelocity, ref dummyVelocity, 0.01f);
+        var direction = (position - transform.position).normalized;
+        rbody.velocity = direction * pickupSpeed;
     }
 
     private IEnumerator PickupRecoveryCoroutine()

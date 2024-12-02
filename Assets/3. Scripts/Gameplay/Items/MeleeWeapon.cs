@@ -46,6 +46,21 @@ public class MeleeWeapon : Item
         }
     }
 
+    protected void Harvest(Vector2 position)
+    {
+        var hits = Physics2D.OverlapCircleAll(position, meleeWeaponProperty.Radius);
+        if (hits.Length > 0)
+        {
+            foreach (var hit in hits)
+            {
+                if (hit.TryGetComponent<IHarvestable>(out var harvestable))
+                {
+                    harvestable.GetHarvested();
+                }
+            }
+        }
+    }
+
     private void OnDrawGizmos()
     {
         if (!showGizmos || meleeWeaponProperty == null) return;

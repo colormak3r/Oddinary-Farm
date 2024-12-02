@@ -44,6 +44,7 @@ public class Seed : Item
 
     public override void OnPrimaryAction(Vector2 position)
     {
+        base.OnPrimaryAction(position);
         position = position.SnapToGrid();
         SpawnPlantRpc(position);
     }

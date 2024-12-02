@@ -7,7 +7,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Hoe : Item
+public class Hoe : Tool
 {
     private HoeProperty hoeProperty;
 
@@ -64,6 +64,7 @@ public class Hoe : Item
 
     public override void OnPrimaryAction(Vector2 position)
     {
+        base.OnPrimaryAction(position);
         HoePrimaryRpc(position, hoeSize[currentHoeAltMode]);
     }
 

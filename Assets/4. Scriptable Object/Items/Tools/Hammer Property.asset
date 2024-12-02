@@ -20,7 +20,12 @@ MonoBehaviour:
   secondaryCdr: 0.25
   range: 15
   price: 1
+  pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
+  primarySound: {fileID: 0}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}
   radius: 0.25
+  hitSound: {fileID: 0}
   structures:
   - {fileID: 737704494243597508, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
   invalidLayers:

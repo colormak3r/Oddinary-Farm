@@ -47,6 +47,12 @@ public class GameManager : NetworkBehaviour
         yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
         yield return WorldGenerator.Main.GenerateTerrainCoroutine(Vector2.zero);
         yield return TransitionUI.Main.HideCoroutine();
+
+        if (TimeManager.Main.IsDay)
+            AudioManager.Main.PlayAmbientSound(AmbientTrack.Day);
+        else
+            AudioManager.Main.PlayAmbientSound(AmbientTrack.Night);
+
         yield return MapUI.Main.ShowCoroutine();
 
         isInitializing = false;

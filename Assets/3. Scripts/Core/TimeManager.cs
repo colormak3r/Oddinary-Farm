@@ -120,16 +120,19 @@ public class TimeManager : NetworkBehaviour
         if (timeSpan.Hours != hour_cached)
         {
             hour_cached = timeSpan.Hours;
-            OnHourChanged?.Invoke(hour_cached);
 
             if (hour_cached == nightStartTime)
             {
+                AudioManager.Main.PlayAmbientSound(AmbientTrack.Night);
                 OnNightStart?.Invoke();
             }
             else if (hour_cached == dayStartTime)
             {
+                AudioManager.Main.PlayAmbientSound(AmbientTrack.Day);
                 OnDayStart?.Invoke();
             }
+
+            OnHourChanged?.Invoke(hour_cached);            
         }
     }
 }

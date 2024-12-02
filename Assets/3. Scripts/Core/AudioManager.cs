@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public enum SoundEffect
@@ -18,12 +19,20 @@ public enum MusicTrack
     MainGame,
 }
 
+public enum AmbientTrack
+{
+    Day,
+    Night,
+    Rain
+}
+
 public class AudioManager : MonoBehaviour
 {
     private static string BGM_VOLUME_VALUE_STRING = "BGM_VOLUME_VALUE";
     private static string SFX_VOLUME_VALUE_STRING = "SFX_VOLUME_VALUE";
+    private static string ABM_VOLUME_VALUE_STRING = "ABM_VOLUME_VALUE";
 
-    public static AudioManager main;
+    public static AudioManager Main;
 
     [Header("Audio Settings")]
     [SerializeField]
@@ -32,6 +41,8 @@ public class AudioManager : MonoBehaviour
     private AudioSource bgmAudioSource;
     [SerializeField]
     private AudioSource sfxAudioSource;
+    [SerializeField]
+    private AudioSource abmAudioSource;
 
     [Header("Sound Effects")]
     [SerializeField]
@@ -47,10 +58,20 @@ public class AudioManager : MonoBehaviour
     [SerializeField]
     private AudioClip mainGameMusic;
 
+    [Header("Ambient Tracks")]
+    [SerializeField]
+    private AudioClip dayClip;
+    [SerializeField]
+    private AudioClip nightClip;
+    [SerializeField]
+    private AudioClip rainClip;
+
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs;
 
+    [HideInInspector]
+    public UnityEvent<float> OnSfxVolumeChange;
 
     public float BgmVolume
     {
@@ -71,13 +92,25 @@ public class AudioManager : MonoBehaviour
             value = Mathf.Clamp01(value);
             sfxAudioSource.volume = value;
             PlayerPrefs.SetFloat(SFX_VOLUME_VALUE_STRING, value);
+            OnSfxVolumeChange?.Invoke(value);
+        }
+    }
+
+    public float AbmVolume
+    {
+        get { return abmAudioSource.volume; }
+        set
+        {
+            value = Mathf.Clamp01(value);
+            abmAudioSource.volume = value;
+            PlayerPrefs.SetFloat(ABM_VOLUME_VALUE_STRING, value);
         }
     }
 
     private void Awake()
     {
-        if (main == null)
-            main = this;
+        if (Main == null)
+            Main = this;
         else
             Destroy(gameObject);
 
@@ -85,6 +118,8 @@ public class AudioManager : MonoBehaviour
         if (showDebugs) Debug.Log("BGM Volume: " + bgmAudioSource.volume);
         sfxAudioSource.volume = PlayerPrefs.GetFloat(SFX_VOLUME_VALUE_STRING, 0.5f);
         if (showDebugs) Debug.Log("SFX Volume: " + sfxAudioSource.volume);
+        abmAudioSource.volume = PlayerPrefs.GetFloat(ABM_VOLUME_VALUE_STRING, 0.5f);
+        if (showDebugs) Debug.Log("ABM Volume: " + abmAudioSource.volume);
 
         DontDestroyOnLoad(gameObject);
     }
@@ -155,6 +190,26 @@ public class AudioManager : MonoBehaviour
         PlayOneShot(GetAudioClip(sfx));
     }
 
+    private AmbientTrack cachedAmbientTrack;
+    public void PlayAmbientSound(AmbientTrack ambientTrack)
+    {
+        if (cachedAmbientTrack == ambientTrack) return;
+        cachedAmbientTrack = ambientTrack;
+
+        StartCoroutine(PlayAmbientSoundCoroutine(ambientTrack));
+    }
+
+    private IEnumerator PlayAmbientSoundCoroutine(AmbientTrack ambientTrack)
+    {
+        yield return LerpVolumeCoroutine(abmAudioSource, AbmVolume, 0f, transitionDuration);
+
+        abmAudioSource.clip = GetAudioClip(ambientTrack);
+        abmAudioSource.Play();
+
+        var volume = PlayerPrefs.GetFloat(ABM_VOLUME_VALUE_STRING, 0.5f);
+        yield return LerpVolumeCoroutine(abmAudioSource, 0f, volume, transitionDuration);
+    }
+
     private AudioClip GetAudioClip(SoundEffect sfx)
     {
         switch (sfx)
@@ -181,6 +236,22 @@ public class AudioManager : MonoBehaviour
                 return mainGameMusic;
             default:
                 Debug.LogError("Music track not found: " + track);
+                return null;
+        }
+    }
+
+    private AudioClip GetAudioClip(AmbientTrack track)
+    {
+        switch (track)
+        {
+            case AmbientTrack.Day:
+                return dayClip;
+            case AmbientTrack.Night:
+                return nightClip;
+            case AmbientTrack.Rain:
+                return rainClip;
+            default:
+                Debug.LogError("Ambient track not found: " + track);
                 return null;
         }
     }

@@ -8,5 +8,10 @@ public abstract class ToolProperty : ItemProperty
     [SerializeField]
     private float radius = 0.5f;
 
+    [Header("Tool Sound Settings")]
+    [SerializeField]
+    private AudioClip hitSound;
+
+
     public float Radius => radius;
 }

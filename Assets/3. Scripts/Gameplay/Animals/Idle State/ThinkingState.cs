@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThinkingState : AnimalState
+public class ThinkingState : BehaviourState
 {
     public ThinkingState(Animal animal) : base(animal)
     {

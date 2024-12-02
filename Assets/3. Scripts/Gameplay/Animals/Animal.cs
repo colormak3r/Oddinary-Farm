@@ -19,19 +19,19 @@ public abstract class Animal : NetworkBehaviour
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
-    private Animator animator; 
+    private Animator animator;
     public Animator Animator => animator;
 
-    private NetworkAnimator networkAnimator; 
+    private NetworkAnimator networkAnimator;
     public NetworkAnimator NetworkAnimator => networkAnimator;
 
-    private EntityMovement movement; 
+    private EntityMovement movement;
     public EntityMovement Movement => movement;
 
-    private PreyDetector preyDetector; 
+    private PreyDetector preyDetector;
     public PreyDetector PreyDetector => preyDetector;
 
-    private Item item; 
+    private Item item;
     public Item Item => item;
 
     public float RemainingDistance { get; private set; }
@@ -46,7 +46,7 @@ public abstract class Animal : NetworkBehaviour
     public UnityEvent OnDestinationReached;
     [SerializeField]
     protected string currentStateName;
-    protected IBehaviourState currentState;
+    protected BehaviourState currentState;
 
 
     private Coroutine moveCoroutine;
@@ -82,7 +82,7 @@ public abstract class Animal : NetworkBehaviour
         item = GetComponentInChildren<Item>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!IsServer) return;
 
@@ -92,9 +92,9 @@ public abstract class Animal : NetworkBehaviour
 
     protected abstract void HandleTransitions();
 
-    public void ChangeState(IBehaviourState newState)
+    public void ChangeState(BehaviourState newState)
     {
-        if(showDebug) Debug.Log($"Change state from {currentStateName} to {newState.GetType().Name}");
+        if (showDebug) Debug.Log($"Change state from {currentStateName} to {newState.GetType().Name}");
         currentState?.ExitState();
         currentState = newState;
         currentStateName = newState.GetType().Name;
@@ -108,6 +108,16 @@ public abstract class Animal : NetworkBehaviour
         moveCoroutine = StartCoroutine(MoveCoroutine(position, precision));
     }
 
+    public void MoveDirection(Vector2 direction)
+    {
+        if (direction.x > 0)
+            IsFacingRight.Value = true;
+        else if (direction.x < 0)
+            IsFacingRight.Value = false;
+
+        movement.SetDirection(direction);
+    }
+
     public void StopMovement()
     {
         destination = Vector2.zero;
@@ -118,10 +128,9 @@ public abstract class Animal : NetworkBehaviour
 
     private IEnumerator MoveCoroutine(Vector2 position, float precision)
     {
-        Vector2 direction;
-        do
+        while (RemainingDistance > precision)
         {
-            direction = position - (Vector2)transform.position;
+            var direction = position - (Vector2)transform.position;
             RemainingDistance = direction.magnitude;
 
             if (direction.x > 0)
@@ -132,18 +141,17 @@ public abstract class Animal : NetworkBehaviour
             movement.SetDirection(direction);
 
             yield return new WaitForFixedUpdate();
-
-        } while (RemainingDistance > precision);
+        }
 
         // Must have this condition to prevent stopping movement prematurally if OnDestinationReached set a new destination
-        if(OnDestinationReached != null)
+        if (OnDestinationReached != null)
         {
             OnDestinationReached.Invoke();
         }
         else
         {
             StopMovement();
-        }       
+        }
     }
 
     public Vector2 GetRandomPointInRange()

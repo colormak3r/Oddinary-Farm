@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SnailPreyDetector : PreyDetector
 {
-    protected override bool CheckPreyCondition(Transform prey)
+    protected override bool ValidateValidPrey(Transform prey)
     {
         return prey.GetComponent<Plant>().IsHarvestable(); 
     }

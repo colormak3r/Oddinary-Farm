@@ -15,6 +15,13 @@ public class Item : NetworkBehaviour
     protected NetworkVariable<ItemProperty> Property = new NetworkVariable<ItemProperty>();
     private ItemProperty property;
 
+    private AudioSource audioSource;
+
+    private void Awake()
+    {
+        audioSource = GetComponentInParent<AudioSource>();
+    }
+
     public ItemProperty PropertyValue
     {
         get { return Property.Value; }
@@ -44,7 +51,7 @@ public class Item : NetworkBehaviour
 
     public virtual void OnPrimaryAction(Vector2 position)
     {
-
+        if (property.PrimarySound) PlayPrimarySoundRpc();
     }
 
     public virtual bool CanSecondaryAction(Vector2 position)
@@ -54,7 +61,7 @@ public class Item : NetworkBehaviour
 
     public virtual void OnSecondaryAction(Vector2 position)
     {
-
+        if (property.SecondarySound) PlaySecondarySoundRpc();
     }
 
     public virtual bool CanAlternativeAction(Vector2 position)
@@ -64,7 +71,25 @@ public class Item : NetworkBehaviour
 
     public virtual void OnAlternativeAction(Vector2 position)
     {
+        if (property.AlternativeSound) PlayAlternativeSoundRpc();
+    }
 
+    [Rpc(SendTo.Everyone)]
+    private void PlayPrimarySoundRpc()
+    {
+        audioSource.PlayOneShot(property.PrimarySound);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void PlaySecondarySoundRpc()
+    {
+        audioSource.PlayOneShot(property.SecondarySound);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void PlayAlternativeSoundRpc()
+    {
+        audioSource.PlayOneShot(property.AlternativeSound);
     }
 
     protected bool IsInRange(Vector2 position)

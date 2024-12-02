@@ -14,12 +14,17 @@ public class Spider : Animal
     private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
     private float nextIdleStateChange;
 
-    private static int STATE_COUNT = 2;
-    private float[] baseWeights = new float[] { 1f, 2f };
-    private float[] selectedCounts = new float[STATE_COUNT];
-    private float[] adjustedWeights = new float[STATE_COUNT];
+    private float nextMoveAfterBurrow = 0;
 
-    private float nextMoveAfterBurrow = -1;
+    private BehaviourState thinkingState;
+    private BehaviourState burrowingState;
+    private BehaviourState roamingState;
+
+    private BehaviourState chasingState;
+    private BehaviourState attackPrimaryState;
+
+    private BehaviourState[] idleStates;
+    private BehaviourState[] activeStates;
 
     public override void OnNetworkSpawn()
     {
@@ -28,6 +33,16 @@ public class Spider : Animal
         {
             Item.PropertyValue = axeProperty;
         }
+
+        thinkingState = new ThinkingState(this);
+        burrowingState = new BurrowingState(this);
+        roamingState = new RoamingState(this);
+
+        chasingState = new ChasingState(this);
+        attackPrimaryState = new AttackPrimaryState(this);
+
+        idleStates = new BehaviourState[] { thinkingState, burrowingState, roamingState };
+        activeStates = new BehaviourState[] { chasingState, attackPrimaryState };
     }
 
     protected override void HandleTransitions()
@@ -35,54 +50,36 @@ public class Spider : Animal
         if (PreyDetector.CurrentPrey == null)
         {
             // Idle States
-            if (Time.time > nextIdleStateChange)
-            {
-                nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
+            if (Time.time < nextIdleStateChange) return;
+            nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
 
-                if (currentState is ChasingState || currentState is AttackPrimaryState)
+            if (currentState == chasingState || currentState == attackPrimaryState)
+            {
+                ChangeState(thinkingState);
+            }
+            else
+            {
+                if (TimeManager.Main.IsDay)
                 {
-                    if (currentState is not ThinkingState) ChangeState(new ThinkingState(this));
+                    ChangeState(burrowingState);
                 }
                 else
                 {
-                    float totalWeight = 0f;
-                    for (int i = 0; i < STATE_COUNT; i++)
-                    {
-                        adjustedWeights[i] = baseWeights[i] * (STATE_COUNT / (1f + selectedCounts[i]));
-                        totalWeight += adjustedWeights[i];
-                    }
-
-                    var rng = Random.Range(0, totalWeight);
-                    if (rng < adjustedWeights[0])
-                    {
-                        if (TimeManager.Main.IsDay)
-                        {
-                            if (currentState is not BurrowingState) ChangeState(new BurrowingState(this));
-                        }
-                        else
-                        {
-                            if (currentState is not RoamingState) ChangeState(new RoamingState(this));
-                        }
-                        selectedCounts[0]++;
-                    }
-                    else
-                    {
-                        if (currentState is not BurrowingState) ChangeState(new BurrowingState(this));
-                        selectedCounts[1]++;
-                    }
+                    ChangeState(roamingState);
                 }
             }
         }
         else
         {
             nextIdleStateChange = 0;
+
             if (PreyDetector.DistanceToPrey > axeProperty.Range)
             {
-                if (currentState is not ChasingState) ChangeState(new ChasingState(this));
+                if (currentState != chasingState) ChangeState(chasingState);
             }
             else
             {
-                if (currentState is not AttackPrimaryState) ChangeState(new AttackPrimaryState(this));
+                if (currentState != attackPrimaryState) ChangeState(attackPrimaryState);
             }
         }
     }

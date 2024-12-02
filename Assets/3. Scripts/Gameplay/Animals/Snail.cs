@@ -10,15 +10,35 @@ public class Snail : Animal
     private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
     private float nextIdleStateChange;
 
-    private static int STATE_COUNT = 3;
+    /*private static int STATE_COUNT = 3;
     private float[] selectedCounts = new float[STATE_COUNT];
-    private float[] adjustedWeights = new float[STATE_COUNT];
+    private float[] adjustedWeights = new float[STATE_COUNT];*/
+
+    private BehaviourState thinkingState;
+    private BehaviourState nibblingState;
+    private BehaviourState roamingState;
+
+    private BehaviourState chasingState;
+    private BehaviourState attackPrimaryState;
+
+    private BehaviourState[] idleStates;
+    private BehaviourState[] activeStates;
 
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         if (IsServer)
             Item.PropertyValue = handProperty;
+
+        thinkingState = new ThinkingState(this);
+        nibblingState = new NibblingState(this);
+        roamingState = new RoamingState(this);
+
+        chasingState = new ChasingState(this);
+        attackPrimaryState = new AttackPrimaryState(this);
+
+        idleStates = new BehaviourState[] { thinkingState, nibblingState, roamingState };
+        activeStates = new BehaviourState[] { chasingState, attackPrimaryState };
     }
 
     protected override void HandleTransitions()
@@ -30,41 +50,21 @@ public class Snail : Animal
             {
                 nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
 
-                float totalWeight = 0f;
-                for (int i = 0; i < STATE_COUNT; i++)
-                {
-                    adjustedWeights[i] = (float)STATE_COUNT / (1f + selectedCounts[i]);
-                    totalWeight += adjustedWeights[i];
-                }
-
-                var rng = Random.Range(0, totalWeight);
-                if (rng < adjustedWeights[0])
-                {
-                    if (currentState is not ThinkingState) ChangeState(new ThinkingState(this));
-                    selectedCounts[0]++;
-                }
-                else if (rng < adjustedWeights.SumUpTo(1))
-                {
-                    if (currentState is not NibblingState) ChangeState(new NibblingState(this));
-                    selectedCounts[1]++;
-                }
-                else
-                {
-                    if (currentState is not RoamingState) ChangeState(new RoamingState(this));
-                    selectedCounts[2]++;
-                }
+                var newState = idleStates[Random.Range(0, idleStates.Length)];
+                ChangeState(newState);
             }
         }
         else
         {
+            // Active States
             nextIdleStateChange = 0;
             if (PreyDetector.DistanceToPrey > handProperty.Range)
             {
-                if (currentState is not ChasingState) ChangeState(new ChasingState(this));
+                if (currentState != chasingState) ChangeState(chasingState);
             }
             else
             {
-                if (currentState is not AttackPrimaryState) ChangeState(new AttackPrimaryState(this));
+                if (currentState != attackPrimaryState) ChangeState(attackPrimaryState);
             }
         }
     }

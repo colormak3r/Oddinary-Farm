@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MeleeWeaponProperty : ItemProperty
 {
-    [Header("Tool Settings")]
+    [Header("Melee Weapon Settings")]
     [SerializeField]
     private float radius = 1f;
     [SerializeField]

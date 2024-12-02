@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackPrimaryState : AnimalState
+public class AttackPrimaryState : BehaviourState
 {
     private float nextAction;
     public AttackPrimaryState(Animal animal) : base(animal)
@@ -21,8 +21,6 @@ public class AttackPrimaryState : AnimalState
         base.ExecuteState();
         if (Time.time > nextAction)
         {
-            /*if(animal.Animator.booanimal.Animator.GetBool("IsBurrowing"))
-                animal.Animator.SetBool("IsBurrowing", false);*/
             animal.Item.OnPrimaryAction(animal.PreyDetector.CurrentPrey.position);
             nextAction = Time.time + animal.Item.PropertyValue.PrimaryCdr;
             animal.NetworkAnimator.SetTrigger("PrimaryAction");

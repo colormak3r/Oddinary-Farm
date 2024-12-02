@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChasingState : AnimalState
+public class ChasingState : BehaviourState
 {
     public ChasingState(Animal animal) : base(animal)
     {
@@ -20,7 +20,7 @@ public class ChasingState : AnimalState
         base.ExecuteState();
         if (animal.PreyDetector.CurrentPrey == null) return;
         var direction = animal.PreyDetector.CurrentPrey.transform.position - animal.transform.position;
-        animal.Movement.SetDirection(direction);
+        animal.MoveDirection(direction);
     }
 
     public override void ExitState()

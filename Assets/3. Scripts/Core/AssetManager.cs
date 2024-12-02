@@ -36,7 +36,7 @@ public struct SpawnableID
     }
 }
 
-public class AssetManager : MonoBehaviour
+public class AssetManager : NetworkBehaviour
 {
     public static AssetManager Main;
 
@@ -54,7 +54,7 @@ public class AssetManager : MonoBehaviour
         // Scan and fetch all assets in the specified folder. In Editor mode only.
         FetchAssets();
 #endif
-        PopulateAssetDictionary();
+        BuildAssetDictionary();
         //PopulateCurrencyDictionary();
     }
 
@@ -176,23 +176,15 @@ public class AssetManager : MonoBehaviour
     }
 #endif
 
-    /*private void PopulateCurrencyDictionary()
-    {
-        foreach (var currencyProperty in currencyProperties)
-        {
-            currencyTypeToProperty[currencyProperty.currencyType] = currencyProperty.currencyProperty;
-            currencyPropertyToType[currencyProperty.currencyProperty] = currencyProperty.currencyType;
-        }
-    }*/
 
-    private void PopulateAssetDictionary()
+    private void BuildAssetDictionary()
     {
-        //Debug.Log("scriptableObjectList = " + scriptableObjectList.Count);
-        string builder = "Loaded Assets:";
+        StringBuilder builder = new StringBuilder();
+        builder.AppendLine("Asset Dictionary:");
         foreach (var asset in scriptableObjectList)
         {
             nameToScriptableObject[asset.name] = asset;
-            builder += "\n" + asset.name;
+            builder.Append( $"\n{asset.name}");
         }
         if (showDebugs) Debug.Log(builder);
     }
@@ -210,6 +202,7 @@ public class AssetManager : MonoBehaviour
         }
     }
 
+    #region Print Methods
 
     public void PrintItemIDs()
     {
@@ -235,6 +228,27 @@ public class AssetManager : MonoBehaviour
         }
 
         Debug.Log(sb.ToString());
+    }
+
+    #endregion
+
+    #region Item Spawning
+
+    public void SpawnItem(ItemProperty itemProperty, Vector2 position, float randomRange = 2f, bool randomForce = true)
+    {
+        SpawnItemRpc(itemProperty, position, randomRange, randomForce);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SpawnItemRpc(ItemProperty itemProperty, Vector2 position, float randomRange, bool randomForce)
+    {
+        var randomPos = randomRange * (Vector2)Random.onUnitSphere;
+        position = position == default ? transform.position + (Vector3)randomPos : position + randomPos;
+        GameObject go = Instantiate(itemReplicaPrefab, position, Quaternion.identity);
+        go.GetComponent<NetworkObject>().Spawn();
+        var itemReplica = go.GetComponent<ItemReplica>();
+        itemReplica.SetProperty(itemProperty);
+        itemReplica.AddRandomForce();
     }
 
     public void SpawnByID(int id, Vector2 position, int count = 1, bool log = false, float randomRange = 2f, bool randomForce = true)
@@ -272,22 +286,9 @@ public class AssetManager : MonoBehaviour
         }
     }
 
-    public void SpawnItem(ItemProperty itemProperty, Vector2 position, float randomRange = 2f, bool randomForce = true)
-    {
-        SpawnItemRpc(itemProperty, position, randomRange, randomForce);
-    }
+    #endregion
 
-    [Rpc(SendTo.Server)]
-    private void SpawnItemRpc(ItemProperty itemProperty, Vector2 position, float randomRange, bool randomForce)
-    {
-        var randomPos = randomRange * (Vector2)Random.onUnitSphere;
-        position = position == default ? transform.position + (Vector3)randomPos : position + randomPos;
-        GameObject go = Instantiate(itemReplicaPrefab, position, Quaternion.identity);
-        go.GetComponent<NetworkObject>().Spawn();
-        var itemReplica = go.GetComponent<ItemReplica>();
-        itemReplica.SetProperty(itemProperty);
-        itemReplica.AddRandomForce();
-    }
+    #region Prefab Spawning
 
     public void SpawnPrefab(int id, Vector2 position, int spawnCount = 1, float randomRange = 1, float spawnDelay = 0.25f)
     {
@@ -325,4 +326,6 @@ public class AssetManager : MonoBehaviour
             yield return new WaitForSeconds(spawnDelay);
         }
     }
+
+    #endregion
 }

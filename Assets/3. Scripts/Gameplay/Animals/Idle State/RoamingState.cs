@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class RoamingState : AnimalState
+public class RoamingState : BehaviourState
 {
     public RoamingState(Animal animal) : base(animal)
     {

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class NibblingState : AnimalState
+public class NibblingState : BehaviourState
 {
     public NibblingState(Animal animal) : base(animal)
     {
+
     }
+
     public override void EnterState()
     {
         base.EnterState();
