@@ -24,6 +24,12 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     [SerializeField]
     protected GameObject deathEffectPrefab;
 
+    [Header("Entity Audio")]
+    [SerializeField]
+    private AudioClip damagedSound;
+    [SerializeField]
+    private AudioClip deathSound;
+
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs;
@@ -36,6 +42,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected HealthBarUI healthBarUI;
     protected LootGenerator lootGenerator;
+    protected AudioElement audioElement;
 
     private bool isDamageable;
     private float nextDamagable;
@@ -44,6 +51,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     {
         healthBarUI = GetComponentInChildren<HealthBarUI>();
         lootGenerator = GetComponent<LootGenerator>();
+        audioElement = GetComponent<AudioElement>();
     }
 
     private void Update()
@@ -140,6 +148,9 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntityDamagedOnClient()
     {
+        if (audioElement)
+            audioElement.PlayOneShot(damagedSound);
+
         // Damaged effects
         if (damagedEffectPrefab != null)
             Instantiate(damagedEffectPrefab, transform.position, Quaternion.identity);
@@ -147,7 +158,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntityDamagedOnServer()
     {
-        // Damaged effects
+
     }
 
     protected virtual void OnEntityDeathOnServer()
@@ -162,6 +173,9 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntityDeathOnClient()
     {
+        if (audioElement)
+            audioElement.PlayOneShot(deathSound);
+
         if (deathEffectPrefab != null)
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
     }

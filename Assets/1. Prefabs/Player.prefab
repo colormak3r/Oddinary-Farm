@@ -551,7 +551,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1671143261
+  GlobalObjectIdHash: 3310549321
   InScenePlacedSourceGlobalObjectIdHash: 569683485
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -683,6 +683,8 @@ MonoBehaviour:
   isInvincible: 0
   damagedEffectPrefab: {fileID: 2083952450802541041, guid: 6e1d734580f48ba4bb197387df8b1920, type: 3}
   deathEffectPrefab: {fileID: 3380964621595077600, guid: b46a9319c9fc1e04ab28e16ec8f3db02, type: 3}
+  damagedSound: {fileID: 8300000, guid: 20a7d71691b827846a2db73d37f293ba, type: 3}
+  deathSound: {fileID: 8300000, guid: 67c6fdff6c0b6b94ba316fcfa79f9e3d, type: 3}
   showDebugs: 0
   CurrentHealth:
     m_InternalValue: 0
@@ -906,6 +908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c08a32213073e44996dd553fede6e6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundEffects: []
 --- !u!1 &8901795170501113949
 GameObject:
   m_ObjectHideFlags: 0

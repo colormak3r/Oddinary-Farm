@@ -190,7 +190,7 @@ public class AudioManager : MonoBehaviour
         PlayOneShot(GetAudioClip(sfx));
     }
 
-    private AmbientTrack cachedAmbientTrack;
+    private AmbientTrack? cachedAmbientTrack = null;
     public void PlayAmbientSound(AmbientTrack ambientTrack)
     {
         if (cachedAmbientTrack == ambientTrack) return;

@@ -610,6 +610,8 @@ MonoBehaviour:
   isInvincible: 0
   damagedEffectPrefab: {fileID: 7925314111069725825, guid: ad48d17624524fd4db81acbfb3654719, type: 3}
   deathEffectPrefab: {fileID: 8974835140030421475, guid: 4144d76cc68cc3845a0b657c8e9b0fc7, type: 3}
+  damagedSound: {fileID: 8300000, guid: 20a7d71691b827846a2db73d37f293ba, type: 3}
+  deathSound: {fileID: 8300000, guid: 67c6fdff6c0b6b94ba316fcfa79f9e3d, type: 3}
   showDebugs: 0
   CurrentHealth:
     m_InternalValue: 0
@@ -737,6 +739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c08a32213073e44996dd553fede6e6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundEffects: []
 --- !u!1001 &5288672595647066604
 PrefabInstance:
   m_ObjectHideFlags: 0

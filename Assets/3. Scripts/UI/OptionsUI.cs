@@ -41,11 +41,11 @@ public class OptionsUI : UIBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        backButton.onClick.RemoveAllListeners();
         if (scene.buildIndex == 0)
         {
             leaveButton.SetActive(false);
             backButtonText.text = "Back";
+            backButton.onClick.RemoveListener(ResumeButtonClicked);
             backButton.onClick.AddListener(BackButtonClicked);
             background.enabled = false;
         }
@@ -53,6 +53,7 @@ public class OptionsUI : UIBehaviour
         {
             leaveButton.SetActive(true);
             backButtonText.text = "Resume";
+            backButton.onClick.RemoveListener(BackButtonClicked);
             backButton.onClick.AddListener(ResumeButtonClicked);
             background.enabled = true;
         }
