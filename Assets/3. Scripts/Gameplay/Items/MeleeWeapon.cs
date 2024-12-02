@@ -36,7 +36,7 @@ public class MeleeWeapon : Item
                 if (damageable.GetCurrentHealth() == 0) continue;
 
                 // Check hostility before applying knockback
-                if (damageable.GetHostility() != meleeWeaponProperty.Hostility) continue;
+                if (damageable.GetHostility() == meleeWeaponProperty.Hostility) continue;
 
                 if (collider.TryGetComponent<EntityMovement>(out var movement))
                 {

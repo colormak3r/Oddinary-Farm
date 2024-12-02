@@ -76,7 +76,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     public void GetDamaged(uint damage, DamageType type, Hostility hostility)
     {
-        if (showDebugs) Debug.Log($"GetDamaged: {damage} {type} {hostility}");
+        if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {hostility}");
         if (Hostility == hostility) return;
 
         GetDamagedServerRpc(damage, type);

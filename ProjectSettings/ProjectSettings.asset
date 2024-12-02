@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: Oddinary-Farm
+  companyName: ColorMak3r
+  productName: Oddinary Farm
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -140,7 +140,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 1.0
+  bundleVersion: 0.1
   preloadedAssets:
   - {fileID: 11400000, guid: 545e9e59d85c52b43ad9f39d0b413e89, type: 2}
   - {fileID: -944628639613478452, guid: b3d457429e8f7ed44b7426366aeda246, type: 3}
@@ -290,7 +290,7 @@ PlayerSettings:
   - m_BuildTarget: Standalone
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 420799da5af97f7418b878e9e90d5c92, type: 3}
+      m_Icon: {fileID: 2800000, guid: 5cce82466f07e8c46b0c7e966e170239, type: 3}
       m_Width: 1024
       m_Height: 1024
       m_Kind: 0
@@ -328,6 +328,13 @@ PlayerSettings:
       m_Icon: {fileID: 0}
       m_Width: 16
       m_Height: 16
+      m_Kind: 0
+  - m_BuildTarget: 
+    m_Icons:
+    - serializedVersion: 2
+      m_Icon: {fileID: 2800000, guid: 5cce82466f07e8c46b0c7e966e170239, type: 3}
+      m_Width: 128
+      m_Height: 128
       m_Kind: 0
   m_BuildTargetPlatformIcons: []
   m_BuildTargetBatching: []

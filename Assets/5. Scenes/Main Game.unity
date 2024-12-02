@@ -10861,7 +10861,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canSpawn: 1
   spawnHour: 20
-  wave: 2
+  wave: 1
   spawnPerWaveBase: 5
   spawnCoordinate: {x: 0, y: 0}
   spawnRadius: 20

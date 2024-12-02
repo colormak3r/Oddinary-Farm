@@ -42,56 +42,55 @@ public class PlayerStatus : EntityStatus
         base.OnEntityDeathOnClient();
 
         var colliders = GetComponentsInChildren<Collider2D>();
-        var renderer = GetComponentsInChildren<SpriteRenderer>();
+        var renderers = GetComponentsInChildren<SpriteRenderer>();
         foreach (var collider in colliders)
         {
             collider.enabled = false;
         }
-        foreach (var render in renderer)
+        foreach (var renderer in renderers)
         {
-            render.enabled = false;
+            renderer.enabled = false;
         }
-
-        if (!IsOwner) return;
 
         var respawnPosition = Vector3.zero;
         if (respawnPoint != null)
             respawnPosition = respawnPoint.position;
 
         StartCoroutine(DelayMoveCamera(transform.position, respawnPosition));
-
     }
 
     private IEnumerator DelayMoveCamera(Vector3 deathPos, Vector3 respawnPos)
     {
-        Camera.main.transform.position = new Vector3(deathPos.x, deathPos.y, Camera.main.transform.position.z);
-        foreach (var controllable in controllables)
+        if (IsOwner)
         {
-            controllable.SetControllable(false);
+            Camera.main.transform.position = new Vector3(deathPos.x, deathPos.y, Camera.main.transform.position.z);
+            foreach (var controllable in controllables)
+            {
+                controllable.SetControllable(false);
+            }
+
+            yield return new WaitForSeconds(3f);
+            yield return TransitionUI.Main.ShowCoroutine();
+            transform.position = respawnPos;
+            yield return new WaitUntil(() => !WorldGenerator.Main.IsGenerating);
+            yield return TransitionUI.Main.HideCoroutine();
+
+            foreach (var controllable in controllables)
+            {
+                controllable.SetControllable(true);
+            }
+            Camera.main.transform.localPosition = new Vector3(0, 0, Camera.main.transform.position.z);
         }
 
-        yield return new WaitForSeconds(3f);
-        yield return TransitionUI.Main.ShowCoroutine();
-        transform.position = respawnPos;
-        yield return new WaitUntil(() => !WorldGenerator.Main.IsGenerating);
-        yield return TransitionUI.Main.HideCoroutine();
-
         var colliders = GetComponentsInChildren<Collider2D>();
-        var renderer = GetComponentsInChildren<SpriteRenderer>();
+        var renderers = GetComponentsInChildren<SpriteRenderer>();
         foreach (var collider in colliders)
         {
             collider.enabled = true;
         }
-        foreach (var render in renderer)
+        foreach (var renderer in renderers)
         {
-            render.enabled = true;
+            renderer.enabled = true;
         }
-
-        foreach (var controllable in controllables)
-        {
-            controllable.SetControllable(true);
-        }
-
-        Camera.main.transform.localPosition = new Vector3(0, 0, Camera.main.transform.position.z);
     }
 }
