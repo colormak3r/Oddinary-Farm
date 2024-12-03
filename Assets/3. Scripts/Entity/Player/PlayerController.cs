@@ -1,8 +1,16 @@
 using System.Collections;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.Rendering.DebugUI;
+
+public enum AnimationMode
+{
+    Primary,
+    Secondary,
+    Alternative
+}
 
 public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayActions, IControllable
 {
@@ -27,6 +35,10 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private PlayerInventory inventory;
     private PlayerInteraction interaction;
 
+    private Animator animator;
+    private NetworkAnimator networkAnimator;
+    private PlayerAnimationController animationController;
+
     private bool isOwner;
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
@@ -39,6 +51,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         movement = GetComponent<EntityMovement>();
         inventory = GetComponent<PlayerInventory>();
         interaction = GetComponent<PlayerInteraction>();
+        animator = GetComponentInChildren<Animator>();
+        networkAnimator = GetComponent<NetworkAnimator>();
+        animationController = GetComponentInChildren<PlayerAnimationController>();
         //playerInventory.OnCurrentItemPropertyChanged.AddListener(HandleCurrentItemPropertyChanged);
     }
 
@@ -115,6 +130,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         var direction = context.ReadValue<Vector2>().normalized;
         movement.SetDirection(direction);
+        animator.SetBool("IsMoving", direction != Vector2.zero);
     }
 
     public void OnLook(InputAction.CallbackContext context)
@@ -215,22 +231,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
                 if (currentItem.CanPrimaryAction(lookPosition))
                 {
-                    if (itemProperty.IsConsummable)
-                    {
-                        if (inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex))
-                        {
-                            currentItem.OnPrimaryAction(lookPosition);
-                        }
-                        else
-                        {
-                            Debug.Log("Failed to consume item");
-                            AudioManager.Main.PlaySoundEffect(SoundEffect.UIError);
-                        }
-                    }
-                    else
-                    {
-                        currentItem.OnPrimaryAction(lookPosition);
-                    }
+                    animationController.ChopAnimationMode = AnimationMode.Primary;
+                    networkAnimator.SetTrigger("Chop");
                 }
                 else
                 {
@@ -238,6 +240,37 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
                 }
             }
         }
+    }
+
+    public void Chop(AnimationMode mode)
+    {
+        if (!IsOwner) return;
+
+        var currentItem = inventory.CurrentItemValue;
+        var itemProperty = currentItem.PropertyValue;
+        switch (mode)
+        {
+            case AnimationMode.Primary:
+                if (itemProperty.IsConsummable)
+                {
+                    if (inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex))
+                    {
+                        currentItem.OnPrimaryAction(lookPosition);
+                    }
+                }
+                else
+                {
+                    currentItem.OnPrimaryAction(lookPosition);
+                }
+                break;
+            case AnimationMode.Secondary:
+                currentItem.OnSecondaryAction(lookPosition);
+                break;
+            case AnimationMode.Alternative:
+                currentItem.OnAlternativeAction(lookPosition);
+                break;
+        }
+
     }
 
     public void OnSecondary(InputAction.CallbackContext context)

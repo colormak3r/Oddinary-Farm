@@ -1813,10 +1813,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Audio Manager
       objectReference: {fileID: 0}
-    - target: {fileID: 4468689871484323036, guid: d8f19f028095c104aa2d7b6aa1ed82f1, type: 3}
-      propertyPath: mainMenuMusic
-      value: 
-      objectReference: {fileID: 8300000, guid: d71692609d356d943854e8fff3caa3d5, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2025,7 +2021,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 443030112}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2016779270}
+        m_TargetAssemblyTypeName: InventoryUI, Assembly-CSharp
+        m_MethodName: ToggleInventory
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &443030112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2455,10 +2463,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0.0013037809
-    width: 1
-    height: 0.9960886
+    x: 0.0007342144
+    y: 0.001305483
+    width: 0.9985316
+    height: 0.9973891
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
