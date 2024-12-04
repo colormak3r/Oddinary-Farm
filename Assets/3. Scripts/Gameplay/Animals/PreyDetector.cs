@@ -29,6 +29,8 @@ public class PreyDetector : NetworkBehaviour
 
     [Header("Debugs")]
     [SerializeField]
+    private bool showDebugs;
+    [SerializeField]
     private bool showGizmos;
     [SerializeField]
     private Transform currentPrey;
@@ -113,10 +115,12 @@ public class PreyDetector : NetworkBehaviour
                     if (hit.transform != null) currentPrey = hit.transform;
                 }
 
-                if (currentPrey.gameObject.TryGetComponent<EntityStatus>(out var entityStatus))
+                if (currentPrey.TryGetComponent<EntityStatus>(out var entityStatus))
                 {
                     entityStatus.OnDeathOnServer.AddListener(HandleOnPreyDie);
                 }
+
+                if (showDebugs) Debug.Log("New prey detected: " + currentPrey);
                 OnPreyDetected?.Invoke(currentPrey);
             }
         }
@@ -165,12 +169,15 @@ public class PreyDetector : NetworkBehaviour
 
     private void HandleOnPreyDie()
     {
+        if (showDebugs) Debug.Log($"{currentPrey} died");
         currentPrey = null;
     }
 
     private void OnDrawGizmos()
     {
         if (!showGizmos) return;
+
+        if (TimeManager.Main == null || !TimeManager.Main.IsInitialized) return;
 
         var detectRange = this.detectRange;
         if (huntingTime == HuntingTime.Day && TimeManager.Main.IsNight || huntingTime == HuntingTime.Night && TimeManager.Main.IsDay)

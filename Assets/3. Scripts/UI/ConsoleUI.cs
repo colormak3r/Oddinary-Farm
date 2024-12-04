@@ -108,7 +108,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         sb.Append("<color=#")
           .Append(ColorUtility.ToHtmlStringRGB(timeTagColor))
           .Append(">[")
-          .Append(Helper.FormatTimeHHMMSS(Time.time))
+          .Append(MiscUtility.FormatTimeHHMMSS(Time.time))
           .Append("]</color>");
 
         var typeColor = logTypeColor;

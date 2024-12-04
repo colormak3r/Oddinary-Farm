@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f356b6fb27604684c9a2db9076ace095
+guid: b3bd930d9a4f11140a9aa791e603f3bd
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -121,18 +121,18 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: PH_Terrain
+  - name: BasicResources
     originalName: 
-    pivot: {x: 0.5045045, y: 0}
+    pivot: {x: 0.48387095, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 111
-      height: 80
-    spriteID: 16cb7367b4febcb4f91f5359260d1684
+      width: 31
+      height: 14
+    spriteID: 8666a9325d757534891e738a4b3b1d4b
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -144,21 +144,21 @@ ScriptedImporter:
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: -2032975544
-    name: PH_Terrain
+    guid: -819500021
+    name: BasicResources
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: PH_Terrain
+    - name: BasicResources
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 0
+        x: 1
         y: 0
-        width: 111
-        height: 80
-      spriteId: 16cb7367b4febcb4f91f5359260d1684
+        width: 31
+        height: 14
+      spriteId: 8666a9325d757534891e738a4b3b1d4b
     linkedCells: []
     parentIndex: -1
   platformSettings:
@@ -177,4 +177,4 @@ ScriptedImporter:
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 112, y: 80}
+  canvasSize: {x: 32, y: 16}

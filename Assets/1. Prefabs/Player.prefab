@@ -1335,6 +1335,8 @@ MonoBehaviour:
   OnDeathOnServer:
     m_PersistentCalls:
       m_Calls: []
+  respawnPoint: {fileID: 0}
+  playerHitbox: {fileID: 4434417828680881472}
 --- !u!114 &6332147781516178474
 MonoBehaviour:
   m_ObjectHideFlags: 0

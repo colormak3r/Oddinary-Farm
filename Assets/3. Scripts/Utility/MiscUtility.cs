@@ -1,13 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace ColorMak3r.Utility
 {
-    public static class Helper
+    public static class MiscUtility
     {
         /// <summary>
         /// Snaps the given position to a grid based on the specified size.
@@ -173,6 +173,11 @@ namespace ColorMak3r.Utility
         {
             TimeSpan timeSpan = TimeSpan.FromSeconds(timeLeft);
             return timeSpan.ToString(@"hh\:mm\:ss");
+        }
+
+        public static IEnumerator WaitCoroutine(float duration)
+        {
+            yield return new WaitForSeconds(duration);
         }
     }
 }

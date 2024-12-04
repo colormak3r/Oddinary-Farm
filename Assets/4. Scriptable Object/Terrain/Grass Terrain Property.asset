@@ -18,7 +18,8 @@ MonoBehaviour:
     max: 0.85
   isAccessible: 1
   blockProperty: {fileID: 11400000, guid: cae112df666cda34cb83978a88571cf6, type: 2}
-  overlaySpriteChance: 0.5
+  overlaySpriteChance: 0.3
+  spillOverSpriteChance: 0.3
   overlaySprite:
   - {fileID: -195600167, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   - {fileID: -1242867259, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
@@ -28,3 +29,5 @@ MonoBehaviour:
   baseSprite:
   - {fileID: 1356425900, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   underlaySprite: []
+  drawOutline: 1
+  outlineColor: {r: 0.7137255, g: 0.8352941, b: 0.23529412, a: 1}

@@ -20,13 +20,17 @@ public class TerrainUnitProperty : ScriptableObject
     [SerializeField]
     private float overlaySpriteChance = 0.5f;
     [SerializeField]
-    private float outlineSpriteChance = 0.5f;
+    private float spillOverSpriteChance = 0.5f;
     [SerializeField]
     private Sprite[] overlaySprite;
     [SerializeField]
     private Sprite[] baseSprite;
     [SerializeField]
     private Sprite[] underlaySprite;
+    [SerializeField]
+    private bool drawOutline;
+    [SerializeField]
+    private Color outlineColor = Color.white;
 
 
     public Color MapColor => mapColor;
@@ -35,10 +39,12 @@ public class TerrainUnitProperty : ScriptableObject
     public TerrainBlockProperty BlockProperty => blockProperty;
 
     public float OverlaySpriteChance => overlaySpriteChance;
-    public float OutlineSpriteChance => outlineSpriteChance;
+    public float SpillOverSpriteChance => spillOverSpriteChance;
     public Sprite OverlaySprite => overlaySprite.GetRandomElement();
     public Sprite BaseSprite => baseSprite.GetRandomElement();
     public Sprite UnderlaySprite => underlaySprite.GetRandomElement();
+    public bool DrawOutline => drawOutline;
+    public Color OutlineColor => outlineColor;
 
 
     public bool Match(float elevation)

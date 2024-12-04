@@ -92,16 +92,6 @@ namespace ColorMak3r.Utility
 
 
         #region Pop In/Out
-        public static IEnumerator PopInCoroutine(this Transform transform, float duration = 0.5f)
-        {
-            yield return transform.PopCoroutine(Vector3.zero, Vector3.one, duration);
-        }
-
-        public static IEnumerator PopOutCoroutine(this Transform transform, float duration = 0.5f)
-        {
-            yield return transform.PopCoroutine(Vector3.one, Vector3.zero, duration);
-        }
-
         public static IEnumerator PopCoroutine(this Transform transform, float start, float end, float duration = 0.5f)
         {
             var original = new Vector3(start, start, start);

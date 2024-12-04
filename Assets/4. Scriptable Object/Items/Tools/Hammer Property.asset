@@ -30,7 +30,7 @@ MonoBehaviour:
   - {fileID: 737704494243597508, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
   invalidLayers:
     serializedVersion: 2
-    m_Bits: 3221227264
+    m_Bits: 4026537728
   terrainLayers:
     serializedVersion: 2
     m_Bits: 128

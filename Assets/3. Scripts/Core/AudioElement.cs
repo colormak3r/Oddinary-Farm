@@ -36,7 +36,9 @@ public class AudioElement : MonoBehaviour
     public void PlayOneShot(AudioClip clip)
     {
         if (clip != null)
+        {
             audioSource.PlayOneShot(clip);
+        }
     }
 
     public void PlaySoundEffect(int index)

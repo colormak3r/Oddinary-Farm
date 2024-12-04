@@ -1,7 +1,7 @@
+using ColorMak3r.Utility;
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -26,9 +26,9 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     [Header("Entity Audio")]
     [SerializeField]
-    private AudioClip damagedSound;
+    protected AudioClip damagedSound;
     [SerializeField]
-    private AudioClip deathSound;
+    protected AudioClip deathSound;
 
     [Header("Debugs")]
     [SerializeField]
@@ -43,6 +43,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     protected HealthBarUI healthBarUI;
     protected LootGenerator lootGenerator;
     protected AudioElement audioElement;
+    protected Rigidbody2D rbody;
 
     private bool isDamageable;
     private float nextDamagable;
@@ -52,6 +53,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         healthBarUI = GetComponentInChildren<HealthBarUI>();
         lootGenerator = GetComponent<LootGenerator>();
         audioElement = GetComponent<AudioElement>();
+        rbody = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
@@ -63,10 +65,11 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     public override void OnNetworkSpawn()
     {
-        if (CurrentHealthValue != 0) HandleCurrentHealthChange(0, CurrentHealthValue);
+        HandleCurrentHealthChange(0, CurrentHealthValue);
 
         if (IsServer)
         {
+            CurrentHealth.Value = maxHealth;
             OnEntitySpawnOnServer();
         }
         else
@@ -86,6 +89,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     {
 
     }
+
+    #region Get Damaged
 
     public void GetDamaged(uint damage, DamageType type, Hostility hostility)
     {
@@ -112,6 +117,13 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         else
         {
             CurrentHealth.Value = 0;
+
+            OnDeathOnServer?.Invoke();
+            OnDeathOnServer.RemoveAllListeners();
+
+            if (lootGenerator)
+                lootGenerator.DropLootOnServer();
+
             OnEntityDeathOnServer();
         }
     }
@@ -123,8 +135,16 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
         if (CurrentHealthValue > damage)
         {
-            if (healthBarUI == null) return;
+            if (healthBarUI)
             healthBarUI.SetValue(CurrentHealthValue - damage, maxHealth);
+
+            // Damaged sound
+            if (audioElement)
+                audioElement.PlayOneShot(damagedSound);
+
+            // Damaged effects
+            if (damagedEffectPrefab)
+                Instantiate(damagedEffectPrefab, transform.position, Quaternion.identity);
 
             OnEntityDamagedOnClient();
         }
@@ -132,28 +152,15 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         {
             OnEntityDeathOnClient();
         }
-
-
     }
 
-    public uint GetCurrentHealth()
-    {
-        return CurrentHealthValue;
-    }
+    #endregion
 
-    public Hostility GetHostility()
-    {
-        return Hostility;
-    }
+    #region On Damaged
 
     protected virtual void OnEntityDamagedOnClient()
     {
-        if (audioElement)
-            audioElement.PlayOneShot(damagedSound);
 
-        // Damaged effects
-        if (damagedEffectPrefab != null)
-            Instantiate(damagedEffectPrefab, transform.position, Quaternion.identity);
     }
 
     protected virtual void OnEntityDamagedOnServer()
@@ -161,32 +168,102 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     }
 
+    #endregion
+
+    #region On Death
+
     protected virtual void OnEntityDeathOnServer()
     {
-        if (lootGenerator != null)
-            lootGenerator.DropLootOnServer();
-
-        OnDeathOnServer?.Invoke();
-        OnDeathOnServer.RemoveAllListeners();
-        NetworkObject.Despawn();
+        NetworkObject.Despawn(false);
     }
 
     protected virtual void OnEntityDeathOnClient()
     {
+        StartCoroutine(DeathOnClientCoroutine());
+    }
+
+    protected virtual IEnumerator DeathOnClientCoroutine()
+    {
+        Coroutine audioCoroutine = null;
+        Coroutine effectCoroutine = null;
         if (audioElement)
+        {
             audioElement.PlayOneShot(deathSound);
+            audioCoroutine = StartCoroutine(MiscUtility.WaitCoroutine(deathSound.length));
+        }
 
         if (deathEffectPrefab != null)
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+
+        if(rbody)
+            rbody.velocity = Vector2.zero;
+
+        effectCoroutine = StartCoroutine(transform.PopCoroutine(1, 0, 0.25f));
+
+        yield return effectCoroutine;
+        yield return audioCoroutine;
+
+        Destroy(gameObject);
     }
+
+
+
+
+    #endregion
+
+    #region On Spawn
 
     protected virtual void OnEntitySpawnOnServer()
     {
-        CurrentHealth.Value = maxHealth;
+
     }
 
     protected virtual void OnEntitySpawnOnClient()
     {
 
     }
+
+    #endregion
+
+    #region On Respawn
+
+    public void Respawn()
+    {
+        RespawnServerRpc();
+    }
+
+    [Rpc(SendTo.Server)]
+    private void RespawnServerRpc()
+    {
+        CurrentHealth.Value = maxHealth;
+
+        OnEntityRespawnOnServer();
+
+        RespawnClientRpc();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void RespawnClientRpc()
+    {
+        OnEntityRespawnOnClient();
+    }
+
+    protected virtual void OnEntityRespawnOnServer()
+    {
+
+    }
+
+    protected virtual void OnEntityRespawnOnClient()
+    {
+
+    }
+
+    #endregion
+
+    #region Utility
+
+    public uint GetCurrentHealth() => CurrentHealthValue;
+    public Hostility GetHostility() => Hostility;
+
+    #endregion
 }
