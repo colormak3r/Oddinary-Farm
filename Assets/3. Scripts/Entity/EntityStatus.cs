@@ -48,6 +48,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     private bool isDamageable;
     private float nextDamagable;
 
+    private bool omawumishindeiru;
+
     protected virtual void Awake()
     {
         healthBarUI = GetComponentInChildren<HealthBarUI>();
@@ -97,6 +99,9 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {hostility}");
         if (Hostility == hostility) return;
 
+        if (omawumishindeiru) return;
+        if (damage > CurrentHealthValue) omawumishindeiru = true;
+
         GetDamagedServerRpc(damage, type);
     }
 
@@ -136,7 +141,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (CurrentHealthValue > damage)
         {
             if (healthBarUI)
-            healthBarUI.SetValue(CurrentHealthValue - damage, maxHealth);
+                healthBarUI.SetValue(CurrentHealthValue - damage, maxHealth);
 
             // Damaged sound
             if (audioElement)
@@ -195,7 +200,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (deathEffectPrefab != null)
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
 
-        if(rbody)
+        if (rbody)
             rbody.velocity = Vector2.zero;
 
         effectCoroutine = StartCoroutine(transform.PopCoroutine(1, 0, 0.25f));
@@ -220,7 +225,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntitySpawnOnClient()
     {
-
+        omawumishindeiru = false;
     }
 
     #endregion

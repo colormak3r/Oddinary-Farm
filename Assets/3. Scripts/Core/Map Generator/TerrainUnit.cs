@@ -47,6 +47,10 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
     [Header("Debugs")]
     [SerializeField]
     private TerrainUnitProperty property;
+    [SerializeField]
+    private int initCount;
+    [SerializeField]
+    private int spillOverCount;
 
     public TerrainUnitProperty Property => property;
 
@@ -59,13 +63,20 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
 
     public void Initialize(TerrainUnitProperty property)
     {
+        initCount++;
         this.property = property;
 
         overlayRenderer.sprite = Random.value < property.OverlaySpriteChance ? property.OverlaySprite : null;
+
         baseRenderer.sprite = property.BaseSprite;
+
         outlineRenderer.sprite = null;
-        outlineRenderer.transform.rotation = Quaternion.identity;
-        outlineRenderer.color = property.OutlineColor;
+        if (property.DrawOutline)
+        {
+            outlineRenderer.transform.rotation = Quaternion.identity;
+            outlineRenderer.color = property.OutlineColor;
+        }
+
         spillOverRenderer.sprite = null;
         //underlayRenderer.sprite = property.UnderlaySprite;
 
@@ -80,6 +91,7 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
             {
                 if (!spillOver && isNeighborHigher)
                 {
+                    spillOverCount++;
                     spillOver = true;
                     spillOverRenderer.sprite = Random.value < mappedProperty.SpillOverSpriteChance ? mappedProperty.OverlaySprite : null;
                 }

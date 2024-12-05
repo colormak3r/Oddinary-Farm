@@ -32,6 +32,9 @@ public class TerrainUnitProperty : ScriptableObject
     [SerializeField]
     private Color outlineColor = Color.white;
 
+    [Header("Folliage")]
+    [SerializeField]
+    private GameObject[] folliagePrefabs;
 
     public Color MapColor => mapColor;
     public MinMaxFloat Elevation => elevation;
@@ -46,6 +49,7 @@ public class TerrainUnitProperty : ScriptableObject
     public bool DrawOutline => drawOutline;
     public Color OutlineColor => outlineColor;
 
+    public GameObject FolliagePrefab => folliagePrefabs.GetRandomElement();
 
     public bool Match(float elevation)
     {

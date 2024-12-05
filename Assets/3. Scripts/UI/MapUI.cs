@@ -19,11 +19,18 @@ public class MapUI : UIBehaviour
     }
 
     [Header("Settings")]
-    [SerializeField] 
-    private Image mapImage;
+    [SerializeField]
+    private Image elevationMapImage;
+    [SerializeField]
+    private Image resourceMapImage;
 
-    public void UpdateMap(Sprite mapSprite)
+    public void UpdateElevationMap(Sprite mapSprite)
     {
-        mapImage.sprite = mapSprite;
+        elevationMapImage.sprite = mapSprite;
+    }
+
+    public void UpdateResourceMap(Sprite mapSprite)
+    {
+        resourceMapImage.sprite = mapSprite;
     }
 }

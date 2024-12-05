@@ -19,6 +19,22 @@ public class SerializationInitializer : MonoBehaviour
         UserNetworkVariableSerialization<TerrainUnitProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<TerrainUnitProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
 
+        UserNetworkVariableSerialization<Face>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<Face>.ReadValue = SerializationExtensions.ReadValueSafe;
+        UserNetworkVariableSerialization<Face>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
+        UserNetworkVariableSerialization<Head>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<Head>.ReadValue = SerializationExtensions.ReadValueSafe;
+        UserNetworkVariableSerialization<Head>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
+        UserNetworkVariableSerialization<Hat>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<Hat>.ReadValue = SerializationExtensions.ReadValueSafe;
+        UserNetworkVariableSerialization<Hat>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
+        UserNetworkVariableSerialization<Outfit>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<Outfit>.ReadValue = SerializationExtensions.ReadValueSafe;
+        UserNetworkVariableSerialization<Outfit>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
         /*UserNetworkVariableSerialization<NetworkedScriptableObject>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<NetworkedScriptableObject>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<NetworkedScriptableObject>.DuplicateValue = (in NetworkedScriptableObject val, ref NetworkedScriptableObject dup) =>

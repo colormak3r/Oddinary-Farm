@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Unity.Netcode;
 using UnityEngine;
 using static UnityEngine.UI.Image;
@@ -20,7 +21,7 @@ public static class SerializationExtensions
         reader.ReadValueSafeInternal(out obj);
     }
 
-    public static void DuplicateValue (in ItemProperty value, ref ItemProperty duplicatedValue)
+    public static void DuplicateValue(in ItemProperty value, ref ItemProperty duplicatedValue)
     {
         duplicatedValue = value;
     }
@@ -60,12 +61,80 @@ public static class SerializationExtensions
     }
     #endregion
 
+    #region Face
+    public static void WriteValueSafe(this FastBufferWriter writer, in Face obj)
+    {
+        writer.WriteValueSafeInternal(obj);
+    }
+
+    public static void ReadValueSafe(this FastBufferReader reader, out Face obj)
+    {
+        reader.ReadValueSafeInternal(out obj);
+    }
+
+    public static void DuplicateValue(in Face value, ref Face duplicatedValue)
+    {
+        DuplicateValueInternal(value, ref duplicatedValue);
+    }
+    #endregion
+
+    #region Head
+    public static void WriteValueSafe(this FastBufferWriter writer, in Head obj)
+    {
+        writer.WriteValueSafeInternal(obj);
+    }
+
+    public static void ReadValueSafe(this FastBufferReader reader, out Head obj)
+    {
+        reader.ReadValueSafeInternal(out obj);
+    }
+
+    public static void DuplicateValue(in Head value, ref Head duplicatedValue)
+    {
+        DuplicateValueInternal(value, ref duplicatedValue);
+    }
+    #endregion
+
+    #region Hat
+    public static void WriteValueSafe(this FastBufferWriter writer, in Hat obj)
+    {
+        writer.WriteValueSafeInternal(obj);
+    }
+
+    public static void ReadValueSafe(this FastBufferReader reader, out Hat obj)
+    {
+        reader.ReadValueSafeInternal(out obj);
+    }
+
+    public static void DuplicateValue(in Hat value, ref Hat duplicatedValue)
+    {
+        DuplicateValueInternal(value, ref duplicatedValue);
+    }
+    #endregion
+
+    #region Outfit
+    public static void WriteValueSafe(this FastBufferWriter writer, in Outfit obj)
+    {
+        writer.WriteValueSafeInternal(obj);
+    }
+
+    public static void ReadValueSafe(this FastBufferReader reader, out Outfit obj)
+    {
+        reader.ReadValueSafeInternal(out obj);
+    }
+
+    public static void DuplicateValue(in Outfit value, ref Outfit duplicatedValue)
+    {
+        DuplicateValueInternal(value, ref duplicatedValue);
+    }
+    #endregion
+
     #region Internal
     private static void WriteValueSafeInternal<T>(this FastBufferWriter writer, in T obj) where T : ScriptableObject
     {
         writer.WriteValueSafe(obj == null ? NULL_STRING : obj.name);
     }
-    
+
     private static void ReadValueSafeInternal<T>(this FastBufferReader reader, out T obj) where T : ScriptableObject
     {
         reader.ReadValueSafe(out string objName);

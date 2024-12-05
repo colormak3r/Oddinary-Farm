@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Unity.Netcode;
-
+using Random = UnityEngine.Random;
 
 public class WorldGenerator : NetworkBehaviour
 {
@@ -24,11 +24,15 @@ public class WorldGenerator : NetworkBehaviour
         public int size;
         public Transform transform;
         public List<GameObject> terrainUnits;
+        public List<GameObject> folliages;
 
         public Chunk(Vector2 position, int size, Transform transform)
         {
             this.position = position;
             terrainUnits = new List<GameObject>();
+            terrainUnits.Capacity = size * size;
+            folliages = new List<GameObject>();
+            folliages.Capacity = size * size;
             this.transform = transform;
         }
 
@@ -91,6 +95,8 @@ public class WorldGenerator : NetworkBehaviour
     private float elevationFrequencyBase = 2f;
     [SerializeField]
     private float elevationExp = 1f;
+    [SerializeField]
+    private float grassChance = 0.8f;
 
     [Header("Debug")]
     [SerializeField]
@@ -109,6 +115,7 @@ public class WorldGenerator : NetworkBehaviour
     private Vector2 closetChunkPosition_cached = Vector2.one;
 
     private LocalObjectPooling localObjectPooling;
+    private ResourceGenerator resourceGenerator;
 
     private TerrainUnitProperty[,] terrainMap;
     int halfMapSizeX;
@@ -119,6 +126,7 @@ public class WorldGenerator : NetworkBehaviour
     private void Start()
     {
         localObjectPooling = LocalObjectPooling.Main;
+        resourceGenerator = GetComponent<ResourceGenerator>();
         GenerateMap();
     }
 
@@ -143,9 +151,16 @@ public class WorldGenerator : NetworkBehaviour
         terrainMapSprite = Sprite.Create(terrainMapTexture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
         terrainMapSprite.texture.filterMode = FilterMode.Point;
 
-        MapUI.Main.UpdateMap(terrainMapSprite);
+        MapUI.Main.UpdateElevationMap(terrainMapSprite);
+
+        resourceGenerator.GenerateMap(mapSize);
 
         isInitialized = true;
+    }
+
+    public bool IsValidResourcePosition(int x, int y)
+    {
+        return GetMappedProperty(x, y).Elevation.min >= 0.55f;
     }
 
     public IEnumerator GenerateTerrainCoroutine(Vector2 position)
@@ -203,23 +218,16 @@ public class WorldGenerator : NetworkBehaviour
         int lowerLimit = -halfChunkSize;
         int upperLimit = (chunkSize % 2 == 0) ? halfChunkSize : halfChunkSize + 1;
 
-        // Iterate over distance from center outwards
-        for (int d = 0; d <= halfChunkSize; d++)
+        for (int i = lowerLimit; i < upperLimit; i++)
         {
-            // Iterate over all positions at distance 'd'
-            for (int i = -d; i <= d; i++)
+            for (int j = lowerLimit; j < upperLimit; j++)
             {
-                for (int j = -d; j <= d; j++)
-                {
-                    // Check if the current position is exactly at distance 'd'
-                    if (Mathf.Max(Mathf.Abs(i), Mathf.Abs(j)) == d)
-                    {
-                        Vector2Int pos = new Vector2Int((int)position.x + i, (int)position.y + j);
-                        var property = GetMappedProperty(pos.x, pos.y);
-                        SpawnNewTerrainUnit(pos, chunk, property);
-                        yield return null; // Yield after each terrain unit is spawned
-                    }
-                }
+                var pos = new Vector2Int((int)position.x + i, (int)position.y + j);
+                var property = GetMappedProperty(pos.x, pos.y);
+                SpawnTerrainUnit(pos, chunk, property);
+                /*if (property.FolliagePrefab != null)
+                    SpawnFolliage(pos, chunk, property);*/
+                yield return null;
             }
         }
 
@@ -269,6 +277,12 @@ public class WorldGenerator : NetworkBehaviour
             yield return null;
         }
 
+        foreach (var folliage in chunk.folliages)
+        {
+            localObjectPooling.Despawn(folliage);
+            yield return null;
+        }
+
         positionToChunk.Remove(chunk.position);
         Destroy(chunk.transform.gameObject);
     }
@@ -276,9 +290,9 @@ public class WorldGenerator : NetworkBehaviour
     public TerrainUnitProperty GetMappedProperty(int x, int y)
     {
         //Debug.Log($"GetMappedProperty {x}, {y}");
-        x += halfMapSizeX;
-        y += halfMapSizeY;
-        if (x >= mapSize.x || x < 0 || y >= mapSize.y || y < 0)
+        var i = x + halfMapSizeX;
+        var j = y + halfMapSizeY;
+        if (i >= mapSize.x || i < 0 || j >= mapSize.y || j < 0)
         {
             return voidUnitProperty;
         }
@@ -286,11 +300,11 @@ public class WorldGenerator : NetworkBehaviour
         {
             try
             {
-                return terrainMap[x, y];
+                return terrainMap[i, j];
             }
             catch (Exception e)
             {
-                Debug.Log($"GetMappedProperty i = {x}, j = {y}");
+                Debug.Log($"GetMappedProperty i = {i}, j = {j}");
                 throw e;
             }
         }
@@ -344,7 +358,7 @@ public class WorldGenerator : NetworkBehaviour
         chunk.terrainUnits.Remove(unit);
 
         // Spawn a new unit
-        SpawnNewTerrainUnit(position, chunk, newProperty);
+        SpawnTerrainUnit(position, chunk, newProperty);
     }
 
     public void RemoveBlock(Vector2 position)
@@ -352,13 +366,21 @@ public class WorldGenerator : NetworkBehaviour
         PlaceBlockRpc(position, voidUnitProperty);
     }
 
-    private void SpawnNewTerrainUnit(Vector2 position, Chunk chunk, TerrainUnitProperty property)
+    private void SpawnTerrainUnit(Vector2 position, Chunk chunk, TerrainUnitProperty property)
     {
         var terrainObj = localObjectPooling.Spawn(terrainUnitPrefab);
         terrainObj.transform.position = position;
         terrainObj.transform.parent = chunk.transform;
         terrainObj.GetComponent<TerrainUnit>().Initialize(property);
         chunk.terrainUnits.Add(terrainObj);
+    }
+
+    private void SpawnFolliage(Vector2 position, Chunk chunk, TerrainUnitProperty property)
+    {
+        var folliage = localObjectPooling.Spawn(property.FolliagePrefab);
+        folliage.transform.position = position;
+        folliage.transform.parent = chunk.transform;
+        chunk.folliages.Add(folliage);
     }
 
     private TerrainUnitProperty GetDefaultProperty(float x, float y)

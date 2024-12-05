@@ -31,3 +31,6 @@ MonoBehaviour:
   underlaySprite: []
   drawOutline: 1
   outlineColor: {r: 0.7137255, g: 0.8352941, b: 0.23529412, a: 1}
+  folliagePrefabs:
+  - {fileID: 8991297812413951824, guid: c7931df1fa01fe94b99835c7cc6653c8, type: 3}
+  - {fileID: 7556170137156834127, guid: 836a57fbe6ffbd748b348ff856bfab8b, type: 3}

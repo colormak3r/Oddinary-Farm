@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1903275100066735782
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2368666480702714615, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368666480702714615, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368666480702714615, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368666480702714615, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368666480702714615, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368666480702714615, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368666480702714615, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368666480702714615, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368666480702714615, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368666480702714615, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2916747403788541215, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_Name
+      value: Resource Node Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 3221880858544378413, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 246552511, guid: 5062c2ed5f658b74aad90ffd002e38ee, type: 3}
+    - target: {fileID: 3792849900436727924, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: f43709536b3a99c4ca15ba33bd1d5ac5, type: 3}
+    - target: {fileID: 3792849900436727924, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: damagedSound
+      value: 
+      objectReference: {fileID: 8300000, guid: bbc702d6a8defbd46b7bb8a8ea372a31, type: 3}
+    - target: {fileID: 3792849900436727924, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: deathEffectPrefab
+      value: 
+      objectReference: {fileID: 2017998240076956080, guid: 903b72d91589cde4e9657311c38725ea, type: 3}
+    - target: {fileID: 3792849900436727924, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: damagedEffectPrefab
+      value: 
+      objectReference: {fileID: 3303192038522874649, guid: eaa16f0896e08a04684297aa24c4a3ba, type: 3}
+    - target: {fileID: 3988594065566451194, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3803905971
+      objectReference: {fileID: 0}
+    - target: {fileID: 3988594065566451194, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 4265111786
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}

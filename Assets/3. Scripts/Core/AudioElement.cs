@@ -37,6 +37,7 @@ public class AudioElement : MonoBehaviour
     {
         if (clip != null)
         {
+            audioSource.pitch = UnityEngine.Random.Range(0.9f, 1.1f);
             audioSource.PlayOneShot(clip);
         }
     }
