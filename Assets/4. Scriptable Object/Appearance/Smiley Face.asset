@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 067e19ce549fa554ba9fd5368b893804, type: 3}
   m_Name: Smiley Face
   m_EditorClassIdentifier: 
-  sprite: {fileID: -185579394, guid: 1e05c07ca8112ab4ab6812f57cb60b12, type: 3}
+  displaySprite: {fileID: -185579394, guid: 1e05c07ca8112ab4ab6812f57cb60b12, type: 3}

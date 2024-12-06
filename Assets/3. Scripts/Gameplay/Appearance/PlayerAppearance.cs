@@ -63,7 +63,7 @@ public class PlayerAppearance : NetworkBehaviour
     private void UpdateFaceRpc(Face face)
     {
         currentFace = face;
-        faceRenderer.sprite = face.Sprite;
+        faceRenderer.sprite = face.DisplaySprite;
     }
 
     public void UpdateHead(Head head)
@@ -75,7 +75,7 @@ public class PlayerAppearance : NetworkBehaviour
     private void UpdateHeadRpc(Head head)
     {
         currentHead = head;
-        headRenderer.sprite = head.Sprite;
+        headRenderer.sprite = head.DisplaySprite;
     }
 
     public void UpdateHat(Hat hat)
@@ -87,7 +87,7 @@ public class PlayerAppearance : NetworkBehaviour
     private void UpdateHatRpc(Hat hat)
     {
         currentHat = hat;
-        hatRenderer.sprite = hat.Sprite;
+        hatRenderer.sprite = hat.DisplaySprite;
     }
 
     [ContextMenu("Update Outfit")]

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 871aab305ed840545bc06c102d443757, type: 3}
   m_Name: Long Hair Head
   m_EditorClassIdentifier: 
-  sprite: {fileID: -156707972, guid: 1e05c07ca8112ab4ab6812f57cb60b12, type: 3}
+  displaySprite: {fileID: -156707972, guid: 1e05c07ca8112ab4ab6812f57cb60b12, type: 3}

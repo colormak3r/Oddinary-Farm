@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 271843c45096f3e4a9b382fc1baf905b, type: 3}
   m_Name: Cowboy Hat
   m_EditorClassIdentifier: 
-  sprite: {fileID: 978718842, guid: de4aa4d41b1ec7545a94679774029560, type: 3}
+  displaySprite: {fileID: 978718842, guid: de4aa4d41b1ec7545a94679774029560, type: 3}

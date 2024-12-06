@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = " Outfit", menuName = "Scriptable Objects/Appearance/Outfit")]
-public class Outfit : ScriptableObject, IEquatable<Outfit>
+public class Outfit : AppearanceData
 {
     [Header("Settings")]
     [SerializeField]
@@ -23,9 +23,4 @@ public class Outfit : ScriptableObject, IEquatable<Outfit>
     public Sprite RightArmSprite => rightArmSprite;
     public Sprite LeftLegSprite => leftLegSprite;
     public Sprite RightLegSprite => rightLegSprite;
-
-    public bool Equals(Outfit other)
-    {
-        return other == this;
-    }
 }

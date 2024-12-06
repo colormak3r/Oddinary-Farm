@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 871aab305ed840545bc06c102d443757, type: 3}
   m_Name: Short Hair Head
   m_EditorClassIdentifier: 
-  sprite: {fileID: -1134965187, guid: d9d7249c6bbdaeb4f8df3df4b2629274, type: 3}
+  displaySprite: {fileID: -1134965187, guid: d9d7249c6bbdaeb4f8df3df4b2629274, type: 3}
