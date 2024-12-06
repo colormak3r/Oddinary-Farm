@@ -53,6 +53,7 @@ public class PlayerNameUI : UIBehaviour
                 if (!displayedPlayerNames.Contains(status.PlayerNameValue))
                 {
                     displayedPlayerNames.Add(status.PlayerNameValue);
+                    status.PlayerNameUI.ShowPlayerName();
                 }
 
                 currentNearbyPlayers.Add(status.PlayerNameValue);

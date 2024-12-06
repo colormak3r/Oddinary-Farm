@@ -21,6 +21,7 @@ public class PlayerStatus : EntityStatus
     private NetworkVariable<FixedString128Bytes> PlayerName = new NetworkVariable<FixedString128Bytes>(default, default, NetworkVariableWritePermission.Owner);
 
     public string PlayerNameValue => PlayerName.Value.ToString();
+    public PlayerNameUI PlayerNameUI => playerNameUI;
 
     private IControllable[] controllables;
 
