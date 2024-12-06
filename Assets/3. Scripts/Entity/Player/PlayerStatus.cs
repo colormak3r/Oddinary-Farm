@@ -1,7 +1,9 @@
 using ColorMak3r.Utility;
+using Steamworks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,10 +15,12 @@ public class PlayerStatus : EntityStatus
     private Transform respawnPoint;
     [SerializeField]
     private Collider2D playerHitbox;
+    [SerializeField]
+    private TMP_Text playerNameText;
 
-    private NetworkVariable<FixedString128Bytes> GUID = new NetworkVariable<FixedString128Bytes>();
+    private NetworkVariable<FixedString128Bytes> PlayerName = new NetworkVariable<FixedString128Bytes>(default, default, NetworkVariableWritePermission.Owner);
 
-    public string GUIDValue => GUID.Value.ToString();
+    public string PlayerNameValue => PlayerName.Value.ToString();
 
     private IControllable[] controllables;
 
@@ -29,10 +33,23 @@ public class PlayerStatus : EntityStatus
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (IsServer)
+        PlayerName.OnValueChanged += HandlePlayerNameChange;
+
+        if (IsOwner)
         {
-            GUID.Value = Guid.NewGuid().ToString();
+            PlayerName.Value = SteamClient.Name;
         }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        PlayerName.OnValueChanged -= HandlePlayerNameChange;
+    }
+
+    private void HandlePlayerNameChange(FixedString128Bytes previousValue, FixedString128Bytes newValue)
+    {
+        playerNameText.text = newValue.ToString();
     }
 
     protected override void OnEntityDeathOnServer()

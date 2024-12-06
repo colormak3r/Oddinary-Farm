@@ -4,6 +4,16 @@ using UnityEngine.UI;
 
 public class AppearanceUI : UIBehaviour
 {
+    public static AppearanceUI Main { get; private set; }
+
+    private void Awake()
+    {
+        if (Main == null)
+            Main = this;
+        else
+            Destroy(transform.parent.gameObject);
+    }
+
     [Header("Appearance UI Settings")]
     [SerializeField]
     private GameObject rowPrefab;
@@ -14,13 +24,30 @@ public class AppearanceUI : UIBehaviour
     [SerializeField]
     private AppearanceData[] hats;
     [SerializeField]
-    private AppearanceData[] outfit;
+    private AppearanceData[] outfits;
 
     [Header("Required Component")]
     [SerializeField]
     private Transform contentTransform;
     [SerializeField]
     private Image background;
+
+    [SerializeField]
+    private Image faceImage;
+    [SerializeField]
+    private Image headImage;
+    [SerializeField]
+    private Image hatImage;
+    [SerializeField]
+    private Image torsoImage;
+    [SerializeField]
+    private Image rightArmImage;
+    [SerializeField]
+    private Image leftArmImage;
+    [SerializeField]
+    private Image rightLegImage;
+    [SerializeField]
+    private Image leftLegImage;
 
     protected override void OnEnable()
     {
@@ -51,6 +78,21 @@ public class AppearanceUI : UIBehaviour
         FaceButtonClicked();
     }
 
+    public void Initialize(Face face, Head head, Hat hat, Outfit outfit)
+    {
+        faceImage.sprite = face.DisplaySprite;
+        headImage.sprite = head.DisplaySprite;
+        if (hat.name == "No Hat")
+            hatImage.sprite = null;
+        else
+            hatImage.sprite = hat.DisplaySprite;
+        torsoImage.sprite = outfit.TorsoSprite;
+        rightArmImage.sprite = outfit.RightArmSprite;
+        leftArmImage.sprite = outfit.LeftArmSprite;
+        rightLegImage.sprite = outfit.RightLegSprite;
+        leftLegImage.sprite = outfit.LeftLegSprite;
+    }
+
     public void FaceButtonClicked()
     {
         RenderRows(faces);
@@ -68,7 +110,7 @@ public class AppearanceUI : UIBehaviour
 
     public void OutfitButtonClicked()
     {
-        RenderRows(outfit);
+        RenderRows(outfits);
     }
 
     private void RenderRows(AppearanceData[] data)
@@ -78,8 +120,8 @@ public class AppearanceUI : UIBehaviour
             DestroyImmediate(contentTransform.GetChild(0).gameObject);
         }
 
-        int count = data.Length / 2;
-        for (int i = 0; i < count; i++)
+        int count = data.Length;
+        for (int i = 0; i < count; i += 2)
         {
             var rowObj = Instantiate(rowPrefab, contentTransform);
             var row = rowObj.GetComponent<AppearanceRow>();
@@ -87,18 +129,44 @@ public class AppearanceUI : UIBehaviour
             row.SetDataLeft(data[i]);
             if (i + 1 < data.Length)
                 row.SetDataRight(data[i + 1]);
+            else
+                row.HideRight();
         }
     }
 
     public void HandleButtonClicked(AppearanceData data)
     {
-        if (data is Face)
-            PlayerAppearance.Owner.UpdateFace(data as Face);
-        else if (data is Head)
-            PlayerAppearance.Owner.UpdateHead(data as Head);
-        else if (data is Hat)
-            PlayerAppearance.Owner.UpdateHat(data as Hat);
-        else if (data is Outfit)
-            PlayerAppearance.Owner.UpdateOutfit(data as Outfit);
+        switch (data)
+        {
+            case Face face:
+                PlayerAppearance.Owner.UpdateFace(face);
+                faceImage.sprite = face.DisplaySprite;
+                break;
+            case Head head:
+                PlayerAppearance.Owner.UpdateHead(head);
+                headImage.sprite = head.DisplaySprite;
+                break;
+            case Hat hat:
+                PlayerAppearance.Owner.UpdateHat(hat);
+                if (hat.name == "No Hat")
+                {
+                    hatImage.sprite = null;
+                    hatImage.color = Color.clear;
+                }                    
+                else
+                {
+                    hatImage.sprite = hat.DisplaySprite;
+                    hatImage.color = Color.white;
+                }
+                break;
+            case Outfit outfit:
+                PlayerAppearance.Owner.UpdateOutfit(outfit);
+                torsoImage.sprite = outfit.TorsoSprite;
+                rightArmImage.sprite = outfit.RightArmSprite;
+                leftArmImage.sprite = outfit.LeftArmSprite;
+                rightLegImage.sprite = outfit.RightLegSprite;
+                leftLegImage.sprite = outfit.LeftLegSprite;
+                break;
+        }
     }
 }

@@ -21,6 +21,8 @@ public class OptionsUI : UIBehaviour
     [SerializeField]
     private GameObject leaveButton;
     [SerializeField]
+    private GameObject appearanceButton;
+    [SerializeField]
     private Button backButton;
     [SerializeField]
     private Image background;
@@ -44,6 +46,7 @@ public class OptionsUI : UIBehaviour
         if (scene.buildIndex == 0)
         {
             leaveButton.SetActive(false);
+            appearanceButton.SetActive(false);
             backButtonText.text = "Back";
             backButton.onClick.RemoveListener(ResumeButtonClicked);
             backButton.onClick.AddListener(BackButtonClicked);
@@ -52,6 +55,7 @@ public class OptionsUI : UIBehaviour
         else
         {
             leaveButton.SetActive(true);
+            appearanceButton.SetActive(true);
             backButtonText.text = "Resume";
             backButton.onClick.RemoveListener(BackButtonClicked);
             backButton.onClick.AddListener(ResumeButtonClicked);

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerAppearance : NetworkBehaviour
 {
@@ -51,6 +52,8 @@ public class PlayerAppearance : NetworkBehaviour
             UpdateHead(defaultHead);
             UpdateHat(defaultHat);
             UpdateOutfit(defaultOutfit);
+
+            AppearanceUI.Main.Initialize(defaultFace, defaultHead, defaultHat, defaultOutfit);
         }
     }
 
@@ -87,7 +90,10 @@ public class PlayerAppearance : NetworkBehaviour
     private void UpdateHatRpc(Hat hat)
     {
         currentHat = hat;
-        hatRenderer.sprite = hat.DisplaySprite;
+        if (hat.name == "No Hat")
+            hatRenderer.sprite = null;
+        else
+            hatRenderer.sprite = hat.DisplaySprite;
     }
 
     [ContextMenu("Update Outfit")]

@@ -47,6 +47,14 @@ public class AppearanceRow : MonoBehaviour
         displayTextRight.text = data.name;
     }
 
+    public void HideRight()
+    {
+        borderImageRight.color = Color.clear;
+        itemImageRight.color = Color.clear;
+        displayTextRight.color = Color.clear;
+        buttonRight.enabled = false;
+    }
+
     public void ButtonLeftClicked()
     {
         ui.HandleButtonClicked(leftData);
