@@ -34,6 +34,7 @@ public class PlayerStatus : EntityStatus
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        HandlePlayerNameChange(default, PlayerName.Value);
         PlayerName.OnValueChanged += HandlePlayerNameChange;
 
         if (IsOwner)
