@@ -346,6 +346,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (!isControllable)
         {
             movement.SetDirection(Vector2.zero);
+            animator.SetBool("IsMoving", false);
         }
     }
 }

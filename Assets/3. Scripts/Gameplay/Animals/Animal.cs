@@ -27,6 +27,8 @@ public abstract class Animal : NetworkBehaviour
 
     private EntityMovement movement;
     public EntityMovement Movement => movement;
+    private EntityStatus status;
+    public EntityStatus Status => status;
 
     private PreyDetector preyDetector;
     public PreyDetector PreyDetector => preyDetector;
@@ -84,7 +86,7 @@ public abstract class Animal : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!IsServer) return;
+        if (!IsServer || !IsSpawned) return;
 
         currentState?.ExecuteState();
         HandleTransitions();

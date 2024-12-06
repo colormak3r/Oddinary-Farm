@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -7,18 +8,6 @@ using UnityEngine.UI;
 public class PlayerAppearance : NetworkBehaviour
 {
     public static PlayerAppearance Owner;
-
-    [Header("Settings")]
-    [SerializeField]
-    private Face defaultFace;
-    [SerializeField]
-    private Head defaultHead;
-    [SerializeField]
-    private Hat defaultHat;
-    [SerializeField]
-    private Outfit defaultOutfit;
-    [SerializeField]
-    private Outfit alternateOutfit;
 
     [Header("Required Components")]
     [SerializeField]
@@ -38,23 +27,82 @@ public class PlayerAppearance : NetworkBehaviour
     [SerializeField]
     private SpriteRenderer rightLegRenderer;
 
-    private Face currentFace;
-    private Head currentHead;
-    private Hat currentHat;
-    private Outfit currentOutfit;
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showDebugs;
+
+    private NetworkVariable<Face> CurrentFace = new NetworkVariable<Face>(default, default, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<Head> CurrentHead = new NetworkVariable<Head>(default, default, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<Hat> CurrentHat = new NetworkVariable<Hat>(default, default, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<Outfit> CurrentOutfit = new NetworkVariable<Outfit>(default, default, NetworkVariableWritePermission.Owner);
 
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
+
+        if (CurrentFace.Value != null)
+            HandleFaceChanged(default, CurrentFace.Value);
+        if (CurrentHead.Value != null)
+            HandleHeadChanged(default, CurrentHead.Value);
+        if (CurrentHat.Value != null)
+            HandleHatChanged(default, CurrentHat.Value);
+        if (CurrentOutfit.Value != null)
+            HandleOutfitChanged(default, CurrentOutfit.Value);
+
+        CurrentFace.OnValueChanged += HandleFaceChanged;
+        CurrentHead.OnValueChanged += HandleHeadChanged;
+        CurrentHat.OnValueChanged += HandleHatChanged;
+        CurrentOutfit.OnValueChanged += HandleOutfitChanged;
+
         if (IsOwner)
         {
             Owner = this;
-            UpdateFace(defaultFace);
-            UpdateHead(defaultHead);
-            UpdateHat(defaultHat);
-            UpdateOutfit(defaultOutfit);
 
-            AppearanceUI.Main.Initialize(defaultFace, defaultHead, defaultHat, defaultOutfit);
+            UpdateFace(AppearanceUI.Main.CurrentFace);
+            UpdateHead(AppearanceUI.Main.CurrentHead);
+            UpdateHat(AppearanceUI.Main.CurrentHat);
+            UpdateOutfit(AppearanceUI.Main.CurrentOutfit);
         }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        CurrentFace.OnValueChanged -= HandleFaceChanged;
+        CurrentHead.OnValueChanged -= HandleHeadChanged;
+        CurrentHat.OnValueChanged -= HandleHatChanged;
+        CurrentOutfit.OnValueChanged -= HandleOutfitChanged;
+    }
+
+    private void HandleFaceChanged(Face previousValue, Face newValue)
+    {
+        if (showDebugs) Debug.Log($"Face Changed: {previousValue} -> {newValue}");
+        faceRenderer.sprite = newValue.DisplaySprite;
+    }
+
+    private void HandleHeadChanged(Head previousValue, Head newValue)
+    {
+        if (showDebugs) Debug.Log($"Head Changed: {previousValue} -> {newValue}");
+        headRenderer.sprite = newValue.DisplaySprite;
+    }
+
+    private void HandleHatChanged(Hat previousValue, Hat newValue)
+    {
+        if (showDebugs) Debug.Log($"Hat Changed: {previousValue} -> {newValue}");
+        if (newValue.name == "No Hat")
+            hatRenderer.sprite = null;
+        else
+            hatRenderer.sprite = newValue.DisplaySprite;
+    }
+
+    private void HandleOutfitChanged(Outfit previousValue, Outfit newValue)
+    {
+        if (showDebugs) Debug.Log($"Outfit Changed: {previousValue} -> {newValue}");
+        torsoRenderer.sprite = newValue.TorsoSprite;
+        leftArmRenderer.sprite = newValue.LeftArmSprite;
+        rightArmRenderer.sprite = newValue.RightArmSprite;
+        leftLegRenderer.sprite = newValue.LeftLegSprite;
+        rightLegRenderer.sprite = newValue.RightLegSprite;
     }
 
     public void UpdateFace(Face face)
@@ -62,11 +110,10 @@ public class PlayerAppearance : NetworkBehaviour
         UpdateFaceRpc(face);
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Owner)]
     private void UpdateFaceRpc(Face face)
     {
-        currentFace = face;
-        faceRenderer.sprite = face.DisplaySprite;
+        CurrentFace.Value = face;
     }
 
     public void UpdateHead(Head head)
@@ -74,11 +121,10 @@ public class PlayerAppearance : NetworkBehaviour
         UpdateHeadRpc(head);
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Owner)]
     private void UpdateHeadRpc(Head head)
     {
-        currentHead = head;
-        headRenderer.sprite = head.DisplaySprite;
+        CurrentHead.Value = head;
     }
 
     public void UpdateHat(Hat hat)
@@ -86,23 +132,10 @@ public class PlayerAppearance : NetworkBehaviour
         UpdateHatRpc(hat);
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Owner)]
     private void UpdateHatRpc(Hat hat)
     {
-        currentHat = hat;
-        if (hat.name == "No Hat")
-            hatRenderer.sprite = null;
-        else
-            hatRenderer.sprite = hat.DisplaySprite;
-    }
-
-    [ContextMenu("Update Outfit")]
-    public void UpdateOutfit()
-    {
-        if (currentOutfit == defaultOutfit)
-            UpdateOutfitRpc(alternateOutfit);
-        else
-            UpdateOutfitRpc(defaultOutfit);
+        CurrentHat.Value = hat;
     }
 
     public void UpdateOutfit(Outfit outfit)
@@ -110,14 +143,9 @@ public class PlayerAppearance : NetworkBehaviour
         UpdateOutfitRpc(outfit);
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Owner)]
     private void UpdateOutfitRpc(Outfit outfit)
     {
-        currentOutfit = outfit;
-        torsoRenderer.sprite = outfit.TorsoSprite;
-        leftArmRenderer.sprite = outfit.LeftArmSprite;
-        rightArmRenderer.sprite = outfit.RightArmSprite;
-        leftLegRenderer.sprite = outfit.LeftLegSprite;
-        rightLegRenderer.sprite = outfit.RightLegSprite;
+        CurrentOutfit.Value = outfit;
     }
 }

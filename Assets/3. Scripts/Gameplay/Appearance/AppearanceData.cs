@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AppearanceData : ScriptableObject, IEquatable<Hat>
+public class AppearanceData : ScriptableObject, IEquatable<AppearanceData>
 {
     [Header("Settings")]
     [SerializeField]
@@ -11,7 +11,7 @@ public class AppearanceData : ScriptableObject, IEquatable<Hat>
 
     public Sprite DisplaySprite => displaySprite;
 
-    public bool Equals(Hat other)
+    public bool Equals(AppearanceData other)
     {
         return other == this;
     }

@@ -87,7 +87,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4625df8a292c292429a56ad23ac325a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainGameScene: Main Game
   maxPlayer: 8
   useFacepunchTransport: 1
   showDebugs: 0
@@ -139,7 +138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PresetAsset: {fileID: 0}
   m_PresetReference:
-    rid: 810303361397293080
+    rid: 7558390527854641152
   m_Scenario:
     rid: -2
   m_IsScenarioSettingsFolded: 1
@@ -149,7 +148,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 810303361397293080
+    - rid: 7558390527854641152
       type: {class: NetworkSimulatorPreset, ns: Unity.Multiplayer.Tools.NetworkSimulator.Runtime, asm: Unity.Multiplayer.Tools.NetworkSimulator.Runtime}
       data:
         <Name>k__BackingField: None
@@ -194,7 +193,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1154090671039255764}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44dd247a00edbfa44b77868d755af6ea, type: 3}
   m_Name: 

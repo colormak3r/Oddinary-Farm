@@ -24,14 +24,18 @@ public class AnimalManager : NetworkBehaviour
     private LayerMask spawnBlocker;
     [SerializeField]
     private GameObject monsterPrefab;
+    [SerializeField]
+    private GameObject monsterBossPrefab;
 
     private int currentWave = 0;
+    private int currentSpawnPerWave = 0;
     private bool hourchanged = false;
 
     public override void OnNetworkSpawn()
     {
         if (IsServer)
         {
+            currentSpawnPerWave = spawnPerWaveBase;
             TimeManager.Main.OnHourChanged.AddListener(OnHourChanged);
         }
     }
@@ -50,6 +54,7 @@ public class AnimalManager : NetworkBehaviour
         {
             if (canSpawn)
                 StartCoroutine(SpawnMonsterWaves());
+            currentSpawnPerWave += 2;
         }
 
         hourchanged = true;
@@ -86,12 +91,23 @@ public class AnimalManager : NetworkBehaviour
         }
         yield return null;
 
-        for (int j = 0; j < spawnPerWaveBase; j++)
+        for (int i = 0; i < currentSpawnPerWave; i++)
         {
             var randomIndex = UnityEngine.Random.Range(0, spawnablePositions.Count);
             var randomPosition = spawnablePositions[randomIndex];
 
             var monster = Instantiate(monsterPrefab, randomPosition, Quaternion.identity);
+            monster.GetComponent<NetworkObject>().Spawn();
+
+            yield return null;
+        }
+
+        for (int i = 0; i < currentSpawnPerWave / 5; i++)
+        {
+            var randomIndex = UnityEngine.Random.Range(0, spawnablePositions.Count);
+            var randomPosition = spawnablePositions[randomIndex];
+
+            var monster = Instantiate(monsterBossPrefab, randomPosition, Quaternion.identity);
             monster.GetComponent<NetworkObject>().Spawn();
 
             yield return null;

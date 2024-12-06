@@ -16,7 +16,7 @@ public class PlayerStatus : EntityStatus
     [SerializeField]
     private Collider2D playerHitbox;
     [SerializeField]
-    private TMP_Text playerNameText;
+    private PlayerNameUI playerNameUI;
 
     private NetworkVariable<FixedString128Bytes> PlayerName = new NetworkVariable<FixedString128Bytes>(default, default, NetworkVariableWritePermission.Owner);
 
@@ -49,7 +49,7 @@ public class PlayerStatus : EntityStatus
 
     private void HandlePlayerNameChange(FixedString128Bytes previousValue, FixedString128Bytes newValue)
     {
-        playerNameText.text = newValue.ToString();
+        playerNameUI.SetPlayerName(newValue.ToString());
     }
 
     protected override void OnEntityDeathOnServer()

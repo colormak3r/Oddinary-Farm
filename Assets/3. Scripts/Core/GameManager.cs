@@ -68,6 +68,6 @@ public class GameManager : NetworkBehaviour
     {
         yield return OptionsUI.Main.HideCoroutine();
 
-        ConnectionManager.Main.Disconnect();
+        ConnectionManager.Main.Disconnect(false);
     }
 }

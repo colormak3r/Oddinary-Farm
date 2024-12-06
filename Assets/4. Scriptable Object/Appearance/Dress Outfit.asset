@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf23b0482ae4948458ceeabf8a9bc406, type: 3}
   m_Name: Dress Outfit
   m_EditorClassIdentifier: 
+  displaySprite: {fileID: 1863402801, guid: 1e05c07ca8112ab4ab6812f57cb60b12, type: 3}
   torsoSprite: {fileID: 1863402801, guid: 1e05c07ca8112ab4ab6812f57cb60b12, type: 3}
   leftArmSprite: {fileID: -1462116139, guid: 1e05c07ca8112ab4ab6812f57cb60b12, type: 3}
   rightArmSprite: {fileID: 1080217540, guid: 1e05c07ca8112ab4ab6812f57cb60b12, type: 3}

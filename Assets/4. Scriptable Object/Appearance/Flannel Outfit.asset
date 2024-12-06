@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf23b0482ae4948458ceeabf8a9bc406, type: 3}
   m_Name: Flannel Outfit
   m_EditorClassIdentifier: 
+  displaySprite: {fileID: -1590322747, guid: d9d7249c6bbdaeb4f8df3df4b2629274, type: 3}
   torsoSprite: {fileID: -1590322747, guid: d9d7249c6bbdaeb4f8df3df4b2629274, type: 3}
   leftArmSprite: {fileID: -481553855, guid: d9d7249c6bbdaeb4f8df3df4b2629274, type: 3}
   rightArmSprite: {fileID: 353984707, guid: d9d7249c6bbdaeb4f8df3df4b2629274, type: 3}

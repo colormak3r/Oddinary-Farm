@@ -53,7 +53,7 @@ public class Spider : Animal
             if (Time.time < nextIdleStateChange) return;
             nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
 
-            if (currentState == chasingState || currentState == attackPrimaryState)
+            if (currentState == chasingState || currentState == attackPrimaryState || currentState == null)
             {
                 ChangeState(thinkingState);
             }

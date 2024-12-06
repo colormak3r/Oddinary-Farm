@@ -107,7 +107,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     private Item currentItem;
 
     [SerializeField]
-    private NetworkVariable<ulong> Coins = new NetworkVariable<ulong>(10, default, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<ulong> Wallet = new NetworkVariable<ulong>(10, default, NetworkVariableWritePermission.Owner);
     [HideInInspector]
     public UnityEvent<ulong> OnCoinsValueChanged;
 
@@ -115,7 +115,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     public Item CurrentItemValue => currentItem;
     public int CurrentHotbarIndex => currentHotbarIndex;
-    public ulong CoinsValue => Coins.Value;
+    public ulong WalletValue => Wallet.Value;
     public ItemStack[] Inventory => inventory;
 
     private void Awake()
@@ -152,17 +152,17 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             ChangeHotBarIndex(0);
 
             // Update the wallet
-            inventoryUI.UpdateWallet(CoinsValue);
+            inventoryUI.UpdateWallet(WalletValue);
         }
 
         CurrentItem.OnValueChanged += HandleCurrentItemChanged;
-        Coins.OnValueChanged += HandleCoinValueChanged;
+        Wallet.OnValueChanged += HandleCoinValueChanged;
     }
 
     public override void OnNetworkDespawn()
     {
         CurrentItem.OnValueChanged -= HandleCurrentItemChanged;
-        Coins.OnValueChanged -= HandleCoinValueChanged;
+        Wallet.OnValueChanged -= HandleCoinValueChanged;
     }
 
     private void HandleCurrentItemChanged(NetworkBehaviourReference previousValue, NetworkBehaviourReference newValue)
@@ -537,15 +537,15 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     public void AddCoinsOnClient(uint value)
     {
-        Coins.Value += value;
-        inventoryUI.UpdateWallet(Coins.Value);
-        if (showDebug) Debug.Log($"Added {value} coins to inventory. Total coins = {Coins.Value}");
+        Wallet.Value += value;
+        inventoryUI.UpdateWallet(Wallet.Value);
+        if (showDebug) Debug.Log($"Added {value} coins to inventory. Total coins = {Wallet.Value}");
     }
 
     public void ConsumeCoinsOnClient(ulong value)
     {
-        if (Coins.Value - value < 0) return;
-        Coins.Value -= value;
+        if (Wallet.Value - value < 0) return;
+        Wallet.Value -= value;
     }
 
     public void SetControllable(bool value)

@@ -107,7 +107,7 @@ public class ShopUI : UIBehaviour
         this.shopTransform = shopTransform;
 
         this.playerInventory = playerInventory;
-        HandleCoinValueChanged(playerInventory.CoinsValue);
+        HandleCoinValueChanged(playerInventory.WalletValue);
         playerInventory.OnCoinsValueChanged.AddListener(HandleCoinValueChanged);
 
         InventoryUI.Main.CloseInventory();
@@ -152,7 +152,7 @@ public class ShopUI : UIBehaviour
         if (shopMode == ShopMode.Buy)
         {
             var price = itemProperty.Price;
-            if (playerInventory.CoinsValue < price)
+            if (playerInventory.WalletValue < price)
             {
                 if (showDebug) Debug.Log($"Cannot afford {itemProperty.Name}");
             }

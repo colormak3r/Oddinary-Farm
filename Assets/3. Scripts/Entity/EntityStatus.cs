@@ -98,9 +98,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     {
         if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {hostility}");
         if (Hostility == hostility) return;
-
-        if (omawumishindeiru) return;
-        if (damage > CurrentHealthValue) omawumishindeiru = true;
+        if (!IsSpawned) return;
 
         GetDamagedServerRpc(damage, type);
     }
@@ -126,7 +124,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             OnDeathOnServer?.Invoke();
             OnDeathOnServer.RemoveAllListeners();
 
-            if (lootGenerator)
+            // TODO: Create virtual method that check for loot drop condition
+            if (lootGenerator != null && TryGetComponent(out Plant plant) && plant.IsHarvestable())
                 lootGenerator.DropLootOnServer();
 
             OnEntityDeathOnServer();

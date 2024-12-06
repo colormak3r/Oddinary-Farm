@@ -90,7 +90,7 @@ public class ConnectionManager : MonoBehaviour
         networkManager.OnClientDisconnectCallback -= OnClientDisconnectCallback;
     }
 
-    private void OnApplicationQuit() => Disconnect();
+    private void OnApplicationQuit() => Disconnect(true);
 
     private IEnumerator LaunchCoroutine(bool isHost, NetworkTransport networkTransport)
     {
@@ -127,9 +127,18 @@ public class ConnectionManager : MonoBehaviour
         CurrentLobby = await SteamMatchmaking.CreateLobbyAsync(maxPlayer);
     }
 
-    public void Disconnect()
+    public void Disconnect(bool quit)
     {
-        StartCoroutine(DisconnectCoroutine());
+        if (quit)
+        {
+            CurrentLobby?.Leave();
+            if (networkManager) networkManager.Shutdown();
+            return;
+        }
+        else
+        { 
+            StartCoroutine(DisconnectCoroutine()); 
+        }
     }
 
     private IEnumerator DisconnectCoroutine()
