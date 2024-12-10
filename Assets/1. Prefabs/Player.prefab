@@ -1298,7 +1298,7 @@ MonoBehaviour:
   - Property: {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
     Count: 1
   showDebug: 0
-  showGizmos: 1
+  showGizmos: 0
   showItemDebug: 0
   showItemGizmos: 0
   currentHotbarIndex: 0

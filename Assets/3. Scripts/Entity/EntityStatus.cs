@@ -50,7 +50,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     protected SpriteRenderer[] renderers;
     protected Light2D[] lights;
 
-    private bool isDamageable;
     private float nextDamagable;
 
     protected virtual void Awake()
@@ -63,13 +62,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         colliders = GetComponentsInChildren<Collider2D>();
         renderers = GetComponentsInChildren<SpriteRenderer>();
         lights = GetComponentsInChildren<Light2D>();
-    }
-
-    private void Update()
-    {
-        if (!IsServer) return;
-        if (Time.time > nextDamagable && !isInvincible)
-            isDamageable = true;
     }
 
     public override void OnNetworkSpawn()
@@ -109,9 +101,10 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
         if (!IsSpawned) return;
 
-        if (!isDamageable) return;
+        if (isInvincible) return;
+
+        if (Time.time < nextDamagable) return;
         nextDamagable = Time.time + iframeDuration;
-        isDamageable = false;
 
         GetDamagedRpc(damage, type);
     }

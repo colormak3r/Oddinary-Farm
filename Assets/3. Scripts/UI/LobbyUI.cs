@@ -18,6 +18,9 @@ public class LobbyUI : UIBehaviour
 {
     public static LobbyUI Main;
 
+    public static string LOBBY_STARTED_KEY = "LOBBY_STARTED";
+    public static string LOBBY_NAME_KEY = "LOBBY_NAME";
+
     private void Awake()
     {
         if (Main == null)
@@ -40,7 +43,15 @@ public class LobbyUI : UIBehaviour
     [SerializeField]
     private TMP_Text lobbyPlayerText;
     [SerializeField]
+    private TMP_Text lobbyInstructionText;
+    [SerializeField]
     private TMP_Text startButtonText;
+    [SerializeField]
+    private TMP_Text inviteButtonText;
+    [SerializeField]
+    private Button startButton;
+    [SerializeField]
+    private Button inviteButton;
 
     [Header("Debugs")]
     [SerializeField]
@@ -52,24 +63,18 @@ public class LobbyUI : UIBehaviour
     {
         SteamMatchmaking.OnLobbyCreated += OnLobbyCreated;
         SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
+
         SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoined;
         SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeave;
-        SteamMatchmaking.OnLobbyInvite += OnLobbyInvite;
-        SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreated;
-
-        SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequested;
     }
 
     private void OnDestroy()
     {
         SteamMatchmaking.OnLobbyCreated -= OnLobbyCreated;
         SteamMatchmaking.OnLobbyEntered -= OnLobbyEntered;
+
         SteamMatchmaking.OnLobbyMemberJoined -= OnLobbyMemberJoined;
         SteamMatchmaking.OnLobbyMemberLeave -= OnLobbyMemberLeave;
-        SteamMatchmaking.OnLobbyInvite -= OnLobbyInvite;
-        SteamMatchmaking.OnLobbyGameCreated -= OnLobbyGameCreated;
-
-        SteamFriends.OnGameLobbyJoinRequested -= OnGameLobbyJoinRequested;
     }
 
     #region Steam Callbacks
@@ -78,88 +83,74 @@ public class LobbyUI : UIBehaviour
     {
         lobbyMode = LobbyMode.Host;
         lobbyIdInputField.readOnly = true;
-        startButtonText.text = "Joining...";
+        lobbyIdInputField.text = "";
+
+        lobbyInfoText.text = "";
+
+        lobbyInstructionText.text = "Invite or share Lobby ID to your friend.";
+
+        lobbyPlayerText.text = "Waiting for player...";
+
+        startButton.gameObject.SetActive(true);
+
+        inviteButton.interactable = false;
+        inviteButtonText.text = "Creating Room";
+
         ConnectionManager.Main.CreateLobby();
+
+        Show();
     }
 
     public void Client()
     {
         lobbyMode = LobbyMode.Client;
         lobbyIdInputField.readOnly = false;
-        startButtonText.text = "Join";
+        lobbyIdInputField.text = "";
+
+        lobbyInstructionText.text = "Enter Lobby ID or join a friend from steam overlay.";
+
+        lobbyInfoText.text = "";
+
+        lobbyPlayerText.text = "Waiting for player...";
+
+        startButton.gameObject.SetActive(false);
+
+        inviteButton.interactable = true;
+        inviteButtonText.text = "Join";
+
+        Show();
     }
 
-    private void OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
+    public void InviteButtonClicked()
     {
-        // On invite accepted
-        if (showDebugs) Debug.Log("Joining lobby " + lobby.Id);
-
-        ConnectionManager.Main.SetLobby(lobby, id);
-        ConnectionManager.Main.StartGameMultiplayerOnlineClient();
-    }
-
-    private void OnLobbyGameCreated(Lobby lobby, uint arg2, ushort arg3, SteamId id)
-    {
-        if (showDebugs) Debug.Log("Game created in lobby " + lobby.Id);
-    }
-
-    private void OnLobbyInvite(Friend friend, Lobby lobby)
-    {
-        if (showDebugs) Debug.Log("Received lobby invite from " + friend.Name);
-    }
-
-    private void OnLobbyMemberLeave(Lobby lobby, Friend friend)
-    {
-        if (showDebugs) Debug.Log("Player " + friend.Name + " left the lobby");
-    }
-
-    private void OnLobbyMemberJoined(Lobby lobby, Friend friend)
-    {
-        if (showDebugs) Debug.Log("Player " + friend.Name + " joined the lobby");
-    }
-
-    private void OnLobbyEntered(Lobby lobby)
-    {
-        if (showDebugs) Debug.Log("Entered lobby " + lobby.Id);
-
         if (lobbyMode == LobbyMode.Host)
         {
-            startButtonText.text = "Start";
-            ConnectionManager.Main.SetLobby(lobby, 0);
+            SteamFriends.OpenOverlay("friends");
         }
         else
         {
-            startButtonText.text = "Ready";
-            ConnectionManager.Main.SetLobby(lobby, lobby.Owner.Id);
+            if (!ConnectionManager.Main.CurrentLobby.HasValue && lobbyIdInputField.text != "")
+            {
+                ConnectionManager.Main.JoinLobby(ulong.Parse(lobbyIdInputField.text));
+            }
+            else
+            {
+                SteamFriends.OpenOverlay("friends");
+            }
         }
     }
 
     public void StarButtonClicked()
     {
+        if (!ConnectionManager.Main.CurrentLobby.HasValue) return;
+
         if (lobbyMode == LobbyMode.Host)
         {
             ConnectionManager.Main.StartGameMultiplayerOnlineHost();
         }
         else
         {
-            if (ConnectionManager.Main.CurrentLobby == null)
-            {
-                Lobby lobby = new Lobby(ulong.Parse(lobbyIdInputField.text));
-                try
-                {
-                    lobby.Join();
-                }
-                catch (System.Exception e)
-                {
-                    if (showDebugs) Debug.LogError("Failed to join lobby: " + e.Message);
-                    lobbyInfoText.text = "Failed to join lobby: " + e.Message;
-                    return;
-                }
-            }
-            else
-            {
-                ConnectionManager.Main.StartGameMultiplayerOnlineClient();
-            }
+            ConnectionManager.Main.StartGameMultiplayerOnlineClient();
         }
     }
 
@@ -171,16 +162,66 @@ public class LobbyUI : UIBehaviour
             return;
         }
 
+        if (showDebugs) Debug.Log("Created lobby " + lobby.Id);
+
         lobby.SetFriendsOnly();
         lobby.SetData("lobbyName", "Test Lobby");
         lobby.SetJoinable(true);
 
         lobbyIdInputField.text = lobby.Id.ToString();
-        lobbyInfoText.text = $"Lobby Name:{lobby.GetData("lobbyName")}" +
-            $"\nLobby Type = Friend Only" +
-            $"\nLobby Owner = {lobby.Owner.Name}";
+        lobbyInfoText.text = $"Lobby Name: {lobby.GetData("lobbyName")}" +
+            $"\nLobby Type: Friend Only" +
+            $"\nLobby Owner: {lobby.Owner.Name}";
+    }
 
-        if (showDebugs) Debug.Log("Created lobby " + lobby.Id);
+    private void OnLobbyEntered(Lobby lobby)
+    {
+        if (showDebugs) Debug.Log("Entered lobby " + lobby.Id);
+
+        if (lobby.MemberCount == 0)
+        {
+            lobbyInstructionText.text = "Invalid Lobby ID. Try again!";
+        }
+        else
+        {
+            var builder = $"Player Count = {lobby.MemberCount}/100" +
+                $"\n\nPlayer List:\n";
+            foreach (var member in lobby.Members)
+            {
+                builder += "> " + member.Name + "\n";
+            }
+            lobbyPlayerText.text = builder;
+
+            lobbyInstructionText.text = "Enter Lobby ID or join a friend from steam overlay.";
+
+            if (lobbyMode == LobbyMode.Host)
+            {
+                startButtonText.text = "Start";
+            }
+            else
+            {
+                startButtonText.text = "Join";
+            }
+            startButton.gameObject.SetActive(true);
+
+            inviteButton.interactable = true;
+            inviteButtonText.text = "Invite";
+        }
+    }
+
+    private void OnLobbyMemberLeave(Lobby lobby, Friend friend)
+    {
+        lobbyInfoText.text += $"\nPlayer {friend.Name} left the lobby";
+    }
+
+    private void OnLobbyMemberJoined(Lobby lobby, Friend friend)
+    {
+        lobbyInfoText.text += $"\nPlayer {friend.Name} joined the lobby";
+    }
+
+    public void LeaveLobby()
+    {
+        ConnectionManager.Main.LeaveLobby();
     }
 
     #endregion

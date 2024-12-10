@@ -13,6 +13,9 @@ public class ConnectionManager : MonoBehaviour
 {
     public static ConnectionManager Main;
 
+    public static string LOBBY_PASSWORD_KEY = "!E18@tfR!urQSsTxYmbM";
+    public static string LOBBY_PASSWORD_VAL = "zYVMH1mhH41*%FQaFm41";
+
     private void Awake()
     {
         if (Main == null)
@@ -55,12 +58,28 @@ public class ConnectionManager : MonoBehaviour
 
         facepunchTransport.enabled = useFacepunchTransport;
 
+        SteamMatchmaking.OnLobbyMemberJoined += OnLobbyMemberJoined;
+        SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeave;
+        SteamMatchmaking.OnLobbyInvite += OnLobbyInvite;
+        SteamMatchmaking.OnLobbyGameCreated += OnLobbyGameCreated;
+        SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
+
+        SteamFriends.OnGameLobbyJoinRequested += OnGameLobbyJoinRequested;
+
         networkManager.OnClientConnectedCallback += OnClientConnectedCallback;
         networkManager.OnClientDisconnectCallback += OnClientDisconnectCallback;
     }
 
     private void OnDestroy()
     {
+        SteamMatchmaking.OnLobbyMemberJoined -= OnLobbyMemberJoined;
+        SteamMatchmaking.OnLobbyMemberLeave -= OnLobbyMemberLeave;
+        SteamMatchmaking.OnLobbyInvite -= OnLobbyInvite;
+        SteamMatchmaking.OnLobbyGameCreated -= OnLobbyGameCreated;
+        SteamMatchmaking.OnLobbyEntered -= OnLobbyEntered;
+
+        SteamFriends.OnGameLobbyJoinRequested -= OnGameLobbyJoinRequested;
+
         if (networkManager == null) return;
         networkManager.OnClientConnectedCallback -= OnClientConnectedCallback;
         networkManager.OnClientDisconnectCallback -= OnClientDisconnectCallback;
@@ -99,7 +118,7 @@ public class ConnectionManager : MonoBehaviour
     {
         if (quit)
         {
-            CurrentLobby?.Leave();
+            LeaveLobby();
             if (networkManager) networkManager.Shutdown();
             return;
         }
@@ -111,7 +130,7 @@ public class ConnectionManager : MonoBehaviour
 
     private IEnumerator DisconnectCoroutine()
     {
-        CurrentLobby?.Leave();
+        LeaveLobby();
         yield return TransitionUI.Main.ShowCoroutine();
 
         if (networkManager) networkManager.Shutdown();
@@ -127,9 +146,114 @@ public class ConnectionManager : MonoBehaviour
 
     public async void CreateLobby()
     {
-        CurrentLobby = await SteamMatchmaking.CreateLobbyAsync(maxPlayer);
+        try
+        {
+            CurrentLobby = await SteamMatchmaking.CreateLobbyAsync(maxPlayer);
+        }
+        catch (Exception e)
+        {
+            if (showDebugs) Debug.LogError("Failed to create lobby: " + e.Message);
+            return;
+        }
     }
 
+    public async void JoinLobby(SteamId lobbyId)
+    {
+        try
+        {
+            var lobby = await SteamMatchmaking.JoinLobbyAsync(lobbyId);
+        }
+        catch (Exception e)
+        {
+            if (showDebugs) Debug.LogError("Failed to join lobby: " + e.Message);
+            return;
+        }
+    }
+
+    private void SetLobby(Lobby lobby, SteamId id)
+    {
+        if (showDebugs) Debug.Log("Setting lobby " + lobby.Id + " with owner " + id + " as current lobby");
+
+        CurrentLobby = lobby;
+        facepunchTransport.targetSteamId = id;
+    }
+
+    public void LeaveLobby()
+    {
+        if (showDebugs) Debug.Log("Leaving lobby " + CurrentLobby?.Id);
+        CurrentLobby?.Leave();
+        CurrentLobby = null;
+    }
+
+
+    #region Steam Callback
+
+    private void OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
+    {
+        // On invite accepted
+        if (showDebugs) Debug.Log("Joining lobby " + lobby.Id);
+        if (showDebugs) Debug.Log("OnLobbyEntered Host: lobby = " + lobby.Id + ", id = " + lobby.Owner.Id);
+
+        SetLobby(lobby, id);
+        StartCoroutine(JoinLobbyFromInviteCoroutine());
+    }
+
+    private IEnumerator JoinLobbyFromInviteCoroutine()
+    {
+        if (networkManager.ConnectedClientsList.Count > 0)
+        {
+            CurrentLobby?.Leave();
+            yield return TransitionUI.Main.ShowCoroutine();
+
+            if (networkManager) networkManager.Shutdown();
+
+            if (SceneManager.GetActiveScene().name != SceneDirectory.MAIN_MENU)
+            {
+                AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneDirectory.MAIN_MENU, LoadSceneMode.Single);
+                yield return new WaitUntil(() => asyncLoad.isDone);
+            }
+        }
+
+        StartGameMultiplayerOnlineClient();
+    }
+
+    private void OnLobbyGameCreated(Lobby lobby, uint arg2, ushort arg3, SteamId id)
+    {
+        if (showDebugs) Debug.Log("Game created in lobby " + lobby.Id);
+
+        SetLobby(lobby, id);
+    }
+
+    private void OnLobbyEntered(Lobby lobby)
+    {
+        if (showDebugs) Debug.Log("Entered lobby " + lobby.Id);
+
+        if (lobby.MemberCount <= 0)
+        {
+            if (showDebugs) Debug.Log("Invalid lobby " + lobby.Id);
+            lobby.Leave();
+            return;
+        }
+
+        SetLobby(lobby, lobby.Owner.Id);
+    }
+
+    private void OnLobbyInvite(Friend friend, Lobby lobby)
+    {
+        if (showDebugs) Debug.Log("Received lobby invite from " + friend.Name);
+    }
+
+    private void OnLobbyMemberLeave(Lobby lobby, Friend friend)
+    {
+        if (showDebugs) Debug.Log("Player " + friend.Name + " left the lobby");
+    }
+
+    private void OnLobbyMemberJoined(Lobby lobby, Friend friend)
+    {
+        if (showDebugs) Debug.Log("Player " + friend.Name + " joined the lobby");
+    }
+
+    #endregion
 
     #region Network Callbacks
 
@@ -222,13 +346,6 @@ public class ConnectionManager : MonoBehaviour
         //SteamFriends.OpenOverlay("friends");
         StartCoroutine(LaunchCoroutine(false, facepunchTransport));
     }
-
-    public void SetLobby(Lobby lobby, SteamId id)
-    {
-        CurrentLobby = lobby;
-        facepunchTransport.targetSteamId = id;
-    }
-
     #endregion
 
     private void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
