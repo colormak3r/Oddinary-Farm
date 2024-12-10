@@ -9,12 +9,8 @@ public class Spider : Animal
     [SerializeField]
     private AxeProperty axeProperty;
     [SerializeField]
-    private float burrowPreventMoveDuration = 1f;
-    [SerializeField]
     private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
     private float nextIdleStateChange;
-
-    private float nextMoveAfterBurrow = 0;
 
     private BehaviourState thinkingState;
     private BehaviourState burrowingState;
@@ -32,17 +28,17 @@ public class Spider : Animal
         if (IsServer)
         {
             Item.PropertyValue = axeProperty;
-        }
 
-        thinkingState = new ThinkingState(this);
-        burrowingState = new BurrowingState(this);
-        roamingState = new RoamingState(this);
+            thinkingState = new ThinkingState(this);
+            burrowingState = new BurrowingState(this);
+            roamingState = new RoamingState(this);
 
-        chasingState = new ChasingState(this);
-        attackPrimaryState = new AttackPrimaryState(this);
+            chasingState = new ChasingState(this);
+            attackPrimaryState = new AttackPrimaryState(this);
 
-        idleStates = new BehaviourState[] { thinkingState, burrowingState, roamingState };
-        activeStates = new BehaviourState[] { chasingState, attackPrimaryState };
+            idleStates = new BehaviourState[] { thinkingState, burrowingState, roamingState };
+            activeStates = new BehaviourState[] { chasingState, attackPrimaryState };
+        }        
     }
 
     protected override void HandleTransitions()

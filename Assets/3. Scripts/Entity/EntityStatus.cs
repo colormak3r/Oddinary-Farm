@@ -5,6 +5,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering.Universal;
 
 public class EntityStatus : NetworkBehaviour, IDamageable
 {
@@ -45,10 +46,12 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     protected AudioElement audioElement;
     protected Rigidbody2D rbody;
 
+    protected Collider2D[] colliders;
+    protected SpriteRenderer[] renderers;
+    protected Light2D[] lights;
+
     private bool isDamageable;
     private float nextDamagable;
-
-    private bool omawumishindeiru;
 
     protected virtual void Awake()
     {
@@ -56,6 +59,10 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         lootGenerator = GetComponent<LootGenerator>();
         audioElement = GetComponent<AudioElement>();
         rbody = GetComponent<Rigidbody2D>();
+
+        colliders = GetComponentsInChildren<Collider2D>();
+        renderers = GetComponentsInChildren<SpriteRenderer>();
+        lights = GetComponentsInChildren<Light2D>();
     }
 
     private void Update()
@@ -97,46 +104,21 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     public void GetDamaged(uint damage, DamageType type, Hostility hostility)
     {
         if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {hostility}");
+
         if (Hostility == hostility) return;
+
         if (!IsSpawned) return;
 
-        GetDamagedServerRpc(damage, type);
-    }
-
-    [Rpc(SendTo.Server)]
-    private void GetDamagedServerRpc(uint damage, DamageType type)
-    {
         if (!isDamageable) return;
+        nextDamagable = Time.time + iframeDuration;
+        isDamageable = false;
 
-        GetDamagedClientRpc(damage, type);
-
-        if (CurrentHealthValue > damage)
-        {
-            CurrentHealth.Value -= damage;
-            nextDamagable = Time.time + iframeDuration;
-            isDamageable = false;
-            OnEntityDamagedOnServer();
-        }
-        else
-        {
-            CurrentHealth.Value = 0;
-
-            OnDeathOnServer?.Invoke();
-            OnDeathOnServer.RemoveAllListeners();
-
-            // TODO: Create virtual method that check for loot drop condition
-            if (lootGenerator != null && TryGetComponent(out Plant plant) && plant.IsHarvestable())
-                lootGenerator.DropLootOnServer();
-
-            OnEntityDeathOnServer();
-        }
+        GetDamagedRpc(damage, type);
     }
 
     [Rpc(SendTo.Everyone)]
-    private void GetDamagedClientRpc(uint damage, DamageType type)
+    public void GetDamagedRpc(uint damage, DamageType type)
     {
-        //if (!IsOwner) return;
-
         if (CurrentHealthValue > damage)
         {
             if (healthBarUI)
@@ -150,10 +132,41 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             if (damagedEffectPrefab)
                 Instantiate(damagedEffectPrefab, transform.position, Quaternion.identity);
 
+            if (IsServer)
+            {
+                CurrentHealth.Value -= damage;
+                OnEntityDamagedOnServer();
+            }
+
             OnEntityDamagedOnClient();
         }
         else
         {
+            if (IsServer)
+            {
+                CurrentHealth.Value = 0;
+
+                OnDeathOnServer?.Invoke();
+                OnDeathOnServer.RemoveAllListeners();
+
+                // TODO: Create virtual method that check for loot drop condition
+                // TODO: Pass attacker as prefer picker to loot generator
+                if (lootGenerator != null)
+                {
+                    if (TryGetComponent(out Plant plant))
+                    {
+                        if (plant.IsHarvestable)
+                            lootGenerator.DropLootOnServer();
+                    }
+                    else
+                    {
+                        lootGenerator.DropLootOnServer();
+                    }
+                }
+
+                OnEntityDeathOnServer();
+            }
+
             OnEntityDeathOnClient();
         }
     }
@@ -190,6 +203,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     {
         Coroutine audioCoroutine = null;
         Coroutine effectCoroutine = null;
+
         if (audioElement)
         {
             audioElement.PlayOneShot(deathSound);
@@ -199,8 +213,9 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (deathEffectPrefab != null)
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
 
-        if (rbody)
-            rbody.velocity = Vector2.zero;
+        // Disable all physics
+        if (rbody) rbody.velocity = Vector2.zero;
+        foreach (var collider in colliders) collider.enabled = false;
 
         effectCoroutine = StartCoroutine(transform.PopCoroutine(1, 0, 0.25f));
 
@@ -209,9 +224,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
         Destroy(gameObject);
     }
-
-
-
 
     #endregion
 
@@ -224,7 +236,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntitySpawnOnClient()
     {
-        omawumishindeiru = false;
+
     }
 
     #endregion
@@ -233,22 +245,18 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     public void Respawn()
     {
-        RespawnServerRpc();
-    }
-
-    [Rpc(SendTo.Server)]
-    private void RespawnServerRpc()
-    {
-        CurrentHealth.Value = maxHealth;
-
-        OnEntityRespawnOnServer();
-
-        RespawnClientRpc();
+        RespawnRpc();
     }
 
     [Rpc(SendTo.Everyone)]
-    private void RespawnClientRpc()
+    private void RespawnRpc()
     {
+        if (IsServer)
+        {
+            CurrentHealth.Value = maxHealth;
+            OnEntityRespawnOnServer();
+        }
+
         OnEntityRespawnOnClient();
     }
 

@@ -20,7 +20,8 @@ public class WeatherUnit : MonoBehaviour
 
     private IEnumerator DisplayCoroutine(Vector2 startPos, Vector2 endPos, float duration)
     {
-        yield return transform.LerpMoveCoroutine(startPos, endPos, duration);
+        transform.position = startPos;
+        yield return transform.LerpMoveCoroutine(endPos, duration);
         Destroy(gameObject);
     }
 }

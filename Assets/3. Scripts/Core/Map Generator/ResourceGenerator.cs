@@ -14,7 +14,8 @@ public class ResourceGenerator : PerlinNoiseGenerator
     [SerializeField]
     private int rarity = 4;
 
-    HashSet<Vector2Int> resourcePositions = new HashSet<Vector2Int>();
+    private HashSet<Vector2Int> resourcePositions = new HashSet<Vector2Int>();
+    public HashSet<Vector2Int> ResourcePositions => resourcePositions;
 
     public override void OnNetworkSpawn()
     {
@@ -78,7 +79,7 @@ public class ResourceGenerator : PerlinNoiseGenerator
                 var pos = new Vector2Int(x + halfMapSizeX, y + halfMapSizeY);
                 if (resourcePositions.Contains(pos) && WorldGenerator.Main.IsValidResourcePosition(x, y))
                 {
-                    var res = Instantiate(resourcePrefabs.GetRandomElement(), new Vector3(x, y, 0), Quaternion.identity);
+                    var res = Instantiate(resourcePrefabs.GetRandomElement(), new Vector3(x, y - 0.5f, 0), Quaternion.identity);
                     res.GetComponent<NetworkObject>().Spawn();
                 }
             }

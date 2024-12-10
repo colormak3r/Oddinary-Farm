@@ -24,16 +24,16 @@ MonoBehaviour:
   primarySound: {fileID: 0}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
-  radius: 0.25
-  hitSound: {fileID: 0}
+  terrainLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  iconSprite: {fileID: -977736870, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
+  size: 1
   structures:
   - {fileID: 737704494243597508, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
   invalidLayers:
     serializedVersion: 2
     m_Bits: 4026537728
-  terrainLayers:
-    serializedVersion: 2
-    m_Bits: 128
   structureLayers:
     serializedVersion: 2
     m_Bits: 1024

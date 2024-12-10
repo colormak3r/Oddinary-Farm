@@ -9,10 +9,13 @@ public class HoeProperty : ToolProperty
 {
     [Header("Hoe Settings")]
     [SerializeField]
-    private LayerMask hoeableLayer;
+    private LayerMask farmPlotLayer;
     [SerializeField]
-    private LayerMask unhoeableLayer;
+    private LayerMask plantLayer;
+    [SerializeField]
+    private LayerMask invalidLayer;
 
-    public LayerMask HoeableLayer => hoeableLayer;
-    public LayerMask UnhoeableLayer => unhoeableLayer;
+    public LayerMask FarmPlotLayer => farmPlotLayer;
+    public LayerMask PlantLayer => plantLayer;
+    public LayerMask InvalidLayer => invalidLayer;
 }

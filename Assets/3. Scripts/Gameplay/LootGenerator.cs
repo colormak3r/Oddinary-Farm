@@ -8,18 +8,18 @@ public class LootGenerator : MonoBehaviour
     [SerializeField]
     private LootTable lootTable;
 
-    [ContextMenu("Drop Loot")]
+    /*[ContextMenu("Drop Loot")]
     public void DropLoot()
     {
         DropLootOnServer(true);
-    }
+    }*/
 
     public void Initialize(LootTable lootTable)
     {
         this.lootTable = lootTable;
     }
 
-    public void DropLootOnServer(bool addForce = true)
+    public void DropLootOnServer(Transform prefer = null)
     {
         if (lootTable == null) return;
 
@@ -30,15 +30,10 @@ public class LootGenerator : MonoBehaviour
         {
             for (int i = 0; i < loot.Count; i++)
             {
-                var itemReplica = Instantiate(AssetManager.Main.ItemReplicaPrefab,
-                    (Vector2)position + Random.insideUnitCircle,
-                    Quaternion.identity);
-                itemReplica.GetComponent<NetworkObject>().Spawn();
-
-                var script = itemReplica.GetComponent<ItemReplica>();
-                script.SetProperty(loot.Property);
-
-                if (addForce) script.AddRandomForce();
+                if(prefer)
+                    AssetManager.Main.SpawnItemPrefer(loot.Property, position, prefer.gameObject, 0);
+                else
+                    AssetManager.Main.SpawnItem(loot.Property, position, 0);
             }
         }
     }

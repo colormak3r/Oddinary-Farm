@@ -18,8 +18,10 @@ MonoBehaviour:
     max: 0.55
   isAccessible: 1
   blockProperty: {fileID: 11400000, guid: cae112df666cda34cb83978a88571cf6, type: 2}
-  overlaySpriteChance: 0.3
-  spillOverSpriteChance: 0.3
+  spillOverChance: 0.3
+  folliageChance: 0
+  folliageSprite: []
+  overlayChance: 0.3
   overlaySprite:
   - {fileID: 739865222, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   - {fileID: 1204355908, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}

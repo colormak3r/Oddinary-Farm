@@ -184,7 +184,7 @@ public class AssetManager : NetworkBehaviour
         foreach (var asset in scriptableObjectList)
         {
             nameToScriptableObject[asset.name] = asset;
-            builder.Append( $"\n{asset.name}");
+            builder.Append($"\n{asset.name}");
         }
         if (showDebugs) Debug.Log(builder);
     }
@@ -234,21 +234,65 @@ public class AssetManager : NetworkBehaviour
 
     #region Item Spawning
 
+    /*public void SpawnItem(ItemProperty itemProperty, Vector2 position, Transform prefer = null, Transform ignore = null, float randomRange = 2f, bool randomForce = true)
+    {
+        NetworkObjectReference preferRef = prefer ? prefer.gameObject : default;
+        NetworkObjectReference ignoreRef = ignore ? ignore.gameObject : default;
+        SpawnItemRpc(itemProperty, position, preferRef, ignoreRef, randomRange, randomForce);
+    }*/
+
     public void SpawnItem(ItemProperty itemProperty, Vector2 position, float randomRange = 2f, bool randomForce = true)
     {
         SpawnItemRpc(itemProperty, position, randomRange, randomForce);
     }
 
+    public void SpawnItemPrefer(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef, float randomRange = 2f, bool randomForce = true)
+    {
+        SpawnItemPreferRpc(itemProperty, position, preferRef, randomRange, randomForce);
+    }
+
+    public void SpawnItemIgnore(ItemProperty itemProperty, Vector2 position, NetworkObjectReference ignoreRef, float randomRange = 2f, bool randomForce = true)
+    {
+        SpawnItemIgnoreRpc(itemProperty, position, ignoreRef, randomRange, randomForce);
+    }
+
     [Rpc(SendTo.Server)]
-    private void SpawnItemRpc(ItemProperty itemProperty, Vector2 position, float randomRange, bool randomForce)
+    public void SpawnItemRpc(ItemProperty itemProperty, Vector2 position, float randomRange, bool randomForce)
+    {
+        SpawnItemOnServer(itemProperty, position, randomRange, randomForce);
+    }
+
+    [Rpc(SendTo.Server)]
+    public void SpawnItemPreferRpc(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef, float randomRange, bool randomForce)
+    {
+        var itemReplica = SpawnItemOnServer(itemProperty, position, randomRange, randomForce);
+        if (preferRef.TryGet(out var prefer))
+        {
+            itemReplica.PickUpItemOnServer(prefer.transform);
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SpawnItemIgnoreRpc(ItemProperty itemProperty, Vector2 position, NetworkObjectReference ignoreRef, float randomRange, bool randomForce)
+    {
+        var itemReplica = SpawnItemOnServer(itemProperty, position, randomRange, randomForce);
+        if (ignoreRef.TryGet(out var ignore))
+        {
+            itemReplica.IgnorePicker(ignore.transform);
+        }
+    }
+    public ItemReplica SpawnItemOnServer(ItemProperty itemProperty, Vector2 position, float randomRange = 2f, bool randomForce = true)
     {
         var randomPos = randomRange * (Vector2)Random.onUnitSphere;
         position = position == default ? transform.position + (Vector3)randomPos : position + randomPos;
-        GameObject go = Instantiate(itemReplicaPrefab, position, Quaternion.identity);
-        go.GetComponent<NetworkObject>().Spawn();
-        var itemReplica = go.GetComponent<ItemReplica>();
+        GameObject gameObject = Instantiate(itemReplicaPrefab, position, Quaternion.identity);
+        gameObject.GetComponent<NetworkObject>().Spawn();
+
+        var itemReplica = gameObject.GetComponent<ItemReplica>();
         itemReplica.SetProperty(itemProperty);
         itemReplica.AddRandomForce();
+
+        return itemReplica;
     }
 
     public void SpawnByID(int id, Vector2 position, int count = 1, bool log = false, float randomRange = 2f, bool randomForce = true)

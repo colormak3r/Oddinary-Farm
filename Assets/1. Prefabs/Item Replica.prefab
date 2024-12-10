@@ -297,12 +297,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mockProperty: {fileID: 0}
   pickupSpeed: 10
-  pickupDuration: 1
+  pickupDuration: 3
   pickupRecovery: 1
+  targetOffset: {x: 0, y: 0.25, z: 0}
   Property:
     m_InternalValue: {fileID: 0}
-  CanBePickedUp:
-    m_InternalValue: 0
+  currentPicker: {fileID: 0}
+  ignorePicker: {fileID: 0}
 --- !u!61 &3497622455922979039
 BoxCollider2D:
   m_ObjectHideFlags: 0

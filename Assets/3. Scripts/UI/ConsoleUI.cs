@@ -366,9 +366,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
     private void ScrollToBottom(bool forced = false)
     {
-        if (scrollCoroutine != null)
-            StopCoroutine(scrollCoroutine);
-        StartCoroutine(ScrollToBottomNextFrame(forced));
+        if (scrollCoroutine != null) StopCoroutine(scrollCoroutine);
+        scrollCoroutine = StartCoroutine(ScrollToBottomNextFrame(forced));
     }
 
     float dummy = 0;

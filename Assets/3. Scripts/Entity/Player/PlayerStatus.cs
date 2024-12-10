@@ -1,12 +1,10 @@
 using ColorMak3r.Utility;
 using Steamworks;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerStatus : EntityStatus
 {
@@ -62,10 +60,7 @@ public class PlayerStatus : EntityStatus
 
     protected override void OnEntityRespawnOnClient()
     {
-        if (IsOwner)
-        {
-            healthBarUI.SetValue(CurrentHealthValue, MaxHealth);
-        }
+        healthBarUI.SetValue(CurrentHealthValue, MaxHealth);
     }
 
     protected override IEnumerator DeathOnClientCoroutine()
@@ -81,8 +76,9 @@ public class PlayerStatus : EntityStatus
         if (deathEffectPrefab != null)
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
 
+        // Disable all physics
         rbody.velocity = Vector2.zero;
-
+        foreach (var collider in colliders) collider.enabled = false;
 
         if (IsOwner)
         {
@@ -94,20 +90,17 @@ public class PlayerStatus : EntityStatus
             {
                 controllable.SetControllable(false);
             }
-        }
 
-        // Transform pop out
-        effectCoroutine = StartCoroutine(transform.PopCoroutine(1, 0, 0.25f));
+            // Transform pop out
+            effectCoroutine = StartCoroutine(transform.PopCoroutine(1, 0, 0.25f));
+        }
 
         yield return effectCoroutine;
         yield return audioCoroutine;
 
-        var colliders = GetComponentsInChildren<Collider2D>();
-        var renderers = GetComponentsInChildren<SpriteRenderer>();
-
-        // Disable all colliders and renderers
-        foreach (var collider in colliders) collider.enabled = false;
+        // Disable all renderers
         foreach (var renderer in renderers) renderer.enabled = false;
+        foreach (var light in lights) light.enabled = false;
 
         // Determain respawn position
         var respawnPos = respawnPoint != null ? respawnPoint.position : Vector3.zero;
@@ -131,12 +124,13 @@ public class PlayerStatus : EntityStatus
 
         foreach (var collider in colliders) collider.enabled = true;
         foreach (var renderer in renderers) renderer.enabled = true;
-
-        // Transform pop in
-        yield return transform.PopCoroutine(0, 1, 0.5f);
+        foreach (var light in lights) light.enabled = true;
 
         if (IsOwner)
         {
+            // Transform pop in
+            yield return transform.PopCoroutine(0, 1, 0.5f);
+
             Camera.main.transform.parent = transform;
             Camera.main.transform.localPosition = new Vector3(0, 0, -10);
 

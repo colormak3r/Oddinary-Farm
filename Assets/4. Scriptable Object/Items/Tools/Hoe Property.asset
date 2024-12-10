@@ -24,11 +24,17 @@ MonoBehaviour:
   primarySound: {fileID: 0}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
-  radius: 0.5
-  hitSound: {fileID: 0}
-  hoeableLayer:
+  terrainLayer:
     serializedVersion: 2
     m_Bits: 128
-  unhoeableLayer:
+  iconSprite: {fileID: 1048362592, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
+  size: 1
+  farmPlotLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  plantLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  invalidLayer:
     serializedVersion: 2
     m_Bits: 805312256

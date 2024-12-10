@@ -102,15 +102,18 @@ public class AnimalManager : NetworkBehaviour
             yield return null;
         }
 
-        for (int i = 0; i < currentSpawnPerWave / 5; i++)
+        if (TimeManager.Main.CurrentDay % 5 == 0)
         {
-            var randomIndex = UnityEngine.Random.Range(0, spawnablePositions.Count);
-            var randomPosition = spawnablePositions[randomIndex];
+            for (int i = 0; i < currentSpawnPerWave / 5; i++)
+            {
+                var randomIndex = UnityEngine.Random.Range(0, spawnablePositions.Count);
+                var randomPosition = spawnablePositions[randomIndex];
 
-            var monster = Instantiate(monsterBossPrefab, randomPosition, Quaternion.identity);
-            monster.GetComponent<NetworkObject>().Spawn();
+                var monster = Instantiate(monsterBossPrefab, randomPosition, Quaternion.identity);
+                monster.GetComponent<NetworkObject>().Spawn();
 
-            yield return null;
-        }
+                yield return null;
+            }
+        }       
     }
 }

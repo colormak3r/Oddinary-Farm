@@ -104,7 +104,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     private NetworkVariable<NetworkBehaviourReference> CurrentItem =
         new NetworkVariable<NetworkBehaviourReference>(default, default, NetworkVariableWritePermission.Owner);
     [SerializeField]
-    private Item currentItem;
+    private Item currentItemOnLocal;
 
     [SerializeField]
     private NetworkVariable<ulong> Wallet = new NetworkVariable<ulong>(10, default, NetworkVariableWritePermission.Owner);
@@ -113,7 +113,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     private InventoryUI inventoryUI;
 
-    public Item CurrentItemValue => currentItem;
+    public Item CurrentItemOnLocal => currentItemOnLocal;
     public int CurrentHotbarIndex => currentHotbarIndex;
     public ulong WalletValue => Wallet.Value;
     public ItemStack[] Inventory => inventory;
@@ -130,14 +130,15 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
-        {
-            inventory[0].Property = handProperty;
-            CreateItemRefServerRpc(0, handProperty);
-        }
-
         if (IsOwner)
         {
+            // Initialize the hand property on the owner on server
+            if (IsServer)
+            {
+                inventory[0].Property = handProperty;
+                CreateItemRefServerRpc(0, handProperty);
+            }
+
             // Initialize the inventory UI
             inventoryUI = InventoryUI.Main;
             inventoryUI.Initialize(this);
@@ -169,7 +170,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     {
         if (newValue.TryGet(out Item item))
         {
-            currentItem = item;
+            if (item == null) Debug.Log("Item is null");
+            if (item.PropertyValue == null) Debug.Log("Item property is null");
+
             itemRenderer.sprite = item.PropertyValue.Sprite;
 
 #if UNITY_EDITOR
@@ -441,7 +444,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
         var property = inventory[index].Property;
         ConsumeItemOnClient(index);
-        AssetManager.Main.SpawnItem(property, transform.position, 0);
+        AssetManager.Main.SpawnItemIgnore(property, transform.position, gameObject, 0);
     }
 
     /// <summary>
@@ -525,10 +528,12 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         currentHotbarIndex = index;
         if (itemRefs[index] != null)
         {
+            currentItemOnLocal = itemRefs[index];
             CurrentItem.Value = itemRefs[index];
         }
         else
         {
+            currentItemOnLocal = itemRefs[0];
             CurrentItem.Value = itemRefs[0];
         }
 
@@ -544,8 +549,15 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     public void ConsumeCoinsOnClient(ulong value)
     {
-        if (Wallet.Value - value < 0) return;
+        if (value > Wallet.Value)
+        {
+            if (showDebug) Debug.Log($"Not enough coins to consume {value}. Total coins = {Wallet.Value}");
+            return;
+        }
+
         Wallet.Value -= value;
+        inventoryUI.UpdateWallet(Wallet.Value);
+        if (showDebug) Debug.Log($"Consumed {value} coins from inventory. Total coins = {Wallet.Value}");
     }
 
     public void SetControllable(bool value)

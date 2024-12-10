@@ -1246,6 +1246,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   graphicTransform: {fileID: 5883252978171502032}
   spriteFacingRight: 1
+  validColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
+  invalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}
+  showDebugs: 0
+  showGizmos: 0
 --- !u!114 &3602106504410570466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1294,14 +1298,14 @@ MonoBehaviour:
   - Property: {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
     Count: 1
   showDebug: 0
-  showGizmos: 0
+  showGizmos: 1
   showItemDebug: 0
   showItemGizmos: 0
   currentHotbarIndex: 0
   inventory: []
   itemRefs: []
-  currentItem: {fileID: 0}
-  Coins:
+  currentItemOnLocal: {fileID: 0}
+  Wallet:
     m_InternalValue: 10
   OnCoinsValueChanged:
     m_PersistentCalls:
@@ -1328,7 +1332,7 @@ MonoBehaviour:
   interactableLayer:
     serializedVersion: 2
     m_Bits: 536870912
-  showGizmos: 1
+  showGizmos: 0
 --- !u!114 &4905420985265829973
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6,12 +6,13 @@ public abstract class ToolProperty : ItemProperty
 {
     [Header("Tool Settings")]
     [SerializeField]
-    private float radius = 0.5f;
-
-    [Header("Tool Sound Settings")]
+    private LayerMask terrainLayer;
     [SerializeField]
-    private AudioClip hitSound;
+    private Sprite iconSprite;
+    [SerializeField]
+    private int size = 1;
 
-
-    public float Radius => radius;
+    public LayerMask TerrainLayer => terrainLayer;
+    public Sprite IconSprite => iconSprite;
+    public int Size => size;
 }

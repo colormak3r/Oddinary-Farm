@@ -80,6 +80,7 @@ public abstract class Animal : NetworkBehaviour
         animator = GetComponentInChildren<Animator>();
         networkAnimator = GetComponent<NetworkAnimator>();
         movement = GetComponent<EntityMovement>();
+        status = GetComponent<EntityStatus>();
         preyDetector = GetComponent<PreyDetector>();
         item = GetComponentInChildren<Item>();
     }

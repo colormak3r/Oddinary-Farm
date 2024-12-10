@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4043741663618658510}
+  - component: {fileID: 4886082877013868103}
   - component: {fileID: 610265928260838425}
   - component: {fileID: 3051851916708624163}
   - component: {fileID: 5980385349177380000}
@@ -37,6 +38,18 @@ Transform:
   - {fileID: 631326410053028117}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &4886082877013868103
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5625321612986297944}
+  m_Enabled: 1
+  m_SortingLayerID: 1792883339
+  m_SortingLayer: -1
+  m_SortingOrder: 99
+  m_SortAtRoot: 0
 --- !u!114 &610265928260838425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,8 +333,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1792883339
+  m_SortingLayer: -1
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 41de68ce88584864fbf60caef9e951c0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -15,11 +15,15 @@ public struct PlantStage
 [CreateAssetMenu(fileName = " Property", menuName = "Scriptable Objects/Plant")]
 public class PlantProperty : ScriptableObject, IEquatable<PlantProperty>
 {
+    [Header("Plant Property")]
+    [SerializeField]
+    private SeedProperty seedProperty;
     [SerializeField]
     private PlantStage[] stages;
     [SerializeField]
     private LootTable lootTable;
 
+    public SeedProperty SeedProperty => seedProperty;
     public PlantStage[] Stages => stages;
     public LootTable LootTable => lootTable;
 

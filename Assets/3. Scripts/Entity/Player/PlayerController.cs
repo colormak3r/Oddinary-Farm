@@ -1,3 +1,4 @@
+using ColorMak3r.Utility;
 using System.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -23,6 +24,18 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     [SerializeField]
     private bool spriteFacingRight;
 
+    [Header("Previewer")]
+    [SerializeField]
+    private Color validColor;
+    [SerializeField]
+    private Color invalidColor;
+
+    [Header("Debug")]
+    [SerializeField]
+    private bool showDebugs;
+    [SerializeField]
+    private bool showGizmos;
+
     private bool isControllable = true;
 
     private Vector2 lookPosition;
@@ -35,6 +48,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private PlayerInventory inventory;
     private PlayerInteraction interaction;
 
+    private Previewer previewer;
+
     private Animator animator;
     private NetworkAnimator networkAnimator;
     private PlayerAnimationController animationController;
@@ -44,7 +59,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
     public static Vector2 LookPosition;
-
+    private Vector2 lookPosition_snapped_cached;
 
     private void Awake()
     {
@@ -112,6 +127,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         InputManager.Main.InputActions.Gameplay.SetCallbacks(this);
         InputManager.Main.SwitchMap(InputMap.Gameplay);
 
+        // Set previewer
+        previewer = Previewer.Main;
+
         isOwner = true;
     }
 
@@ -142,6 +160,42 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         lookPosition = Camera.main.ScreenToWorldPoint(context.ReadValue<Vector2>());
         LookPosition = lookPosition;
         IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;
+
+        var lookPosition_snapped = lookPosition.SnapToGrid();
+        if (lookPosition_snapped != lookPosition_snapped_cached)
+        {
+            lookPosition_snapped_cached = lookPosition_snapped;
+            Preview();
+        }
+    }
+
+    private void Preview()
+    {
+        previewer.MoveTo(lookPosition_snapped_cached);
+        /*if((position - (Vector2)transform.position).magnitude > spawnerProperty.Range) 
+    position = (Vector2)transform.position + (position - (Vector2)transform.position).normalized * spawnerProperty.Range;*/
+        var item = inventory.CurrentItemOnLocal;
+        var tool = item != null && item is Tool ? (Tool)item : null;
+        var spawner = item != null && item is Spawner ? (Spawner)item : null;
+        if (tool != null || spawner != null)
+        {
+            previewer.Show(true);
+            previewer.SetIcon(tool ? tool.ToolProperty.IconSprite : spawner.SpawnerProperty.IconSprite);
+            previewer.SetSize(tool ? tool.ToolProperty.Size : spawner.SpawnerProperty.Size);
+            if (item.CanPrimaryAction(lookPosition_snapped_cached))
+            {
+                previewer.SetColor(validColor);
+            }
+            else
+            {
+                previewer.SetColor(invalidColor);
+            }
+        }
+        else
+        {
+            previewer.Show(false);
+        }
+
     }
 
     public void OnDrop(InputAction.CallbackContext context)
@@ -217,13 +271,16 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     #region Player Action
 
+    private Vector2? primaryPosition;
+    private Vector2? secondaryPosition;
+
     public void OnPrimary(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
 
         if (context.performed)
         {
-            var currentItem = inventory.CurrentItemValue;
+            var currentItem = inventory.CurrentItemOnLocal;
             if (currentItem != null && Time.time > nextPrimary)
             {
                 var itemProperty = currentItem.PropertyValue;
@@ -231,6 +288,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
                 if (currentItem.CanPrimaryAction(lookPosition))
                 {
+                    primaryPosition = lookPosition;
                     animationController.ChopAnimationMode = AnimationMode.Primary;
                     networkAnimator.SetTrigger("Chop");
                 }
@@ -246,22 +304,29 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     {
         if (!IsOwner) return;
 
-        var currentItem = inventory.CurrentItemValue;
+        var currentItem = inventory.CurrentItemOnLocal;
         var itemProperty = currentItem.PropertyValue;
         switch (mode)
         {
             case AnimationMode.Primary:
+                if (!primaryPosition.HasValue)
+                {
+                    Debug.LogError("Primary position is null");
+                    break;
+                }
                 if (itemProperty.IsConsummable)
                 {
                     if (inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex))
                     {
-                        currentItem.OnPrimaryAction(lookPosition);
+                        currentItem.OnPrimaryAction(primaryPosition.Value);
                     }
                 }
                 else
                 {
-                    currentItem.OnPrimaryAction(lookPosition);
+                    currentItem.OnPrimaryAction(primaryPosition.Value);
                 }
+
+                Preview();
                 break;
             case AnimationMode.Secondary:
                 currentItem.OnSecondaryAction(lookPosition);
@@ -278,7 +343,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (!isControllable) return;
         if (context.performed)
         {
-            var currentItem = inventory.CurrentItemValue;
+            var currentItem = inventory.CurrentItemOnLocal;
             if (currentItem != null)
             {
                 currentItem.OnSecondaryAction(lookPosition);
@@ -291,7 +356,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (!isControllable) return;
         if (context.performed)
         {
-            var currentItem = inventory.CurrentItemValue;
+            var currentItem = inventory.CurrentItemOnLocal;
             {
                 currentItem.OnAlternativeAction(lookPosition);
             }
@@ -336,7 +401,10 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         // Hotbar index change locally, stored in PlayerInventory
         inventory.ChangeHotBarIndex(value);
+
+        Preview();
     }
+
     #endregion
 
     public void SetControllable(bool value)
@@ -348,5 +416,13 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             movement.SetDirection(Vector2.zero);
             animator.SetBool("IsMoving", false);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!showGizmos) return;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(PlayerController.LookPosition.SnapToGrid(), Vector3.one);
     }
 }

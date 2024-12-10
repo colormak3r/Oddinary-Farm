@@ -24,8 +24,11 @@ MonoBehaviour:
   primarySound: {fileID: 0}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
-  radius: 0.5
-  hitSound: {fileID: 0}
+  terrainLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  iconSprite: {fileID: 1761164126, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
+  size: 1
   diggableLayer:
     serializedVersion: 2
     m_Bits: 128

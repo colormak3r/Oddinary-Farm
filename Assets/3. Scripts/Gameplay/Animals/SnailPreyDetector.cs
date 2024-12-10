@@ -6,6 +6,6 @@ public class SnailPreyDetector : PreyDetector
 {
     protected override bool ValidateValidPrey(Transform prey)
     {
-        return prey.GetComponent<Plant>().IsHarvestable(); 
+        return prey.GetComponent<Plant>().IsHarvestable; 
     }
 }

@@ -24,7 +24,8 @@ MonoBehaviour:
   primarySound: {fileID: 0}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
-  plantPrefab: {fileID: 4773706747441023441, guid: 6e849e9e46e06ad449bd7c16c7acfa40, type: 3}
+  prefabToSpawn: {fileID: 4773706747441023441, guid: 6e849e9e46e06ad449bd7c16c7acfa40, type: 3}
+  iconSprite: {fileID: 1672269866, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
   plantProperty: {fileID: 11400000, guid: 8141f54fd3d926a449c7d0bace10e67b, type: 2}
   farmPlotLayer:
     serializedVersion: 2

@@ -18,38 +18,39 @@ public class TerrainUnitProperty : ScriptableObject
 
     [Header("Graphics")]
     [SerializeField]
-    private float overlaySpriteChance = 0.5f;
+    private float spillOverChance = 0.5f;
     [SerializeField]
-    private float spillOverSpriteChance = 0.5f;
+    private float folliageChance = 0.5f;
+    [SerializeField]
+    private Sprite[] folliageSprite;
+    [SerializeField]
+    private float overlayChance = 0.5f;
     [SerializeField]
     private Sprite[] overlaySprite;
     [SerializeField]
     private Sprite[] baseSprite;
     [SerializeField]
     private Sprite[] underlaySprite;
+
     [SerializeField]
     private bool drawOutline;
     [SerializeField]
     private Color outlineColor = Color.white;
-
-    [Header("Folliage")]
-    [SerializeField]
-    private GameObject[] folliagePrefabs;
 
     public Color MapColor => mapColor;
     public MinMaxFloat Elevation => elevation;
     public bool IsAccessible => isAccessible;
     public TerrainBlockProperty BlockProperty => blockProperty;
 
-    public float OverlaySpriteChance => overlaySpriteChance;
-    public float SpillOverSpriteChance => spillOverSpriteChance;
+    public float OverlayChance => overlayChance;
+    public float SpillOverChance => spillOverChance;
+    public float FolliageChance => folliageChance;
+    public Sprite FolliageSprite => folliageSprite.GetRandomElement();
     public Sprite OverlaySprite => overlaySprite.GetRandomElement();
     public Sprite BaseSprite => baseSprite.GetRandomElement();
     public Sprite UnderlaySprite => underlaySprite.GetRandomElement();
     public bool DrawOutline => drawOutline;
     public Color OutlineColor => outlineColor;
-
-    public GameObject FolliagePrefab => folliagePrefabs.GetRandomElement();
 
     public bool Match(float elevation)
     {

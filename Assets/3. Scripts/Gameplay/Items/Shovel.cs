@@ -23,9 +23,8 @@ public class Shovel : Tool
 
     public override bool CanPrimaryAction(Vector2 position)
     {
-        if (!IsInRange(position)) return false;
-
         position = position.SnapToGrid();
+        if (!IsInRange(position)) return false;
 
         var invalid = Physics2D.OverlapPoint(position, shovelProperty.UndiggableLayer);
         if (invalid)
@@ -57,16 +56,14 @@ public class Shovel : Tool
 
     public override void OnPrimaryAction(Vector2 position)
     {
-        base.OnPrimaryAction(position);
         position = position.SnapToGrid();
+        base.OnPrimaryAction(position);
         ShovelPrimaryRpc(position);
     }
 
     [Rpc(SendTo.Server)]
     private void ShovelPrimaryRpc(Vector2 position)
     {
-        position = position.SnapToGrid();
-
         // Get the terrain unit
         var hit = Physics2D.OverlapPoint(position, shovelProperty.DiggableLayer);
         if (!hit)

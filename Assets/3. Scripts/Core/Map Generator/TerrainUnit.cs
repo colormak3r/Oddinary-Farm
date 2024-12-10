@@ -34,6 +34,8 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
     [SerializeField]
     private Sprite[] outlineSprites;
     [SerializeField]
+    private SpriteRenderer folliageRenderer;
+    [SerializeField]
     private SpriteRenderer outlineRenderer;
     [SerializeField]
     private SpriteRenderer spillOverRenderer;
@@ -61,15 +63,25 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
         worldGenerator = WorldGenerator.Main;
     }
 
-    public void Initialize(TerrainUnitProperty property)
+    public void Initialize(TerrainUnitProperty property, bool canSpawnFolliage)
     {
         initCount++;
         this.property = property;
 
-        overlayRenderer.sprite = Random.value < property.OverlaySpriteChance ? property.OverlaySprite : null;
+        // Folliage
+        var folliage = property.FolliageSprite;
+        if (canSpawnFolliage && folliage != null && property.FolliageChance > Random.value)
+            folliageRenderer.sprite = folliage;
+        else
+            folliageRenderer.sprite = null;
 
+        // Overlay
+        overlayRenderer.sprite = property.OverlayChance > Random.value ? property.OverlaySprite : null;
+
+        // Base
         baseRenderer.sprite = property.BaseSprite;
 
+        // Outline
         outlineRenderer.sprite = null;
         if (property.DrawOutline)
         {
@@ -77,9 +89,11 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
             outlineRenderer.color = property.OutlineColor;
         }
 
+        // Spill Over
         spillOverRenderer.sprite = null;
         //underlayRenderer.sprite = property.UnderlaySprite;
 
+        // Render outline and spillover
         var unmatchedNeighbor = new bool[4];
         var spillOver = false;
         for (int i = 0; i < SCAN_POSITION.Length; i++)
@@ -93,7 +107,7 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
                 {
                     spillOverCount++;
                     spillOver = true;
-                    spillOverRenderer.sprite = Random.value < mappedProperty.SpillOverSpriteChance ? mappedProperty.OverlaySprite : null;
+                    spillOverRenderer.sprite = Random.value < mappedProperty.SpillOverChance ? mappedProperty.OverlaySprite : null;
                 }
 
                 if (property.DrawOutline)
@@ -114,15 +128,27 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
                             break;
                     }
                 }
+                else if (spillOver)
+                {
+                    // break early if spill over is already rendered and not drawing outline
+                    break;
+                }
             }
         }
 
+        // Render outline between this terrain unit and its neighbors that has different property
         if (property.DrawOutline)
         {
             RenderOutline(unmatchedNeighbor);
         }
 
+        // Block movement if not accessible
         movementBlocker.enabled = !property.IsAccessible;
+    }
+
+    public void BreakFolliage()
+    {
+        folliageRenderer.sprite = null;
     }
 
     private void RenderOutline(bool[] unmatchedNeighbor)
@@ -176,57 +202,6 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
             outlineRenderer.sprite = outlineSprites[4];
         }
     }
-
-    /*private void RenderOutline(bool[] unmatchedNeighbor)
-    {
-        int matchedCount = unmatchedNeighbor.Count(n => n);
-        if (matchedCount == 1)
-        {
-            int index = Array.IndexOf(unmatchedNeighbor, true);
-            outlineRenderer.sprite = outlineSprites[0];
-            outlineRenderer.transform.localRotation = Quaternion.Euler(0, 0, 90 * index);
-        }
-        else if (matchedCount == 2)
-        {
-            var index1 = -1;
-            var index2 = -1;
-            for (int i = 0; i < 4; i++)
-            {
-                if (unmatchedNeighbor[i])
-                {
-                    if (index1 < 0)
-                        index1 = i;
-                    else if (index2 < 0)
-                        index2 = i;
-                }
-            }
-
-            if (index2 - index1 == 1)
-                outlineRenderer.sprite = outlineSprites[1];
-            else
-                outlineRenderer.sprite = outlineSprites[2];
-
-            outlineRenderer.transform.localRotation = Quaternion.Euler(0, 0, 90 * index1);
-        }
-        else if (matchedCount == 3)
-        {
-            var index = -1;
-            for (int i = 0; i < 4; i++)
-            {
-                if (!unmatchedNeighbor[i])
-                {
-                    index = i;
-                    break;
-                }
-            }
-            outlineRenderer.sprite = outlineSprites[3];
-            outlineRenderer.transform.localRotation = Quaternion.Euler(0, 0, 90 * index);
-        }
-        else if (matchedCount == 4)
-        {
-            outlineRenderer.sprite = outlineSprites[4];
-        }
-    }*/
 
     public void LocalSpawn()
     {

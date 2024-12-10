@@ -36,9 +36,9 @@ public class MeleeWeapon : Item
                 {
                     if (meleeWeaponProperty.DamageType == DamageType.Slash || meleeWeaponProperty.CanHarvest)
                     {
-                        if (collider.TryGetComponent<IHarvestable>(out var harvestable))
+                        if (collider.TryGetComponent<Plant>(out var plant))
                         {
-                            harvestable.GetHarvested();
+                            plant.GetHarvested();
                         }
                     }
                 }

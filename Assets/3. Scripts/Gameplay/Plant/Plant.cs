@@ -3,7 +3,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Plant : NetworkBehaviour, IWaterable, IHarvestable
+public class Plant : NetworkBehaviour, IWaterable
 {
     [Header("Settings")]
     [SerializeField]
@@ -23,7 +23,8 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
     private LootGenerator lootGenerator;
     private FarmPlot farmPlot;
 
-    public bool IsHarvestable() => Property.Value.Stages[CurrentStage.Value].isHarvestStage;
+    public bool IsHarvestable => Property.Value.Stages[CurrentStage.Value].isHarvestStage;
+    public ItemProperty Seed => Property.Value.SeedProperty;
 
     private void Awake()
     {
@@ -92,7 +93,7 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
         {
             farmPlot = farmPlotHit.GetComponent<FarmPlot>();
             farmPlot.GetDriedOnServer();
-        }        
+        }
     }
 
     public void GetWatered()
@@ -127,8 +128,8 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
         }
         else
         {
-            if(!IsHarvestable())
-            farmPlot.GetDriedOnServer();
+            if (!IsHarvestable)
+                farmPlot.GetDriedOnServer();
         }
     }
 
@@ -140,11 +141,11 @@ public class Plant : NetworkBehaviour, IWaterable, IHarvestable
     [Rpc(SendTo.Server)]
     private void GetHarvestedRpc()
     {
-        if (!IsHarvestable()) return;
+        if (!IsHarvestable) return;
 
         if (IsServer) farmPlot.GetDriedOnServer();
 
-        lootGenerator.DropLoot();
+        lootGenerator.DropLootOnServer();
         Destroy(gameObject);
     }
 }

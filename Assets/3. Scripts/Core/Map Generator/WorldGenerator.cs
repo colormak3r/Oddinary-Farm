@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 using Unity.Netcode;
 using Random = UnityEngine.Random;
+using UnityEngine.UIElements;
 
 public class WorldGenerator : NetworkBehaviour
 {
@@ -16,6 +17,8 @@ public class WorldGenerator : NetworkBehaviour
             Main = this;
         else
             Destroy(Main.gameObject);
+
+        InvalidFolliagePositionList = new NetworkList<Vector2Int>();
     }
 
     private class Chunk
@@ -29,6 +32,7 @@ public class WorldGenerator : NetworkBehaviour
         public Chunk(Vector2 position, int size, Transform transform)
         {
             this.position = position;
+            this.size = size;
             terrainUnits = new List<GameObject>();
             terrainUnits.Capacity = size * size;
             folliages = new List<GameObject>();
@@ -95,8 +99,6 @@ public class WorldGenerator : NetworkBehaviour
     private float elevationFrequencyBase = 2f;
     [SerializeField]
     private float elevationExp = 1f;
-    [SerializeField]
-    private float grassChance = 0.8f;
 
     [Header("Debug")]
     [SerializeField]
@@ -109,6 +111,9 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private bool isGenerating;
     public bool IsGenerating => isGenerating;
+
+    private NetworkList<Vector2Int> InvalidFolliagePositionList;
+    private HashSet<Vector2Int> invalidFolliagePositionHashSet = new HashSet<Vector2Int>();
 
     private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
 
@@ -154,13 +159,65 @@ public class WorldGenerator : NetworkBehaviour
         MapUI.Main.UpdateElevationMap(terrainMapSprite);
 
         resourceGenerator.GenerateMap(mapSize);
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        InvalidFolliagePositionList.OnListChanged += OnInvalidFolliagePositionsChanged;
+
+        if (IsHost)
+        {
+            //var builder = $"Host {resourceGenerator.ResourcePositions.Count}\n";
+            foreach (var position in resourceGenerator.ResourcePositions)
+            {
+                InvalidFolliagePositionList.Add(position);
+                //builder += position + "\n";
+            }
+            //Debug.Log(builder);
+        }
+        else
+        {
+            //var builder = $"Client {InvalidFolliagePositionList.Count}\n";
+            foreach (var position in InvalidFolliagePositionList)
+            {
+                invalidFolliagePositionHashSet.Add(position);
+                //builder += position + "\n";
+            }
+            //Debug.Log(builder);
+        }
 
         isInitialized = true;
+    }
+
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        InvalidFolliagePositionList.OnListChanged -= OnInvalidFolliagePositionsChanged;
+    }
+
+    private void OnInvalidFolliagePositionsChanged(NetworkListEvent<Vector2Int> changeEvent)
+    {
+        if (changeEvent.Type == NetworkListEvent<Vector2Int>.EventType.Add)
+        {
+            invalidFolliagePositionHashSet.Add(changeEvent.Value);
+        }
+        else if (changeEvent.Type == NetworkListEvent<Vector2Int>.EventType.Remove)
+        {
+            invalidFolliagePositionHashSet.Remove(changeEvent.Value);
+        }
+        //Debug.Log($"Set: {invalidFolliagePositionHashSet.Count}, List: {InvalidFolliagePositionList.Count}");
     }
 
     public bool IsValidResourcePosition(int x, int y)
     {
         return GetMappedProperty(x, y).Elevation.min >= 0.55f;
+    }
+
+    public void InvalidateFolliagePositionOnServer(Vector2 position)
+    {
+        InvalidFolliagePositionList.Add(position.ToInt());
     }
 
     public IEnumerator GenerateTerrainCoroutine(Vector2 position)
@@ -222,11 +279,11 @@ public class WorldGenerator : NetworkBehaviour
         {
             for (int j = lowerLimit; j < upperLimit; j++)
             {
-                var pos = new Vector2Int((int)position.x + i, (int)position.y + j);
-                var property = GetMappedProperty(pos.x, pos.y);
-                SpawnTerrainUnit(pos, chunk, property);
-                /*if (property.FolliagePrefab != null)
-                    SpawnFolliage(pos, chunk, property);*/
+                var terrainPos = new Vector2Int((int)position.x + i, (int)position.y + j);
+                var property = GetMappedProperty(terrainPos.x, terrainPos.y);
+
+                //var canSpawnFolliage = !resourceGenerator.ResourcePositions.Contains(new Vector2Int((int)position.x, (int)position.y));
+                SpawnTerrainUnit(terrainPos, chunk, property, !invalidFolliagePositionHashSet.Contains(terrainPos));
                 yield return null;
             }
         }
@@ -358,7 +415,7 @@ public class WorldGenerator : NetworkBehaviour
         chunk.terrainUnits.Remove(unit);
 
         // Spawn a new unit
-        SpawnTerrainUnit(position, chunk, newProperty);
+        SpawnTerrainUnit(position, chunk, newProperty, !invalidFolliagePositionHashSet.Contains(position.ToInt()));
     }
 
     public void RemoveBlock(Vector2 position)
@@ -366,21 +423,13 @@ public class WorldGenerator : NetworkBehaviour
         PlaceBlockRpc(position, voidUnitProperty);
     }
 
-    private void SpawnTerrainUnit(Vector2 position, Chunk chunk, TerrainUnitProperty property)
+    private void SpawnTerrainUnit(Vector2 position, Chunk chunk, TerrainUnitProperty property, bool canSpawnFolliage)
     {
         var terrainObj = localObjectPooling.Spawn(terrainUnitPrefab);
         terrainObj.transform.position = position;
         terrainObj.transform.parent = chunk.transform;
-        terrainObj.GetComponent<TerrainUnit>().Initialize(property);
+        terrainObj.GetComponent<TerrainUnit>().Initialize(property, canSpawnFolliage);
         chunk.terrainUnits.Add(terrainObj);
-    }
-
-    private void SpawnFolliage(Vector2 position, Chunk chunk, TerrainUnitProperty property)
-    {
-        var folliage = localObjectPooling.Spawn(property.FolliagePrefab);
-        folliage.transform.position = position;
-        folliage.transform.parent = chunk.transform;
-        chunk.folliages.Add(folliage);
     }
 
     private TerrainUnitProperty GetDefaultProperty(float x, float y)
@@ -465,7 +514,5 @@ public class WorldGenerator : NetworkBehaviour
         {
             Gizmos.DrawWireCube(entry.Key, Vector3.one * chunkSize);
         }
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(PlayerController.LookPosition.SnapToGrid(), Vector3.one);
     }
 }

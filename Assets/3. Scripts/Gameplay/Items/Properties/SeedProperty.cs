@@ -5,11 +5,9 @@ using Unity.Netcode;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = " Property", menuName = "Scriptable Objects/Item/Seed")]
-public class SeedProperty : ItemProperty
+public class SeedProperty : SpawnerProperty
 {
     [Header("Seed Property")]
-    [SerializeField]
-    private GameObject plantPrefab;
     [SerializeField]
     private PlantProperty plantProperty;
     [SerializeField]
@@ -31,7 +29,6 @@ public class SeedProperty : ItemProperty
     [SerializeField]
     private AudioClip plantGrowSound;
 
-    public GameObject PlantPrefab => plantPrefab;
     public PlantProperty PlantProperty => plantProperty;
     public LayerMask FarmPlotLayer => farmPlotLayer;
     public LayerMask PlantLayer => plantLayer;

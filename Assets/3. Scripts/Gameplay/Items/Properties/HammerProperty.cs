@@ -11,12 +11,9 @@ public class HammerProperty : ToolProperty
     [SerializeField]
     private LayerMask invalidLayers;
     [SerializeField]
-    private LayerMask terrainLayers;
-    [SerializeField]
     private LayerMask structureLayers;
 
     public GameObject[] Structures => structures;
     public LayerMask InvalidLayers => invalidLayers;
-    public LayerMask TerrainLayers => terrainLayers;
     public LayerMask StructureLayers => structureLayers;
 }

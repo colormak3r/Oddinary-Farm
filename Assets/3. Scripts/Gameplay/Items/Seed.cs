@@ -5,7 +5,7 @@ using Unity.Netcode;
 using Unity.Properties;
 using UnityEngine;
 
-public class Seed : Item
+public class Seed : Spawner
 {
     private SeedProperty seedProperty;
 
@@ -42,19 +42,10 @@ public class Seed : Item
         }
     }
 
-    public override void OnPrimaryAction(Vector2 position)
+    protected override void OnSpawn(GameObject gameObject)
     {
-        base.OnPrimaryAction(position);
-        position = position.SnapToGrid();
-        SpawnPlantRpc(position);
-    }
-
-    [Rpc(SendTo.Server)]
-    private void SpawnPlantRpc(Vector2 position)
-    {
-        GameObject go = Instantiate(seedProperty.PlantPrefab, position.SnapToGrid(), Quaternion.identity);
-        go.GetComponent<NetworkObject>().Spawn();
-        var plant = go.GetComponent<Plant>();
+        base.OnSpawn(gameObject);
+        var plant = gameObject.GetComponent<Plant>();
         plant.Initialize(seedProperty.PlantProperty);
     }
 }
