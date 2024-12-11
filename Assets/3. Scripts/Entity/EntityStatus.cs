@@ -93,7 +93,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     #region Get Damaged
 
-    public void GetDamaged(uint damage, DamageType type, Hostility hostility)
+    public void GetDamaged(uint damage, DamageType type, Hostility hostility, Transform attacker)
     {
         if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {hostility}");
 
@@ -106,11 +106,11 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (Time.time < nextDamagable) return;
         nextDamagable = Time.time + iframeDuration;
 
-        GetDamagedRpc(damage, type);
+        GetDamagedRpc(damage, type, attacker.gameObject);
     }
 
     [Rpc(SendTo.Everyone)]
-    public void GetDamagedRpc(uint damage, DamageType type)
+    public void GetDamagedRpc(uint damage, DamageType type, NetworkObjectReference attackerRef)
     {
         if (CurrentHealthValue > damage)
         {
@@ -149,11 +149,11 @@ public class EntityStatus : NetworkBehaviour, IDamageable
                     if (TryGetComponent(out Plant plant))
                     {
                         if (plant.IsHarvestable)
-                            lootGenerator.DropLootOnServer();
+                            lootGenerator.DropLootOnServer(attackerRef);
                     }
                     else
                     {
-                        lootGenerator.DropLootOnServer();
+                        lootGenerator.DropLootOnServer(attackerRef);
                     }
                 }
 

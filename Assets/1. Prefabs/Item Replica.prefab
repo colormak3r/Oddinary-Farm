@@ -179,8 +179,7 @@ GameObject:
   - component: {fileID: 3536331440226196720}
   - component: {fileID: 4144789532550474485}
   - component: {fileID: 1745390494722101591}
-  - component: {fileID: 9037220115300694353}
-  - component: {fileID: 1466273898579075252}
+  - component: {fileID: 7304923991498461258}
   - component: {fileID: 1701917104167263387}
   - component: {fileID: 3497622455922979039}
   - component: {fileID: 4138184307597425321}
@@ -240,7 +239,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &9037220115300694353
+--- !u!114 &7304923991498461258
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -249,19 +248,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 5937313573806529732}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 966dd1f28bdde1f4e9ce5b053083fed7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
   SyncPositionX: 1
   SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
+  SyncPositionZ: 0
+  SyncRotAngleX: 0
+  SyncRotAngleY: 0
   SyncRotAngleZ: 1
   SyncScaleX: 1
   SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -271,18 +270,6 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &1466273898579075252
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5937313573806529732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1701917104167263387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,10 +287,12 @@ MonoBehaviour:
   pickupDuration: 3
   pickupRecovery: 1
   targetOffset: {x: 0, y: 0.25, z: 0}
+  showDebugs: 0
   Property:
     m_InternalValue: {fileID: 0}
-  currentPicker: {fileID: 0}
   ignorePicker: {fileID: 0}
+  CanBePickup:
+    m_InternalValue: 0
 --- !u!61 &3497622455922979039
 BoxCollider2D:
   m_ObjectHideFlags: 0

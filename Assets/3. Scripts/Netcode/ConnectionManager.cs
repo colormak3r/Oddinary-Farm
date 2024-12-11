@@ -200,10 +200,12 @@ public class ConnectionManager : MonoBehaviour
 
     private IEnumerator JoinLobbyFromInviteCoroutine()
     {
-        if (networkManager.ConnectedClientsList.Count > 0)
+        yield return TransitionUI.Main.ShowCoroutine();
+        if (networkManager.IsServer || networkManager.IsClient)
         {
+            if (showDebugs) Debug.Log("Already in a game, disconnecting");
+
             CurrentLobby?.Leave();
-            yield return TransitionUI.Main.ShowCoroutine();
 
             if (networkManager) networkManager.Shutdown();
 
@@ -213,6 +215,8 @@ public class ConnectionManager : MonoBehaviour
                 yield return new WaitUntil(() => asyncLoad.isDone);
             }
         }
+
+        if (showDebugs) Debug.Log("Joining lobby from invite");
 
         StartGameMultiplayerOnlineClient();
     }

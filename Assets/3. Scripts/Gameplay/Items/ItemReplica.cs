@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -10,23 +9,25 @@ public class ItemReplica : NetworkBehaviour
     [SerializeField]
     private ItemProperty mockProperty;
     [SerializeField]
-    private float pickupSpeed = 800f;
+    private float pickupSpeed = 10f;
     [SerializeField]
     private float pickupDuration = 3f;
     [SerializeField]
     private float pickupRecovery = 1f;
     [SerializeField]
-    private Vector3 targetOffset;
+    private Vector3 targetOffset = new Vector3(0, 0.25f);
 
     [Header("Debugs")]
+    [SerializeField]
+    private bool showDebugs;
     [SerializeField]
     private NetworkVariable<ItemProperty> Property = new NetworkVariable<ItemProperty>();
     private ItemProperty currentProperty;
     public ItemProperty CurrentProperty => currentProperty;
 
-    [SerializeField]
+    /*[SerializeField]
     private Transform currentPicker;
-    public Transform CurrentPicker => currentPicker;
+    public Transform CurrentPicker => currentPicker;*/
 
     [SerializeField]
     private Transform ignorePicker;
@@ -34,6 +35,10 @@ public class ItemReplica : NetworkBehaviour
     [SerializeField]
     private NetworkVariable<NetworkObjectReference> Owner = new NetworkVariable<NetworkObjectReference>();
     public NetworkObject OwnerValue => Owner.Value;
+
+    [SerializeField]
+    private NetworkVariable<bool> CanBePickup = new NetworkVariable<bool>(false);
+    public bool CanBePickupValue => CanBePickup.Value;
 
     private float nextPickupStop;
 
@@ -43,9 +48,11 @@ public class ItemReplica : NetworkBehaviour
 
     private float pickupRangeSqr;
     private Vector3 dummyVelocity;
+    private Coroutine spawnCoroutine;
     private Coroutine pickupCoroutine;
     private Coroutine recoveryCoroutine;
     private Coroutine ignoreCoroutine;
+    private Coroutine pickupTimeoutCoroutine;
 
     private void Awake()
     {
@@ -58,24 +65,41 @@ public class ItemReplica : NetworkBehaviour
     {
         HandlePropertyChanged(null, Property.Value);
         Property.OnValueChanged += HandlePropertyChanged;
+        Owner.OnValueChanged += HandleOwnerChanged;
+
+        spawnCoroutine = StartCoroutine(SpawnCoroutine());
     }
 
     public override void OnNetworkDespawn()
     {
         Property.OnValueChanged -= HandlePropertyChanged;
+        Owner.OnValueChanged -= HandleOwnerChanged;
+    }
+
+    private void HandleOwnerChanged(NetworkObjectReference previousValue, NetworkObjectReference newValue)
+    {
+        if (!newValue.TryGet(out var pickerNetObj)) return;
+
+        if (pickupCoroutine != null) StopCoroutine(pickupCoroutine);
+        if (pickerNetObj.OwnerClientId == NetworkManager.LocalClientId)
+        {
+            if (pickerNetObj.transform == transform) return;
+            pickupCoroutine = StartCoroutine(PickupCoroutine(pickerNetObj.transform, pickupDuration));
+            if (showDebugs) Debug.Log($"Picked up by {pickerNetObj.transform}");
+        }
     }
 
     private void HandlePropertyChanged(ItemProperty previous, ItemProperty current)
     {
-        HandlePropertyChanged(current);
-    }
-
-    private void HandlePropertyChanged(ItemProperty property)
-    {
-        currentProperty = property;
+        currentProperty = current;
         if (currentProperty == null) return;
 
         spriteRenderer.sprite = currentProperty.Sprite;
+
+        if (IsOwner)
+        {
+            AddRandomForce();
+        }
     }
 
     [ContextMenu("Mock Property Change")]
@@ -88,84 +112,160 @@ public class ItemReplica : NetworkBehaviour
     public void SetProperty(ItemProperty property)
     {
         Property.Value = property;
-        if (recoveryCoroutine != null) StopCoroutine(recoveryCoroutine);
-        recoveryCoroutine = StartCoroutine(PickupRecoveryCoroutine());
     }
 
-    private IEnumerator PickupRecoveryCoroutine()
+    private IEnumerator SpawnCoroutine()
     {
         yield return new WaitForSeconds(pickupRecovery);
+
+        if (IsServer)
+        {
+            if (!Owner.Value.TryGet(out var networkObject))
+            {
+                // If no owner, can be picked up
+                CanBePickup.Value = true;
+            }
+        }
     }
 
-    public void PickUpItemOnServer(Transform picker)
+    public void Pickup(Transform picker)
     {
-        if (picker == ignorePicker) return;
-        if (pickupCoroutine != null) StopCoroutine(pickupCoroutine);
-        currentPicker = picker;
-        Owner.Value = picker.gameObject;
-        pickupCoroutine = StartCoroutine(PickupCoroutine(picker, pickupDuration));
+        if (!CanBePickup.Value)
+        {
+            if (showDebugs) Debug.Log("Cannot be picked up.");
+            return;
+        }
+
+        if (Owner.Value.TryGet(out var networkObject) && networkObject.transform == picker)
+        {
+            if (showDebugs) Debug.Log($"Already picked up by the same picker: {picker}");
+            return;
+        }
+
+        PickupRpc(picker.gameObject);
+    }
+
+    [Rpc(SendTo.Server)]
+    public void PickupRpc(NetworkObjectReference pickerRef)
+    {
+        Transform picker = null;
+        if (pickerRef.TryGet(out var pickerNetObj))
+        {
+            picker = pickerNetObj.transform;
+        }
+
+        if (picker == null || picker == ignorePicker) return;
+
+        // Check for owner and canbePickup again to prevent RPC duplication
+        if (!CanBePickup.Value)
+        {
+            if (showDebugs) Debug.Log("Cannot be picked up.");
+            return;
+        }
+
+        if (Owner.Value.TryGet(out var networkObject) && networkObject.transform == picker)
+        {
+            if (showDebugs) Debug.Log($"Already picked up by the same picker: {picker}");
+            return;
+        }
+
+        if (showDebugs) Debug.Log($"Picked up by {picker}", picker);
+
+        Owner.Value = pickerNetObj;
+        CanBePickup.Value = false;
+        NetworkObject.ChangeOwnership(pickerNetObj.OwnerClientId);
+
+        if (pickupTimeoutCoroutine != null) StopCoroutine(pickupTimeoutCoroutine);
+        pickupTimeoutCoroutine = StartCoroutine(PickupTimeoutCoroutine(pickerNetObj));
+    }
+
+    public void PickupItemOnServer(NetworkObject preferNetObj)
+    {
+        Owner.Value = preferNetObj;
+        CanBePickup.Value = false;
+        NetworkObject.ChangeOwnership(preferNetObj.OwnerClientId);
+
+        if (pickupTimeoutCoroutine != null) StopCoroutine(pickupTimeoutCoroutine);
+        pickupTimeoutCoroutine = StartCoroutine(PickupTimeoutCoroutine(preferNetObj));
     }
 
     private IEnumerator PickupCoroutine(Transform picker, float duration)
     {
-        yield return recoveryCoroutine;
+        yield return spawnCoroutine;
 
-        var pickerPos = currentPicker.position + targetOffset;
+        //var pickerRigidBody = picker.GetComponent<Rigidbody2D>();
+        var pickerPos = picker.position + targetOffset;
         var endTime = Time.time + duration;
-        while ((transform.position - pickerPos).sqrMagnitude > 0.001f)
+        var sqrDistance = (transform.position - pickerPos).sqrMagnitude;
+        while (sqrDistance > 0.01f)
         {
             if (Time.time > endTime) yield break;
-            pickerPos = currentPicker.position + targetOffset;
-            FlyToward(pickerPos);
+            //pickerPos = picker.position + (Vector3)pickerRigidBody.velocity * Time.fixedDeltaTime + targetOffset;
+            pickerPos = picker.position + targetOffset;
+
+            var direction = (pickerPos - transform.position).normalized;
+            itemRigidbody.velocity = direction * pickupSpeed;
+
+            sqrDistance = (transform.position - pickerPos).sqrMagnitude;
             yield return new WaitForFixedUpdate();
         }
+
+        picker = null;
+    }
+
+    private IEnumerator PickupTimeoutCoroutine(NetworkObject pickerNetObj)
+    {
+        yield return new WaitForSeconds(pickupDuration);
+
+        Owner.Value = NetworkObject;
+        NetworkObject.ChangeOwnership(0);
 
         if (recoveryCoroutine != null) StopCoroutine(recoveryCoroutine);
         recoveryCoroutine = StartCoroutine(PickupRecoveryCoroutine());
 
         yield return recoveryCoroutine;
 
-        currentPicker = null;
-        Owner.Value = default;
-
         if (ignoreCoroutine != null) StopCoroutine(ignoreCoroutine);
-        ignoreCoroutine = StartCoroutine(IgnoreCoroutine(picker));
+        ignoreCoroutine = StartCoroutine(IgnorePickerCoroutine(pickerNetObj.transform));
 
         yield return ignoreCoroutine;
     }
 
-    public void IgnorePicker(Transform picker)
+    private IEnumerator PickupRecoveryCoroutine()
     {
-        if (ignoreCoroutine != null) StopCoroutine(ignoreCoroutine);
-        ignoreCoroutine = StartCoroutine(IgnoreCoroutine(picker));
+        CanBePickup.Value = false;
+        yield return new WaitForSeconds(pickupRecovery);
+        CanBePickup.Value = true;
     }
 
-    private IEnumerator IgnoreCoroutine(Transform picker)
+    private void AddRandomForce()
+    {
+        itemRigidbody.AddForce(Random.insideUnitCircle * Random.Range(5, 10), ForceMode2D.Impulse);
+    }
+
+    public void IgnorePickerOnServer(Transform picker)
+    {
+        if (ignoreCoroutine != null) StopCoroutine(ignoreCoroutine);
+        ignoreCoroutine = StartCoroutine(IgnorePickerCoroutine(picker));
+    }
+
+    private IEnumerator IgnorePickerCoroutine(Transform picker)
     {
         ignorePicker = picker;
         yield return new WaitForSeconds(pickupDuration);
         ignorePicker = null;
     }
 
-    private void FlyToward(Vector3 position)
+    public void RequestDestroy()
     {
-        var direction = (position - transform.position).normalized;
-        itemRigidbody.velocity = direction * pickupSpeed;
-    }
-
-    public void AddRandomForce()
-    {
-        itemRigidbody.AddForce(Random.insideUnitCircle * Random.Range(0, 10), ForceMode2D.Impulse);
-    }
-
-    public void Destroy()
-    {
-        DestroyServerRpc();
+        // Object is destroyed before being requested to be destroyed somehow
+        // Must check if object is spawned before sending RPC
+        if (IsSpawned) DestroyServerRpc();
     }
 
     [Rpc(SendTo.Server)]
     private void DestroyServerRpc()
     {
-        Destroy(gameObject);
+        NetworkObject.Despawn(true);
     }
 }

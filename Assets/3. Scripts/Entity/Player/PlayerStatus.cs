@@ -32,6 +32,9 @@ public class PlayerStatus : EntityStatus
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+
+        gameObject.name = NetworkObject.OwnerClientId == 0 ? "Host" : $"Client {NetworkObject.OwnerClientId}";
+
         HandlePlayerNameChange(default, PlayerName.Value);
         PlayerName.OnValueChanged += HandlePlayerNameChange;
 

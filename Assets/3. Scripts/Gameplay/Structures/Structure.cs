@@ -5,7 +5,12 @@ using UnityEngine;
 
 public class Structure : NetworkBehaviour
 {
-    public virtual void Remove()
+    public virtual void Removed()
+    {
+
+    }
+
+    public virtual void DestroyOnClient()
     {
 
     }

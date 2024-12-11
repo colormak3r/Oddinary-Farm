@@ -54,9 +54,9 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
             {
                 if (hit.TryGetComponent(out ItemReplica itemReplica))
                 {
-                    if (itemReplica.CurrentPicker != null) continue;
+                    if (!itemReplica.CanBePickupValue) continue;
 
-                    itemReplica.PickUpItemOnServer(transform);
+                    itemReplica.Pickup(transform);
                 }
             }
         }

@@ -1279,7 +1279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01b0a155acb56c84f9b8f27c58d44024, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryRadius: 0.5
+  inventoryRadius: 0.25
   inventoryOffset: {x: 0, y: 0.5, z: 0}
   itemLayer:
     serializedVersion: 2

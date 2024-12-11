@@ -133,19 +133,20 @@ public class Plant : NetworkBehaviour, IWaterable
         }
     }
 
-    public void GetHarvested()
+    public void GetHarvested(Transform harvester)
     {
-        GetHarvestedRpc();
+         GetHarvestedRpc(harvester.gameObject);
     }
 
     [Rpc(SendTo.Server)]
-    private void GetHarvestedRpc()
+    private void GetHarvestedRpc(NetworkObjectReference harvester)
     {
         if (!IsHarvestable) return;
 
         if (IsServer) farmPlot.GetDriedOnServer();
 
-        lootGenerator.DropLootOnServer();
-        Destroy(gameObject);
+        lootGenerator.DropLootOnServer(harvester);
+
+        NetworkObject.Despawn();
     }
 }

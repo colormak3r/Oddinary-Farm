@@ -84,6 +84,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         inputField.text = "";
         debugText.text = "";
         suggestionText.text = "";
+
+        UnfocusOnInputField();
     }
     protected override void OnEnable()
     {
@@ -102,6 +104,15 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     }
 
     private void HandleLogMessageReceived(string condition, string stackTrace, LogType type)
+    {
+        var log = BuildLogString(condition, stackTrace, type);
+
+        SetLogText(log);
+
+        if (logToFile) LogToFile(log);
+    }
+
+    private string BuildLogString(string condition, string stackTrace, LogType type)
     {
         StringBuilder sb = new StringBuilder();
 
@@ -140,17 +151,17 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
           .Append(condition)
           .Append("</color>");
 
-        if (showStackTrace || type == LogType.Error)
+        if (showStackTrace || (type != LogType.Log && type != LogType.Warning))
         {
             sb.Append("\n")
               .Append(stackTrace);
         }
         sb.Append("\n");
 
-        UpdateLog(sb.ToString());
+        return sb.ToString();
     }
 
-    private void UpdateLog(string newLog)
+    private void SetLogText(string newLog)
     {
         verticalNormalizedPosition_cached = scrollRect.verticalNormalizedPosition;
         log += newLog + "\n";
@@ -160,31 +171,31 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         debugText.text = log;
 
         ScrollToBottom();
+    }
 
-        if (logToFile)
+    private void LogToFile(string newLog)
+    {
+        if (filename == "")
         {
-            if (filename == "")
-            {
-                string d = System.Environment.GetFolderPath(
-                   System.Environment.SpecialFolder.Desktop) + "/ODD_LOGS";
-                System.IO.Directory.CreateDirectory(d);
-                DateTime now = DateTime.Now;
-                // Format the DateTime as MMDDYY-HHMMSS
-                string t = now.ToString("MMddyy-HHmmss");
-                string r = UnityEngine.Random.Range(1000, 9999).ToString();
-                filename = d + "/log-" + t + "-" + r + "-" + version + versionNumber + ".txt";
-            }
+            string d = System.Environment.GetFolderPath(
+               System.Environment.SpecialFolder.Desktop) + "/ODD_LOGS";
+            System.IO.Directory.CreateDirectory(d);
+            DateTime now = DateTime.Now;
+            // Format the DateTime as MMDDYY-HHMMSS
+            string t = now.ToString("MMddyy-HHmmss");
+            string r = UnityEngine.Random.Range(1000, 9999).ToString();
+            filename = d + "/log-" + t + "-" + r + "-" + version + versionNumber + ".txt";
+        }
 
-            try
-            {
-                string pattern = "<.*?>";
-                string resultString = Regex.Replace(newLog, pattern, "");
-                System.IO.File.AppendAllText(filename, resultString + "\n");
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.Message);
-            }
+        try
+        {
+            string pattern = "<.*?>";
+            string resultString = Regex.Replace(newLog, pattern, "");
+            System.IO.File.AppendAllText(filename, resultString + "\n");
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
         }
     }
 
@@ -290,12 +301,14 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         if (context.performed && !IsAnimating)
         {
             CloseConsole();
+
+            UnfocusOnInputField();
         }
     }
 
     public void OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && IsShowing)
         {
             if (inputField.text != "")
                 ParseCommand(inputField.text);
@@ -307,7 +320,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
     public void OnAutoComplete(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && IsShowing)
         {
             HandleTabPress();
         }
@@ -315,7 +328,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
     public void OnScrollToBottom(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && IsShowing)
         {
             ScrollToBottom(true);
         }
@@ -491,6 +504,12 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
         // Activate the input field
         inputField.ActivateInputField();
+    }
+
+    private void UnfocusOnInputField()
+    {
+        // Deselect the input field
+        inputField.DeactivateInputField();
     }
 
     #endregion

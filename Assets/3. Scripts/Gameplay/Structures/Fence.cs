@@ -27,18 +27,22 @@ public class Fence : Structure
         spriteBlender.Blend(true);
     }
 
-    public override void Remove()
+    public override void Removed()
     {
         RemoveRpc();
     }
 
-    [Rpc(SendTo.ClientsAndHost)]
-    private void RemoveRpc()
+    public override void DestroyOnClient()
     {
         movementBlocker.enabled = false;
         spriteBlender.ReblendNeighbors();
-        if (IsServer)
-            Destroy(gameObject);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void RemoveRpc()
+    {
+        DestroyOnClient();
+        if (IsServer) Destroy(gameObject);
     }
 }
 

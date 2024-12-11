@@ -83,7 +83,7 @@ public class Hammer : Tool
         var hit = Physics2D.OverlapPoint(position, hammerProperty.StructureLayers);
         if (hit && hit.TryGetComponent(out Structure structure))
         {
-            structure.Remove();
+            structure.Removed();
         }
     }
 }

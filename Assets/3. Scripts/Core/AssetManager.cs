@@ -234,26 +234,14 @@ public class AssetManager : NetworkBehaviour
 
     #region Item Spawning
 
-    /*public void SpawnItem(ItemProperty itemProperty, Vector2 position, Transform prefer = null, Transform ignore = null, float randomRange = 2f, bool randomForce = true)
-    {
-        NetworkObjectReference preferRef = prefer ? prefer.gameObject : default;
-        NetworkObjectReference ignoreRef = ignore ? ignore.gameObject : default;
-        SpawnItemRpc(itemProperty, position, preferRef, ignoreRef, randomRange, randomForce);
-    }*/
-
-    public void SpawnItem(ItemProperty itemProperty, Vector2 position, float randomRange = 2f, bool randomForce = true)
+    public void SpawnItem(ItemProperty itemProperty, Vector2 position, float randomRange = 0f, bool randomForce = true)
     {
         SpawnItemRpc(itemProperty, position, randomRange, randomForce);
     }
 
-    public void SpawnItemPrefer(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef, float randomRange = 2f, bool randomForce = true)
+    public void SpawnItemPrefer(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef, NetworkObjectReference ignoreRef, float randomRange = 0f, bool randomForce = true)
     {
-        SpawnItemPreferRpc(itemProperty, position, preferRef, randomRange, randomForce);
-    }
-
-    public void SpawnItemIgnore(ItemProperty itemProperty, Vector2 position, NetworkObjectReference ignoreRef, float randomRange = 2f, bool randomForce = true)
-    {
-        SpawnItemIgnoreRpc(itemProperty, position, ignoreRef, randomRange, randomForce);
+        SpawnItemPreferRpc(itemProperty, position, preferRef, ignoreRef, randomRange, randomForce);
     }
 
     [Rpc(SendTo.Server)]
@@ -263,24 +251,20 @@ public class AssetManager : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    public void SpawnItemPreferRpc(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef, float randomRange, bool randomForce)
+    public void SpawnItemPreferRpc(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef, NetworkObjectReference ignoreRef, float randomRange, bool randomForce)
     {
         var itemReplica = SpawnItemOnServer(itemProperty, position, randomRange, randomForce);
-        if (preferRef.TryGet(out var prefer))
+
+        if (preferRef.TryGet(out var preferNetObj))
         {
-            itemReplica.PickUpItemOnServer(prefer.transform);
+            itemReplica.PickupItemOnServer(preferNetObj);
+        }
+        else if (ignoreRef.TryGet(out var ignore))
+        {
+            itemReplica.IgnorePickerOnServer(ignore.transform);
         }
     }
 
-    [Rpc(SendTo.Server)]
-    private void SpawnItemIgnoreRpc(ItemProperty itemProperty, Vector2 position, NetworkObjectReference ignoreRef, float randomRange, bool randomForce)
-    {
-        var itemReplica = SpawnItemOnServer(itemProperty, position, randomRange, randomForce);
-        if (ignoreRef.TryGet(out var ignore))
-        {
-            itemReplica.IgnorePicker(ignore.transform);
-        }
-    }
     public ItemReplica SpawnItemOnServer(ItemProperty itemProperty, Vector2 position, float randomRange = 2f, bool randomForce = true)
     {
         var randomPos = randomRange * (Vector2)Random.onUnitSphere;
@@ -290,7 +274,6 @@ public class AssetManager : NetworkBehaviour
 
         var itemReplica = gameObject.GetComponent<ItemReplica>();
         itemReplica.SetProperty(itemProperty);
-        itemReplica.AddRandomForce();
 
         return itemReplica;
     }

@@ -89,7 +89,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxPlayer: 8
   useFacepunchTransport: 1
-  showDebugs: 0
+  showDebugs: 1
   showStatus: 0
 --- !u!114 &8308089946564611574
 MonoBehaviour:
@@ -138,7 +138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PresetAsset: {fileID: 0}
   m_PresetReference:
-    rid: 8037850241611333649
+    rid: 8037850263128113156
   m_Scenario:
     rid: -2
   m_IsScenarioSettingsFolded: 1
@@ -148,7 +148,7 @@ MonoBehaviour:
     RefIds:
     - rid: -2
       type: {class: , ns: , asm: }
-    - rid: 8037850241611333649
+    - rid: 8037850263128113156
       type: {class: NetworkSimulatorPreset, ns: Unity.Multiplayer.Tools.NetworkSimulator.Runtime, asm: Unity.Multiplayer.Tools.NetworkSimulator.Runtime}
       data:
         <Name>k__BackingField: None

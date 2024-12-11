@@ -108,6 +108,10 @@ PrefabInstance:
       propertyPath: lootTable
       value: 
       objectReference: {fileID: 11400000, guid: 74a79f4b6ffc0594d9f6304cd6eb28b9, type: 2}
+    - target: {fileID: 7587470008011550257, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: m_Mass
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_Name
       value: Spider Boss Variant

@@ -29,7 +29,7 @@ public class MeleeWeapon : Item
                 // Deal damage to the object
                 if (collider.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    damageable.GetDamaged(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType, meleeWeaponProperty.Hostility);
+                    damageable.GetDamaged(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType, meleeWeaponProperty.Hostility, transform.root);
                 }
 
                 if (damageable.GetHostility() == meleeWeaponProperty.Hostility)
@@ -38,7 +38,7 @@ public class MeleeWeapon : Item
                     {
                         if (collider.TryGetComponent<Plant>(out var plant))
                         {
-                            plant.GetHarvested();
+                            plant.GetHarvested(transform.root);
                         }
                     }
                 }

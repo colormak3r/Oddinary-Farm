@@ -12,10 +12,9 @@ public class StructureStatus : EntityStatus
         structure = GetComponent<Structure>();
     }
 
-    protected override void OnEntityDeathOnServer()
+    protected override IEnumerator DeathOnClientCoroutine()
     {
-        OnDeathOnServer?.Invoke();
-        OnDeathOnServer.RemoveAllListeners();
-        structure.Remove();
+        structure.DestroyOnClient();
+        return base.DeathOnClientCoroutine();
     }
 }

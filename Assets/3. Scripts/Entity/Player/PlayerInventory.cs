@@ -3,7 +3,6 @@ using ColorMak3r.Utility;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEditor;
 
 [System.Serializable]
@@ -132,16 +131,14 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     {
         if (IsOwner)
         {
-            // Initialize the hand property on the owner on server
-            if (IsServer)
-            {
-                inventory[0].Property = handProperty;
-                CreateItemRefServerRpc(0, handProperty);
-            }
-
             // Initialize the inventory UI
             inventoryUI = InventoryUI.Main;
             inventoryUI.Initialize(this);
+
+            //Add the hand to the inventory
+            inventory[0].Property = handProperty;
+            inventory[0].Count = 1;
+            CreateItemRefServerRpc(0, handProperty);
 
             // Add the default items to the inventory
             foreach (var itemStack in defaultInventory)
@@ -198,7 +195,33 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     }
 
 
-    private void Update()
+    /* private void FixedUpdate()
+     {
+         // Run on client only
+         if (!IsOwner) return;
+
+         if (!isControllable) return;
+
+         // Automatically try to pick up Items in the close proximity
+         var hits = Physics2D.OverlapCircleAll(transform.position + inventoryOffset, inventoryRadius, itemLayer);
+         if (hits.Length > 0)
+         {
+             foreach (var hit in hits)
+             {
+                 if (hit.TryGetComponent(out ItemReplica itemReplica) && itemReplica.OwnerValue == NetworkObject)
+                 {
+                     // Add an item on client side
+                     if (AddItemOnClient(itemReplica.CurrentProperty))
+                     {
+                         itemReplica.gameObject.SetActive(false);
+                         itemReplica.Destroy();   // Todo: Recycle using network object pooling
+                     }
+                 }
+             }
+         }
+     }*/
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         // Run on client only
         if (!IsOwner) return;
@@ -206,20 +229,13 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         if (!isControllable) return;
 
         // Automatically try to pick up Items in the close proximity
-        var hits = Physics2D.OverlapCircleAll(transform.position + inventoryOffset, inventoryRadius, itemLayer);
-        if (hits.Length > 0)
+        if (collision.TryGetComponent(out ItemReplica itemReplica) && itemReplica.OwnerValue == NetworkObject)
         {
-            foreach (var hit in hits)
+            // Add an item on client side
+            if (AddItemOnClient(itemReplica.CurrentProperty))
             {
-                if (hit.TryGetComponent(out ItemReplica itemReplica) && itemReplica.OwnerValue == NetworkObject)
-                {
-                    // Add an item on client side
-                    if (AddItemOnClient(itemReplica.CurrentProperty))
-                    {
-                        itemReplica.gameObject.SetActive(false);
-                        itemReplica.Destroy();   // Todo: Recycle using network object pooling
-                    }
-                }
+                itemReplica.gameObject.SetActive(false);
+                itemReplica.RequestDestroy();   // Todo: Recycle using network object pooling
             }
         }
     }
@@ -444,7 +460,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
         var property = inventory[index].Property;
         ConsumeItemOnClient(index);
-        AssetManager.Main.SpawnItemIgnore(property, transform.position, gameObject, 0);
+        AssetManager.Main.SpawnItemPrefer(property, transform.position, default, gameObject);
     }
 
     /// <summary>

@@ -34,6 +34,8 @@ public class InputManager : MonoBehaviour
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs = false;
+    [SerializeField]
+    private InputMap currentInputMap;
 
     private DefaultInputActions inputActions;
     public DefaultInputActions InputActions => inputActions;
@@ -98,6 +100,7 @@ public class InputManager : MonoBehaviour
 
     private InputActionMap GetActionMap(InputMap map)
     {
+        currentInputMap = map;
         switch (map)
         {
             case InputMap.Gameplay:

@@ -19,21 +19,28 @@ public class LootGenerator : MonoBehaviour
         this.lootTable = lootTable;
     }
 
-    public void DropLootOnServer(Transform prefer = null)
+    public void DropLootOnServer(NetworkObjectReference preferRef)
     {
         if (lootTable == null) return;
 
         var loots = GenerateLoot(lootTable);
         var position = transform.position;
 
+        NetworkObject prefer;
+        preferRef.TryGet(out prefer);
+
         foreach (ItemStack loot in loots)
         {
             for (int i = 0; i < loot.Count; i++)
             {
-                if(prefer)
-                    AssetManager.Main.SpawnItemPrefer(loot.Property, position, prefer.gameObject, 0);
+                if (prefer.TryGetComponent<PlayerInventory>(out var inventory))
+                {
+                    AssetManager.Main.SpawnItemPrefer(loot.Property, position, preferRef, default);
+                }
                 else
-                    AssetManager.Main.SpawnItem(loot.Property, position, 0);
+                {
+                    AssetManager.Main.SpawnItem(loot.Property, position);
+                }
             }
         }
     }

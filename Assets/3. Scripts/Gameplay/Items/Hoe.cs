@@ -126,7 +126,7 @@ public class Hoe : Tool
             {
                 if (showDebug) Debug.Log($"Plant and Farm Plot at {position} is removed");
                 Destroy(farmPlotCollider.gameObject);
-                AssetManager.Main.SpawnItemPrefer(plant.Seed, position, gameObject);
+                AssetManager.Main.SpawnItemPrefer(plant.Seed, position, transform.root.gameObject, default);
             }
         }
         else
