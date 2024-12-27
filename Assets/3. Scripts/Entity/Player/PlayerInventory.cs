@@ -79,6 +79,8 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     [SerializeField]
     private SpriteRenderer itemRenderer;
     [SerializeField]
+    private SpriteRenderer itemRotationRenderer;
+    [SerializeField]
     private ItemStack[] defaultInventory;
 
     [Header("Debugs")]
@@ -170,7 +172,10 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             if (item == null) Debug.Log("Item is null");
             if (item.PropertyValue == null) Debug.Log("Item property is null");
 
-            itemRenderer.sprite = item.PropertyValue.Sprite;
+            if (item is RangedWeapon)
+                itemRotationRenderer.sprite = item.PropertyValue.Sprite;
+            else
+                itemRenderer.sprite = item.PropertyValue.Sprite;
 
 #if UNITY_EDITOR
             if (showItemGizmos || showItemDebug)
@@ -546,6 +551,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         {
             currentItemOnLocal = itemRefs[index];
             CurrentItem.Value = itemRefs[index];
+
+            var selectSound = itemRefs[index].PropertyValue.SelectSound;
+            AudioManager.Main.PlayOneShot(selectSound);
         }
         else
         {

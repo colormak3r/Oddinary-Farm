@@ -26,6 +26,8 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     [SerializeField]
     private AudioClip pickupSound;
     [SerializeField]
+    private AudioClip selectSound;
+    [SerializeField]
     private AudioClip primarySound;
     [SerializeField]
     private AudioClip secondarySound;
@@ -43,6 +45,7 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     public uint Price => price;
 
     public AudioClip PickupSound => pickupSound;
+    public AudioClip SelectSound => selectSound;
     public AudioClip PrimarySound => primarySound;
     public AudioClip SecondarySound => secondarySound;
     public AudioClip AlternativeSound => alternativeSound;

@@ -283,8 +283,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mockProperty: {fileID: 0}
-  pickupSpeed: 10
-  pickupDuration: 3
+  pickupSpeed: 20
+  pickupDuration: 5
   pickupRecovery: 1
   targetOffset: {x: 0, y: 0.25, z: 0}
   showDebugs: 0

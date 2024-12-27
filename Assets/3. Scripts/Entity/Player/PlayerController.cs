@@ -2,6 +2,7 @@ using ColorMak3r.Utility;
 using System.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.Rendering.DebugUI;
@@ -17,10 +18,17 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 {
     private static Vector3 LEFT_DIRECTION = new Vector3(-1, 1, 1);
     private static Vector3 RIGHT_DIRECTION = new Vector3(1, 1, 1);
+    private static Vector3 VECTOR_ONE_FLIP_XY = new Vector3(-1, -1, 1);
 
     [Header("Settings")]
     [SerializeField]
     private Transform graphicTransform;
+    [SerializeField]
+    private Transform armTransform;
+    [SerializeField]
+    private Transform armRotationTransform;
+    [SerializeField]
+    private Transform muzzleTransform;
     [SerializeField]
     private bool spriteFacingRight;
 
@@ -37,9 +45,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private bool showGizmos;
 
     private bool isControllable = true;
-
     private Vector2 lookPosition;
     private Vector2 playerPosition_cached = Vector2.one;
+    private Vector2 mousePosition;
 
     private float nextPrimary;
     private float nextSecondary;
@@ -55,11 +63,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private PlayerAnimationController animationController;
 
     private bool isOwner;
+    private bool isInitialized;
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
-    public static Vector2 LookPosition;
+    public static Vector2 LookPosition { get; private set; }
     private Vector2 lookPosition_snapped_cached;
+
+    public static Transform MuzzleTransform;
 
     private void Awake()
     {
@@ -98,7 +109,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private void Update()
     {
         // Run Client-Side only
-        if (!IsOwner) return;
+        if (!IsOwner || !isInitialized) return;
 
         if (!GameManager.Main.IsInitialized) return;
 
@@ -106,6 +117,19 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         {
             playerPosition_cached = transform.position;
             StartCoroutine(WorldGenerator.Main.GenerateTerrainCoroutine(transform.position));
+        }
+
+        lookPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        LookPosition = lookPosition;
+        IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;
+
+        RotateArm();
+
+        var lookPosition_snapped = lookPosition.SnapToGrid();
+        if (lookPosition_snapped != lookPosition_snapped_cached)
+        {
+            lookPosition_snapped_cached = lookPosition_snapped;
+            Preview();
         }
     }
 
@@ -130,7 +154,12 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         // Set previewer
         previewer = Previewer.Main;
 
+        // Set muzzle transform
+        MuzzleTransform = muzzleTransform;
+
         isOwner = true;
+
+        isInitialized = true;
     }
 
     private void OnDisable()
@@ -157,16 +186,18 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (Camera.main == null) return;
 
-        lookPosition = Camera.main.ScreenToWorldPoint(context.ReadValue<Vector2>());
-        LookPosition = lookPosition;
-        IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;
+        mousePosition = context.ReadValue<Vector2>();
+    }
 
-        var lookPosition_snapped = lookPosition.SnapToGrid();
-        if (lookPosition_snapped != lookPosition_snapped_cached)
-        {
-            lookPosition_snapped_cached = lookPosition_snapped;
-            Preview();
-        }
+    private bool rotateArm = false;
+
+    private void RotateArm()
+    {
+        if (!rotateArm) return;
+
+        var direction = (lookPosition - (Vector2)armRotationTransform.position).normalized;
+        armRotationTransform.rotation = Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, 90) * direction);
+        armRotationTransform.localScale = IsFacingRight.Value ? Vector3.one : VECTOR_ONE_FLIP_XY;
     }
 
     private void Preview()
@@ -286,15 +317,23 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
                 var itemProperty = currentItem.PropertyValue;
                 nextPrimary = Time.time + itemProperty.PrimaryCdr;
 
-                if (currentItem.CanPrimaryAction(lookPosition))
+                if (currentItem is RangedWeapon)
                 {
-                    primaryPosition = lookPosition;
-                    animationController.ChopAnimationMode = AnimationMode.Primary;
-                    networkAnimator.SetTrigger("Chop");
+                    networkAnimator.SetTrigger("Shoot");
+                    currentItem.OnPrimaryAction(lookPosition);
                 }
                 else
                 {
-                    AudioManager.Main.PlaySoundEffect(SoundEffect.UIError);
+                    if (currentItem.CanPrimaryAction(lookPosition))
+                    {
+                        primaryPosition = lookPosition;
+                        animationController.ChopAnimationMode = AnimationMode.Primary;
+                        networkAnimator.SetTrigger("Chop");
+                    }
+                    else
+                    {
+                        AudioManager.Main.PlaySoundEffect(SoundEffect.UIError);
+                    }
                 }
             }
         }
@@ -403,6 +442,10 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         inventory.ChangeHotBarIndex(value);
 
         Preview();
+
+        rotateArm = inventory.CurrentItemOnLocal is RangedWeapon;
+        armRotationTransform.gameObject.SetActive(rotateArm);
+        armTransform.gameObject.SetActive(!rotateArm);
     }
 
     #endregion

@@ -73,6 +73,9 @@ public class AssetManager : NetworkBehaviour
     [SerializeField]
     private GameObject itemReplicaPrefab;
     public GameObject ItemReplicaPrefab => itemReplicaPrefab;
+    [SerializeField]
+    private GameObject projectilePrefab;
+    public GameObject ProjectilePrefab => projectilePrefab;
 
     [Header("Scriptable Object Assets")]
     [SerializeField]

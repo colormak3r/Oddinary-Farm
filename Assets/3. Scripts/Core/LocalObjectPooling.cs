@@ -38,6 +38,7 @@ public class LocalObjectPooling : MonoBehaviour
 
         var obj = pool.GetChild(0).gameObject;
         obj.GetComponent<LocalObjectController>().LocalSpawn(pool);
+        obj.transform.SetParent(null);
         obj.SetActive(true);
         return obj;
     }
