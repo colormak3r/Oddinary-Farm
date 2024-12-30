@@ -93,20 +93,22 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     #region Get Damaged
 
-    public void GetDamaged(uint damage, DamageType type, Hostility hostility, Transform attacker)
+    public bool GetDamaged(uint damage, DamageType type, Hostility hostility, Transform attacker)
     {
         if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {hostility}");
 
-        if (Hostility == hostility) return;
+        if (Hostility == hostility) return false;
 
-        if (!IsSpawned) return;
+        if (!IsSpawned) return false;
 
-        if (isInvincible) return;
+        if (isInvincible) return false;
 
-        if (Time.time < nextDamagable) return;
+        if (Time.time < nextDamagable) return false;
         nextDamagable = Time.time + iframeDuration;
 
         GetDamagedRpc(damage, type, attacker.gameObject);
+
+        return true;
     }
 
     [Rpc(SendTo.Everyone)]

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a57e2f2cc0303e409b66e96b4acfa84, type: 3}
-  m_Name: Pistol Projectile
+  m_Name: Friendly Normal Projectile
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 04bf79effb8084349b31c5d946ff32b1, type: 3}
   animatorController: {fileID: 0}

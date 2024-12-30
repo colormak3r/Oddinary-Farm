@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Pistol Property", menuName = "Scriptable Objects/Item/Pistol")]
-public class PistolProperty : RangedWeaponProperty
+public class ProjectileGunProperty : RangedWeaponProperty
 {
 
 }

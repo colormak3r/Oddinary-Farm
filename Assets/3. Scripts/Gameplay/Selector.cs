@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [ExecuteAlways]
 public class Selector : MonoBehaviour
 {
-    public static Selector main;
+    public static Selector Main;
 
     [Header("Settings")]
     [SerializeField]
@@ -16,11 +12,12 @@ public class Selector : MonoBehaviour
     private Vector2 defaultSize = new Vector2(3, 3);
 
     private SpriteRenderer spriteRenderer;
+    private bool testMode;
 
     private void Awake()
     {
-        if (main == null)
-            main = this;
+        if (Main == null)
+            Main = this;
         else
             Destroy(gameObject);
     }
@@ -33,8 +30,22 @@ public class Selector : MonoBehaviour
 
     private void Update()
     {
-        if (!Application.isPlaying)
+        if (!testMode && !Application.isPlaying)
             spriteRenderer.enabled = showInEditor;
+    }
+
+    [ContextMenu("Reset")]
+    public void Reset()
+    {
+        testMode = false;
+        transform.position = Vector2.zero;
+        spriteRenderer.size = defaultSize;
+    }
+
+    public void Test(Vector2 position, Vector2 size)
+    {
+        testMode = true;
+        Select(position, size);
     }
 
     public void MoveTo(Vector2 position, bool show = true)
@@ -57,7 +68,7 @@ public class Selector : MonoBehaviour
     {
         SetSelectorSize(size);
         MoveTo(position);
-    }    
+    }
 
     public void Select(GameObject gameObject)
     {

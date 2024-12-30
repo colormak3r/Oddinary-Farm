@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: dbf2a18830467254db9ff7bc10a0d576
+guid: 609121e3b05afbc43b47b5bae272c08d
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -121,18 +121,18 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: Corn
+  - name: Frame_0
     originalName: 
-    pivot: {x: 0.5652174, y: 0}
+    pivot: {x: 0.5, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 92
-      height: 32
-    spriteID: fd3e16f44f1887741b480f35814f117e
+      width: 160
+      height: 160
+    spriteID: b4abda1ceb1b34544a05404fee74f0fb
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -141,28 +141,69 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
+  - name: Frame_1
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 172
+      width: 160
+      height: 160
+    spriteID: 8fe4282e224aab24b93a758ba5e4f26d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 172}
   spriteSheetImportData: []
   asepriteLayers:
   - layerIndex: 0
-    guid: 1609297064
-    name: Corn
+    guid: -395215153
+    name: HotAirBalloon - Backup
     layerFlags: 0
     layerType: 0
     blendMode: 0
     cells:
-    - name: Corn
+    - name: Frame_0
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 4
+        x: 0
         y: 0
-        width: 92
-        height: 32
-      spriteId: fd3e16f44f1887741b480f35814f117e
+        width: 160
+        height: 160
+      spriteId: b4abda1ceb1b34544a05404fee74f0fb
+    - name: Frame_1
+      frameIndex: 1
+      additiveSortOrder: 0
+      cellRect:
+        x: 0
+        y: 0
+        width: 160
+        height: 160
+      spriteId: 8fe4282e224aab24b93a758ba5e4f26d
     linkedCells: []
     parentIndex: -1
-  platformSettings: []
+  platformSettings:
+  - name: Default
+    overridden: 0
+    ignorePlatformSupport: 0
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    androidETC2FallbackOverride: 0
   generatePhysicsShape: 0
   secondarySpriteTextures: []
   spritePackingTag: 
-  canvasSize: {x: 112, y: 32}
+  canvasSize: {x: 160, y: 160}

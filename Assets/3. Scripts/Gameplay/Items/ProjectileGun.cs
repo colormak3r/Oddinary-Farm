@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shotgun : RangedWeapon
+public class ProjectileGun : RangedWeapon
 {
     override public void OnPrimaryAction(Vector2 position)
     {

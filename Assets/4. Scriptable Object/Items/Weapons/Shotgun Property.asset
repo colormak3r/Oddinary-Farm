@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Shotgun Property
   m_EditorClassIdentifier: 
   sprite: {fileID: 1576866383, guid: 0cefbb5fdff3c5740b36113fa3e01276, type: 3}
-  prefab: {fileID: 1421667534790634325, guid: bbe3bb95600cc3a41b667ba50359b3b2, type: 3}
+  prefab: {fileID: 6493089648266601401, guid: 485f96db894dc62428366905bf64fda6, type: 3}
   isConsummable: 0
   maxStack: 1
   primaryCdr: 0.5

@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteAlways]
 public class SelectorModifier : MonoBehaviour
 {
     [Header("Settings")]
@@ -14,8 +13,14 @@ public class SelectorModifier : MonoBehaviour
     public Vector2 Size => size;
 
     [ContextMenu("Test")]
-    private void Test()
+    public void Test()
     {
-        Selector.main.Select(Position, Size);
+        Selector.Main.Test(Position, Size);
+    }
+
+    [ContextMenu("Reset")]
+    public void Reset()
+    {
+        Selector.Main.Reset();
     }
 }

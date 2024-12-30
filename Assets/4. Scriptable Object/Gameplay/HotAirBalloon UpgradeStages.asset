@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0f10e4a047f0d4a99e7746f360fc97, type: 3}
+  m_Name: HotAirBalloon UpgradeStages
+  m_EditorClassIdentifier: 
+  stages:
+  - prompt: 
+    cost: 5000
+    sprite: {fileID: -1621638092, guid: 0bc699f3d8cf9484fb364fc4d9e5c78b, type: 3}
+  - prompt: Add Burner to Hot Air Balloon?
+    cost: 50000
+    sprite: {fileID: 1330486549, guid: 0bc699f3d8cf9484fb364fc4d9e5c78b, type: 3}
+  - prompt: Add Envelope to Hot Air Balloon?
+    cost: 500000
+    sprite: {fileID: -1346301965, guid: 0bc699f3d8cf9484fb364fc4d9e5c78b, type: 3}

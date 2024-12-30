@@ -11,6 +11,7 @@ public class ControllableController : NetworkBehaviour
     private bool isAudioUIVisible;
     private bool isAppearanceUIVisible;
     private bool isGameplayUIVisible;
+    private bool isUpgradeUIVisible;
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class ControllableController : NetworkBehaviour
             OptionsUI.Main.OnVisibilityChanged.AddListener(OnOptionsUIVisibilityChanged);
             AudioUI.Main.OnVisibilityChanged.AddListener(OnAudioUIVisibilityChanged);
             AppearanceUI.Main.OnVisibilityChanged.AddListener(OnAppearanceUIVisibilityChanged);
+            UpgradeUI.Main.OnVisibilityChanged.AddListener(OnUpgradeUIVisibilityChanged);
         }
     }
 
@@ -37,6 +39,7 @@ public class ControllableController : NetworkBehaviour
             OptionsUI.Main.OnVisibilityChanged.RemoveListener(OnOptionsUIVisibilityChanged);
             AudioUI.Main.OnVisibilityChanged.RemoveListener(OnAudioUIVisibilityChanged);
             AppearanceUI.Main.OnVisibilityChanged.RemoveListener(OnAppearanceUIVisibilityChanged);
+            UpgradeUI.Main.OnVisibilityChanged.RemoveListener(OnUpgradeUIVisibilityChanged);
         }
     }
 
@@ -64,10 +67,16 @@ public class ControllableController : NetworkBehaviour
         Evaluate();
     }
 
+    private void OnUpgradeUIVisibilityChanged(bool isShowing)
+    {
+        isUpgradeUIVisible = isShowing;
+        Evaluate();
+    }
+
     private void Evaluate()
     {
         bool controllable = !isShopUIVisible && !isOptionsUIVisible
-            && !isAudioUIVisible && !isAppearanceUIVisible;
+            && !isAudioUIVisible && !isAppearanceUIVisible && !isUpgradeUIVisible;
 
         foreach (var controllableItem in controllables)
         {

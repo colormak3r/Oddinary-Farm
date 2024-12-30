@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    [Header("Properties")]
     [SerializeField]
     private ProjectileProperty property;
+
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showDebugs;
 
     private Transform owner;
     private Coroutine despawnCoroutine;
@@ -49,11 +54,20 @@ public class Projectile : MonoBehaviour
     {
         if (!isInitialized || owner == null) return;
 
+        if (showDebugs) Debug.Log(collider.name);
+
         if (collider.TryGetComponent<IDamageable>(out var damageable))
         {
-            damageable.GetDamaged(property.Damage, property.DamageType, property.Hostility, owner);
-            if (despawnCoroutine != null) StopCoroutine(despawnCoroutine);
-            Despawn();
+            var success = damageable.GetDamaged(property.Damage, property.DamageType, property.Hostility, owner);
+            if (success)
+            {
+                if (despawnCoroutine != null) StopCoroutine(despawnCoroutine);
+                Despawn();
+            }
+            else
+            {
+                // Pass through the target and continue
+            }
         }
     }
 

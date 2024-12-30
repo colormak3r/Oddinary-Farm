@@ -82,7 +82,7 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
                 if (closetInteractable != currentInteractable)
                 {
                     currentInteractable = closetInteractable;
-                    Selector.main.Select(hits[0].gameObject);
+                    Selector.Main.Select(hits[0].gameObject);
                 }
             }
         }
@@ -91,7 +91,7 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
             if (currentInteractable != null)
             {
                 currentInteractable = null;
-                Selector.main.Show(false);
+                Selector.Main.Show(false);
             }
         }
     }
@@ -103,7 +103,7 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
         if (!isControllable && currentInteractable != null)
         {
             currentInteractable = null;
-            Selector.main.Show(false);
+            Selector.Main.Show(false);
         }
     }
 

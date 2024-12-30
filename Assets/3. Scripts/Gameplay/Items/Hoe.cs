@@ -131,10 +131,18 @@ public class Hoe : Tool
         }
         else
         {
-            if (showDebug) Debug.Log($"Farm Plot at {position} is removed");
-            Destroy(farmPlotCollider.gameObject);
-        }
+            var farmPlot = Physics2D.OverlapPoint(position, hoeProperty.FarmPlotLayer);
+            if (!farmPlot)
+            {
+                if (showDebug) Debug.Log($"Cannot hoe secondary at {position}, no farm plot found");
 
+            }
+            else
+            {
+                if (showDebug) Debug.Log($"Farm Plot at {position} is removed");
+                Destroy(farmPlotCollider.gameObject);
+            }
+        }
     }
 
     public override void OnAlternativeAction(Vector2 position)
