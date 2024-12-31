@@ -30,8 +30,8 @@ public abstract class Animal : NetworkBehaviour
     private EntityStatus status;
     public EntityStatus Status => status;
 
-    private PreyDetector preyDetector;
-    public PreyDetector PreyDetector => preyDetector;
+    private TargetDetector targetDetector;
+    public TargetDetector TargetDetector => targetDetector;
 
     private Item item;
     public Item Item => item;
@@ -81,7 +81,7 @@ public abstract class Animal : NetworkBehaviour
         networkAnimator = GetComponent<NetworkAnimator>();
         movement = GetComponent<EntityMovement>();
         status = GetComponent<EntityStatus>();
-        preyDetector = GetComponent<PreyDetector>();
+        targetDetector = GetComponent<TargetDetector>();
         item = GetComponentInChildren<Item>();
     }
 
@@ -164,12 +164,12 @@ public abstract class Animal : NetworkBehaviour
 
     private void OnDrawGizmos()
     {
-        if (!PreyDetector) return;
+        if (!TargetDetector) return;
 
-        if (PreyDetector.CurrentPrey)
+        if (TargetDetector.CurrentTarget)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, PreyDetector.CurrentPrey.transform.position);
+            Gizmos.DrawLine(transform.position, TargetDetector.CurrentTarget.transform.position);
         }
         else
         {

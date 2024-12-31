@@ -159,6 +159,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
                     }
                 }
 
+                isInvincible = true;
                 OnEntityDeathOnServer();
             }
 
@@ -248,6 +249,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     {
         if (IsServer)
         {
+            isInvincible = false;
             CurrentHealth.Value = maxHealth;
             OnEntityRespawnOnServer();
         }

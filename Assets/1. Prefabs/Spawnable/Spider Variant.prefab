@@ -123,7 +123,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 1343188877
+      value: 564385764
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
@@ -148,6 +148,10 @@ PrefabInstance:
     - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: hostility
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: isInvincible
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: deathEffectPrefab
@@ -221,7 +225,6 @@ MonoBehaviour:
       m_Calls: []
   currentStateName: 
   axeProperty: {fileID: 11400000, guid: cd267a9b4d75f83478b4a4406c8eea92, type: 2}
-  burrowPreventMoveDuration: 0
   idleStateChangeCdr:
     min: 1
     max: 2
@@ -237,19 +240,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd1c109a41adeb1429a0f8f387051297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raycastPrey: 1
+  raycastTarget: 1
   detectRange: 10
   escapeRange: 15
-  huntingTime: 2
-  preyMask:
+  activeTime: 2
+  penaltyRange: 2
+  targetHostility: 0
+  targetMask:
     serializedVersion: 2
     m_Bits: 2147485184
+  showDebugs: 0
   showGizmos: 0
-  currentPrey: {fileID: 0}
-  distanceToPrey: 0
-  OnPreyDetected:
+  currentTarget: {fileID: 0}
+  distanceToTarget: 0
+  OnTargetDetected:
     m_PersistentCalls:
       m_Calls: []
-  OnPreyExited:
+  OnTargetEscaped:
     m_PersistentCalls:
       m_Calls: []

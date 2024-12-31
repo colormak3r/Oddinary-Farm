@@ -18,8 +18,8 @@ public class ChasingState : BehaviourState
     public override void ExecuteState()
     {
         base.ExecuteState();
-        if (animal.PreyDetector.CurrentPrey == null) return;
-        var direction = animal.PreyDetector.CurrentPrey.transform.position - animal.transform.position;
+        if (animal.TargetDetector.CurrentTarget == null) return;
+        var direction = animal.TargetDetector.CurrentTarget.transform.position - animal.transform.position;
         animal.MoveDirection(direction);
     }
 

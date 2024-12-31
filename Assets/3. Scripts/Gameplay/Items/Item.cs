@@ -17,9 +17,10 @@ public class Item : NetworkBehaviour
 
     private AudioSource audioSource;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         audioSource = GetComponentInParent<AudioSource>();
+        if (!audioSource) Debug.LogError("AudioSource not found in parent object");
     }
 
     public ItemProperty PropertyValue

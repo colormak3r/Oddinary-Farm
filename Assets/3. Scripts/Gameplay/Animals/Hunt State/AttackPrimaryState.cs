@@ -19,9 +19,9 @@ public class AttackPrimaryState : BehaviourState
     public override void ExecuteState()
     {
         base.ExecuteState();
-        if (Time.time > nextAction && animal.PreyDetector.CurrentPrey != null)
+        if (Time.time > nextAction && animal.TargetDetector.CurrentTarget != null)
         {
-            animal.Item.OnPrimaryAction(animal.PreyDetector.CurrentPrey.position);
+            animal.Item.OnPrimaryAction(animal.TargetDetector.CurrentTarget.position);
             nextAction = Time.time + animal.Item.PropertyValue.PrimaryCdr;
             animal.NetworkAnimator.SetTrigger("PrimaryAction");
         }

@@ -7,6 +7,14 @@ using UnityEngine;
 public class RangedWeapon : Item
 {
     private RangedWeaponProperty rangedWeaponProperty;
+    private Transform muzzleTransform;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        muzzleTransform = transform.root.GetComponent<TransformReference>().Get();
+        if (muzzleTransform == null) Debug.LogError("Failed to get muzzle transform");
+    }
 
     protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
     {
@@ -17,12 +25,12 @@ public class RangedWeapon : Item
     // This method can run on both server and client
     protected virtual void ShootProjectiles(Vector2 position)
     {
-        SpawnProjectile(PlayerController.MuzzleTransform.position, position, transform.root);
-        ShootProjectilesRpc(PlayerController.MuzzleTransform.position, position, transform.root.gameObject);
+        SpawnProjectile(position, transform.root);
+        ShootProjectilesRpc(position, transform.root.gameObject);
     }
 
     [Rpc(SendTo.NotMe)]
-    private void ShootProjectilesRpc(Vector3 muzzlePosition, Vector3 lookPosition, NetworkObjectReference ownerRef)
+    private void ShootProjectilesRpc(Vector3 lookPosition, NetworkObjectReference ownerRef)
     {
         Transform owner = null;
         if (ownerRef.TryGet(out var networkObject))
@@ -35,10 +43,10 @@ public class RangedWeapon : Item
             return;
         }
 
-        SpawnProjectile(muzzlePosition, lookPosition, owner);
+        SpawnProjectile(lookPosition, owner);
     }
 
-    private void SpawnProjectile(Vector3 muzzlePosition, Vector3 lookPosition, Transform owner)
+    private void SpawnProjectile(Vector3 lookPosition, Transform owner)
     {
         for (int i = 0; i < rangedWeaponProperty.ProjectileCount; i++)
         {
@@ -48,6 +56,7 @@ public class RangedWeapon : Item
                 spread = Random.Range(-spread, spread);
             }
 
+            var muzzlePosition = muzzleTransform.position;
             var direction = Quaternion.Euler(0, 0, spread) * (lookPosition - muzzlePosition).normalized;
             var rotation = Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, 90) * direction);
             var projectile = LocalObjectPooling.Main.Spawn(AssetManager.Main.ProjectilePrefab);

@@ -43,7 +43,7 @@ public class Spider : Animal
 
     protected override void HandleTransitions()
     {
-        if (PreyDetector.CurrentPrey == null)
+        if (TargetDetector.CurrentTarget == null)
         {
             // Idle States
             if (Time.time < nextIdleStateChange) return;
@@ -69,7 +69,7 @@ public class Spider : Animal
         {
             nextIdleStateChange = 0;
 
-            if (PreyDetector.DistanceToPrey > axeProperty.Range)
+            if (TargetDetector.DistanceToTarget > axeProperty.Range)
             {
                 if (currentState != chasingState) ChangeState(chasingState);
             }
