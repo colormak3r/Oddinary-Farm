@@ -67,19 +67,13 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 {
     private static int MAX_INVENTORY_SLOTS = 30;
 
-    [Header("Settings")]
+    [Header("Inventory Settings")]
     [SerializeField]
     private float inventoryRadius = 1f;
     [SerializeField]
     private Vector3 inventoryOffset = new Vector3(0, 0.75f);
     [SerializeField]
-    private LayerMask itemLayer;
-    [SerializeField]
     private HandProperty handProperty;
-    [SerializeField]
-    private SpriteRenderer itemRenderer;
-    [SerializeField]
-    private SpriteRenderer itemRotationRenderer;
     [SerializeField]
     private ItemStack[] defaultInventory;
 
@@ -112,9 +106,10 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     [HideInInspector]
     public UnityEvent<ulong> OnCoinsValueChanged;
 
+    public Action<Item> OnCurrentItemChanged;
+
     private InventoryUI inventoryUI;
 
-    public Item CurrentItemOnLocal => currentItemOnLocal;
     public int CurrentHotbarIndex => currentHotbarIndex;
     public ulong WalletValue => Wallet.Value;
     public ItemStack[] Inventory => inventory;
@@ -172,10 +167,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             if (item == null) Debug.Log("Item is null");
             if (item.PropertyValue == null) Debug.Log("Item property is null");
 
-            if (item is RangedWeapon)
-                itemRotationRenderer.sprite = item.PropertyValue.Sprite;
-            else
-                itemRenderer.sprite = item.PropertyValue.Sprite;
+            OnCurrentItemChanged?.Invoke(item);
 
 #if UNITY_EDITOR
             if (showItemGizmos || showItemDebug)
@@ -407,18 +399,18 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         if (!IsServer) return;
 
         // Create a networked Item at this position
-        var item = Instantiate(property.Prefab, transform);
-        item.transform.localPosition = inventoryOffset;
+        var itemObject = Instantiate(property.Prefab, transform);
+        itemObject.transform.localPosition = inventoryOffset;
 
-        var networkObject = item.GetComponent<NetworkObject>();
+        var networkObject = itemObject.GetComponent<NetworkObject>();
         networkObject.Spawn();
         networkObject.TrySetParent(transform);
 
-        var itemRef = item.GetComponent<Item>();
-        itemRef.PropertyValue = property;
-        itemRefs[index] = itemRef;
+        var item = itemObject.GetComponent<Item>();
+        item.PropertyValue = property;
+        itemRefs[index] = item;
 
-        UpdateItemRefOwnerRpc(index, itemRef);
+        UpdateItemRefOwnerRpc(index, item);
     }
 
     [Rpc(SendTo.Owner)]

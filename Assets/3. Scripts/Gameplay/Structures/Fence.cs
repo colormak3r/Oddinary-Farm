@@ -5,44 +5,31 @@ using UnityEngine;
 
 public class Fence : Structure
 {
+    [Header("Fence Settings")]
     [SerializeField]
     private Collider2D movementBlocker;
 
-    SpriteBlender spriteBlender;
+    private SpriteBlender spriteBlender;
 
-    private void Awake()
+    override protected void Awake()
     {
+        base.Awake();
         spriteBlender = GetComponentInChildren<SpriteBlender>();
-        movementBlocker = GetComponent<Collider2D>();
+        if (movementBlocker == null)
+            movementBlocker = GetComponent<Collider2D>();
     }
 
-    public override void OnNetworkSpawn()
+    protected override void OnNetworkPostSpawn()
     {
-        StartCoroutine(DelayBlend());
-    }
-
-    private IEnumerator DelayBlend()
-    {
-        yield return null;
+        base.OnNetworkPostSpawn();
         spriteBlender.Blend(true);
     }
 
-    public override void Removed()
-    {
-        RemoveRpc();
-    }
-
-    public override void DestroyOnClient()
+    protected override void RemoveOnClient()
     {
         movementBlocker.enabled = false;
         spriteBlender.ReblendNeighbors();
-    }
-
-    [Rpc(SendTo.Everyone)]
-    private void RemoveRpc()
-    {
-        DestroyOnClient();
-        if (IsServer) Destroy(gameObject);
+        base.RemoveOnClient();
     }
 }
 

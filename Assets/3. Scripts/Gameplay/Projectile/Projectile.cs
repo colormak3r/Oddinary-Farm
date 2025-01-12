@@ -16,6 +16,7 @@ public class Projectile : MonoBehaviour
     private Coroutine despawnCoroutine;
 
     private bool isInitialized;
+    private bool isAuthoritative;
 
     private SpriteRenderer spriteRenderer;
     private Animator animator;
@@ -29,13 +30,14 @@ public class Projectile : MonoBehaviour
     [ContextMenu("Mock Initialize")]
     private void MockInitialize()
     {
-        Initialize(transform, property);
+        Initialize(transform, property, true);
     }
 
-    public void Initialize(Transform owner, ProjectileProperty property)
+    public void Initialize(Transform owner, ProjectileProperty property, bool isAuthoritative)
     {
         this.owner = owner;
         this.property = property;
+        this.isAuthoritative = isAuthoritative;
 
         spriteRenderer.sprite = property.Sprite;
         animator.runtimeAnimatorController = property.AnimatorController;
@@ -58,16 +60,33 @@ public class Projectile : MonoBehaviour
 
         if (collider.TryGetComponent<IDamageable>(out var damageable))
         {
-            var success = damageable.GetDamaged(property.Damage, property.DamageType, property.Hostility, owner);
-            if (success)
+            if (isAuthoritative)
             {
-                if (despawnCoroutine != null) StopCoroutine(despawnCoroutine);
-                Despawn();
+                var success = damageable.GetDamaged(property.Damage, property.DamageType, property.Hostility, owner);
+                if (success)
+                {
+                    if (despawnCoroutine != null) StopCoroutine(despawnCoroutine);
+                    Despawn();
+                }
+                else
+                {
+                    // Pass through the target and continue
+                }
             }
             else
             {
-                // Pass through the target and continue
+                var success = damageable.GetDamaged(0, property.DamageType, property.Hostility, owner);
+                if (success)
+                {
+                    if (despawnCoroutine != null) StopCoroutine(despawnCoroutine);
+                    Despawn();
+                }
+                else
+                {
+                    // Pass through the target and continue
+                }
             }
+
         }
     }
 

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class VendingMachine : NetworkBehaviour, IInteractable
+public class VendingMachine : Structure, IInteractable
 {
-    [Header("Settings")]
+    [Header("Vending Machine Settings")]
     [SerializeField]
     private ShopInventory shopInventory;
 

@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class StructureStatus : EntityStatus
 {
-    private Structure structure;
+    private SpriteBlender spriteBlender;
 
     protected override void Awake()
     {
         base.Awake();
-        structure = GetComponent<Structure>();
+        spriteBlender = GetComponentInChildren<SpriteBlender>();
     }
 
     protected override IEnumerator DeathOnClientCoroutine()
     {
-        structure.DestroyOnClient();
-        return base.DeathOnClientCoroutine();
+        spriteBlender.ReblendNeighbors();
+        yield return base.DeathOnClientCoroutine();
     }
 }

@@ -45,6 +45,16 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
         if (!isControllable) return;
 
         // Run on the server only
+        ScanItemPickupOnServer();
+    }
+
+    public void Interact()
+    {
+        currentInteractable?.Interact(transform);
+    }
+
+    private void ScanItemPickupOnServer()
+    {
         if (!IsServer) return;
 
         var hits = Physics2D.OverlapCircleAll(transform.position + pickupOffset, pickupRadius, itemLayer);
@@ -62,27 +72,31 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
         }
     }
 
-    public void Interact()
-    {
-        currentInteractable?.Interact(transform);
-    }
+    [SerializeField]
+    private Collider2D[] cachedcolliders;
 
     private void ScanClosetInteractable()
     {
         var hits = Physics2D.OverlapCircleAll(transform.position + interactionOffset, interactionRadius, interactableLayer);
+        cachedcolliders = hits;
 
         if (hits.Length > 0)
         {
             Array.Sort(hits, distanceComparer);
+            Array.Sort(cachedcolliders, distanceComparer);
 
             //colliders.OrderBy((collider) => (collider.transform.position - transform.position).sqrMagnitude).ToArray();
             //cachedcolliders = colliders;
-            if (hits[0].TryGetComponent(out IInteractable closetInteractable))
+            for (int i = 0; i < hits.Length; i++)
             {
-                if (closetInteractable != currentInteractable)
+                if (hits[i].TryGetComponent(out IInteractable closetInteractable))
                 {
-                    currentInteractable = closetInteractable;
-                    Selector.Main.Select(hits[0].gameObject);
+                    if (closetInteractable != currentInteractable)
+                    {
+                        currentInteractable = closetInteractable;
+                        Selector.Main.Select(hits[i].gameObject);
+                    }
+                    break;
                 }
             }
         }

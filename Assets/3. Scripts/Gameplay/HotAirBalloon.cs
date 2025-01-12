@@ -2,9 +2,9 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class HotAirBalloon : NetworkBehaviour, IInteractable
+public class HotAirBalloon : Structure, IInteractable
 {
-    [Header("Settings")]
+    [Header("Hot Air Balloon Settings")]
     [SerializeField]
     private UpgradeStages upgradeStages;
     [SerializeField]

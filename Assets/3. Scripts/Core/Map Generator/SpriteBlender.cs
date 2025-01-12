@@ -54,7 +54,7 @@ public class SpriteBlender : MonoBehaviour
         Blend(false);
     }
 
-    public void Blend(bool reblend = false)
+    public void Blend(bool reblendNeighbor = false)
     {
         IBool[] neighbors = new IBool[9];
         SpriteBlender[] neigborBlenders = new SpriteBlender[9];
@@ -114,7 +114,7 @@ public class SpriteBlender : MonoBehaviour
         {
             if (showDebugs) Debug.Log("Cannot find matching sprite", this);
         }
-        else if (reblend)
+        else if (reblendNeighbor)
         {
             if (showDebugs) Debug.Log("Reblending neighbors", this);
             StartCoroutine(DelayBlendNeighbor(neigborBlenders));

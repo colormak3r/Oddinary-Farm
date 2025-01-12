@@ -32,20 +32,12 @@ public class WateringCan : Tool
     [Rpc(SendTo.Server)]
     private void WaterRpc(Vector2 position)
     {
-        var halfSize = new Vector2(wateringCanProperty.Size / 2f, wateringCanProperty.Size / 2f);
-
-        var pointA = position + halfSize * 0.9f;
-        var pointB = position - halfSize * 0.9f;
-
-        var hits = Physics2D.OverlapAreaAll(pointA, pointB, wateringCanProperty.WaterableLayer);
-        if (hits.Length > 0)
+        var hits = OverlapAreaAll(wateringCanProperty.Size, position, wateringCanProperty.WaterableLayer);
+        foreach (var hit in hits)
         {
-            foreach (var hit in hits)
+            if (hit.TryGetComponent<IWaterable>(out var waterable))
             {
-                if (hit.TryGetComponent<IWaterable>(out var waterable))
-                {
-                    waterable.GetWatered();
-                }
+                waterable.GetWatered();
             }
         }
     }

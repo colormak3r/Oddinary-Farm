@@ -61,6 +61,23 @@ public static class SerializationExtensions
     }
     #endregion
 
+    #region StructureProperty
+    public static void WriteValueSafe(this FastBufferWriter writer, in StructureProperty obj)
+    {
+        writer.WriteValueSafeInternal(obj);
+    }
+
+    public static void ReadValueSafe(this FastBufferReader reader, out StructureProperty obj)
+    {
+        reader.ReadValueSafeInternal(out obj);
+    }
+
+    public static void DuplicateValue(in StructureProperty value, ref StructureProperty duplicatedValue)
+    {
+        DuplicateValueInternal(value, ref duplicatedValue);
+    }
+    #endregion
+
     #region Face
     public static void WriteValueSafe(this FastBufferWriter writer, in Face obj)
     {

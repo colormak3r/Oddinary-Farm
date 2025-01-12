@@ -30,28 +30,31 @@ public class MeleeWeapon : Item
                 if (collider.TryGetComponent<IDamageable>(out var damageable))
                 {
                     damageable.GetDamaged(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType, meleeWeaponProperty.Hostility, transform.root);
-                }
 
-                if (damageable.GetHostility() == meleeWeaponProperty.Hostility)
-                {
-                    if (meleeWeaponProperty.DamageType == DamageType.Slash || meleeWeaponProperty.CanHarvest)
+                    if (damageable.GetHostility() == meleeWeaponProperty.Hostility)
                     {
-                        if (collider.TryGetComponent<Plant>(out var plant))
+                        if (meleeWeaponProperty.DamageType == DamageType.Slash || meleeWeaponProperty.CanHarvest)
                         {
-                            plant.GetHarvested(transform.root);
+                            // Check if the object is a plant
+                            if (collider.TryGetComponent<Plant>(out var plant))
+                            {
+                                plant.GetHarvested(transform.root);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Check if the object is already dead
+                        if (damageable.GetCurrentHealth() == 0) continue;
+
+                        if (collider.TryGetComponent<EntityMovement>(out var movement))
+                        {
+                            movement.Knockback(meleeWeaponProperty.KnockbackForce, transform);
                         }
                     }
                 }
-                else
-                {
-                    // Check if the object is already dead
-                    if (damageable.GetCurrentHealth() == 0) continue;
 
-                    if (collider.TryGetComponent<EntityMovement>(out var movement))
-                    {
-                        movement.Knockback(meleeWeaponProperty.KnockbackForce, transform);
-                    }
-                }
+
             }
         }
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEditor.Overlays;
 using UnityEngine;
 
@@ -9,10 +10,11 @@ public class RangedWeapon : Item
     private RangedWeaponProperty rangedWeaponProperty;
     private Transform muzzleTransform;
 
-    protected override void Awake()
+    protected override void Initialize()
     {
-        base.Awake();
-        muzzleTransform = transform.root.GetComponent<TransformReference>().Get();
+        base.Initialize();
+
+        muzzleTransform = transform.root.GetComponent<TransformReference>()?.Get();
         if (muzzleTransform == null) Debug.LogError("Failed to get muzzle transform");
     }
 
@@ -25,7 +27,7 @@ public class RangedWeapon : Item
     // This method can run on both server and client
     protected virtual void ShootProjectiles(Vector2 position)
     {
-        SpawnProjectile(position, transform.root);
+        SpawnProjectile(position, transform.root, true);
         ShootProjectilesRpc(position, transform.root.gameObject);
     }
 
@@ -43,10 +45,10 @@ public class RangedWeapon : Item
             return;
         }
 
-        SpawnProjectile(lookPosition, owner);
+        SpawnProjectile(lookPosition, owner, false);
     }
 
-    private void SpawnProjectile(Vector3 lookPosition, Transform owner)
+    private void SpawnProjectile(Vector3 lookPosition, Transform owner, bool isAuthoritative)
     {
         for (int i = 0; i < rangedWeaponProperty.ProjectileCount; i++)
         {
@@ -62,7 +64,7 @@ public class RangedWeapon : Item
             var projectile = LocalObjectPooling.Main.Spawn(AssetManager.Main.ProjectilePrefab);
             projectile.transform.position = muzzlePosition;
             projectile.transform.rotation = rotation;
-            projectile.GetComponent<Projectile>().Initialize(owner, rangedWeaponProperty.ProjectileProperty);
+            projectile.GetComponent<Projectile>().Initialize(owner, rangedWeaponProperty.ProjectileProperty, isAuthoritative);
         }
     }
 

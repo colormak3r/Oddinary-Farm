@@ -194,15 +194,24 @@ public class AssetManager : NetworkBehaviour
 
     public T GetScriptableObjectByName<T>(string name) where T : ScriptableObject
     {
-        if (!nameToScriptableObject.ContainsKey(name))
+        try
         {
-            Debug.Log("Asset does not contains " + name);
+            if (!nameToScriptableObject.ContainsKey(name))
+            {
+                Debug.Log("Asset does not contains " + name);
+                return null;
+            }
+            else
+            {
+                return (T)nameToScriptableObject[name];
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Error while fetching asset: {name} of type {nameToScriptableObject[name].GetType().Name}\n{e}");
             return null;
         }
-        else
-        {
-            return (T)nameToScriptableObject[name];
-        }
+
     }
 
     #region Print Methods

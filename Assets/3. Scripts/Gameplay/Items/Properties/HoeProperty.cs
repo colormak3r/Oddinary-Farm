@@ -12,10 +12,7 @@ public class HoeProperty : ToolProperty
     private LayerMask farmPlotLayer;
     [SerializeField]
     private LayerMask plantLayer;
-    [SerializeField]
-    private LayerMask invalidLayer;
 
     public LayerMask FarmPlotLayer => farmPlotLayer;
     public LayerMask PlantLayer => plantLayer;
-    public LayerMask InvalidLayer => invalidLayer;
 }

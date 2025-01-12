@@ -10,13 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 5992046905657548847}
   - component: {fileID: 3832826237017750057}
-  - component: {fileID: 6066686701764870872}
-  - component: {fileID: 3608521828551919829}
+  - component: {fileID: 7457288765223012164}
   - component: {fileID: 4923286859819435741}
   - component: {fileID: 5452321758450969809}
   - component: {fileID: 6744640491762675156}
   - component: {fileID: 6181762144406206014}
   - component: {fileID: 7489642395375847181}
+  - component: {fileID: 3608521828551919829}
   m_Layer: 10
   m_Name: Fence
   m_TagString: Untagged
@@ -64,7 +64,7 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &6066686701764870872
+--- !u!114 &7457288765223012164
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 737704494243597508}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Script: {fileID: 11500000, guid: 48f9f28f3b7d3b0448dedd6eeeeb5a62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -93,21 +93,8 @@ MonoBehaviour:
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
-  Interpolate: 1
+  Interpolate: 0
   SlerpPosition: 0
---- !u!114 &3608521828551919829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 737704494243597508}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d10e512ea8c12874fba4aff8ecae3635, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementBlocker: {fileID: 4171257918591175091}
 --- !u!114 &4923286859819435741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,6 +296,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundEffects: []
+--- !u!114 &3608521828551919829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737704494243597508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d10e512ea8c12874fba4aff8ecae3635, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMovable: 1
+  isRemovable: 1
+  property: {fileID: 11400000, guid: fab6e0563dc8ffc4fa9dbc1f3ad29603, type: 2}
+  movementBlocker: {fileID: 4171257918591175091}
 --- !u!1 &3221076355038008428
 GameObject:
   m_ObjectHideFlags: 0

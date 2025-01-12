@@ -10,16 +10,21 @@ namespace ColorMak3r.Utility
     public static class MiscUtility
     {
         /// <summary>
-        /// Snaps the given position to a grid based on the specified size.
+        /// Snaps the given <paramref name="position"/> to the nearest grid cell using an integer grid size. 
+        /// <para/>
+        /// - If <paramref name="size"/> is even, a half-cell offset is applied (+/- 0.5) in both the X and Y directions.  
+        /// - If <paramref name="size"/> is odd and <paramref name="rigid"/> is true, the position snaps to multiples of <paramref name="size"/>.  
+        /// - Otherwise, it simply rounds each coordinate to the nearest integer.
         /// </summary>
-        /// <param name="position">The original position to be snapped.</param>
-        /// <param name="size">The grid size to snap to. Defaults to 1.</param>
+        /// <param name="position">The position in world space to snap.</param>
+        /// <param name="size">The integer grid size (defaults to 1).</param>
         /// <param name="rigid">
-        /// If true, the position will be snapped rigidly to the nearest multiple of the grid size.
-        /// If false, the position will be snapped to the nearest integer values or adjusted based on specific rules for size 2.
-        /// Defaults to false.
+        /// If <c>true</c>, the snapping is performed to multiples of <paramref name="size"/> (rigid snapping). 
+        /// If <c>false</c>, it simply rounds to the nearest integer.
         /// </param>
-        /// <returns>A new Vector2 representing the snapped position.</returns>
+        /// <returns>
+        /// The <see cref="Vector2"/> representing the snapped position.
+        /// </returns>
         public static Vector2 SnapToGrid(this Vector2 position, int size = 1, bool rigid = false)
         {
             // Special handling when grid size is 2
@@ -55,6 +60,80 @@ namespace ColorMak3r.Utility
                         Mathf.RoundToInt(position.y));
                 }
             }
+        }
+
+        /// <summary>
+        /// Snaps the given <paramref name="position"/> to a grid defined by a <see cref="Vector2"/> <paramref name="gridSize"/>, 
+        /// allowing different horizontal and vertical grid sizes. 
+        /// <para/>
+        /// - Each axis (X/Y) checks whether its grid size is even. If it is, a half-cell offset is applied (+/- 0.5) on that axis.  
+        /// - If the grid size on a particular axis is odd and <paramref name="rigid"/> is true, then that axis snaps to multiples of its grid size.  
+        /// - Otherwise, it simply rounds that axis to the nearest integer.
+        /// </summary>
+        /// <param name="position">The position in world space to snap.</param>
+        /// <param name="gridSize">The grid size in each axis as a <see cref="Vector2"/>.</param>
+        /// <param name="rigid">
+        /// If <c>true</c>, each axis snaps to multiples of its respective size from <paramref name="gridSize"/>. 
+        /// If <c>false</c>, it simply rounds on each axis.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Vector2"/> representing the snapped position.
+        /// </returns>
+        public static Vector2 SnapToGrid(this Vector2 position, Vector2 gridSize, bool rigid = false)
+        {
+            // Convert the floating-point gridSize to integer values 
+            // to determine even/odd behavior.
+            int sx = Mathf.RoundToInt(gridSize.x);
+            int sy = Mathf.RoundToInt(gridSize.y);
+
+            // We'll snap each axis independently according to the same logic:
+            // 1) If size is even, apply half-cell offset.
+            // 2) Otherwise if rigid, snap to multiples of that size.
+            // 3) Otherwise just round to the nearest integer.
+
+            // -- Snap the X axis --
+            float x;
+            if (sx % 2 == 0)
+            {
+                int snapX = Mathf.RoundToInt(position.x);
+                float offsetX = position.x < snapX ? -0.5f : 0.5f;
+                x = snapX + offsetX;
+            }
+            else
+            {
+                if (rigid)
+                {
+                    // Snap to multiples of sx
+                    x = sx * Mathf.RoundToInt(position.x / sx);
+                }
+                else
+                {
+                    // Round to int
+                    x = Mathf.RoundToInt(position.x);
+                }
+            }
+
+            // -- Snap the Y axis --
+            float y;
+            if (sy % 2 == 0)
+            {
+                int snapY = Mathf.RoundToInt(position.y);
+                float offsetY = position.y < snapY ? -0.5f : 0.5f;
+                y = snapY + offsetY;
+            }
+            else
+            {
+                if (rigid)
+                {
+                    y = sy * Mathf.RoundToInt(position.y / sy);
+                }
+                else
+                {
+                    y = Mathf.RoundToInt(position.y);
+                }
+            }
+
+            return new Vector2(x, y);
         }
 
         public static Vector2Int ToInt(this Vector2 vector)

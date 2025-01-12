@@ -15,9 +15,7 @@ public class Previewer : MonoBehaviour
     [SerializeField]
     private float speed = 20;
     [SerializeField]
-    private Vector2 borderDefaultSize = new Vector2(3, 3);
-    [SerializeField]
-    private Vector2 backgroundDefaultSize = new Vector2(1, 1);
+    private Vector2 borderDefaultSize = new Vector2(1, 1);
     [SerializeField]
     private SpriteRenderer borderRenderer;
     [SerializeField]
@@ -66,17 +64,27 @@ public class Previewer : MonoBehaviour
         iconRenderer.sprite = icon;
     }
 
-    public void SetSize(int size = 1)
+    public void SetIconOffset(Vector2 offset)
     {
-        size -= 1;
-        var scale = Vector2.one * size * 2;
-        borderRenderer.size = borderDefaultSize + scale;
-        backgroundRenderer.size = backgroundDefaultSize + scale;
+        iconRenderer.transform.localPosition = offset;
+    }
+
+    public void SetSize(Vector2 size)
+    {
+        borderRenderer.size = size + Vector2.one / 2f;
+        backgroundRenderer.size = size + Vector2.one / 4f;
     }
 
     public void SetColor(Color color)
     {
         borderRenderer.color = color;
         iconRenderer.color = color;
+    }
+
+    [ContextMenu("Reset")]
+    private void Reset()
+    {
+        transform.position = Vector2.zero;
+        SetSize(borderDefaultSize);
     }
 }

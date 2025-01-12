@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class SpawnerProperty : ItemProperty
+public class SpawnerProperty : ToolProperty
 {
     [Header("Spawner Settings")]
     [SerializeField]
     private GameObject prefabToSpawn;
     [SerializeField]
-    private Sprite iconSprite;
-    [SerializeField]
-    private int size = 1;
+    private Vector2 spawnOffset;
+
 
     public GameObject PrefabToSpawn => prefabToSpawn;
-    public Sprite IconSprite => iconSprite;
-    public int Size => size;
+    public Vector2 SpawnOffset => spawnOffset;
 }

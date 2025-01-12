@@ -16,24 +16,34 @@ MonoBehaviour:
   prefab: {fileID: 5102719620840585883, guid: b11c04e161743884cad931cdca292f60, type: 3}
   isConsummable: 0
   maxStack: 1
+  price: 1
+  range: 15
   primaryCdr: 0.25
   secondaryCdr: 0.25
-  range: 15
-  price: 1
   pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
+  selectSound: {fileID: 0}
   primarySound: {fileID: 0}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
+  size: {x: 1, y: 1}
   terrainLayer:
     serializedVersion: 2
     m_Bits: 128
-  iconSprite: {fileID: -977736870, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
-  size: 1
-  structures:
-  - {fileID: 737704494243597508, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
+  validLayers:
+    serializedVersion: 2
+    m_Bits: 0
   invalidLayers:
     serializedVersion: 2
-    m_Bits: 4026537728
+    m_Bits: 0
+  previewIconSprite: {fileID: -977736870, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
+  previewIconOffset: {x: 0, y: 0}
+  previewValidColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
+  previewInvalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}
+  structures:
+  - {fileID: 737704494243597508, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
   structureLayers:
     serializedVersion: 2
     m_Bits: 1024
+  fixIconSprite: {fileID: 1542392611, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
+  moveIconSprite: {fileID: -344225714, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
+  removeIconSprite: {fileID: -640705075, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}

@@ -14,13 +14,13 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     [SerializeField]
     private uint maxStack = 20;
     [SerializeField]
-    private float primaryCdr = 0.25f;
-    [SerializeField]
-    private float secondaryCdr = 0.25f;
+    private uint price = 1;
     [SerializeField]
     private float range = 5f;
     [SerializeField]
-    private uint price = 1;
+    private float primaryCdr = 0.25f;
+    [SerializeField]
+    private float secondaryCdr = 0.25f;
 
     [Header("Item Audio")]
     [SerializeField]
@@ -37,12 +37,13 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     public string Name => name.Replace(" Property", "");
     public Sprite Sprite => sprite;
     public GameObject Prefab => prefab;
-    public uint MaxStack => maxStack;
     public bool IsConsummable => isConsummable;
+    public uint MaxStack => maxStack;
+    public uint Price => price;
+    public float Range => range;
     public float PrimaryCdr => primaryCdr;
     public float SecondaryCdr => secondaryCdr;
-    public float Range => range;
-    public uint Price => price;
+
 
     public AudioClip PickupSound => pickupSound;
     public AudioClip SelectSound => selectSound;
@@ -50,10 +51,19 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     public AudioClip SecondarySound => secondarySound;
     public AudioClip AlternativeSound => alternativeSound;
 
+
     public bool IsStackable => maxStack > 1;
 
     public bool Equals(ItemProperty other)
     {
         return other == this;
+    }
+
+    private void OnValidate()
+    {
+        if (!IsConsummable)
+        {
+            maxStack = 1;
+        }
     }
 }

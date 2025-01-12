@@ -9,11 +9,19 @@ public class HammerProperty : ToolProperty
     [SerializeField]
     private GameObject[] structures;
     [SerializeField]
-    private LayerMask invalidLayers;
-    [SerializeField]
     private LayerMask structureLayers;
 
+    [Header("Hammer Preview Settings")]
+    [SerializeField]
+    private Sprite fixIconSprite;
+    [SerializeField]
+    private Sprite moveIconSprite;
+    [SerializeField]
+    private Sprite removeIconSprite;
+
     public GameObject[] Structures => structures;
-    public LayerMask InvalidLayers => invalidLayers;
     public LayerMask StructureLayers => structureLayers;
+    public Sprite FixIconSprite => fixIconSprite;
+    public Sprite MoveIconSprite => moveIconSprite;
+    public Sprite RemoveIconSprite => removeIconSprite;
 }

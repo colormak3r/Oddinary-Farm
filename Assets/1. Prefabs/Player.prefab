@@ -1385,6 +1385,7 @@ GameObject:
   - component: {fileID: 4905420985265829973}
   - component: {fileID: 3964909910632687159}
   - component: {fileID: 6544998554535444510}
+  - component: {fileID: 8566257446586188789}
   m_Layer: 31
   m_Name: Player
   m_TagString: Untagged
@@ -1438,7 +1439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3310549321
+  GlobalObjectIdHash: 673229221
   InScenePlacedSourceGlobalObjectIdHash: 569683485
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1633,12 +1634,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   graphicTransform: {fileID: 5883252978171502032}
-  armTransform: {fileID: 2857708942818493137}
-  armRotationTransform: {fileID: 3162647291015121518}
   muzzleTransform: {fileID: 8182768967083580640}
   spriteFacingRight: 1
-  validColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
-  invalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}
+  itemRenderer: {fileID: 1336259249078708547}
+  arm: {fileID: 93608165705019912}
+  itemRotationRenderer: {fileID: 3584390382844068880}
+  armRotation: {fileID: 2719811452612836575}
   showDebugs: 0
   showGizmos: 0
 --- !u!114 &3602106504410570466
@@ -1672,12 +1673,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryRadius: 0.25
   inventoryOffset: {x: 0, y: 0.5, z: 0}
-  itemLayer:
-    serializedVersion: 2
-    m_Bits: 64
   handProperty: {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
-  itemRenderer: {fileID: 1336259249078708547}
-  itemRotationRenderer: {fileID: 3584390382844068880}
   defaultInventory:
   - Property: {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
     Count: 1
@@ -1691,7 +1687,13 @@ MonoBehaviour:
     Count: 1
   - Property: {fileID: 11400000, guid: acf5787fae590e74ca10497b40091a27, type: 2}
     Count: 1
-  - Property: {fileID: 11400000, guid: 082775721ddde0e4eb730a842401d7a5, type: 2}
+  - Property: {fileID: 11400000, guid: 5652e2a6a33384749b44907c01239425, type: 2}
+    Count: 5
+  - Property: {fileID: 11400000, guid: d2b2a3a6be5afab4c9099f6bec976fc1, type: 2}
+    Count: 1
+  - Property: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Count: 20
+  - Property: {fileID: 11400000, guid: 10226bcfc39c1f742bf1eb7e3d2b665a, type: 2}
     Count: 1
   showDebug: 0
   showGizmos: 0
@@ -1727,8 +1729,9 @@ MonoBehaviour:
   interactionOffset: {x: 0, y: 0.75, z: 0}
   interactableLayer:
     serializedVersion: 2
-    m_Bits: 536870912
+    m_Bits: 536871936
   showGizmos: 0
+  cachedcolliders: []
 --- !u!114 &4905420985265829973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1859,6 +1862,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8566257446586188789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5447349809502746784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b39fb441b86be24384268437af00c3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5683447457852873712
 GameObject:
   m_ObjectHideFlags: 0

@@ -91,6 +91,41 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     }
 
+    #region Heal
+    public bool GetHealed(uint healAmount)
+    {
+        if (showDebugs) Debug.Log($"GetHealed: HealAmount = {healAmount}");
+        if (!IsSpawned) return false;
+        if (CurrentHealthValue < maxHealth)
+        {
+            GetHealedRpc(healAmount);
+            return true;
+        }
+        return false;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void GetHealedRpc(uint healAmount)
+    {
+        var newHealthValue = CurrentHealthValue + healAmount;
+        if (newHealthValue > maxHealth)
+        {
+            newHealthValue = maxHealth;
+        }
+
+        if (IsServer)
+        {
+            CurrentHealth.Value = newHealthValue;
+        }
+        else
+        {
+            if (healthBarUI)
+                healthBarUI.SetValue(newHealthValue, maxHealth);
+        }
+
+    }
+    #endregion
+
     #region Get Damaged
 
     public bool GetDamaged(uint damage, DamageType type, Hostility hostility, Transform attacker)
@@ -112,7 +147,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     }
 
     [Rpc(SendTo.Everyone)]
-    public void GetDamagedRpc(uint damage, DamageType type, NetworkObjectReference attackerRef)
+    private void GetDamagedRpc(uint damage, DamageType type, NetworkObjectReference attackerRef)
     {
         if (CurrentHealthValue > damage)
         {

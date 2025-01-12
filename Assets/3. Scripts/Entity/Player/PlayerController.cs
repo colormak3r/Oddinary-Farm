@@ -1,10 +1,12 @@
 using ColorMak3r.Utility;
+using System;
 using System.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI;
 
 public enum AnimationMode
@@ -24,19 +26,19 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     [SerializeField]
     private Transform graphicTransform;
     [SerializeField]
-    private Transform armTransform;
-    [SerializeField]
-    private Transform armRotationTransform;
-    [SerializeField]
     private Transform muzzleTransform;
     [SerializeField]
     private bool spriteFacingRight;
 
-    [Header("Previewer")]
+    [Header("Graphic Settings")]
     [SerializeField]
-    private Color validColor;
+    private SpriteRenderer itemRenderer;
     [SerializeField]
-    private Color invalidColor;
+    private GameObject arm;
+    [SerializeField]
+    private SpriteRenderer itemRotationRenderer;
+    [SerializeField]
+    private GameObject armRotation;
 
     [Header("Debug")]
     [SerializeField]
@@ -68,9 +70,12 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
     public static Vector2 LookPosition { get; private set; }
-    private Vector2 lookPosition_snapped_cached;
 
     public static Transform MuzzleTransform;
+
+    private bool rotateArm = false;
+
+    private Item currentItem;
 
     private void Awake()
     {
@@ -80,7 +85,43 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         animator = GetComponentInChildren<Animator>();
         networkAnimator = GetComponent<NetworkAnimator>();
         animationController = GetComponentInChildren<PlayerAnimationController>();
-        //playerInventory.OnCurrentItemPropertyChanged.AddListener(HandleCurrentItemPropertyChanged);
+    }
+
+    private void OnEnable()
+    {
+        inventory.OnCurrentItemChanged += HandleCurrentItemPropertyChanged;
+    }
+
+    private void OnDisable()
+    {
+        inventory.OnCurrentItemChanged -= HandleCurrentItemPropertyChanged;
+
+        if (isOwner)
+        {
+            Camera.main.transform.parent = null;
+            InputManager.Main.InputActions.Gameplay.SetCallbacks(null);
+        }
+    }
+
+    private void HandleCurrentItemPropertyChanged(Item item)
+    {
+        currentItem = item;
+
+        if (isOwner) Preview(lookPosition);
+
+        rotateArm = item is RangedWeapon;
+        if (rotateArm)
+        {
+            armRotation.SetActive(true);
+            arm.SetActive(false);
+            itemRotationRenderer.sprite = item.PropertyValue.Sprite;
+        }
+        else
+        {
+            armRotation.SetActive(false);
+            arm.SetActive(true);
+            itemRenderer.sprite = item.PropertyValue.Sprite;
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -123,14 +164,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         LookPosition = lookPosition;
         IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;
 
-        RotateArm();
+        if (rotateArm) RotateArm(lookPosition);
 
-        var lookPosition_snapped = lookPosition.SnapToGrid();
-        if (lookPosition_snapped != lookPosition_snapped_cached)
-        {
-            lookPosition_snapped_cached = lookPosition_snapped;
-            Preview();
-        }
+        Preview(lookPosition);
     }
 
     private void Initialize()
@@ -162,15 +198,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         isInitialized = true;
     }
 
-    private void OnDisable()
-    {
-        if (isOwner)
-        {
-            Camera.main.transform.parent = null;
-            InputManager.Main.InputActions.Gameplay.SetCallbacks(null);
-        }
-    }
-
     public void OnMove(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
@@ -189,44 +216,19 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         mousePosition = context.ReadValue<Vector2>();
     }
 
-    private bool rotateArm = false;
-
-    private void RotateArm()
+    private void RotateArm(Vector2 lookPosition)
     {
-        if (!rotateArm) return;
-
-        var direction = (lookPosition - (Vector2)armRotationTransform.position).normalized;
-        armRotationTransform.rotation = Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, 90) * direction);
-        armRotationTransform.localScale = IsFacingRight.Value ? Vector3.one : VECTOR_ONE_FLIP_XY;
+        var direction = (lookPosition - (Vector2)armRotation.transform.position).normalized;
+        armRotation.transform.rotation = Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, 90) * direction);
+        armRotation.transform.localScale = IsFacingRight.Value ? Vector3.one : VECTOR_ONE_FLIP_XY;
     }
 
-    private void Preview()
+    private void Preview(Vector2 position)
     {
-        previewer.MoveTo(lookPosition_snapped_cached);
-        /*if((position - (Vector2)transform.position).magnitude > spawnerProperty.Range) 
-    position = (Vector2)transform.position + (position - (Vector2)transform.position).normalized * spawnerProperty.Range;*/
-        var item = inventory.CurrentItemOnLocal;
-        var tool = item != null && item is Tool ? (Tool)item : null;
-        var spawner = item != null && item is Spawner ? (Spawner)item : null;
-        if (tool != null || spawner != null)
-        {
-            previewer.Show(true);
-            previewer.SetIcon(tool ? tool.ToolProperty.IconSprite : spawner.SpawnerProperty.IconSprite);
-            previewer.SetSize(tool ? tool.ToolProperty.Size : spawner.SpawnerProperty.Size);
-            if (item.CanPrimaryAction(lookPosition_snapped_cached))
-            {
-                previewer.SetColor(validColor);
-            }
-            else
-            {
-                previewer.SetColor(invalidColor);
-            }
-        }
+        if (currentItem != null)
+            currentItem.OnPreview(position, previewer);
         else
-        {
             previewer.Show(false);
-        }
-
     }
 
     public void OnDrop(InputAction.CallbackContext context)
@@ -311,7 +313,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (context.performed)
         {
-            var currentItem = inventory.CurrentItemOnLocal;
             if (currentItem != null && Time.time > nextPrimary)
             {
                 var itemProperty = currentItem.PropertyValue;
@@ -321,6 +322,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
                 {
                     networkAnimator.SetTrigger("Shoot");
                     currentItem.OnPrimaryAction(lookPosition);
+                    SyncArmRotationRpc(lookPosition);
                 }
                 else
                 {
@@ -339,11 +341,16 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
     }
 
+    [Rpc(SendTo.NotMe)]
+    private void SyncArmRotationRpc(Vector2 lookPosition)
+    {
+        RotateArm(lookPosition);
+    }
+
     public void Chop(AnimationMode mode)
     {
         if (!IsOwner) return;
 
-        var currentItem = inventory.CurrentItemOnLocal;
         var itemProperty = currentItem.PropertyValue;
         switch (mode)
         {
@@ -365,7 +372,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
                     currentItem.OnPrimaryAction(primaryPosition.Value);
                 }
 
-                Preview();
+                Preview(lookPosition);
                 break;
             case AnimationMode.Secondary:
                 currentItem.OnSecondaryAction(lookPosition);
@@ -382,7 +389,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (!isControllable) return;
         if (context.performed)
         {
-            var currentItem = inventory.CurrentItemOnLocal;
             if (currentItem != null)
             {
                 currentItem.OnSecondaryAction(lookPosition);
@@ -395,7 +401,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (!isControllable) return;
         if (context.performed)
         {
-            var currentItem = inventory.CurrentItemOnLocal;
+            if (currentItem != null)
             {
                 currentItem.OnAlternativeAction(lookPosition);
             }
@@ -440,12 +446,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         // Hotbar index change locally, stored in PlayerInventory
         inventory.ChangeHotBarIndex(value);
-
-        Preview();
-
-        rotateArm = inventory.CurrentItemOnLocal is RangedWeapon;
-        armRotationTransform.gameObject.SetActive(rotateArm);
-        armTransform.gameObject.SetActive(!rotateArm);
     }
 
     #endregion

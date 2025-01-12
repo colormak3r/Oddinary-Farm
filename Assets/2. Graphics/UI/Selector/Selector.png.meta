@@ -115,11 +115,11 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 48
-        height: 48
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 23, y: 23, z: 23, w: 23}
+      border: {x: 13, y: 13, z: 13, w: 13}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -134,13 +134,13 @@ TextureImporter:
       name: Selector_1
       rect:
         serializedVersion: 2
-        x: 48
+        x: 32
         y: 0
-        width: 48
-        height: 48
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 23, y: 23, z: 23, w: 23}
+      border: {x: 13, y: 13, z: 13, w: 13}
       outline: []
       physicsShape: []
       tessellationDetail: 0

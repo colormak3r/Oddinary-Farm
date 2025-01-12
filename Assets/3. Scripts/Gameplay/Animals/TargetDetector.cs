@@ -143,17 +143,17 @@ public class TargetDetector : NetworkBehaviour
                     {
                         var hit = Physics2D.Raycast(transform.position, candidate.position - transform.position, detectRange, targetMask);
 
-                        if (hit.transform == candidate) break;
+                        if (hit.transform == candidate) return candidate;
                         if (hit.transform != null && ValidateValidTarget(candidate, out targetStatus))
                             candidate = hit.transform;
                     }
                     else
                     {
-                        break;
+                        return candidate;
                     }
                 }
             }
-            return candidate;
+            return null;
         }
         else
         {
@@ -164,7 +164,7 @@ public class TargetDetector : NetworkBehaviour
     protected virtual bool ValidateValidTarget(Transform target, out EntityStatus targetStatus)
     {
         targetStatus = target.GetComponent<EntityStatus>();
-        return targetStatus.Hostility == targetHostility && targetStatus != null;
+        return targetStatus != null && targetStatus.Hostility == targetHostility;
     }
 
     private void HandleOnTargetDie()

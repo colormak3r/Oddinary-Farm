@@ -19,6 +19,10 @@ public class SerializationInitializer : MonoBehaviour
         UserNetworkVariableSerialization<TerrainUnitProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<TerrainUnitProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
 
+        UserNetworkVariableSerialization<StructureProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<StructureProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
+        UserNetworkVariableSerialization<StructureProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
         UserNetworkVariableSerialization<Face>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<Face>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<Face>.DuplicateValue = SerializationExtensions.DuplicateValue;

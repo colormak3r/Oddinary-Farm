@@ -25,41 +25,37 @@ public class Hoe : Tool
     public override bool CanPrimaryAction(Vector2 position)
     {
         position = position.SnapToGrid();
+
+        // Check if the action is in range
         if (!IsInRange(position))
         {
             if (showDebug) Debug.Log($"Cannot hoe primary at {position}, out of range");
             return false;
         }
-        else
+
+        // Check if there is any invalid object in the area
+        var invalid = OverlapArea(hoeProperty.Size, position, hoeProperty.InvalidLayers);
+        if (invalid)
         {
-            var halfSize = new Vector2(hoeProperty.Size / 2f, hoeProperty.Size / 2f);
+            if (showDebug) Debug.Log($"Cannot hoe at {position}, {invalid.name} is blocking", invalid);
+            return false;
+        }
 
-            var pointA = position + halfSize * 0.9f;
-            var pointB = position - halfSize * 0.9f;
-
-            var invalid = Physics2D.OverlapArea(pointA, pointB, hoeProperty.InvalidLayer);
-            if (invalid)
+        // Check if the terrain is accessible
+        var terrainHits = OverlapAreaAll(hoeProperty.Size, position, hoeProperty.TerrainLayer);
+        foreach (var terrainHit in terrainHits)
+        {
+            if (terrainHit && terrainHit.TryGetComponent<TerrainUnit>(out var terrain))
             {
-                if (showDebug) Debug.Log($"Cannot hoe at {position}, {invalid.name} is blocking", invalid);
-                return false;
-            }
-
-            var terrainHits = Physics2D.OverlapAreaAll(pointA, pointB, hoeProperty.TerrainLayer);
-            foreach (var terrainHit in terrainHits)
-            {
-                if (terrainHit && terrainHit.TryGetComponent<TerrainUnit>(out var terrain))
+                if (!terrain.Property.IsAccessible)
                 {
-                    if (!terrain.Property.IsAccessible)
-                    {
-                        if (showDebug) Debug.Log($"Cannot hoe at {position}, {terrain.name} is not accessible");
-                        return false;
-                    }
+                    if (showDebug) Debug.Log($"Cannot hoe at {position}, {terrain.name} is not accessible");
+                    return false;
                 }
             }
-
-            if (showDebug) Debug.Log($"Hoe primary success at {position}");
-            return true;
         }
+
+        return true;
     }
 
     public override void OnPrimaryAction(Vector2 position)

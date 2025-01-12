@@ -40,14 +40,9 @@ public class ItemReplica : NetworkBehaviour
     private NetworkVariable<bool> CanBePickup = new NetworkVariable<bool>(false);
     public bool CanBePickupValue => CanBePickup.Value;
 
-    private float nextPickupStop;
-
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D itemRigidbody;
-    private Collider2D itemCollider;
 
-    private float pickupRangeSqr;
-    private Vector3 dummyVelocity;
     private Coroutine spawnCoroutine;
     private Coroutine pickupCoroutine;
     private Coroutine recoveryCoroutine;
@@ -58,7 +53,6 @@ public class ItemReplica : NetworkBehaviour
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         itemRigidbody = GetComponent<Rigidbody2D>();
-        itemCollider = GetComponentInChildren<Collider2D>();
     }
 
     public override void OnNetworkSpawn()

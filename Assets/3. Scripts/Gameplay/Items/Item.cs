@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.UIElements;
+using Unity.VisualScripting;
+using UnityEngine.Rendering.Universal;
 
 public class Item : NetworkBehaviour
 {
@@ -17,16 +19,27 @@ public class Item : NetworkBehaviour
 
     private AudioSource audioSource;
 
-    protected virtual void Awake()
-    {
-        audioSource = GetComponentInParent<AudioSource>();
-        if (!audioSource) Debug.LogError("AudioSource not found in parent object");
-    }
-
     public ItemProperty PropertyValue
     {
         get { return Property.Value; }
         set { Property.Value = value; }
+    }
+
+    private void Awake()
+    {
+        StartCoroutine(InitializeCoroutine());
+    }
+
+    private IEnumerator InitializeCoroutine()
+    {
+        yield return new WaitUntil(() => transform.root != null);
+        Initialize();
+    }
+
+    protected virtual void Initialize()
+    {
+        audioSource = transform.root.GetComponent<AudioSource>();
+        if (!audioSource) Debug.LogError("AudioSource not found in parent object", this);
     }
 
     public override void OnNetworkSpawn()
@@ -45,6 +58,18 @@ public class Item : NetworkBehaviour
         property = newValue;
     }
 
+    public virtual void OnPreview(Vector2 position, Previewer previewer)
+    {
+        previewer.Show(false);
+    }
+
+    protected bool IsInRange(Vector2 position)
+    {
+        return ((Vector2)transform.position - position).magnitude < property.Range;
+    }
+
+    #region Primary Action
+
     public virtual bool CanPrimaryAction(Vector2 position)
     {
         return true;
@@ -55,6 +80,15 @@ public class Item : NetworkBehaviour
         if (property.PrimarySound) PlayPrimarySoundRpc();
     }
 
+    [Rpc(SendTo.Everyone)]
+    private void PlayPrimarySoundRpc()
+    {
+        audioSource.PlayOneShot(property.PrimarySound);
+    }
+
+    #endregion
+
+    #region Secondary Action
     public virtual bool CanSecondaryAction(Vector2 position)
     {
         return true;
@@ -65,6 +99,15 @@ public class Item : NetworkBehaviour
         if (property.SecondarySound) PlaySecondarySoundRpc();
     }
 
+    [Rpc(SendTo.Everyone)]
+    private void PlaySecondarySoundRpc()
+    {
+        audioSource.PlayOneShot(property.SecondarySound);
+    }
+
+    #endregion
+
+    #region Alternative Action
     public virtual bool CanAlternativeAction(Vector2 position)
     {
         return true;
@@ -76,28 +119,13 @@ public class Item : NetworkBehaviour
     }
 
     [Rpc(SendTo.Everyone)]
-    private void PlayPrimarySoundRpc()
-    {
-        audioSource.PlayOneShot(property.PrimarySound);
-    }
-
-    [Rpc(SendTo.Everyone)]
-    private void PlaySecondarySoundRpc()
-    {
-        audioSource.PlayOneShot(property.SecondarySound);
-    }
-
-    [Rpc(SendTo.Everyone)]
     private void PlayAlternativeSoundRpc()
     {
         audioSource.PlayOneShot(property.AlternativeSound);
     }
+    #endregion
 
-    protected bool IsInRange(Vector2 position)
-    {
-        return ((Vector2)transform.position - position).magnitude < property.Range;
-    }
-
+    #region Utility
     public void SetGizmosVisibility(bool value)
     {
         showGizmos = value;
@@ -107,11 +135,5 @@ public class Item : NetworkBehaviour
     {
         showDebug = value;
     }
-
-    private void OnDrawGizmos()
-    {
-        if (!showGizmos) return;
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, property.Range);
-    }
+    #endregion
 }

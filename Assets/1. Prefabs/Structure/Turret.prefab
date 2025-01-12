@@ -499,11 +499,12 @@ GameObject:
   - component: {fileID: 1799584523334334167}
   - component: {fileID: 7322078078454876302}
   - component: {fileID: 3500477510027685364}
-  - component: {fileID: 5591595427705575791}
   - component: {fileID: 7898758061958629585}
   - component: {fileID: 2765544993643186310}
   - component: {fileID: 8196869412201575716}
   - component: {fileID: 2252018209570721719}
+  - component: {fileID: 2892963004461302067}
+  - component: {fileID: 5370952979220722898}
   m_Layer: 10
   m_Name: Turret
   m_TagString: Untagged
@@ -553,7 +554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2351821397
+  GlobalObjectIdHash: 121584766
   InScenePlacedSourceGlobalObjectIdHash: 121584766
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -620,34 +621,8 @@ MonoBehaviour:
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
-  Interpolate: 1
+  Interpolate: 0
   SlerpPosition: 0
---- !u!114 &5591595427705575791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8837993320125130146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8ea954f2c02bc14fbbccf6c0b8b28b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hostility: 0
-  maxHealth: 5
-  iframeDuration: 0.1
-  isInvincible: 0
-  damagedEffectPrefab: {fileID: 3303192038522874649, guid: eaa16f0896e08a04684297aa24c4a3ba, type: 3}
-  deathEffectPrefab: {fileID: 2017998240076956080, guid: 903b72d91589cde4e9657311c38725ea, type: 3}
-  damagedSound: {fileID: 8300000, guid: 54b6510704152384cac1cad9aaec8da0, type: 3}
-  deathSound: {fileID: 8300000, guid: e0c07741e59101440b11ff3b27b8e408, type: 3}
-  showDebugs: 0
-  CurrentHealth:
-    m_InternalValue: 0
-  OnDeathOnServer:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &7898758061958629585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -832,8 +807,49 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
+--- !u!114 &2892963004461302067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837993320125130146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d979647c76ea91e4abe3abd25226efa0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMovable: 1
+  isRemovable: 1
+  property: {fileID: 11400000, guid: 810374ba7a9268445ae392af69c9e693, type: 2}
+--- !u!114 &5370952979220722898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837993320125130146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dc9dcf7df3ec624b91d39dbcb9b77fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hostility: 0
+  maxHealth: 5
+  iframeDuration: 0.1
+  isInvincible: 0
+  damagedEffectPrefab: {fileID: 3303192038522874649, guid: eaa16f0896e08a04684297aa24c4a3ba, type: 3}
+  deathEffectPrefab: {fileID: 2017998240076956080, guid: 903b72d91589cde4e9657311c38725ea, type: 3}
+  damagedSound: {fileID: 8300000, guid: 54b6510704152384cac1cad9aaec8da0, type: 3}
+  deathSound: {fileID: 8300000, guid: e0c07741e59101440b11ff3b27b8e408, type: 3}
+  showDebugs: 0
+  CurrentHealth:
+    m_InternalValue: 0
+  OnDeathOnServer:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &9118820903780815706
 PrefabInstance:
   m_ObjectHideFlags: 0
