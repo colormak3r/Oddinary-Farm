@@ -53,10 +53,14 @@ public class Structure : NetworkBehaviour
         {
             RemoveOnServer();
         }
-        else
-        {
-            RemoveOnClient();
-        }
+
+        StartCoroutine(RemoveCoroutine());
+    }
+
+    private IEnumerator RemoveCoroutine()
+    {
+        yield return new WaitUntil(() => !NetworkObject.IsSpawned);
+        RemoveOnClient();
     }
 
     protected virtual void RemoveOnClient()
@@ -68,6 +72,5 @@ public class Structure : NetworkBehaviour
     {
         AssetManager.Main.SpawnItem(property.StructureItemProperty, transform.position);
         NetworkObject.Despawn(false);
-        Destroy(gameObject);
     }
 }

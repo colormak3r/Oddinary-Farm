@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMovable: 1
-  isRemovable: 0
+  isRemovable: 1
   property: {fileID: 11400000, guid: acc17e463b7ae194791f9ac5b7f2782d, type: 2}
   shopInventory: {fileID: 11400000, guid: e0b20477f0821794e855dcb5dbf0aafc, type: 2}
 --- !u!1 &7479066920920115073

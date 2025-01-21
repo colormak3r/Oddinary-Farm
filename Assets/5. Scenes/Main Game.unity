@@ -2818,15 +2818,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.0007727975
+    x: 0
     y: 0
-    width: 0.9984544
-    height: 1
+    width: 1
+    height: 0.9986928
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 11.375
+  orthographic size: 11.9375
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -21990,67 +21990,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3575acaa4b419b3419c56b9f258db607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &3700812220878483061
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 940610010983976717, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: m_Name
-      value: Hot Air Balloon
-      objectReference: {fileID: 0}
-    - target: {fileID: 2611876951963763595, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2611876951963763595, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2611876951963763595, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2611876951963763595, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2611876951963763595, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2611876951963763595, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2611876951963763595, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2611876951963763595, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2611876951963763595, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2611876951963763595, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6225081745315550987, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 2278933042
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
 --- !u!1001 &3886028087406855206
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22107,6 +22046,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Vending Machine
       objectReference: {fileID: 0}
+    - target: {fileID: 8968559354677375507, guid: f9a4dcc0cd49dde40af3e06f8bc41874, type: 3}
+      propertyPath: isRemovable
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -22138,7 +22081,6 @@ SceneRoots:
   - {fileID: 353218142}
   - {fileID: 1448123952}
   - {fileID: 3886028087406855206}
-  - {fileID: 3700812220878483061}
   - {fileID: 98597106}
   - {fileID: 1479007980}
   - {fileID: 939687302}

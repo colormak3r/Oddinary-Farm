@@ -311,7 +311,6 @@ MonoBehaviour:
   isMovable: 1
   isRemovable: 1
   property: {fileID: 11400000, guid: fab6e0563dc8ffc4fa9dbc1f3ad29603, type: 2}
-  movementBlocker: {fileID: 4171257918591175091}
 --- !u!1 &3221076355038008428
 GameObject:
   m_ObjectHideFlags: 0

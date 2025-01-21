@@ -5,18 +5,17 @@ using UnityEngine;
 
 public class Fence : Structure
 {
-    [Header("Fence Settings")]
-    [SerializeField]
-    private Collider2D movementBlocker;
+    /*[Header("Fence Settings")]
+    [SerializeField]*/
 
+    private Collider2D fenceHitbox;
     private SpriteBlender spriteBlender;
 
     override protected void Awake()
     {
         base.Awake();
         spriteBlender = GetComponentInChildren<SpriteBlender>();
-        if (movementBlocker == null)
-            movementBlocker = GetComponent<Collider2D>();
+        fenceHitbox = GetComponentInChildren<Collider2D>();
     }
 
     protected override void OnNetworkPostSpawn()
@@ -27,7 +26,7 @@ public class Fence : Structure
 
     protected override void RemoveOnClient()
     {
-        movementBlocker.enabled = false;
+        fenceHitbox.enabled = false;
         spriteBlender.ReblendNeighbors();
         base.RemoveOnClient();
     }

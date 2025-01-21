@@ -92,6 +92,13 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     }
 
     #region Heal
+
+    [ContextMenu("Get Healed")]
+    private void GetHealed()
+    {
+        GetHealed(1);
+    }
+
     public bool GetHealed(uint healAmount)
     {
         if (showDebugs) Debug.Log($"GetHealed: HealAmount = {healAmount}");
@@ -101,7 +108,10 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             GetHealedRpc(healAmount);
             return true;
         }
-        return false;
+        else
+        {
+            return false;
+        }
     }
 
     [Rpc(SendTo.Everyone)]
@@ -110,23 +120,27 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         var newHealthValue = CurrentHealthValue + healAmount;
         if (newHealthValue > maxHealth)
         {
+            if (showDebugs) Debug.Log($"GetHealedRpc: NewHealthValue = {newHealthValue} > MaxHealth = {maxHealth}");
             newHealthValue = maxHealth;
         }
 
         if (IsServer)
         {
+            if (showDebugs) Debug.Log($"GetHealedRpc: NewHealthValue = {newHealthValue}");
             CurrentHealth.Value = newHealthValue;
         }
-        else
-        {
-            if (healthBarUI)
-                healthBarUI.SetValue(newHealthValue, maxHealth);
-        }
 
+        if (healthBarUI) healthBarUI.SetValue(newHealthValue, maxHealth);
     }
     #endregion
 
     #region Get Damaged
+
+    [ContextMenu("Get Damaged")]
+    private void GetDamaged()
+    {
+        GetDamaged(1, DamageType.Slash, Hostility.Neutral, null);
+    }
 
     public bool GetDamaged(uint damage, DamageType type, Hostility hostility, Transform attacker)
     {
@@ -141,7 +155,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (Time.time < nextDamagable) return false;
         nextDamagable = Time.time + iframeDuration;
 
-        GetDamagedRpc(damage, type, attacker.gameObject);
+
+        GetDamagedRpc(damage, type, attacker?.gameObject);
 
         return true;
     }
@@ -151,8 +166,9 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     {
         if (CurrentHealthValue > damage)
         {
-            if (healthBarUI)
+            if (healthBarUI && damage > 0)
                 healthBarUI.SetValue(CurrentHealthValue - damage, maxHealth);
+            
 
             // Damaged sound
             if (audioElement)

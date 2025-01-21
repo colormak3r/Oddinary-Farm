@@ -27,9 +27,10 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
     [Header("Debugs")]
     [SerializeField]
     private bool showGizmos;
-    [SerializeField]
+
     private IInteractable currentInteractable;
     private DistanceComparer distanceComparer;
+    private Vector3 interactablePosition_cached;
 
     private bool isControllable = true;
 
@@ -91,9 +92,11 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
             {
                 if (hits[i].TryGetComponent(out IInteractable closetInteractable))
                 {
-                    if (closetInteractable != currentInteractable)
+                    if (closetInteractable != currentInteractable ||
+                        (closetInteractable == currentInteractable && hits[i].transform.position != interactablePosition_cached))
                     {
                         currentInteractable = closetInteractable;
+                        interactablePosition_cached = hits[i].transform.position;
                         Selector.Main.Select(hits[i].gameObject);
                     }
                     break;
@@ -105,8 +108,9 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
             if (currentInteractable != null)
             {
                 currentInteractable = null;
-                Selector.Main.Show(false);
             }
+
+            Selector.Main.Show(false);
         }
     }
 

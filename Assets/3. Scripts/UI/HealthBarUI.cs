@@ -60,7 +60,7 @@ public class HealthBarUI : MonoBehaviour
 
     public void SetValue(float health, float maxHealth)
     {
-        if (showDebugs) Debug.Log($"{transform.root.gameObject.name} health: {health} / {maxHealth}");
+        if (showDebugs) Debug.Log($"{transform.root.gameObject.name} health: {health} / {maxHealth}", this);
 
         var ratio = health / maxHealth;
         var newSize = new Vector2(ratio * defaultSize.x, defaultSize.y);

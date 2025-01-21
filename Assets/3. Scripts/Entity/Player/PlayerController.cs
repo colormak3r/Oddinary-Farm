@@ -362,9 +362,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
                 }
                 if (itemProperty.IsConsummable)
                 {
-                    if (inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex))
+                    if (inventory.CanConsumeItemOnClient(inventory.CurrentHotbarIndex))
                     {
                         currentItem.OnPrimaryAction(primaryPosition.Value);
+                        inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex);
+                    }
+                    else
+                    {
+                        Debug.Log("Cannot consume item");
                     }
                 }
                 else

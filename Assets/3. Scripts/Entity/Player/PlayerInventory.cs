@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEditor;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class ItemStack
@@ -305,10 +306,46 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         return false;
     }*/
 
-    public bool ConsumeItemOnClient(int index, uint amount = 1)
+    public bool CanConsumeItemOnClient(int index, uint amount = 1)
     {
         if (!IsOwner) return false;
         if (index < 0 || index >= inventory.Length) return false;
+        if (amount == 0) return true;
+
+        var itemStack = inventory[index];
+        var itemProperty = itemStack.Property;
+
+        if (itemStack.Count - amount >= 0)
+        {
+            return true;
+        }
+        else
+        {
+            var amountNeeded = amount - itemStack.Count;
+            for (int i = 0; i < inventory.Length; i++)
+            {
+                if (i == index) continue;
+                if (inventory[i].Property == itemProperty)
+                {
+                    if (inventory[i].Count >= amountNeeded)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        amountNeeded -= inventory[i].Count;
+                    }
+                }
+            }
+
+            return false;
+        }
+    }
+
+    public void ConsumeItemOnClient(int index, uint amount = 1)
+    {
+        if (!IsOwner) return;
+        if (index < 0 || index >= inventory.Length) return;
 
         var itemStack = inventory[index];
         var itemProperty = itemStack.Property;
@@ -317,8 +354,6 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         {
             itemStack.Count -= amount;
             inventoryUI.UpdateSlot(index, itemStack.Property.Sprite, (int)itemStack.Count);
-
-            return true;
         }
         else
         {
@@ -333,7 +368,8 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
             // Remove the item reference on the server
             RemoveItemRefServerRpc(index);
-            return true;
+
+            // TODO: Fulfill the remaining amount by consuming from other stacks
 
             // Wrong Implementation
             /*var amountNeeded = amount - itemStack.Count;
@@ -502,34 +538,6 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             {
                 index = i;
                 return true;
-            }
-        }
-
-        return false;
-    }
-
-    private bool FindNearestStackIndex(ItemStack[] inventory, ItemProperty property, int initialIndex, out int index)
-    {
-        index = -1;
-
-        for (int offset = 0; offset < inventory.Length; offset++)
-        {
-            int indexToCheck;
-
-            // Check positive and negative offsets
-            if (offset % 2 == 0)
-                indexToCheck = initialIndex + (offset / 2);
-            else
-                indexToCheck = initialIndex - ((offset + 1) / 2);
-
-            // Ensure the index is within bounds
-            if (indexToCheck >= 0 && indexToCheck < inventory.Length)
-            {
-                if (inventory[indexToCheck].Property == property)
-                {
-                    index = indexToCheck;
-                    return true;
-                }
             }
         }
 

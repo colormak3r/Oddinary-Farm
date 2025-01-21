@@ -140,6 +140,7 @@ public class SpriteBlender : MonoBehaviour
         }
     }
 
+    [ContextMenu("ReblendNeighbors")]
     public void ReblendNeighbors()
     {
         SpriteBlender[] neigborBlenders = new SpriteBlender[9];

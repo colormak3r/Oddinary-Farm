@@ -50,7 +50,6 @@ public class StructureNetworkTransform : NetworkTransform
     protected override void OnTransformUpdated()
     {
         base.OnTransformUpdated();
-        Debug.Log("Position = " + transform.position);
         PostMove();
     }
 }
