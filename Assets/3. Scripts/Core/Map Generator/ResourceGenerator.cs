@@ -53,8 +53,8 @@ public class ResourceGenerator : PerlinNoiseGenerator
                 if (map[x, y] == maxValue)
                 {
                     resourcePositions.Add(new Vector2Int(x, y));
-                    if (WorldGenerator.Main.IsValidResourcePosition(x, y))
-                        resourceMapTexture.SetPixel(x, y, Color.red);
+                    /*if (WorldGenerator.Main.IsValidResourcePosition(x, y))
+                        resourceMapTexture.SetPixel(x, y, Color.red);*/
                 }
             }
         }
@@ -69,7 +69,7 @@ public class ResourceGenerator : PerlinNoiseGenerator
 
     public IEnumerator GenerateResourceCoroutine(Vector2 position)
     {
-        yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
+        /*yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
 
         position = position.SnapToGrid();
         for (int x = -renderDistance; x < renderDistance; x++)
@@ -83,7 +83,7 @@ public class ResourceGenerator : PerlinNoiseGenerator
                     res.GetComponent<NetworkObject>().Spawn();
                 }
             }
-        }
+        }*/
 
         yield return null;
     }

@@ -77,6 +77,6 @@ public class Shovel : Tool
         AssetManager.Main.SpawnItem(blockProperty, position);
 
         // Destroy the terrain unit
-        worldGenerator.RemoveBlock(position);
+        //worldGenerator.RemoveBlock(position);
     }
 }

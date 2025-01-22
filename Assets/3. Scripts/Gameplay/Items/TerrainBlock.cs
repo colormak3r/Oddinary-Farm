@@ -58,6 +58,6 @@ public class TerrainBlock : Item
     private void TerrainBlockPrimaryRpc(Vector2 position)
     {
         position = position.SnapToGrid();
-        worldGenerator.PlaceBlock(position, terrainBlockProperty.UnitProperty);
+        //worldGenerator.PlaceBlock(position, terrainBlockProperty.UnitProperty);
     }
 }

@@ -1,4 +1,196 @@
-using ColorMak3r.Utility;
+using System;
+using System.Collections;
+using Unity.Netcode;
+using UnityEngine;
+
+public class WorldGenerator : MonoBehaviour
+{
+    public static WorldGenerator Main;
+
+    private void Awake()
+    {
+        if (Main == null)
+            Main = this;
+        else
+            Destroy(Main.gameObject);
+    }
+
+    [Header("Map Settings")]
+    [SerializeField]
+    private Vector2Int mapSize = new Vector2Int(500, 500);
+
+    [Header("Terrain Settings")]
+    [SerializeField]
+    private TerrainUnitProperty[] terrainUnitProperties;
+    [SerializeField]
+    private TerrainUnitProperty voidUnitProperty;
+    [SerializeField]
+    private GameObject terrainUnitPrefab;
+
+    [Header("Elevation Map Settings")]
+    [SerializeField]
+    private Vector2 elevationOrigin = new Vector2(1264, 234);
+    [SerializeField]
+    private Vector2Int elevationDimension;
+    [SerializeField]
+    private float elevationScale = 1.0f;
+    [SerializeField]
+    private int elevationOctaves = 3;
+    [SerializeField]
+    private float elevationPersistence = 0.5f;
+    [SerializeField]
+    private float elevationFrequencyBase = 2f;
+    [SerializeField]
+    private float elevationExp = 1f;
+
+    private TerrainUnitProperty[,] terrainMap;
+    private Sprite terrainMapSprite;
+
+    private void Start()
+    {
+        GenerateWord();
+        StartCoroutine(BuildWorld());
+    }
+
+    #region World Generation
+    public void GenerateWord()
+    {
+        GenerateTerrain();
+    }
+
+    private void GenerateTerrain()
+    {
+        var terrainMapTexture = new Texture2D(mapSize.x, mapSize.y);
+        var halfMapSize = mapSize / 2;
+        terrainMap = new TerrainUnitProperty[mapSize.x, mapSize.y];
+
+        for (int i = 0; i < mapSize.x; i++)
+        {
+            for (int j = 0; j < mapSize.y; j++)
+            {
+                terrainMap[i, j] = GetDefaultProperty(i, j);
+                terrainMapTexture.SetPixel(i, j, terrainMap[i, j].MapColor);
+            }
+        }
+
+        terrainMapTexture.Apply();
+        terrainMapSprite = Sprite.Create(terrainMapTexture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
+        terrainMapSprite.texture.filterMode = FilterMode.Point;
+        MapUI.Main.UpdateElevationMap(terrainMapSprite);
+    }
+
+    private TerrainUnitProperty GetDefaultProperty(float x, float y)
+    {
+        TerrainUnitProperty candidate = null;
+        var noise = GetNoise(x, y, elevationOrigin, elevationDimension,
+                    elevationScale, elevationOctaves, elevationPersistence, elevationFrequencyBase, elevationExp);
+
+        // Apply island shaping to the noise
+        var nx = 2 * x / mapSize.x - 1;
+        var ny = 2 * y / mapSize.y - 1;
+        var d = 1 - (1 - nx * nx) * (1 - ny * ny);
+        //var d = Mathf.Min(1, (nx * nx + ny * ny) / Mathf.Sqrt(2));
+        noise = Mathf.Clamp01(Mathf.Lerp(noise, 1 - d, 0.5f));
+
+        foreach (var property in terrainUnitProperties)
+        {
+            if (property.Match(noise)) candidate = property;
+        }
+
+        if (candidate == null)
+        {
+            candidate = terrainUnitProperties[0];
+            Debug.LogError($"Cannot match property at {x}, {y}, noise = {noise}");
+        }
+
+        return candidate;
+    }
+
+    public static float GetNoise(float x, float y, Vector2 origin, Vector2 dimension,
+        float scale, int octaves, float persistence, float frequencyBase, float exp)
+    {
+        float xCoord = origin.x + x / dimension.x * scale;
+        float yCoord = origin.y + y / dimension.y * scale;
+
+        var total = 0f;
+        var frequency = 1f;
+        var amplitude = 1f;
+        var maxValue = 0f;
+        for (int i = 0; i < octaves; i++)
+        {
+            total += Mathf.PerlinNoise(xCoord * frequency, yCoord * frequency) * amplitude;
+
+            maxValue += amplitude;
+            amplitude *= persistence;
+            frequency *= frequencyBase;
+        }
+
+        return Mathf.Pow(total / maxValue, exp);
+    }
+
+    #endregion
+
+    #region World Building
+
+    public IEnumerator BuildWorld()
+    {
+        yield return BuildTerrain();
+    }
+
+    private IEnumerator BuildTerrain()
+    {
+        var halfMapSize = mapSize / 2;
+
+        for (int i = 0; i < mapSize.x; i++)
+        {
+            for (int j = 0; j < mapSize.y; j++)
+            {
+                SpawnTerrainUnit(new Vector2(i - halfMapSize.x, j - halfMapSize.y), terrainMap[i, j]);
+                yield return null;
+            }
+        }
+    }
+
+    private void SpawnTerrainUnit(Vector2 position, TerrainUnitProperty property)
+    {
+        var terrainObj = LocalObjectPooling.Main.Spawn(terrainUnitPrefab);
+        terrainObj.transform.position = position;
+        terrainObj.transform.parent = transform;
+        terrainObj.GetComponent<TerrainUnit>().Initialize(property);
+    }
+
+    #endregion
+
+    #region Utility
+    public TerrainUnitProperty GetMappedProperty(int x, int y)
+    {
+        //Debug.Log($"GetMappedProperty {x}, {y}");
+        var halfMapSize = mapSize / 2;
+        var i = x + halfMapSize.x;
+        var j = y + halfMapSize.y;
+        if (i >= mapSize.x || i < 0 || j >= mapSize.y || j < 0)
+        {
+            return voidUnitProperty;
+        }
+        else
+        {
+            try
+            {
+                return terrainMap[i, j];
+            }
+            catch (Exception e)
+            {
+                Debug.Log($"GetMappedProperty i = {i}, j = {j}");
+                throw e;
+            }
+        }
+    }
+
+    #endregion
+}
+
+
+/*using ColorMak3r.Utility;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -516,3 +708,4 @@ public class WorldGenerator : NetworkBehaviour
         }
     }
 }
+*/

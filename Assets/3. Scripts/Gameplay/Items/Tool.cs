@@ -47,10 +47,10 @@ public class Tool : Item
         if (collider && collider.TryGetComponent<TerrainUnit>(out var terrainUnit))
         {
             terrainUnit.BreakFolliage();
-            if (IsServer)
+            /*if (IsServer)
             {
                 WorldGenerator.Main.InvalidateFolliagePositionOnServer(position);
-            }
+            }*/
         }
     }
 

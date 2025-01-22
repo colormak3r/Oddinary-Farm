@@ -118,7 +118,6 @@ public class PlayerStatus : EntityStatus
             transform.position = respawnPos;
             Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
 
-            yield return new WaitUntil(() => !WorldGenerator.Main.IsGenerating);
             yield return TransitionUI.Main.HideCoroutine();
         }
 

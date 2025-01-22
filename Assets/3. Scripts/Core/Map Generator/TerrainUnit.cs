@@ -63,7 +63,7 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
         worldGenerator = WorldGenerator.Main;
     }
 
-    public void Initialize(TerrainUnitProperty property, bool canSpawnFolliage)
+    public void Initialize(TerrainUnitProperty property, bool canSpawnFolliage = false)
     {
         initCount++;
         this.property = property;

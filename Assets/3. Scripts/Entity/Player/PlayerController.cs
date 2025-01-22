@@ -157,7 +157,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (playerPosition_cached != (Vector2)transform.position)
         {
             playerPosition_cached = transform.position;
-            StartCoroutine(WorldGenerator.Main.GenerateTerrainCoroutine(transform.position));
+            //StartCoroutine(WorldGenerator.Main.GenerateTerrainCoroutine(transform.position));
         }
 
         lookPosition = Camera.main.ScreenToWorldPoint(mousePosition);

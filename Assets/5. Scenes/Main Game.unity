@@ -509,7 +509,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2801,7 +2801,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.15686275, g: 0.8000001, b: 0.8745099, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -9411,7 +9411,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11183,7 +11183,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12918,7 +12918,6 @@ GameObject:
   - component: {fileID: 1454340018}
   - component: {fileID: 1454340020}
   - component: {fileID: 1454340019}
-  - component: {fileID: 1454340021}
   m_Layer: 0
   m_Name: World Generator
   m_TagString: Untagged
@@ -12953,32 +12952,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bc33e54fc04ad3479ec2086cbd4f520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapSize: {x: 100, y: 100}
   terrainUnitProperties:
   - {fileID: 11400000, guid: cdfb8f13db1fb6341aff37d65cae2cc5, type: 2}
   - {fileID: 11400000, guid: 2e0f68b5b9a38e44784d98fa11d1a5f6, type: 2}
   - {fileID: 11400000, guid: 541faeadd70e4e84cbcbcb16c76e1d39, type: 2}
   - {fileID: 11400000, guid: 9d7075498e4b06141b5398d65b8edc73, type: 2}
   - {fileID: 11400000, guid: d911fce547ec5df4c8967959a22cdaac, type: 2}
-  terrainUnitPrefab: {fileID: 1734130187429010102, guid: 5bf6f8e869ce4e5459f9ed6887636bc8, type: 3}
-  chunkSize: 7
-  renderDistance: 5
-  renderXOffset: 0
-  mapSize: {x: 500, y: 500}
   voidUnitProperty: {fileID: 11400000, guid: cdfb8f13db1fb6341aff37d65cae2cc5, type: 2}
-  starterShaping: 0.5
-  starterArea: {x: 50, y: 50}
-  starterBound: {x: 80, y: 80}
+  terrainUnitPrefab: {fileID: 1734130187429010102, guid: 5bf6f8e869ce4e5459f9ed6887636bc8, type: 3}
   elevationOrigin: {x: 1264, y: 234}
-  elevationDimension: {x: 100, y: 100}
+  elevationDimension: {x: 50, y: 50}
   elevationScale: 1
   elevationOctaves: 3
   elevationPersistence: 0.5
   elevationFrequencyBase: 2
   elevationExp: 1
-  showDebug: 0
-  showGizmos: 0
-  isInitialized: 0
-  isGenerating: 0
 --- !u!114 &1454340020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13000,30 +12989,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &1454340021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1454340017}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aadf8b1037a3d4748b4fbcb8f22cedf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  origin: {x: 1264, y: 234}
-  dimension: {x: 100, y: 100}
-  scale: 1
-  octaves: 3
-  persistence: 0.5
-  frequencyBase: 50
-  exponent: 1
-  resourcePrefabs:
-  - {fileID: 2916747403788541215, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
-  - {fileID: 3608391356101770169, guid: 1c172b2fbd08cb44ba7c65cfa8c9b425, type: 3}
-  renderDistance: 20
-  rarity: 3
 --- !u!224 &1456023660 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7503531136921162209, guid: c2efbeadd6fa73c48a39beac227ece46, type: 3}
@@ -13200,6 +13165,10 @@ PrefabInstance:
     - target: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_Name
       value: Spider Variant (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -20344,7 +20313,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1884378376
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22082,9 +22051,9 @@ SceneRoots:
   - {fileID: 1448123952}
   - {fileID: 3886028087406855206}
   - {fileID: 98597106}
-  - {fileID: 1479007980}
   - {fileID: 939687302}
   - {fileID: 1173478713}
   - {fileID: 27553356}
   - {fileID: 789520121}
+  - {fileID: 1479007980}
   - {fileID: 2044314483}
