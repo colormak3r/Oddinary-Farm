@@ -18,6 +18,8 @@ public class WorldGenerator : MonoBehaviour
     [Header("Map Settings")]
     [SerializeField]
     private Vector2Int mapSize = new Vector2Int(500, 500);
+    [SerializeField]
+    private int tilePerFrame = 100;
 
     [Header("Terrain Settings")]
     [SerializeField]
@@ -46,19 +48,26 @@ public class WorldGenerator : MonoBehaviour
     private TerrainUnitProperty[,] terrainMap;
     private Sprite terrainMapSprite;
 
-    private void Start()
+    [Header("Debugs")]
+    [SerializeField]
+    private bool isInitialized = false;
+    public bool IsInitialized => isInitialized;
+
+    public IEnumerator Initialize()
     {
-        GenerateWord();
-        StartCoroutine(BuildWorld());
+        yield return GenerateWord();
+        yield return BuildWorld();
+        isInitialized = true;
     }
+
 
     #region World Generation
-    public void GenerateWord()
+    private IEnumerator GenerateWord()
     {
-        GenerateTerrain();
+        yield return GenerateTerrain();
     }
 
-    private void GenerateTerrain()
+    private IEnumerator GenerateTerrain()
     {
         var terrainMapTexture = new Texture2D(mapSize.x, mapSize.y);
         var halfMapSize = mapSize / 2;
@@ -77,6 +86,8 @@ public class WorldGenerator : MonoBehaviour
         terrainMapSprite = Sprite.Create(terrainMapTexture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
         terrainMapSprite.texture.filterMode = FilterMode.Point;
         MapUI.Main.UpdateElevationMap(terrainMapSprite);
+
+        yield return null;
     }
 
     private TerrainUnitProperty GetDefaultProperty(float x, float y)
@@ -132,7 +143,7 @@ public class WorldGenerator : MonoBehaviour
 
     #region World Building
 
-    public IEnumerator BuildWorld()
+    private IEnumerator BuildWorld()
     {
         yield return BuildTerrain();
     }
@@ -141,12 +152,18 @@ public class WorldGenerator : MonoBehaviour
     {
         var halfMapSize = mapSize / 2;
 
+        var count = 0;
         for (int i = 0; i < mapSize.x; i++)
         {
             for (int j = 0; j < mapSize.y; j++)
             {
                 SpawnTerrainUnit(new Vector2(i - halfMapSize.x, j - halfMapSize.y), terrainMap[i, j]);
-                yield return null;
+                count++;
+                if (count > tilePerFrame)
+                {
+                    count = 0;
+                    yield return null;
+                }
             }
         }
     }

@@ -15,9 +15,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Look",
+                    "name": "Look Position",
                     "type": "Value",
                     "id": "5926107b-2afb-49e4-bb75-500bb5fff0aa",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Look Direction",
+                    "type": "Value",
+                    "id": "c4db6458-0396-4fd8-8281-7ec3904e9879",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -27,7 +36,7 @@
                     "name": "Drop",
                     "type": "Button",
                     "id": "097946b0-a1d8-49ab-802d-83da59df9b3a",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -36,7 +45,7 @@
                     "name": "Primary",
                     "type": "Button",
                     "id": "8ab65a53-01f1-4d5f-ba0a-e88a6f6cf498",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -45,7 +54,7 @@
                     "name": "Secondary",
                     "type": "Button",
                     "id": "b156b0e4-f550-44cd-9262-ed1922076a78",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -76,6 +85,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Hotbar Up",
+                    "type": "Button",
+                    "id": "67511a4c-f991-472e-824c-b6cd5bdc56ca",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Hotbar Down",
+                    "type": "Button",
+                    "id": "261c58c5-6ad5-4b4c-b62d-50a969c572c6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Interact",
@@ -190,12 +217,23 @@
                 },
                 {
                     "name": "",
+                    "id": "46c89c64-5eba-4793-9d7c-48267950063f",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "70fef873-ea7c-4108-b1cc-0e8db4bc634f",
                     "path": "<Pointer>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Look",
+                    "action": "Look Position",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -203,6 +241,17 @@
                     "name": "",
                     "id": "d381ea8d-9405-4309-b297-184c2e039973",
                     "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Drop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "858cc591-25e9-4cfa-b385-73c5f377ca5d",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -223,8 +272,30 @@
                 },
                 {
                     "name": "",
+                    "id": "4457235e-e0df-4608-8f57-597b9a489a7f",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Primary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "f0b4d857-a0db-4bfc-8a9b-9dac74eda2f8",
                     "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Secondary",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7da2e2fa-8e98-4ffe-b245-a8584f076952",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -377,6 +448,17 @@
                 },
                 {
                     "name": "",
+                    "id": "9a2a797c-9f17-435a-bf08-27139c0ccede",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "fa2f405a-18f4-48da-aabb-e4dcb9b25ee0",
                     "path": "<Keyboard>/m",
                     "interactions": "",
@@ -388,8 +470,30 @@
                 },
                 {
                     "name": "",
+                    "id": "9f7acfe2-c051-49a9-98c5-060e06ecac8f",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Map",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "b4b9c4f6-efe7-4200-8d7c-e80edad6acd4",
                     "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c8b7f4d0-4898-4043-98e4-508d01650567",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -421,8 +525,30 @@
                 },
                 {
                     "name": "",
+                    "id": "d6e1bc20-55a1-4486-a62f-285f43112b7e",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "eef7fab7-a851-44a7-9376-1207d2a4e17f",
                     "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Hand",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e7560b1-fb26-454c-9ea1-425fde35e706",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -438,6 +564,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Open Console",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f42c7849-b185-4959-a6bc-b03fedcacf9a",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Hotbar Up",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8280442a-6757-403b-8d4e-7f0ea3f324ed",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Look Direction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "810574bd-4ec3-4a72-b996-8dbdd37163c1",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Hotbar Down",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

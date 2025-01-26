@@ -6,6 +6,7 @@ using Unity.Netcode.Components;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI;
 
@@ -207,13 +208,22 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         animator.SetBool("IsMoving", direction != Vector2.zero);
     }
 
-    public void OnLook(InputAction.CallbackContext context)
+    public void OnLookPosition(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
 
         if (Camera.main == null) return;
 
         mousePosition = context.ReadValue<Vector2>();
+    }
+
+    public void OnLookDirection(InputAction.CallbackContext context)
+    {
+        if (!isControllable) return;
+
+        if (Camera.main == null) return;
+
+        CursorUI.Main.MoveCursor(context.ReadValue<Vector2>().normalized);
     }
 
     private void RotateArm(Vector2 lookPosition)
@@ -435,6 +445,28 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (context.performed)
         {
             var value = inventory.CurrentHotbarIndex - (int)Mathf.Sign(context.ReadValue<float>());
+            ChangeHotbarIndex(value);
+        }
+    }
+
+    public void OnHotbarUp(InputAction.CallbackContext context)
+    {
+        if (!isControllable) return;
+
+        if (context.performed)
+        {
+            var value = inventory.CurrentHotbarIndex + 1;
+            ChangeHotbarIndex(value);
+        }
+    }
+
+    public void OnHotbarDown(InputAction.CallbackContext context)
+    {
+        if (!isControllable) return;
+
+        if (context.performed)
+        {
+            var value = inventory.CurrentHotbarIndex - 1;
             ChangeHotbarIndex(value);
         }
     }
