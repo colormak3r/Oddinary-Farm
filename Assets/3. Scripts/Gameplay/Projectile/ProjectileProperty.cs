@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Animations;
+using UnityEngine.Animations;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Projectile Property", menuName = "Scriptable Objects/Projectile Property")]
@@ -10,7 +8,7 @@ public class ProjectileProperty : ScriptableObject
     [SerializeField]
     private Sprite sprite;
     [SerializeField]
-    private AnimatorController animatorController;
+    private Animator animator;
     [SerializeField]
     private float speed;
     [SerializeField]
@@ -23,7 +21,7 @@ public class ProjectileProperty : ScriptableObject
     private Hostility hostility;
 
     public Sprite Sprite => sprite;
-    public AnimatorController AnimatorController => animatorController;
+    public Animator Animator => animator;
     public float Speed => speed;
     public uint Damage => damage;
     public float LifeTime => lifeTime;

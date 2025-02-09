@@ -13,7 +13,7 @@ public class AnimalManager : NetworkBehaviour
     [SerializeField]
     private int spawnHour = 20;
     [SerializeField]
-    private int wave = 5;
+    private int waveTotal = 3;
     [SerializeField]
     private int spawnPerWaveBase = 5;
     [SerializeField]
@@ -50,7 +50,7 @@ public class AnimalManager : NetworkBehaviour
 
     private void OnHourChanged(int hour)
     {
-        if (hour == spawnHour && TimeManager.Main.CurrentDay > 2)
+        if (hour == spawnHour && TimeManager.Main.CurrentDay % 5 == 0)
         {
             if (canSpawn)
                 StartCoroutine(SpawnMonsterWaves());
@@ -63,13 +63,15 @@ public class AnimalManager : NetworkBehaviour
     private IEnumerator SpawnMonsterWaves()
     {
         currentWave = 0;
-        while (currentWave < wave)
+        while (currentWave < waveTotal)
         {
             hourchanged = false;
             yield return SpawnMonsterCoroutine();
             currentWave++;
             yield return new WaitUntil(() => hourchanged);
         }
+
+        waveTotal += 2;
     }
 
     private IEnumerator SpawnMonsterCoroutine()

@@ -9,15 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9055da22a0bc5e04298de329421a3de7, type: 3}
-  m_Name: Pro Watering Can Property
+  m_Script: {fileID: 11500000, guid: fa3f02b719936f94eb03088a62ba5f4e, type: 3}
+  m_Name: Weapon Shop Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: 1662408151, guid: 0cefbb5fdff3c5740b36113fa3e01276, type: 3}
-  prefab: {fileID: 6818938842726724790, guid: b9a70defc8f9c0d419779d5a09fd64be, type: 3}
-  isConsummable: 0
+  sprite: {fileID: 61433538, guid: 8ceadfd081e64d647a843992361bc3c5, type: 3}
+  prefab: {fileID: 949117059081605438, guid: 43faad68a0f5c3f46864295e4caf8f6c, type: 3}
+  isConsummable: 1
   maxStack: 1
-  price: 5000
-  range: 9
+  price: 500
+  range: 10
   primaryCdr: 0.25
   secondaryCdr: 0.25
   pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
@@ -25,7 +25,7 @@ MonoBehaviour:
   primarySound: {fileID: 0}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
-  size: {x: 5, y: 5}
+  size: {x: 3, y: 4}
   terrainLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -34,12 +34,10 @@ MonoBehaviour:
     m_Bits: 0
   invalidLayers:
     serializedVersion: 2
-    m_Bits: 0
-  previewIconSprite: {fileID: 1522628911, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
-  previewIconOffset: {x: 0, y: 0}
+    m_Bits: 2415927040
+  previewIconSprite: {fileID: 21300000, guid: 0506dd7984a03694cb7c5b8e0b4ec8fa, type: 3}
+  previewIconOffset: {x: 0, y: -1.5}
   previewValidColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
   previewInvalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}
-  maxCharge: 3
-  waterableLayer:
-    serializedVersion: 2
-    m_Bits: 768
+  prefabToSpawn: {fileID: 4294250761585886378, guid: 34aa875e58329a94790c23056ec568c8, type: 3}
+  spawnOffset: {x: 0, y: -1.5}

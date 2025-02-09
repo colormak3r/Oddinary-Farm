@@ -19,12 +19,12 @@ public class Projectile : MonoBehaviour
     private bool isAuthoritative;
 
     private SpriteRenderer spriteRenderer;
-    private Animator animator;
+    //private Animator animator;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
     }
 
     [ContextMenu("Mock Initialize")]
@@ -40,7 +40,7 @@ public class Projectile : MonoBehaviour
         this.isAuthoritative = isAuthoritative;
 
         spriteRenderer.sprite = property.Sprite;
-        animator.runtimeAnimatorController = property.AnimatorController;
+        //animator.runtimeAnimatorController = property.Animator.runtimeAnimatorController;
 
         despawnCoroutine = StartCoroutine(DespawnCoroutine());
         isInitialized = true;

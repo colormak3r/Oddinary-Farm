@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa3f02b719936f94eb03088a62ba5f4e, type: 3}
-  m_Name: Vending Machine Property
+  m_Name: General Shop Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: 1662408151, guid: 0cefbb5fdff3c5740b36113fa3e01276, type: 3}
+  sprite: {fileID: -1298137488, guid: 8ceadfd081e64d647a843992361bc3c5, type: 3}
   prefab: {fileID: 949117059081605438, guid: 43faad68a0f5c3f46864295e4caf8f6c, type: 3}
   isConsummable: 1
   maxStack: 1
-  price: 100
+  price: 50
   range: 10
   primaryCdr: 0.25
   secondaryCdr: 0.25
