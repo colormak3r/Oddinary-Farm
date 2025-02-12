@@ -16,4 +16,9 @@ public class UIController : MonoBehaviour, DefaultInputActions.IUIActions
             ConsoleUI.Main.OpenConsole();
         }
     }
+
+    public void OnBack(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        // TODO: Implement concrete method of UI back action
+    }
 }

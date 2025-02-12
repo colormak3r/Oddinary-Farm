@@ -27,7 +27,9 @@ public class TimeManager : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField]
-    private float timeScale = 96;
+    private float realMinutesPerInGameDay = 12f;
+
+
     [SerializeField]
     private float dayStartTime = 6;
     public bool IsDay => hour_cached >= dayStartTime && hour_cached < nightStartTime;
@@ -57,6 +59,7 @@ public class TimeManager : NetworkBehaviour
     private int day_cached = -1;
     private int hour_cached = -1;
     private int minute_cached = -1;
+    private float timeScale => MINUTES_A_DAY / realMinutesPerInGameDay;
 
     private NetworkManager networkManager;
 
@@ -132,7 +135,7 @@ public class TimeManager : NetworkBehaviour
                 OnDayStart?.Invoke();
             }
 
-            OnHourChanged?.Invoke(hour_cached);            
+            OnHourChanged?.Invoke(hour_cached);
         }
     }
 }

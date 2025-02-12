@@ -25,11 +25,8 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField]
     private bool isAnimating;
     public bool IsAnimating => isAnimating;
-    [SerializeField]
     private CanvasRenderer[] allRenderers;
-    [SerializeField]
     private CanvasRenderer[] dsffoRenderers;
-    [SerializeField]
     private CanvasRenderer[] ignoreRenderers;
 
     [HideInInspector]

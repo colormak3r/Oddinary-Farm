@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Table:
   - item: {fileID: 11400000, guid: 9dfd615188d3a5d4ca3bd3e8986fbe39, type: 2}
-    probability: 1
+    probability: 0.1
     minMaxCount:
       min: 1
       max: 2
   - item: {fileID: 11400000, guid: 76d2c63355af9a245b265f0bf2a6667c, type: 2}
     probability: 1
     minMaxCount:
-      min: 5
-      max: 10
+      min: 10
+      max: 15

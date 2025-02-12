@@ -636,6 +636,15 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Back"",
+                    ""type"": ""Button"",
+                    ""id"": ""8fb1ad92-b73e-4ddb-ac87-27b5db42b651"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -647,6 +656,17 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Open Console"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""db8f6d56-36c4-4ca1-90fa-3974582faa40"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Back"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -765,6 +785,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_OpenConsole = m_UI.FindAction("Open Console", throwIfNotFound: true);
+        m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
         // Console
         m_Console = asset.FindActionMap("Console", throwIfNotFound: true);
         m_Console_CloseConsole = m_Console.FindAction("Close Console", throwIfNotFound: true);
@@ -1014,11 +1035,13 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_OpenConsole;
+    private readonly InputAction m_UI_Back;
     public struct UIActions
     {
         private @DefaultInputActions m_Wrapper;
         public UIActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @OpenConsole => m_Wrapper.m_UI_OpenConsole;
+        public InputAction @Back => m_Wrapper.m_UI_Back;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1031,6 +1054,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @OpenConsole.started += instance.OnOpenConsole;
             @OpenConsole.performed += instance.OnOpenConsole;
             @OpenConsole.canceled += instance.OnOpenConsole;
+            @Back.started += instance.OnBack;
+            @Back.performed += instance.OnBack;
+            @Back.canceled += instance.OnBack;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -1038,6 +1064,9 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @OpenConsole.started -= instance.OnOpenConsole;
             @OpenConsole.performed -= instance.OnOpenConsole;
             @OpenConsole.canceled -= instance.OnOpenConsole;
+            @Back.started -= instance.OnBack;
+            @Back.performed -= instance.OnBack;
+            @Back.canceled -= instance.OnBack;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -1148,6 +1177,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnOpenConsole(InputAction.CallbackContext context);
+        void OnBack(InputAction.CallbackContext context);
     }
     public interface IConsoleActions
     {

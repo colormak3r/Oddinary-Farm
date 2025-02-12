@@ -13,8 +13,38 @@ MonoBehaviour:
   m_Name: Resource LootTable
   m_EditorClassIdentifier: 
   Table:
+  - item: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
+    probability: 0.01
+    minMaxCount:
+      min: 1
+      max: 1
+  - item: {fileID: 11400000, guid: 9dfd615188d3a5d4ca3bd3e8986fbe39, type: 2}
+    probability: 0.005
+    minMaxCount:
+      min: 1
+      max: 1
+  - item: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+    probability: 0.002
+    minMaxCount:
+      min: 1
+      max: 1
+  - item: {fileID: 11400000, guid: 4730fab78f887a545a3e7218b4a76356, type: 2}
+    probability: 0.001
+    minMaxCount:
+      min: 1
+      max: 1
   - item: {fileID: 11400000, guid: 4861b0c465e13f24585f6b10f6cfe85d, type: 2}
     probability: 1
     minMaxCount:
       min: 3
       max: 5
+  - item: {fileID: 11400000, guid: 76d2c63355af9a245b265f0bf2a6667c, type: 2}
+    probability: 0.03
+    minMaxCount:
+      min: 1
+      max: 2
+  - item: {fileID: 11400000, guid: 8dd2be67a005b44409834c3b76ffa615, type: 2}
+    probability: 0.01
+    minMaxCount:
+      min: 1
+      max: 2

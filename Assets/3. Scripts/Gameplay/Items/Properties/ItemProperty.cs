@@ -13,8 +13,12 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     private bool isConsummable;
     [SerializeField]
     private uint maxStack = 20;
+    [Space]
+    [SerializeField]
+    private bool isSellable = true;
     [SerializeField]
     private uint price = 1;
+    [Space]
     [SerializeField]
     private float range = 5f;
     [SerializeField]
@@ -39,6 +43,7 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     public GameObject Prefab => prefab;
     public bool IsConsummable => isConsummable;
     public uint MaxStack => maxStack;
+    public bool IsSellable => isSellable;
     public uint Price => price;
     public float Range => range;
     public float PrimaryCdr => primaryCdr;

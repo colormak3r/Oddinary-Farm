@@ -22,37 +22,37 @@ public class PerlinNoiseGenerator : MapGenerator
     [SerializeField]
     private float exponent = 1f;
 
-    protected Vector2Int mapSize;
-    protected int halfMapSizeX;
-    protected int halfMapSizeY;
-
-    public override void GenerateMap(Vector2Int mapSize)
+    public IEnumerator Initialize(Vector2Int mapSize)
     {
-        this.mapSize = mapSize;
-        halfMapSizeX = mapSize.x / 2;
-        halfMapSizeY = mapSize.y / 2;
+        yield return GenerateMap(mapSize);
+        yield return BuildMap(mapSize);
+    }
 
+    protected override IEnumerator GenerateMap(Vector2Int mapSize)
+    {
+        var halfMapSize = mapSize / 2;
         map = new float[mapSize.x, mapSize.y];
         for (int i = 0; i < mapSize.x; i++)
         {
             for (int j = 0; j < mapSize.y; j++)
             {
-                map[i, j] = GetNoise(i - halfMapSizeX, j - halfMapSizeY, origin, dimension, scale, octaves, persistence, frequencyBase, exponent);
+                map[i, j] = GetNoise(i - halfMapSize.x, j - halfMapSize.y, origin, dimension, scale, octaves, persistence, frequencyBase, exponent);
             }
         }
 
-        OnMapGenerated();
+        yield return null;
     }
 
-    protected virtual void OnMapGenerated()
+    protected virtual IEnumerator BuildMap(Vector2Int mapSize)
     {
-
+        yield return null;
     }
 
-    public float GetValueNormalized(int x, int y)
+    public float GetValueNormalized(int x, int y, Vector2Int mapSize)
     {
-        var i = x + halfMapSizeX;
-        var j = y + halfMapSizeY;
+        var halfMapSize = mapSize / 2;
+        var i = x + halfMapSize.x;
+        var j = y + halfMapSize.y;
 
         return map[i, j];
     }

@@ -182,6 +182,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         Camera.main.transform.parent = transform;
         Camera.main.transform.localPosition = Camera.main.transform.position;
 
+        CharacterCamera.Main.transform.parent = transform;
+        CharacterCamera.Main.transform.localPosition = CharacterCamera.Main.transform.position;
+
         yield return new WaitUntil(() => GameManager.Main.IsInitialized);
 
         // Set control
@@ -277,7 +280,19 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (context.performed)
         {
-            if (ShopUI.Main.IsShowing) ShopUI.Main.CloseShop();
+            if (ShopUI.Main.IsShowing)
+                ShopUI.Main.CloseShop();
+            if (OptionsUI.Main.IsShowing)
+            {
+                // TODO: Use UI Map instead
+                OptionsUI.Main.Hide();
+            }
+            else
+            {
+                InventoryUI.Main.CloseInventory();
+                OptionsUI.Main.Show();
+            }
+
         }
     }
 
@@ -317,11 +332,32 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private Vector2? primaryPosition;
     private Vector2? secondaryPosition;
 
+    private Coroutine primaryCoroutine;
+    private bool isPrimaryCoroutineRunning;
+    private bool firstCallIgnored;
     public void OnPrimary(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
 
         if (context.performed)
+        {
+            isPrimaryCoroutineRunning = true;
+            firstCallIgnored = false;
+            primaryCoroutine = StartCoroutine(PrimaryActionCoroutine());
+        }
+        else if (context.canceled)
+        {
+            if (primaryCoroutine != null)
+            {
+                isPrimaryCoroutineRunning = false;
+                StopCoroutine(primaryCoroutine);
+            }
+        }
+    }
+
+    private IEnumerator PrimaryActionCoroutine()
+    {
+        while (true)
         {
             if (currentItem != null && Time.time > nextPrimary)
             {
@@ -348,6 +384,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
                     }
                 }
             }
+            yield return new WaitUntil(() => Time.time > nextPrimary);
+            firstCallIgnored = true;
         }
     }
 
@@ -360,6 +398,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     public void Chop(AnimationMode mode)
     {
         if (!IsOwner) return;
+
+        if (!isPrimaryCoroutineRunning && firstCallIgnored) return;
 
         var itemProperty = currentItem.PropertyValue;
         switch (mode)
@@ -473,7 +513,15 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private void ChangeHotbarIndex(int value)
     {
+        // Play sound effect
         AudioManager.Main.PlaySoundEffect(SoundEffect.UIHover);
+
+        // Stop primary action coroutine
+        if (primaryCoroutine != null)
+        {
+            isPrimaryCoroutineRunning = false;
+            StopCoroutine(primaryCoroutine);
+        }
 
         // Clamp and loop the hotbar item keys from 0-9
         if (value > 9)

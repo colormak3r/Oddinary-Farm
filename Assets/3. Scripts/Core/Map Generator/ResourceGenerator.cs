@@ -9,32 +9,22 @@ public class ResourceGenerator : PerlinNoiseGenerator
     [Header("Resource Settings")]
     [SerializeField]
     private GameObject[] resourcePrefabs;
+    //[SerializeField]
+    //private int rarity = 4;
     [SerializeField]
-    private int renderDistance = 20;
-    [SerializeField]
-    private int rarity = 4;
+    private float chance = 0.05f;
 
     private HashSet<Vector2Int> resourcePositions = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> ResourcePositions => resourcePositions;
 
-    public override void OnNetworkSpawn()
+    protected override IEnumerator BuildMap(Vector2Int mapSize)
     {
-        if (IsHost)
-        {
-            StartCoroutine(GenerateResourceCoroutine(Vector2.zero));
-        }
-    }
-
-    protected override void OnMapGenerated()
-    {
-        var resourceMapTexture = new Texture2D(mapSize.x, mapSize.y);
-
+        var halfMapSize = mapSize / 2;
         for (int x = 0; x < mapSize.x; x++)
         {
             for (int y = 0; y < mapSize.y; y++)
             {
-                resourceMapTexture.SetPixel(x, y, Color.clear);
-                float maxValue = 0;
+                /*float maxValue = 0;
                 // there are more efficient algorithms than this
                 for (int xx = -rarity; xx <= rarity; xx++)
                 {
@@ -50,41 +40,27 @@ public class ResourceGenerator : PerlinNoiseGenerator
                         }
                     }
                 }
-                if (map[x, y] == maxValue)
+
+                if (map[x, y] == maxValue)*/
+                if (Random.value < chance)
                 {
                     resourcePositions.Add(new Vector2Int(x, y));
-                    /*if (WorldGenerator.Main.IsValidResourcePosition(x, y))
-                        resourceMapTexture.SetPixel(x, y, Color.red);*/
+                    if (WorldGenerator.Main.IsValidResourcePosition(x, y))
+                    {
+                        var i = x - halfMapSize.x;
+                        var j = y - halfMapSize.y;
+                        //Debug.Log($"Resource at {x}, {y}, {i}, {j}");
+                        SpawnResource(i, j);
+                        yield return null;
+                    }
                 }
             }
         }
-
-
-        resourceMapTexture.Apply();
-        var resourceMapSprite = Sprite.Create(resourceMapTexture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
-        resourceMapSprite.texture.filterMode = FilterMode.Point;
-
-        MapUI.Main.UpdateResourceMap(resourceMapSprite);
     }
 
-    public IEnumerator GenerateResourceCoroutine(Vector2 position)
+    private void SpawnResource(int i, int j)
     {
-        /*yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
-
-        position = position.SnapToGrid();
-        for (int x = -renderDistance; x < renderDistance; x++)
-        {
-            for (int y = -renderDistance; y < renderDistance; y++)
-            {
-                var pos = new Vector2Int(x + halfMapSizeX, y + halfMapSizeY);
-                if (resourcePositions.Contains(pos) && WorldGenerator.Main.IsValidResourcePosition(x, y))
-                {
-                    var res = Instantiate(resourcePrefabs.GetRandomElement(), new Vector3(x, y - 0.5f, 0), Quaternion.identity);
-                    res.GetComponent<NetworkObject>().Spawn();
-                }
-            }
-        }*/
-
-        yield return null;
+        var res = Instantiate(resourcePrefabs.GetRandomElement(), new Vector3(i, j - 0.5f, 0), Quaternion.identity);
+        res.GetComponent<NetworkObject>().Spawn();
     }
 }

@@ -9,5 +9,5 @@ public abstract class MapGenerator : NetworkBehaviour
 
     public float[,] Map { get => map; }
 
-    public abstract void GenerateMap(Vector2Int mapSize);
+    protected abstract IEnumerator GenerateMap(Vector2Int mapSize);
 }

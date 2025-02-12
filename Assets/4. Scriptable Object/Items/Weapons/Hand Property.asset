@@ -16,11 +16,13 @@ MonoBehaviour:
   prefab: {fileID: 278873172899980473, guid: 6c458cf87ac56e34f932ddc4d95aa583, type: 3}
   isConsummable: 0
   maxStack: 1
+  isSellable: 0
+  price: 1
+  range: 5
   primaryCdr: 0.25
   secondaryCdr: 0.25
-  range: 5
-  price: 1
   pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
+  selectSound: {fileID: 0}
   primarySound: {fileID: 0}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}

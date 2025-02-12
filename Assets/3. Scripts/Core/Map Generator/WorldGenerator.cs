@@ -3,7 +3,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class WorldGenerator : MonoBehaviour
+public class WorldGenerator : NetworkBehaviour
 {
     public static WorldGenerator Main;
 
@@ -13,6 +13,8 @@ public class WorldGenerator : MonoBehaviour
             Main = this;
         else
             Destroy(Main.gameObject);
+
+        resourceGenerator = GetComponent<ResourceGenerator>();
     }
 
     [Header("Map Settings")]
@@ -20,6 +22,8 @@ public class WorldGenerator : MonoBehaviour
     private Vector2Int mapSize = new Vector2Int(500, 500);
     [SerializeField]
     private int tilePerFrame = 100;
+    [SerializeField]
+    private int mapPadding = 10;
 
     [Header("Terrain Settings")]
     [SerializeField]
@@ -48,6 +52,8 @@ public class WorldGenerator : MonoBehaviour
     private TerrainUnitProperty[,] terrainMap;
     private Sprite terrainMapSprite;
 
+    private ResourceGenerator resourceGenerator;
+
     [Header("Debugs")]
     [SerializeField]
     private bool isInitialized = false;
@@ -57,6 +63,11 @@ public class WorldGenerator : MonoBehaviour
     {
         yield return GenerateWord();
         yield return BuildWorld();
+        if (IsHost)
+        {
+            yield return resourceGenerator.Initialize(mapSize);
+        }
+
         isInitialized = true;
     }
 
@@ -166,6 +177,29 @@ public class WorldGenerator : MonoBehaviour
                 }
             }
         }
+
+        // Spawn the padding tiles around the main map.
+        // Loop through the full range, which is the main map plus padding on every side.
+        for (int i = -mapPadding; i < mapSize.x + mapPadding; i++)
+        {
+            for (int j = -mapPadding; j < mapSize.y + mapPadding; j++)
+            {
+                // Skip positions that are inside the main map,
+                // since those tiles have already been spawned.
+                if (i >= 0 && i < mapSize.x && j >= 0 && j < mapSize.y)
+                    continue;
+
+                // Calculate the position with the same center offset.
+                Vector2 pos = new Vector2(i - halfMapSize.x, j - halfMapSize.y);
+                SpawnTerrainUnit(pos, voidUnitProperty);
+                count++;
+                if (count >= tilePerFrame)
+                {
+                    count = 0;
+                    yield return null;
+                }
+            }
+        }
     }
 
     private void SpawnTerrainUnit(Vector2 position, TerrainUnitProperty property)
@@ -201,6 +235,11 @@ public class WorldGenerator : MonoBehaviour
                 throw e;
             }
         }
+    }
+
+    public bool IsValidResourcePosition(int x, int y)
+    {
+        return terrainMap[x, y].Elevation.min == 0.55f; // Elevation of grass
     }
 
     #endregion

@@ -87,7 +87,7 @@ public class ShopUI : UIBehaviour
         var index = 0;
         foreach (var entry in playerInventory.Inventory)
         {
-            if (!entry.IsStackEmpty)
+            if (!entry.IsStackEmpty && entry.Property.IsSellable)
             {
                 var shopButton = Instantiate(shopButtonPrefab, contentContainer);
                 shopButton.GetComponent<ShopButton>().SetShopEntry(entry.Property, this, shopMode, shopInventory.PenaltyMultiplier, index, entry.Count);
