@@ -14,7 +14,7 @@ public class StructureStatus : EntityStatus
 
     protected override IEnumerator DeathOnClientCoroutine()
     {
-        spriteBlender.ReblendNeighbors();
+        if (spriteBlender) spriteBlender.ReblendNeighbors();
         yield return base.DeathOnClientCoroutine();
     }
 }

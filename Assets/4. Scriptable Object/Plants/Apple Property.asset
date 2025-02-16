@@ -12,21 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63517db498b643c42b0decdd941ba821, type: 3}
   m_Name: Apple Property
   m_EditorClassIdentifier: 
+  seedProperty: {fileID: 0}
   stages:
   - sprite: {fileID: -1708265602, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
-    duration: 5
+    duration: 2
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: 1188134214, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
-    duration: 5
+    duration: 2
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: -380925659, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
-    duration: 5
+    duration: 2
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: 1012679333, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
-    duration: 5
+    duration: 2
     isHarvestStage: 1
-    stageIncrement: 0
+    stageIncrement: -1
   lootTable: {fileID: 11400000, guid: bcad375afb6b130468b2b693736053e4, type: 2}

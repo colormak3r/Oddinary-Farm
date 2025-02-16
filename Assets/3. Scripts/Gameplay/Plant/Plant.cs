@@ -21,6 +21,7 @@ public class Plant : NetworkBehaviour, IWaterable
 
     private SpriteRenderer spriteRenderer;
     private LootGenerator lootGenerator;
+    private EntityStatus entityStatus;
     private FarmPlot farmPlot;
 
     public bool IsHarvestable => Property.Value.Stages[CurrentStage.Value].isHarvestStage;
@@ -30,6 +31,7 @@ public class Plant : NetworkBehaviour, IWaterable
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         lootGenerator = GetComponentInChildren<LootGenerator>();
+        entityStatus = GetComponent<EntityStatus>();
     }
 
     public override void OnNetworkSpawn()
@@ -111,14 +113,17 @@ public class Plant : NetworkBehaviour, IWaterable
         {
             StartCoroutine(GrowthCoroutine());
         }
+
+        entityStatus.GetHealed(1);
     }
 
     private IEnumerator GrowthCoroutine()
     {
         var stage = Property.Value.Stages[CurrentStage.Value];
-        yield return new WaitForSeconds(stage.duration);
+        yield return new WaitForSeconds(stage.duration * TimeManager.Main.HourDuration);
 
-        CurrentStage.Value++;
+        if (CurrentStage.Value < Property.Value.Stages.Length - 1)
+            CurrentStage.Value += stage.stageIncrement;
 
         isWatered.Value = false;
 
@@ -135,7 +140,7 @@ public class Plant : NetworkBehaviour, IWaterable
 
     public void GetHarvested(Transform harvester)
     {
-         GetHarvestedRpc(harvester.gameObject);
+        GetHarvestedRpc(harvester.gameObject);
     }
 
     [Rpc(SendTo.Server)]
@@ -143,10 +148,16 @@ public class Plant : NetworkBehaviour, IWaterable
     {
         if (!IsHarvestable) return;
 
-        if (IsServer) farmPlot.GetDriedOnServer();
-
         lootGenerator.DropLootOnServer(harvester);
 
-        NetworkObject.Despawn();
+        var stage = Property.Value.Stages[CurrentStage.Value];
+        CurrentStage.Value += stage.stageIncrement;
+
+        farmPlot.GetDriedOnServer();
+        isWatered.Value = false;
+        if (WeatherManager.Main.IsRainning)
+        {
+            GetWateredRpc();
+        }
     }
 }

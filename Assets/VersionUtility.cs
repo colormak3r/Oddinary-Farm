@@ -6,6 +6,6 @@ public static class VersionUtility
 {
     public static int MAJOR_VERSION = 0;
     public static int MINOR_VERSION = 3;
-    public static int BUILD_VERSION = 3;
+    public static int BUILD_VERSION = 5;
     public static string VERSION => MAJOR_VERSION + "." + MINOR_VERSION + "." + BUILD_VERSION;
 }

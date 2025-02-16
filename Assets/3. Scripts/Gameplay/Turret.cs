@@ -55,6 +55,18 @@ public class Turret : NetworkBehaviour
             if (Time.time > nextFire)
             {
                 nextFire = Time.time + projectileGunProperty.PrimaryCdr;
+                if (projectileGun == null)
+                {
+                    Debug.LogError("ProjectileGun is null", this);
+                }
+                if (targetDetector == null)
+                {
+                    Debug.LogError("TargetDetector is null", this);
+                }
+                if (targetDetector.CurrentTarget == null)
+                {
+                    Debug.LogError("Target is null", this);
+                }
                 projectileGun.OnPrimaryAction(targetDetector.CurrentTarget.position);
             }
         }

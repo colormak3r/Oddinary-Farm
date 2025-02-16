@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63517db498b643c42b0decdd941ba821, type: 3}
   m_Name: Cabbage Property
   m_EditorClassIdentifier: 
+  seedProperty: {fileID: 0}
   stages:
   - sprite: {fileID: 1155793255, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
     duration: 1
@@ -28,5 +29,5 @@ MonoBehaviour:
   - sprite: {fileID: -435341045, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
     duration: 1
     isHarvestStage: 1
-    stageIncrement: 0
+    stageIncrement: -1
   lootTable: {fileID: 11400000, guid: 9713338d69df681458c236f6e3a827f9, type: 2}

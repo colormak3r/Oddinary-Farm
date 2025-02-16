@@ -16,7 +16,8 @@ MonoBehaviour:
   prefab: {fileID: 6818938842726724790, guid: b9a70defc8f9c0d419779d5a09fd64be, type: 3}
   isConsummable: 0
   maxStack: 1
-  price: 1
+  isSellable: 1
+  price: 5
   range: 10
   primaryCdr: 0.25
   secondaryCdr: 0.25

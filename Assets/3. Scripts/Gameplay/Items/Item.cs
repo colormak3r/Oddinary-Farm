@@ -83,6 +83,20 @@ public class Item : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     private void PlayPrimarySoundRpc()
     {
+        if (!IsSpawned || audioSource == null) return;
+
+        if (audioSource == null)
+        {
+            Debug.LogError("AudioSource is null", this);
+        }
+        if (property == null)
+        {
+            Debug.LogError("Property is null", this);
+        }
+        if (property.PrimarySound == null)
+        {
+            Debug.LogError("PrimarySound is null", this);
+        }
         audioSource.PlayOneShot(property.PrimarySound);
     }
 

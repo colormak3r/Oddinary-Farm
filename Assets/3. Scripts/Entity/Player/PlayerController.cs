@@ -281,18 +281,22 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (context.performed)
         {
             if (ShopUI.Main.IsShowing)
-                ShopUI.Main.CloseShop();
-            if (OptionsUI.Main.IsShowing)
             {
-                // TODO: Use UI Map instead
-                OptionsUI.Main.Hide();
+                ShopUI.Main.CloseShop();
             }
             else
             {
-                InventoryUI.Main.CloseInventory();
-                OptionsUI.Main.Show();
+                if (OptionsUI.Main.IsShowing)
+                {
+                    // TODO: Use UI Map instead
+                    OptionsUI.Main.Hide();
+                }
+                else
+                {
+                    InventoryUI.Main.CloseInventory();
+                    OptionsUI.Main.Show();
+                }
             }
-
         }
     }
 
@@ -347,11 +351,16 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
         else if (context.canceled)
         {
-            if (primaryCoroutine != null)
-            {
-                isPrimaryCoroutineRunning = false;
-                StopCoroutine(primaryCoroutine);
-            }
+            OnPrimaryCancelled();
+        }
+    }
+
+    private void OnPrimaryCancelled()
+    {
+        if (primaryCoroutine != null)
+        {
+            isPrimaryCoroutineRunning = false;
+            StopCoroutine(primaryCoroutine);
         }
     }
 
@@ -543,6 +552,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         {
             movement.SetDirection(Vector2.zero);
             animator.SetBool("IsMoving", false);
+            OnPrimaryCancelled();
         }
     }
 

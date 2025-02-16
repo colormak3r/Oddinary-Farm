@@ -12,29 +12,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63517db498b643c42b0decdd941ba821, type: 3}
   m_Name: Corn Property
   m_EditorClassIdentifier: 
+  seedProperty: {fileID: 0}
   stages:
   - sprite: {fileID: 957528551, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
-    duration: 3
+    duration: 1
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: 94427730, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
-    duration: 3
+    duration: 1
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: -397994332, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
-    duration: 3
+    duration: 1
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: 1202802903, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
-    duration: 3
+    duration: 1
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: 2017731977, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
-    duration: 3
+    duration: 1
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: -1100818058, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
-    duration: 3
+    duration: 1
     isHarvestStage: 1
-    stageIncrement: 0
+    stageIncrement: -1
   lootTable: {fileID: 11400000, guid: d2126c561ac7c0e4b8e8af0947367830, type: 2}

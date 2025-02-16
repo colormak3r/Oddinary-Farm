@@ -12,21 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63517db498b643c42b0decdd941ba821, type: 3}
   m_Name: Carrot Property
   m_EditorClassIdentifier: 
+  seedProperty: {fileID: 0}
   stages:
   - sprite: {fileID: -1045316009, guid: 7cd5c6b0e7452cb488e9871dbb777ab3, type: 3}
-    duration: 2
+    duration: 1
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: -2014821492, guid: 7cd5c6b0e7452cb488e9871dbb777ab3, type: 3}
-    duration: 2
+    duration: 1
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: -1656897597, guid: 7cd5c6b0e7452cb488e9871dbb777ab3, type: 3}
-    duration: 2
+    duration: 1
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: 538056519, guid: 7cd5c6b0e7452cb488e9871dbb777ab3, type: 3}
-    duration: 2
+    duration: 1
     isHarvestStage: 1
-    stageIncrement: 0
+    stageIncrement: -1
   lootTable: {fileID: 11400000, guid: 45c8f01df45ec1141b3121328c99594f, type: 2}

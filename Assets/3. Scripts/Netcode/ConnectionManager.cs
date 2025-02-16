@@ -32,7 +32,7 @@ public class ConnectionManager : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField]
-    private int maxPlayer = 8;
+    private int maxPlayer = 16;
     [SerializeField]
     private bool useFacepunchTransport = false;
 

@@ -46,6 +46,9 @@ public class RangedWeapon : Item
 
     private void SpawnProjectile(Vector3 lookPosition, Transform owner, bool isAuthoritative)
     {
+        // Todo: Create isInitialized bool and check it here instead
+        if (!muzzleTransform) return;
+
         for (int i = 0; i < rangedWeaponProperty.ProjectileCount; i++)
         {
             var spread = rangedWeaponProperty.ProjectileSpread;
