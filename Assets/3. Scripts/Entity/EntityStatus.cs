@@ -261,7 +261,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
 
         // Disable all physics
-        if (rbody) rbody.velocity = Vector2.zero;
+        if (rbody) rbody.linearVelocity = Vector2.zero;
         foreach (var collider in colliders) collider.enabled = false;
 
         effectCoroutine = StartCoroutine(transform.PopCoroutine(1, 0, 0.25f));

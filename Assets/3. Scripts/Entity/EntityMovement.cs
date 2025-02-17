@@ -36,16 +36,16 @@ public class EntityMovement : NetworkBehaviour
     {
         if (movementDirection != Vector2.zero)
         {
-            var targetDirection = Vector2.Lerp(movementDirection, rbody.velocity.normalized, smoothTime * Time.deltaTime);
+            var targetDirection = Vector2.Lerp(movementDirection, rbody.linearVelocity.normalized, smoothTime * Time.deltaTime);
             rbody.AddForce(targetDirection * moveSpeed * Time.deltaTime);
         }
 
-        velocity = rbody.velocity.magnitude;
+        velocity = rbody.linearVelocity.magnitude;
 
         // Clamp the velocity to the maximum speed
-        if (rbody.velocity.magnitude > maxSpeed)
+        if (rbody.linearVelocity.magnitude > maxSpeed)
         {
-            rbody.velocity = rbody.velocity.normalized * maxSpeed;
+            rbody.linearVelocity = rbody.linearVelocity.normalized * maxSpeed;
         }
     }
 

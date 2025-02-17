@@ -80,7 +80,7 @@ public class PlayerStatus : EntityStatus
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
 
         // Disable all physics
-        rbody.velocity = Vector2.zero;
+        rbody.linearVelocity = Vector2.zero;
         foreach (var collider in colliders) collider.enabled = false;
 
         if (IsOwner)

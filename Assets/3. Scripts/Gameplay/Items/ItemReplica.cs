@@ -198,7 +198,7 @@ public class ItemReplica : NetworkBehaviour
             pickerPos = picker.position + targetOffset;
 
             var direction = (pickerPos - transform.position).normalized;
-            itemRigidbody.velocity = direction * pickupSpeed;
+            itemRigidbody.linearVelocity = direction * pickupSpeed;
 
             sqrDistance = (transform.position - pickerPos).sqrMagnitude;
             yield return new WaitForFixedUpdate();
