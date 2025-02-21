@@ -5,9 +5,9 @@ using UnityEngine;
 
 public abstract class MapGenerator : NetworkBehaviour
 {
-    protected float[,] map;
+    protected Offset2DArray<float> rawMap;
 
-    public float[,] Map { get => map; }
+    public Offset2DArray<float> RawMap { get => rawMap; }
 
     protected abstract IEnumerator GenerateMap(Vector2Int mapSize);
 }

@@ -49,6 +49,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private bool isControllable = true;
     private Vector2 lookPosition;
+    [SerializeField]
     private Vector2 playerPosition_cached = Vector2.one;
     private Vector2 mousePosition;
 
@@ -158,7 +159,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (playerPosition_cached != (Vector2)transform.position)
         {
             playerPosition_cached = transform.position;
-            //StartCoroutine(WorldGenerator.Main.GenerateTerrainCoroutine(transform.position));
+            StartCoroutine(WorldGenerator.Main.BuildWorld(transform.position));
         }
 
         lookPosition = Camera.main.ScreenToWorldPoint(mousePosition);

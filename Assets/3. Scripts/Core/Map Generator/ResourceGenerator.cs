@@ -20,9 +20,9 @@ public class ResourceGenerator : PerlinNoiseGenerator
     protected override IEnumerator BuildMap(Vector2Int mapSize)
     {
         var halfMapSize = mapSize / 2;
-        for (int x = 0; x < mapSize.x; x++)
+        for (int x = -halfMapSize.x; x < halfMapSize.y; x++)
         {
-            for (int y = 0; y < mapSize.y; y++)
+            for (int y = -halfMapSize.y; y < halfMapSize.y; y++)
             {
                 /*float maxValue = 0;
                 // there are more efficient algorithms than this
@@ -47,10 +47,7 @@ public class ResourceGenerator : PerlinNoiseGenerator
                     resourcePositions.Add(new Vector2Int(x, y));
                     if (WorldGenerator.Main.IsValidResourcePosition(x, y))
                     {
-                        var i = x - halfMapSize.x;
-                        var j = y - halfMapSize.y;
-                        //Debug.Log($"Resource at {x}, {y}, {i}, {j}");
-                        SpawnResource(i, j);
+                        SpawnResource(x, y);
                         yield return null;
                     }
                 }
@@ -58,9 +55,11 @@ public class ResourceGenerator : PerlinNoiseGenerator
         }
     }
 
-    private void SpawnResource(int i, int j)
+    private void SpawnResource(int x, int y)
     {
-        var res = Instantiate(resourcePrefabs.GetRandomElement(), new Vector3(i, j - 0.5f, 0), Quaternion.identity);
-        res.GetComponent<NetworkObject>().Spawn();
+        var res = Instantiate(resourcePrefabs.GetRandomElement(), new Vector3(x, y - 0.5f, 0), Quaternion.identity, transform);
+        var resNetObject = res.GetComponent<NetworkObject>();
+        resNetObject.TrySetParent(transform);
+        resNetObject.Spawn();
     }
 }

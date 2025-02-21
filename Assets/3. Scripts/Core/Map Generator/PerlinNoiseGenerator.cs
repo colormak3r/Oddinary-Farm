@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.TerrainUtils;
 
 
 public class PerlinNoiseGenerator : MapGenerator
@@ -22,6 +24,8 @@ public class PerlinNoiseGenerator : MapGenerator
     [SerializeField]
     private float exponent = 1f;
 
+    Vector2Int halfMapSize;
+
     public IEnumerator Initialize(Vector2Int mapSize)
     {
         yield return GenerateMap(mapSize);
@@ -30,31 +34,29 @@ public class PerlinNoiseGenerator : MapGenerator
 
     protected override IEnumerator GenerateMap(Vector2Int mapSize)
     {
-        var halfMapSize = mapSize / 2;
-        map = new float[mapSize.x, mapSize.y];
-        for (int i = 0; i < mapSize.x; i++)
+        halfMapSize = mapSize / 2;
+
+        // Generate the map
+        rawMap = new Offset2DArray<float>(-halfMapSize.x, halfMapSize.x, -halfMapSize.y, halfMapSize.y);
+        for (int x = -halfMapSize.x; x < halfMapSize.x; x++)
         {
-            for (int j = 0; j < mapSize.y; j++)
+            for (int y = -halfMapSize.y; y < halfMapSize.y; y++)
             {
-                map[i, j] = GetNoise(i - halfMapSize.x, j - halfMapSize.y, origin, dimension, scale, octaves, persistence, frequencyBase, exponent);
+                rawMap[x, y] = GetNoise(x + halfMapSize.x, y + halfMapSize.y, origin, dimension, scale, octaves, persistence, frequencyBase, exponent);
             }
         }
 
+        yield return GenerateMapExtension(mapSize);
+    }
+
+    protected virtual IEnumerator GenerateMapExtension(Vector2Int mapSize)
+    {
         yield return null;
     }
 
     protected virtual IEnumerator BuildMap(Vector2Int mapSize)
     {
         yield return null;
-    }
-
-    public float GetValueNormalized(int x, int y, Vector2Int mapSize)
-    {
-        var halfMapSize = mapSize / 2;
-        var i = x + halfMapSize.x;
-        var j = y + halfMapSize.y;
-
-        return map[i, j];
     }
 
     private float GetNoise(float x, float y, Vector2 origin, Vector2 dimension,

@@ -44,7 +44,6 @@ public class GameManager : NetworkBehaviour
         if (isInitializing || isInitialized) yield break;
         isInitializing = true;
 
-        //yield return WorldGenerator.Main.BuildWorld();
         yield return WorldGenerator.Main.Initialize();
         yield return TransitionUI.Main.HideCoroutine();
 
