@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf23b0482ae4948458ceeabf8a9bc406, type: 3}
+  m_Name: Sir Loin Outfit
+  m_EditorClassIdentifier: 
+  displaySprite: {fileID: -360890293253881395, guid: bed010a862d500342bdd321a3506a514, type: 3}
+  torsoSprite: {fileID: -360890293253881395, guid: bed010a862d500342bdd321a3506a514, type: 3}
+  leftArmSprite: {fileID: -848534642327962279, guid: bed010a862d500342bdd321a3506a514, type: 3}
+  rightArmSprite: {fileID: -773566775435429008, guid: bed010a862d500342bdd321a3506a514, type: 3}
+  leftLegSprite: {fileID: -7821210870028070345, guid: bed010a862d500342bdd321a3506a514, type: 3}
+  rightLegSprite: {fileID: -3378283817468157762, guid: bed010a862d500342bdd321a3506a514, type: 3}

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf23b0482ae4948458ceeabf8a9bc406, type: 3}
+  m_Name: Inmate Outfit
+  m_EditorClassIdentifier: 
+  displaySprite: {fileID: -8861344537651896149, guid: cc931597fa039364eb6117735d079732, type: 3}
+  torsoSprite: {fileID: -8861344537651896149, guid: cc931597fa039364eb6117735d079732, type: 3}
+  leftArmSprite: {fileID: 2332764183712458670, guid: cc931597fa039364eb6117735d079732, type: 3}
+  rightArmSprite: {fileID: -5541999701908161873, guid: cc931597fa039364eb6117735d079732, type: 3}
+  leftLegSprite: {fileID: 4234443512416235006, guid: cc931597fa039364eb6117735d079732, type: 3}
+  rightLegSprite: {fileID: 7415040868160028158, guid: cc931597fa039364eb6117735d079732, type: 3}
