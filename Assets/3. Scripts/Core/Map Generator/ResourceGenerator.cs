@@ -17,14 +17,14 @@ public class ResourceGenerator : PerlinNoiseGenerator
     private HashSet<Vector2Int> resourcePositions = new HashSet<Vector2Int>();
     public HashSet<Vector2Int> ResourcePositions => resourcePositions;
 
-    protected override IEnumerator BuildMap(Vector2Int mapSize)
+    /*protected override IEnumerator BuildMap(Vector2Int mapSize)
     {
         var halfMapSize = mapSize / 2;
         for (int x = -halfMapSize.x; x < halfMapSize.y; x++)
         {
             for (int y = -halfMapSize.y; y < halfMapSize.y; y++)
             {
-                /*float maxValue = 0;
+                *//*float maxValue = 0;
                 // there are more efficient algorithms than this
                 for (int xx = -rarity; xx <= rarity; xx++)
                 {
@@ -41,7 +41,7 @@ public class ResourceGenerator : PerlinNoiseGenerator
                     }
                 }
 
-                if (map[x, y] == maxValue)*/
+                if (map[x, y] == maxValue)*//*
                 if (Random.value < chance)
                 {
                     resourcePositions.Add(new Vector2Int(x, y));
@@ -54,7 +54,7 @@ public class ResourceGenerator : PerlinNoiseGenerator
             }
         }
     }
-
+*/
     private void SpawnResource(int x, int y)
     {
         var res = Instantiate(resourcePrefabs.GetRandomElement(), new Vector3(x, y - 0.5f, 0), Quaternion.identity, transform);

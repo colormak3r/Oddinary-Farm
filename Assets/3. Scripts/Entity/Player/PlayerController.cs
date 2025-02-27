@@ -321,7 +321,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
     }
 
-
     public void OnOpenConsole(InputAction.CallbackContext context)
     {
         if (context.performed)

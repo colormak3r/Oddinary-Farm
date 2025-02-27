@@ -112,8 +112,30 @@ public class WeatherManager : NetworkBehaviour
 
     private float GetWeatherData(float value)
     {
-        return (float)System.Math.Round(WorldGenerator.GetNoise(0, value,
+        return (float)System.Math.Round(GetNoise(0, value,
                 origin, dimension, scale, octaves, persistence, frequency, exp), 2);
+    }
+
+    private static float GetNoise(float x, float y, Vector2 origin, Vector2 dimension,
+       float scale, int octaves, float persistence, float frequencyBase, float exp)
+    {
+        float xCoord = origin.x + x / dimension.x * scale;
+        float yCoord = origin.y + y / dimension.y * scale;
+
+        var total = 0f;
+        var frequency = 1f;
+        var amplitude = 1f;
+        var maxValue = 0f;
+        for (int i = 0; i < octaves; i++)
+        {
+            total += Mathf.PerlinNoise(xCoord * frequency, yCoord * frequency) * amplitude;
+
+            maxValue += amplitude;
+            amplitude *= persistence;
+            frequency *= frequencyBase;
+        }
+
+        return Mathf.Pow(total / maxValue, exp);
     }
 
     public float GetWeatherForcast(int hourAhead)

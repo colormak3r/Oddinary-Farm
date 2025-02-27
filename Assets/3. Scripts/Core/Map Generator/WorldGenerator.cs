@@ -16,8 +16,8 @@ public class Chunk
     public bool isBuilding;
     public bool isRemoving;
 
-    public GameObject[,] terrainUnits;
-    public GameObject[,] folliages;
+    public List<GameObject> terrainUnits;
+    public List<GameObject> folliages;
 
     public Chunk(Vector2 position, int size, Transform transform)
     {
@@ -29,8 +29,10 @@ public class Chunk
         isBuilding = false;
         isRemoving = false;
 
-        terrainUnits = new GameObject[size, size];
-        folliages = new GameObject[size, size];
+        terrainUnits = new List<GameObject>();
+        terrainUnits.Capacity = size * size;
+        folliages = new List<GameObject>();
+        folliages.Capacity = size * size;
     }
 }
 
@@ -38,6 +40,10 @@ public class Offset2DArray<T> : IEnumerable<T>
 {
     private T[,] array;
     private int offsetX, offsetY;
+    public int minX => -offsetX;
+    public int maxX => array.GetLength(0) - offsetX - 1;
+    public int minY => -offsetY;
+    public int maxY => array.GetLength(1) - offsetY - 1;
 
     // minX, maxX, minY, maxY define the logical index bounds.
     public Offset2DArray(int minX, int maxX, int minY, int maxY)
@@ -108,19 +114,7 @@ public class WorldGenerator : NetworkBehaviour
 
     [Header("Elevation Map Settings")]
     [SerializeField]
-    private Vector2 elevationOrigin = new Vector2(1264, 234);
-    [SerializeField]
-    private Vector2Int elevationDimension;
-    [SerializeField]
-    private float elevationScale = 1.0f;
-    [SerializeField]
-    private int elevationOctaves = 3;
-    [SerializeField]
-    private float elevationPersistence = 0.5f;
-    [SerializeField]
-    private float elevationFrequencyBase = 2f;
-    [SerializeField]
-    private float elevationExp = 1f;
+    private ElevationMap elevationMap;
 
     private Offset2DArray<TerrainUnitProperty> terrainMap;
     private Sprite terrainMapSprite;
@@ -131,6 +125,7 @@ public class WorldGenerator : NetworkBehaviour
     private int halfChunkSize;
 
     private Offset2DArray<Chunk> chunkMap;
+    private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
 
     private ResourceGenerator resourceGenerator;
 
@@ -145,7 +140,7 @@ public class WorldGenerator : NetworkBehaviour
         yield return BuildWorld(Vector2.zero);
         if (IsHost)
         {
-            yield return resourceGenerator.Initialize(mapSize);
+            //yield return resourceGenerator.Initialize(mapSize);
         }
 
         isInitialized = true;
@@ -168,211 +163,178 @@ public class WorldGenerator : NetworkBehaviour
         halfChunkSize = chunkSize / 2;
 
         // Generate the terrain map
-        var terrainMapTexture = new Texture2D(trueMapSize.x, trueMapSize.y);
+        elevationMap.GenerateMap(mapSize);
         terrainMap = new Offset2DArray<TerrainUnitProperty>(-trueHalfMapSize.x, trueHalfMapSize.x, -trueHalfMapSize.y, trueHalfMapSize.y);
 
-        for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x; x++)
+        for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x + 1; x++)
         {
-            for (int y = -trueHalfMapSize.y; y < trueHalfMapSize.y; y++)
+            for (int y = -trueHalfMapSize.y; y < trueHalfMapSize.y + 1; y++)
             {
-                terrainMap[x, y] = GetDefaultProperty(x + trueHalfMapSize.x, y + trueHalfMapSize.y);
-                terrainMapTexture.SetPixel(x + trueHalfMapSize.x, y + trueHalfMapSize.y, terrainMap[x, y].MapColor);
+                if (x < -halfMapSize.x || x >= halfMapSize.x || y < -halfMapSize.y || y >= halfMapSize.y)
+
+                    terrainMap[x, y] = voidUnitProperty;
+                else
+                    terrainMap[x, y] = GetDefaultProperty(elevationMap.RawMap[x, y]);
             }
         }
 
-        terrainMapTexture.Apply();
-        terrainMapSprite = Sprite.Create(terrainMapTexture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
+        terrainMapSprite = Sprite.Create(elevationMap.MapTexture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
         terrainMapSprite.texture.filterMode = FilterMode.Point;
         MapUI.Main.UpdateElevationMap(terrainMapSprite);
-
-        // Generate the chunk map
-        var chunkTransform = new GameObject("Chunks").transform;
-        chunkTransform.parent = transform;
-
-        chunkMap = new Offset2DArray<Chunk>(-trueHalfMapSize.x, trueHalfMapSize.x, -trueHalfMapSize.y, trueHalfMapSize.y);
-        for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x; x += chunkSize)
-        {
-            for (int y = -trueHalfMapSize.y; y < trueHalfMapSize.y; y += chunkSize)
-            {
-                var chunkPos = new Vector2(x, y).SnapToGrid(chunkSize, true);
-
-                var chunkObj = new GameObject("Chunk");
-                chunkObj.transform.parent = chunkTransform;
-                chunkObj.transform.position = chunkPos;
-
-                chunkMap[(int)chunkPos.x, (int)chunkPos.y] = new Chunk(chunkPos, chunkSize, chunkObj.transform);
-            }
-        }
 
         yield return null;
     }
 
-    private TerrainUnitProperty GetDefaultProperty(float x, float y)
+    private TerrainUnitProperty GetDefaultProperty(float value)
     {
         TerrainUnitProperty candidate = null;
-        var noise = GetNoise(x, y, elevationOrigin, elevationDimension,
-                    elevationScale, elevationOctaves, elevationPersistence, elevationFrequencyBase, elevationExp);
-
-        // Apply island shaping to the noise
-        var nx = 2 * x / mapSize.x - 1;
-        var ny = 2 * y / mapSize.y - 1;
-        var d = 1 - (1 - nx * nx) * (1 - ny * ny);
-        noise = Mathf.Clamp01(Mathf.Lerp(noise, 1 - d, 0.5f));
-
         foreach (var property in terrainUnitProperties)
         {
-            if (property.Match(noise)) candidate = property;
+            if (property.Match(value)) candidate = property;
         }
 
         if (candidate == null)
         {
             candidate = terrainUnitProperties[0];
-            Debug.LogError($"Cannot match property at {x}, {y}, noise = {noise}");
+            Debug.LogError($"Cannot match property noise = {value}");
         }
 
         return candidate;
     }
-
-    public static float GetNoise(float x, float y, Vector2 origin, Vector2 dimension,
-        float scale, int octaves, float persistence, float frequencyBase, float exp)
-    {
-        float xCoord = origin.x + x / dimension.x * scale;
-        float yCoord = origin.y + y / dimension.y * scale;
-
-        var total = 0f;
-        var frequency = 1f;
-        var amplitude = 1f;
-        var maxValue = 0f;
-        for (int i = 0; i < octaves; i++)
-        {
-            total += Mathf.PerlinNoise(xCoord * frequency, yCoord * frequency) * amplitude;
-
-            maxValue += amplitude;
-            amplitude *= persistence;
-            frequency *= frequencyBase;
-        }
-
-        return Mathf.Pow(total / maxValue, exp);
-    }
-
     #endregion
 
     #region World Building
+    private Vector2 closetChunkPosition_cached = Vector2.one;
+    private bool isGenerating = false;
+
     public IEnumerator BuildWorld(Vector2 position)
     {
+        MapUI.Main.UpdatePlayerPosition(position, trueMapSize);
+
         yield return BuildTerrain(position);
     }
 
-    private Vector2Int currentChunkPosition = Vector2Int.one;
-    private IEnumerator BuildTerrain(Vector2 position)
+    public IEnumerator BuildTerrain(Vector2 position)
     {
-        // Get closet chunk position
-        var snapped = position.SnapToGrid(chunkSize, true);
-        var closetChunkPosition = new Vector2Int((int)snapped.x, (int)snapped.y);
+        position = position.SnapToGrid();
 
-        Coroutine buildCoroutine;
-        Coroutine removeCoroutine;
-        if (closetChunkPosition != currentChunkPosition)
+        var closetChunkPosition = position.SnapToGrid(chunkSize, true);
+        if (closetChunkPosition_cached != closetChunkPosition)
+            closetChunkPosition_cached = closetChunkPosition;
+        else
+            yield break;
+
+        if (isGenerating) yield break;
+        isGenerating = true;
+
+        yield return BuildChunkGrid(closetChunkPosition);
+
+        yield return RemoveExcessChunks(closetChunkPosition);
+
+        isGenerating = false;
+
+        //if (showDebug) Debug.Log("Child count = " + transform.childCount);
+    }
+
+    private IEnumerator BuildChunkGrid(Vector2 closetChunkPosition)
+    {
+        var coroutines = new List<Coroutine>();
+        for (int i = -(renderDistance + renderXOffset); i < renderDistance + 1 + renderXOffset; i++)
         {
-            currentChunkPosition = closetChunkPosition;
-            buildCoroutine = StartCoroutine(BuildChunkGroup(closetChunkPosition));
-            removeCoroutine = StartCoroutine(RemoveChunkOutOfView(closetChunkPosition));
-            yield return buildCoroutine;
-            yield return removeCoroutine;
+            for (int j = -renderDistance + 1; j < renderDistance; j++)
+            {
+                var chunkPos = new Vector2(closetChunkPosition.x + i * chunkSize, closetChunkPosition.y + j * chunkSize);
+
+                if (!positionToChunk.ContainsKey(chunkPos))
+                {
+                    coroutines.Add(StartCoroutine(BuildChunk(chunkPos, chunkSize, positionToChunk)));
+                }
+            }
         }
 
+        foreach (var coroutine in coroutines)
+        {
+            yield return coroutine;
+        }
+    }
+
+    private IEnumerator BuildChunk(Vector2 position, int chunkSize, Dictionary<Vector2, Chunk> positionToChunk)
+    {
+        var chunkObj = new GameObject("Chunk");
+        chunkObj.transform.parent = transform;
+        chunkObj.transform.position = position;
+        Chunk chunk = new Chunk(position, chunkSize, chunkObj.transform);
+        int halfChunkSize = chunkSize / 2;
+        int lowerLimit = -halfChunkSize;
+        int upperLimit = (chunkSize % 2 == 0) ? halfChunkSize : halfChunkSize + 1;
+
+        for (int i = lowerLimit; i < upperLimit; i++)
+        {
+            for (int j = lowerLimit; j < upperLimit; j++)
+            {
+                var terrainPos = new Vector2Int((int)position.x + i, (int)position.y + j);
+                var property = GetMappedProperty(terrainPos.x, terrainPos.y);
+
+                chunk.terrainUnits.Add(SpawnTerrainUnit(terrainPos, property));
+                //var canSpawnFolliage = !resourceGenerator.ResourcePositions.Contains(new Vector2Int((int)position.x, (int)position.y));
+                //SpawnTerrainUnit(terrainPos, chunk, property, !invalidFolliagePositionHashSet.Contains(terrainPos));
+            }
+        }
+
+        positionToChunk.Add(position, chunk);
         yield return null;
     }
 
-    private IEnumerator BuildChunkGroup(Vector2 position)
+    private IEnumerator RemoveExcessChunks(Vector2 closetChunkPosition)
     {
-        for (int i = -renderDistance - renderXOffset; i < renderDistance + 1 + renderXOffset; i++)
+        List<Vector2> positionsToRemove = new List<Vector2>();
+
+        // Determine the bounds of the loop
+        int minX = (int)closetChunkPosition.x - (renderDistance + renderXOffset) * chunkSize;
+        int maxX = (int)closetChunkPosition.x + (renderDistance + 1 + renderXOffset) * chunkSize;
+        int minY = (int)closetChunkPosition.y - renderDistance * chunkSize;
+        int maxY = (int)closetChunkPosition.y + renderDistance * chunkSize;
+
+        // Iterate over the dictionary to find chunks outside the bounds
+        foreach (var entry in positionToChunk)
         {
-            for (int j = -renderDistance; j < renderDistance + 1; j++)
+            Vector2 pos = entry.Key;
+            if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY)
             {
-                var chunkPos = new Vector2(position.x + i * chunkSize, position.y + j * chunkSize);
-                yield return BuildChunk(chunkMap[(int)chunkPos.x, (int)chunkPos.y]);
-            }
-        }
-    }
-
-    private List<Chunk> activeChunks = new List<Chunk>();
-
-    private IEnumerator BuildChunk(Chunk chunk)
-    {
-        if (chunk.isBuilt || chunk.isBuilding) yield break;
-        chunk.isBuilding = true;
-        chunk.isRemoving = false;
-
-        for (int i = 0; i < chunkSize; i++)
-        {
-            for (int j = 0; j < chunkSize; j++)
-            {
-                Vector2 pos = new Vector2(chunk.position.x - halfChunkSize + i, chunk.position.y - halfChunkSize + j);
-                if (chunk.terrainUnits[i, j] != null) continue;
-
-                chunk.terrainUnits[i, j] = SpawnTerrainUnit(pos, terrainMap[(int)pos.x, (int)pos.y]);
-
-                // Terminate early if the chunk is no longer building
-                if (chunk.isBuilding == false) yield break;
+                positionsToRemove.Add(pos);
             }
         }
 
-        chunk.isBuilt = true;
-        chunk.isBuilding = false;
-
-        activeChunks.Add(chunk);
-
-        yield return null;
-    }
-
-    private IEnumerator RemoveChunkOutOfView(Vector2 position)
-    {
-        var minChunkX = (int)position.x - (renderDistance + renderXOffset) * chunkSize;
-        var maxChunkX = (int)position.x + (renderDistance + 1 + renderXOffset) * chunkSize;
-        var minChunkY = (int)position.y - renderDistance * chunkSize;
-        var maxChunkY = (int)position.y + (renderDistance + 1) * chunkSize;
-
-        var chunksToRemove = new List<Chunk>();
-        foreach (var chunk in activeChunks)
+        // Remove the identified chunks
+        var coroutines = new List<Coroutine>();
+        foreach (var pos in positionsToRemove)
         {
-            if (chunk.position.x < minChunkX || chunk.position.x > maxChunkX || chunk.position.y < minChunkY || chunk.position.y > maxChunkY)
-            {
-                chunksToRemove.Add(chunk);
-            }
+            var chunk = positionToChunk[pos];
+            coroutines.Add(StartCoroutine(RemoveChunk(chunk)));
         }
 
-        foreach (var chunk in chunksToRemove)
+        foreach (var coroutine in coroutines)
         {
-            activeChunks.Remove(chunk);
-            yield return RemoveChunk(chunk);
+            yield return coroutine;
         }
     }
 
     private IEnumerator RemoveChunk(Chunk chunk)
     {
-        // Terminate early if the chunk is not built or is already building
-        chunk.isBuilding = false;
-        chunk.isRemoving = true;
-
-        for (int i = 0; i < chunkSize; i++)
+        foreach (var terrainUnit in chunk.terrainUnits)
         {
-            for (int j = 0; j < chunkSize; j++)
-            {
-                if (chunk.terrainUnits[i, j] != null)
-                {
-                    LocalObjectPooling.Main.Despawn(chunk.terrainUnits[i, j]);
-                    chunk.terrainUnits[i, j] = null;
-                }
-
-                // Terminate early if the chunk is no longer removing
-                if (chunk.isRemoving == false) yield break;
-            }
+            LocalObjectPooling.Main.Despawn(terrainUnit);
         }
+        chunk.terrainUnits.Clear();
 
-        chunk.isRemoving = false;
-        chunk.isBuilt = false;
+        /*foreach (var folliage in chunk.folliages)
+        {
+            localObjectPooling.Despawn(folliage);
+            yield return null;
+        }*/
 
+        positionToChunk.Remove(chunk.position);
+        Destroy(chunk.transform.gameObject);
         yield return null;
     }
 
@@ -391,7 +353,10 @@ public class WorldGenerator : NetworkBehaviour
     #region Utility
     public TerrainUnitProperty GetMappedProperty(int x, int y)
     {
-        return terrainMap[x, y];
+        if (x < -halfMapSize.x || x >= halfMapSize.x || y < -halfMapSize.y || y >= halfMapSize.y)
+            return voidUnitProperty;
+        else
+            return terrainMap[x, y];
     }
 
     public bool IsValidResourcePosition(int x, int y)
@@ -411,126 +376,17 @@ public class WorldGenerator : NetworkBehaviour
             {
                 if (chunk == null) continue;
                 Gizmos.DrawWireCube(chunk.position, Vector3.one * chunk.size);
-                Gizmos.DrawSphere(chunk.position, 0.1f);
+                //Gizmos.DrawSphere(chunk.position, 0.1f);
                 //Handles.Label(chunk.position + Vector2.one * 0.1f, $"({chunk.position.x},{chunk.position.y})");
             }
         }
+        Gizmos.color = Color.red;
+        //Gizmos.DrawWireCube(Vector3.zero, new Vector3(mapSize.x, mapSize.y, 0));
+        //Gizmos.DrawWireCube(Vector3.zero, new Vector3(trueMapSize.x, trueMapSize.y, 0));
     }
 #endif
 
 }
-/*
-    #region World Building
-    [SerializeField]
-    private bool isBuilding;
-    private Coroutine buildWorldCoroutine;
-    private Coroutine waitBuildWorldCoroutine;
-    public IEnumerator BuildWorld(Vector2 position)
-    {
-        if (isBuilding) yield break;
-        isBuilding = true;
-        yield return BuildTerrain(position);
-        isBuilding = false;
-    }
-
-    
-    {
-        var halfMapSize = mapSize / 2;
-        var chunkXMax = mapSize.x / chunkSize + mapPadding * 2 + 1;
-        var chunkYMax = mapSize.y / chunkSize + mapPadding * 2 + 1;
-        var mapIndex = WorldToMapIndex(position);
-
-        var coroutines = new List<Coroutine>();
-        for (int x = mapIndex.x - renderDistance - renderXOffset; x < mapIndex.x + renderDistance + 1 + renderXOffset; x++)
-        {
-            for (int y = mapIndex.y - renderDistance; y < mapIndex.y + renderDistance; y++)
-            {
-                if (x >= 0 && x < chunkXMax && y >= 0 && y < chunkYMax)
-                {
-                    var chunk = chunkMap[x, y];
-                    if (!chunk.isBuilt && !chunk.isBuilding)
-                    {
-                        activeChunks.Add(chunk);
-                        coroutines.Add(StartCoroutine(BuildChunk(chunk)));
-                        yield return null;
-                    }
-                }
-            }
-        }
-
-        foreach (var coroutine in coroutines)
-        {
-            yield return coroutine;
-        }
-    }
-
-
-
-    private IEnumerator RemoveChunkOutOfView(Vector2 position)
-    {
-        var mapIndex = WorldToMapIndex(position);
-
-        var maxChunkX = mapIndex.x + renderDistance + 1 + renderXOffset;
-        var minChunkX = mapIndex.x - renderDistance - renderXOffset;
-        var maxChunkY = mapIndex.y + renderDistance;
-        var minChunkY = mapIndex.y - renderDistance;
-
-        var coroutines = new List<Coroutine>();
-        List<Chunk> chunksToRemove = new List<Chunk>();
-        foreach (var chunk in activeChunks)
-        {
-            if (chunk.position.x < minChunkX || chunk.position.x > maxChunkX || chunk.position.y < minChunkY || chunk.position.y > maxChunkY)
-            {
-                chunksToRemove.Add(chunk);
-                coroutines.Add(StartCoroutine(RemoveChunk(chunk)));
-                yield return null;
-            }
-        }
-
-        foreach (var chunk in chunksToRemove)
-        {
-            activeChunks.Remove(chunk);
-        }
-
-        foreach (var coroutine in coroutines)
-        {
-            yield return coroutine;
-        }
-    }
-
-    private Vector2Int WorldToMapIndex(Vector2 position)
-    {
-        var halfMapSize = mapSize / 2;
-        int i = Mathf.RoundToInt((position.x + halfMapSize.x) / chunkSize) + mapPadding;
-        int j = Mathf.RoundToInt((position.y + halfMapSize.y) / chunkSize) + mapPadding;
-        return new Vector2Int(i, j);
-    }
-
-
-    private IEnumerator RemoveChunk(Chunk chunk)
-    {
-        chunk.isBuilding = false;
-
-        foreach (var terrainUnit in chunk.terrainUnits)
-        {
-            LocalObjectPooling.Main.Despawn(terrainUnit);
-        }
-
-        foreach (var folliage in chunk.folliages)
-        {
-            LocalObjectPooling.Main.Despawn(folliage);
-        }
-
-        chunk.terrainUnits.Clear();
-        chunk.folliages.Clear();
-
-        chunk.isBuilt = false;
-        yield return null;
-    }
-
-    
-}*/
-
 
 /*using ColorMak3r.Utility;
 using System.Collections;

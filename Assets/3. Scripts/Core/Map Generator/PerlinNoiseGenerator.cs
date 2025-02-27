@@ -1,10 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.TerrainUtils;
 
+[System.Serializable]
+public struct ColorMapping
+{
+    public Color32 color;
+    public float value;
+
+    public ColorMapping(Color32 color, float value)
+    {
+        this.color = color;
+        this.value = value;
+    }
+}
 
 public class PerlinNoiseGenerator : MapGenerator
 {
@@ -12,7 +19,7 @@ public class PerlinNoiseGenerator : MapGenerator
     [SerializeField]
     private Vector2 origin = new Vector2(1264, 234);
     [SerializeField]
-    private Vector2Int dimension;
+    private Vector2Int dimension = new Vector2Int(50, 50);
     [SerializeField]
     private float scale = 1.0f;
     [SerializeField]
@@ -24,17 +31,13 @@ public class PerlinNoiseGenerator : MapGenerator
     [SerializeField]
     private float exponent = 1f;
 
-    Vector2Int halfMapSize;
-
-    public IEnumerator Initialize(Vector2Int mapSize)
+    public override void GenerateMap(Vector2Int mapSize)
     {
-        yield return GenerateMap(mapSize);
-        yield return BuildMap(mapSize);
-    }
+        var halfMapSize = mapSize / 2;
+        mapTexture = new Texture2D(mapSize.x, mapSize.y);
+        mapTexture.filterMode = FilterMode.Point;
 
-    protected override IEnumerator GenerateMap(Vector2Int mapSize)
-    {
-        halfMapSize = mapSize / 2;
+        var mapColorLength = mapColors.Length;
 
         // Generate the map
         rawMap = new Offset2DArray<float>(-halfMapSize.x, halfMapSize.x, -halfMapSize.y, halfMapSize.y);
@@ -42,21 +45,25 @@ public class PerlinNoiseGenerator : MapGenerator
         {
             for (int y = -halfMapSize.y; y < halfMapSize.y; y++)
             {
-                rawMap[x, y] = GetNoise(x + halfMapSize.x, y + halfMapSize.y, origin, dimension, scale, octaves, persistence, frequencyBase, exponent);
+                rawMap[x, y] = GetValue(x + halfMapSize.x, y + halfMapSize.y, mapSize);
+                mapTexture.SetPixel(x + halfMapSize.x, y + halfMapSize.y, GetColor(rawMap[x, y]));
             }
         }
 
-        yield return GenerateMapExtension(mapSize);
+        TransformMap();
+
+        mapTexture.Apply();
     }
 
-    protected virtual IEnumerator GenerateMapExtension(Vector2Int mapSize)
+    protected virtual void TransformMap()
     {
-        yield return null;
+        // Override this method to transform the map
     }
 
-    protected virtual IEnumerator BuildMap(Vector2Int mapSize)
+    protected virtual float GetValue(float x, float y, Vector2Int mapSize)
     {
-        yield return null;
+        var halfMapSize = mapSize / 2;
+        return GetNoise(x + halfMapSize.x, y + halfMapSize.y, origin, dimension, scale, octaves, persistence, frequencyBase, exponent);
     }
 
     private float GetNoise(float x, float y, Vector2 origin, Vector2 dimension,
@@ -79,5 +86,21 @@ public class PerlinNoiseGenerator : MapGenerator
         }
 
         return Mathf.Pow(total / maxValue, exponent);
+    }
+
+    private Color GetColor(float noiseValue)
+    {
+        Color32 selectedColor = mapColors[0].color;
+
+        // Find the correct color mapping
+        for (int i = 0; i < mapColors.Length; i++)
+        {
+            if (noiseValue <= mapColors[i].value)
+            {
+                selectedColor = mapColors[i].color;
+                break;
+            }
+        }
+        return selectedColor;
     }
 }
