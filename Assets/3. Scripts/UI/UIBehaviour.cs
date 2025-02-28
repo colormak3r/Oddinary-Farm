@@ -13,6 +13,7 @@ public class UIBehaviour : MonoBehaviour
     protected float fadeDuration = 0.25f;
     [SerializeField]
     protected bool delayShow;
+    [Tooltip("These objects appear after others and fade out first.")]
     [SerializeField]
     protected GameObject[] delayShowFadeFirstObjects;
     [SerializeField]

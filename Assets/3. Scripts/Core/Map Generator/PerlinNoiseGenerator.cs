@@ -50,12 +50,12 @@ public class PerlinNoiseGenerator : MapGenerator
             }
         }
 
-        TransformMap();
+        TransformMap(mapSize);
 
         mapTexture.Apply();
     }
 
-    protected virtual void TransformMap()
+    protected virtual void TransformMap(Vector2Int mapSize)
     {
         // Override this method to transform the map
     }
@@ -88,7 +88,7 @@ public class PerlinNoiseGenerator : MapGenerator
         return Mathf.Pow(total / maxValue, exponent);
     }
 
-    private Color GetColor(float noiseValue)
+    protected Color GetColor(float noiseValue)
     {
         Color32 selectedColor = mapColors[0].color;
 

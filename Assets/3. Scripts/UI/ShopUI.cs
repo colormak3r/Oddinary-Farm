@@ -161,7 +161,7 @@ public class ShopUI : UIBehaviour
                 playerInventory.ConsumeCoinsOnClient(itemProperty.Price);
                 if (!playerInventory.AddItemOnClient(itemProperty))
                 {
-                    AssetManager.Main.SpawnItem(itemProperty, shopTransform.transform.position - new Vector3(0, 1), 0.5f, false);
+                    AssetManager.Main.SpawnItem(itemProperty, shopTransform.transform.position - new Vector3(0, 1), default, default, 0.5f, false);
                 }
 
                 if (showDebug) Debug.Log($"Bought 1x{itemProperty.Name} for {itemProperty.Price}");

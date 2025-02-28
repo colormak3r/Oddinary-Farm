@@ -493,7 +493,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
         var property = inventory[index].Property;
         ConsumeItemOnClient(index);
-        AssetManager.Main.SpawnItemPrefer(property, transform.position, default, gameObject);
+        AssetManager.Main.SpawnItem(property, transform.position, default, gameObject);
     }
 
     /// <summary>

@@ -21,6 +21,7 @@ public class AudioElement : MonoBehaviour
     private void Start()
     {
         AudioManager.Main.OnSfxVolumeChange.AddListener(HandleSfxVolumeChange);
+        HandleSfxVolumeChange(AudioManager.Main.SfxVolume);
     }
 
     private void OnDestroy()

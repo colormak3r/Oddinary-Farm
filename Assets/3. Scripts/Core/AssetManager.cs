@@ -245,25 +245,13 @@ public class AssetManager : NetworkBehaviour
     #endregion
 
     #region Item Spawning
-
-    public void SpawnItem(ItemProperty itemProperty, Vector2 position, float randomRange = 0f, bool randomForce = true)
+    public void SpawnItem(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef = default, NetworkObjectReference ignoreRef = default, float randomRange = 0f, bool randomForce = true)
     {
-        SpawnItemRpc(itemProperty, position, randomRange, randomForce);
-    }
-
-    public void SpawnItemPrefer(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef, NetworkObjectReference ignoreRef, float randomRange = 0f, bool randomForce = true)
-    {
-        SpawnItemPreferRpc(itemProperty, position, preferRef, ignoreRef, randomRange, randomForce);
+        SpawnItemRpc(itemProperty, position, preferRef, ignoreRef, randomRange, randomForce);
     }
 
     [Rpc(SendTo.Server)]
-    public void SpawnItemRpc(ItemProperty itemProperty, Vector2 position, float randomRange, bool randomForce)
-    {
-        SpawnItemOnServer(itemProperty, position, randomRange, randomForce);
-    }
-
-    [Rpc(SendTo.Server)]
-    public void SpawnItemPreferRpc(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef, NetworkObjectReference ignoreRef, float randomRange, bool randomForce)
+    public void SpawnItemRpc(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef, NetworkObjectReference ignoreRef, float randomRange, bool randomForce)
     {
         var itemReplica = SpawnItemOnServer(itemProperty, position, randomRange, randomForce);
 
@@ -308,7 +296,7 @@ public class AssetManager : NetworkBehaviour
             {
                 for (int i = 0; i < count; i++)
                 {
-                    SpawnItem(property, position, randomRange, randomForce);
+                    SpawnItem(property, position, default, default, randomRange, randomForce);
                 }
                 if (log) Debug.Log("Spawned " + count + " " + property.Name + " around " + position);
             }

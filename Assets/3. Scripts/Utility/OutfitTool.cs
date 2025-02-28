@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor.U2D.Sprites;
 using UnityEditor;
 using UnityEngine;
@@ -213,3 +214,4 @@ public static class OutfitTool
         }
     }
 }
+#endif

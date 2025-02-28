@@ -88,8 +88,6 @@ public class WorldGenerator : NetworkBehaviour
             Main = this;
         else
             Destroy(Main.gameObject);
-
-        resourceGenerator = GetComponent<ResourceGenerator>();
     }
 
     [Header("Map Settings")]
@@ -112,22 +110,37 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private GameObject terrainUnitPrefab;
 
-    [Header("Elevation Map Settings")]
+    [Header("Resource Settings")]
+    [SerializeField]
+    private GameObject[] resourcePrefabs;
+    [SerializeField]
+    private int countPerYield = 10;
+
+    [Header("Folliage Settings")]
+    [SerializeField]
+    private GameObject[] folliagePrefabs;
+
+    [Header("Map Components")]
     [SerializeField]
     private ElevationMap elevationMap;
+    [SerializeField]
+    private ResourceMap resourceMap;
+    [SerializeField]
+    private MoistureMap moistureMap;
 
-    private Offset2DArray<TerrainUnitProperty> terrainMap;
-    private Sprite terrainMapSprite;
     private Vector2Int halfMapSize;
     private Vector2Int paddingSize;
     private Vector2Int trueHalfMapSize;
     private Vector2Int trueMapSize;
     private int halfChunkSize;
 
+    private Offset2DArray<TerrainUnitProperty> terrainMap;
+    private Sprite terrainMapSprite;
+
+    private Offset2DArray<bool> folliageMap;
+
     private Offset2DArray<Chunk> chunkMap;
     private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
-
-    private ResourceGenerator resourceGenerator;
 
     [Header("Debugs")]
     [SerializeField]
@@ -138,10 +151,6 @@ public class WorldGenerator : NetworkBehaviour
     {
         yield return GenerateWorld();
         yield return BuildWorld(Vector2.zero);
-        if (IsHost)
-        {
-            //yield return resourceGenerator.Initialize(mapSize);
-        }
 
         isInitialized = true;
     }
@@ -150,11 +159,6 @@ public class WorldGenerator : NetworkBehaviour
     #region World Generation
     private IEnumerator GenerateWorld()
     {
-        yield return GenerateTerrain();
-    }
-
-    private IEnumerator GenerateTerrain()
-    {
         // Calculate the half map size and padding size
         halfMapSize = mapSize / 2;
         paddingSize = Vector2Int.one * paddingChunkCount * chunkSize;
@@ -162,8 +166,24 @@ public class WorldGenerator : NetworkBehaviour
         trueMapSize = trueHalfMapSize * 2;
         halfChunkSize = chunkSize / 2;
 
-        // Generate the terrain map
+        // Initialize the maps
         elevationMap.GenerateMap(mapSize);
+        resourceMap.GenerateMap(mapSize);
+        moistureMap.GenerateMap(mapSize);
+
+        yield return GenerateTerrain();
+        if (IsHost)
+        {
+            yield return GenerateResources();
+        }
+        yield return GenerateFolliage();
+    }
+    #endregion
+
+    #region Terrain Generation
+    private IEnumerator GenerateTerrain()
+    {
+        // Generate the terrain map        
         terrainMap = new Offset2DArray<TerrainUnitProperty>(-trueHalfMapSize.x, trueHalfMapSize.x, -trueHalfMapSize.y, trueHalfMapSize.y);
 
         for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x + 1; x++)
@@ -178,6 +198,7 @@ public class WorldGenerator : NetworkBehaviour
             }
         }
 
+        // Update MapUI
         terrainMapSprite = Sprite.Create(elevationMap.MapTexture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
         terrainMapSprite.texture.filterMode = FilterMode.Point;
         MapUI.Main.UpdateElevationMap(terrainMapSprite);
@@ -200,6 +221,71 @@ public class WorldGenerator : NetworkBehaviour
         }
 
         return candidate;
+    }
+    #endregion
+
+    #region Resource Generation
+    private IEnumerator GenerateResources()
+    {
+        var count = 0;
+        for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x + 1; x++)
+        {
+            for (int y = -trueHalfMapSize.y; y < trueHalfMapSize.y + 1; y++)
+            {
+                if (x < -halfMapSize.x || x >= halfMapSize.x || y < -halfMapSize.y || y >= halfMapSize.y)
+                {
+                    // Do nothing
+                    // Padding area
+                }
+                else
+                {
+                    if (terrainMap[x, y] != voidUnitProperty && resourceMap.RawMap[x, y] >= 0.99f)
+                    {
+                        SpawnResource(x, y);
+                        count++;
+                        if (count % countPerYield == 0)
+                        {
+                            yield return null;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void SpawnResource(int x, int y)
+    {
+        var res = Instantiate(resourcePrefabs.GetRandomElement(), new Vector3(x, y - 0.5f, 0), Quaternion.identity, transform);
+        var resNetObject = res.GetComponent<NetworkObject>();
+        resNetObject.Spawn();
+        resNetObject.TrySetParent(transform);
+    }
+    #endregion
+
+    #region Generate Folliage
+    private IEnumerator GenerateFolliage()
+    {
+        folliageMap = new Offset2DArray<bool>(-trueHalfMapSize.x, trueHalfMapSize.x, -trueHalfMapSize.y, trueHalfMapSize.y);
+
+        for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x + 1; x++)
+        {
+            for (int y = -trueHalfMapSize.y; y < trueHalfMapSize.y + 1; y++)
+            {
+                if (x < -halfMapSize.x || x >= halfMapSize.x || y < -halfMapSize.y || y >= halfMapSize.y)
+                {
+                    // Do nothing
+                    // Padding area
+                }
+                else
+                {
+                    if (terrainMap[x, y].Elevation.min >= 0.55f && resourceMap.RawMap[x, y] < 0.99f && moistureMap.RawMap[x, y] > 0.1f && moistureMap.RawMap[x, y] < 0.2f)
+                    {
+                        folliageMap[x, y] = true;
+                    }
+                }
+            }
+        }
+        yield return null;
     }
     #endregion
 
@@ -276,6 +362,8 @@ public class WorldGenerator : NetworkBehaviour
                 var property = GetMappedProperty(terrainPos.x, terrainPos.y);
 
                 chunk.terrainUnits.Add(SpawnTerrainUnit(terrainPos, property));
+                if (folliageMap[terrainPos.x, terrainPos.y])
+                    chunk.folliages.Add(SpawnFolliage(terrainPos, folliagePrefabs.GetRandomElement()));
                 //var canSpawnFolliage = !resourceGenerator.ResourcePositions.Contains(new Vector2Int((int)position.x, (int)position.y));
                 //SpawnTerrainUnit(terrainPos, chunk, property, !invalidFolliagePositionHashSet.Contains(terrainPos));
             }
@@ -327,11 +415,11 @@ public class WorldGenerator : NetworkBehaviour
         }
         chunk.terrainUnits.Clear();
 
-        /*foreach (var folliage in chunk.folliages)
+        foreach (var folliage in chunk.folliages)
         {
-            localObjectPooling.Despawn(folliage);
+            LocalObjectPooling.Main.Despawn(folliage);
             yield return null;
-        }*/
+        }
 
         positionToChunk.Remove(chunk.position);
         Destroy(chunk.transform.gameObject);
@@ -346,6 +434,15 @@ public class WorldGenerator : NetworkBehaviour
         terrainObj.GetComponent<TerrainUnit>().Initialize(property);
 
         return terrainObj;
+    }
+
+    private GameObject SpawnFolliage(Vector2 position, GameObject prefab)
+    {
+        var folliageObj = LocalObjectPooling.Main.Spawn(prefab);
+        folliageObj.transform.position = new Vector2(position.x, position.y - 0.5f);
+        folliageObj.transform.parent = transform;
+
+        return folliageObj;
     }
 
     #endregion
