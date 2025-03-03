@@ -88,15 +88,6 @@ public class AssetManager : NetworkBehaviour
     [SerializeField]
     private List<SpawnableID> spawnableIds = new List<SpawnableID>();
 
-    /*[SerializeField]
-    private ItemProperty unidentifiedItemProperty;
-    [SerializeField]
-    private PlantProperty unidentifiedPlantProperty;*/
-    /*[SerializeField]
-    private List<CurrencyTypeProperty> currencyProperties = new List<CurrencyTypeProperty>();
-    private Dictionary<CurrencyType, CurrencyProperty> currencyTypeToProperty = new Dictionary<CurrencyType, CurrencyProperty>();
-    private Dictionary<CurrencyProperty, CurrencyType> currencyPropertyToType = new Dictionary<CurrencyProperty, CurrencyType>();*/
-
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs;

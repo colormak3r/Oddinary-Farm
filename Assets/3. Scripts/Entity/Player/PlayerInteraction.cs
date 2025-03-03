@@ -39,7 +39,7 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
         distanceComparer = new DistanceComparer(transform, interactionOffset);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (IsOwner) ScanClosetInteractable();
 

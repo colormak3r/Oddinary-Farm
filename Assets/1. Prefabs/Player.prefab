@@ -1093,7 +1093,7 @@ GameObject:
   m_Component:
   - component: {fileID: 828533589956129182}
   - component: {fileID: 8509437197401579281}
-  m_Layer: 31
+  m_Layer: 5
   m_Name: Player Name UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1728,8 +1728,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  inventoryRadius: 0.25
+  inventoryRadius: 0.5
   inventoryOffset: {x: 0, y: 0.5, z: 0}
+  itemLayer:
+    serializedVersion: 2
+    m_Bits: 64
   handProperty: {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
   defaultInventory:
   - Property: {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
@@ -2108,7 +2111,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8923464463619703159}
-  m_Layer: 31
+  m_Layer: 5
   m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2147,7 +2150,7 @@ GameObject:
   - component: {fileID: 7295394253486176060}
   - component: {fileID: 5842285991855719483}
   - component: {fileID: 8283984362107144022}
-  m_Layer: 31
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2218,7 +2221,7 @@ MonoBehaviour:
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 100
+  m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 1
 --- !u!114 &8283984362107144022
 MonoBehaviour:
@@ -2574,7 +2577,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1755628319614265679, guid: bed010a862d500342bdd321a3506a514, type: 3}
+  m_Sprite: {fileID: 706377332, guid: d9d7249c6bbdaeb4f8df3df4b2629274, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2769,7 +2772,7 @@ GameObject:
   - component: {fileID: 7572938712296360599}
   - component: {fileID: 6973868924068942765}
   - component: {fileID: 8335167079609672860}
-  m_Layer: 31
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

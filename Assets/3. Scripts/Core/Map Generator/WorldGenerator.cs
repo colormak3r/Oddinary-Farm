@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Chunk
 {
@@ -138,6 +139,8 @@ public class WorldGenerator : NetworkBehaviour
     private Sprite terrainMapSprite;
 
     private Offset2DArray<bool> folliageMap;
+    private NetworkVariable<HashSet<Vector2>> invalidFolliagePositionHashSet = new NetworkVariable<HashSet<Vector2>>(new HashSet<Vector2>());
+
 
     private Offset2DArray<Chunk> chunkMap;
     private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
@@ -362,7 +365,7 @@ public class WorldGenerator : NetworkBehaviour
                 var property = GetMappedProperty(terrainPos.x, terrainPos.y);
 
                 chunk.terrainUnits.Add(SpawnTerrainUnit(terrainPos, property));
-                if (folliageMap[terrainPos.x, terrainPos.y])
+                if (folliageMap[terrainPos.x, terrainPos.y] && !invalidFolliagePositionHashSet.Value.Contains(terrainPos))
                     chunk.folliages.Add(SpawnFolliage(terrainPos, folliagePrefabs.GetRandomElement()));
                 //var canSpawnFolliage = !resourceGenerator.ResourcePositions.Contains(new Vector2Int((int)position.x, (int)position.y));
                 //SpawnTerrainUnit(terrainPos, chunk, property, !invalidFolliagePositionHashSet.Contains(terrainPos));
@@ -459,6 +462,27 @@ public class WorldGenerator : NetworkBehaviour
     public bool IsValidResourcePosition(int x, int y)
     {
         return terrainMap[x, y].Elevation.min == 0.55f; // Elevation of grass
+    }
+
+    public void InvalidateFolliageOnServer(Vector2 position)
+    {
+        invalidFolliagePositionHashSet.Value.Add(position);
+    }
+
+    public void RemoveFoliage(Vector2 position)
+    {
+        var chunkPosition = position.SnapToGrid(chunkSize, true);
+        if (positionToChunk.ContainsKey(chunkPosition))
+        {
+            var chunk = positionToChunk[chunkPosition];
+            position -= TransformUtility.HALF_UNIT_Y_V2;
+            var folliage = chunk.folliages.Find(f => (Vector2)f.transform.position == position);
+            if (folliage != null)
+            {
+                chunk.folliages.Remove(folliage);
+                LocalObjectPooling.Main.Despawn(folliage);
+            }
+        }
     }
 
     #endregion

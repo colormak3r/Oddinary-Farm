@@ -74,6 +74,8 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     [SerializeField]
     private Vector3 inventoryOffset = new Vector3(0, 0.75f);
     [SerializeField]
+    private LayerMask itemLayer;
+    [SerializeField]
     private HandProperty handProperty;
     [SerializeField]
     private ItemStack[] defaultInventory;
@@ -159,6 +161,19 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     {
         CurrentItem.OnValueChanged -= HandleCurrentItemChanged;
         Wallet.OnValueChanged -= HandleCoinValueChanged;
+
+        if (IsServer)
+        {
+            // Clean up when a client despawns
+            foreach (var item in itemRefs)
+            {
+                if (item != null)
+                {
+                    var netObj = item.GetComponent<NetworkObject>();
+                    if (netObj.IsSpawned) netObj.Despawn();
+                }
+            }
+        }
     }
 
     private void HandleCurrentItemChanged(NetworkBehaviourReference previousValue, NetworkBehaviourReference newValue)
@@ -190,52 +205,6 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     private void HandleCoinValueChanged(ulong previousValue, ulong newValue)
     {
         OnCoinsValueChanged?.Invoke(newValue);
-    }
-
-
-    /* private void FixedUpdate()
-     {
-         // Run on client only
-         if (!IsOwner) return;
-
-         if (!isControllable) return;
-
-         // Automatically try to pick up Items in the close proximity
-         var hits = Physics2D.OverlapCircleAll(transform.position + inventoryOffset, inventoryRadius, itemLayer);
-         if (hits.Length > 0)
-         {
-             foreach (var hit in hits)
-             {
-                 if (hit.TryGetComponent(out ItemReplica itemReplica) && itemReplica.OwnerValue == NetworkObject)
-                 {
-                     // Add an item on client side
-                     if (AddItemOnClient(itemReplica.CurrentProperty))
-                     {
-                         itemReplica.gameObject.SetActive(false);
-                         itemReplica.Destroy();   // Todo: Recycle using network object pooling
-                     }
-                 }
-             }
-         }
-     }*/
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // Run on client only
-        if (!IsOwner) return;
-
-        if (!isControllable) return;
-
-        // Automatically try to pick up Items in the close proximity
-        if (collision.TryGetComponent(out ItemReplica itemReplica) && itemReplica.OwnerValue == NetworkObject)
-        {
-            // Add an item on client side
-            if (AddItemOnClient(itemReplica.CurrentProperty))
-            {
-                itemReplica.gameObject.SetActive(false);
-                itemReplica.RequestDestroy();   // Todo: Recycle using network object pooling
-            }
-        }
     }
 
     public bool AddItemOnClient(ItemProperty property, uint amount = 1, bool playSound = true)

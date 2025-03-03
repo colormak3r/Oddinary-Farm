@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06325898f1e52304fb236642b27d37a8, type: 3}
+  m_Name: Farm Plot Rules
+  m_EditorClassIdentifier: 
+  blendUnits:
+  - Sprite: {fileID: -1912393900, guid: b54dfabe9032dc247b20485f0d80dabc, type: 3}
+    Neighbors: 000000000000000000000000020000000000000002000000000000000000000000000000
+  - Sprite: {fileID: 1238624258, guid: b54dfabe9032dc247b20485f0d80dabc, type: 3}
+    Neighbors: 000000000000000000000000020000000000000001000000000000000000000000000000
+  - Sprite: {fileID: -48744593, guid: b54dfabe9032dc247b20485f0d80dabc, type: 3}
+    Neighbors: 000000000000000000000000010000000000000001000000000000000000000000000000
+  - Sprite: {fileID: -36353750, guid: b54dfabe9032dc247b20485f0d80dabc, type: 3}
+    Neighbors: 000000000000000000000000010000000000000002000000000000000000000000000000

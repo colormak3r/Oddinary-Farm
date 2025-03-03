@@ -47,7 +47,7 @@ public class ItemReplica : NetworkBehaviour
     private Coroutine pickupCoroutine;
     private Coroutine recoveryCoroutine;
     private Coroutine ignoreCoroutine;
-    private Coroutine pickupTimeoutCoroutine;
+    private Coroutine timeoutCoroutine;
 
     private void Awake()
     {
@@ -111,6 +111,7 @@ public class ItemReplica : NetworkBehaviour
     private IEnumerator SpawnCoroutine()
     {
         yield return new WaitForSeconds(pickupRecovery);
+        yield return new WaitUntil(() => IsSpawned);
 
         if (IsServer)
         {
@@ -165,49 +166,27 @@ public class ItemReplica : NetworkBehaviour
 
         if (showDebugs) Debug.Log($"Picked up by {picker}", picker);
 
+        PickupItemOnServer(pickerNetObj);
+    }
+
+    public void PickupItemOnServer(NetworkObject pickerNetObj)
+    {
+        StartCoroutine(WaitForPickupCoroutine(pickerNetObj));
+    }
+
+    private IEnumerator WaitForPickupCoroutine(NetworkObject pickerNetObj)
+    {
         Owner.Value = pickerNetObj;
         CanBePickup.Value = false;
+
+        yield return new WaitUntil(() => IsSpawned);
         NetworkObject.ChangeOwnership(pickerNetObj.OwnerClientId);
 
-        if (pickupTimeoutCoroutine != null) StopCoroutine(pickupTimeoutCoroutine);
-        pickupTimeoutCoroutine = StartCoroutine(PickupTimeoutCoroutine(pickerNetObj));
+        if (timeoutCoroutine != null) StopCoroutine(timeoutCoroutine);
+        timeoutCoroutine = StartCoroutine(TimeoutCoroutine(pickerNetObj));
     }
 
-    public void PickupItemOnServer(NetworkObject preferNetObj)
-    {
-        Owner.Value = preferNetObj;
-        CanBePickup.Value = false;
-        NetworkObject.ChangeOwnership(preferNetObj.OwnerClientId);
-
-        if (pickupTimeoutCoroutine != null) StopCoroutine(pickupTimeoutCoroutine);
-        pickupTimeoutCoroutine = StartCoroutine(PickupTimeoutCoroutine(preferNetObj));
-    }
-
-    private IEnumerator PickupCoroutine(Transform picker, float duration)
-    {
-        yield return spawnCoroutine;
-
-        //var pickerRigidBody = picker.GetComponent<Rigidbody2D>();
-        var pickerPos = picker.position + targetOffset;
-        var endTime = Time.time + duration;
-        var sqrDistance = (transform.position - pickerPos).sqrMagnitude;
-        while (sqrDistance > 0.01f)
-        {
-            if (Time.time > endTime) yield break;
-            //pickerPos = picker.position + (Vector3)pickerRigidBody.velocity * Time.fixedDeltaTime + targetOffset;
-            pickerPos = picker.position + targetOffset;
-
-            var direction = (pickerPos - transform.position).normalized;
-            itemRigidbody.linearVelocity = direction * pickupSpeed;
-
-            sqrDistance = (transform.position - pickerPos).sqrMagnitude;
-            yield return new WaitForFixedUpdate();
-        }
-
-        picker = null;
-    }
-
-    private IEnumerator PickupTimeoutCoroutine(NetworkObject pickerNetObj)
+    private IEnumerator TimeoutCoroutine(NetworkObject pickerNetObj)
     {
         yield return new WaitForSeconds(pickupDuration);
 
@@ -232,11 +211,6 @@ public class ItemReplica : NetworkBehaviour
         CanBePickup.Value = true;
     }
 
-    private void AddRandomForce()
-    {
-        itemRigidbody.AddForce(Random.insideUnitCircle * Random.Range(5, 10), ForceMode2D.Impulse);
-    }
-
     public void IgnorePickerOnServer(Transform picker)
     {
         if (ignoreCoroutine != null) StopCoroutine(ignoreCoroutine);
@@ -250,6 +224,39 @@ public class ItemReplica : NetworkBehaviour
         ignorePicker = null;
     }
 
+    private IEnumerator PickupCoroutine(Transform picker, float duration)
+    {
+        yield return spawnCoroutine;
+
+        //var pickerRigidBody = picker.GetComponent<Rigidbody2D>();
+        var pickerPos = picker.position + targetOffset;
+        var endTime = Time.time + duration;
+        var sqrDistance = (transform.position - pickerPos).sqrMagnitude;
+        while (sqrDistance > 0.01f)
+        {
+            if (Time.time > endTime) yield break;
+            //pickerPos = picker.position + (Vector3)pickerRigidBody.velocity * Time.fixedDeltaTime + targetOffset;
+            pickerPos = picker.position + targetOffset;
+
+            var direction = (pickerPos - transform.position).normalized;
+            itemRigidbody.linearVelocity = direction * pickupSpeed;
+
+            sqrDistance = (transform.position - pickerPos).sqrMagnitude;
+            if (sqrDistance < 0.04f) break;
+
+            yield return new WaitForFixedUpdate();
+        }
+
+        var inventory = picker.GetComponent<PlayerInventory>();
+        if (inventory.AddItemOnClient(Property.Value))
+        {
+            gameObject.SetActive(false);
+            DestroyServerRpc();
+        }
+
+        picker = null;
+    }
+
     public void RequestDestroy()
     {
         // Object is destroyed before being requested to be destroyed somehow
@@ -261,5 +268,10 @@ public class ItemReplica : NetworkBehaviour
     private void DestroyServerRpc()
     {
         NetworkObject.Despawn(true);
+    }
+
+    private void AddRandomForce()
+    {
+        itemRigidbody.AddForce(Random.insideUnitCircle * Random.Range(5, 10), ForceMode2D.Impulse);
     }
 }

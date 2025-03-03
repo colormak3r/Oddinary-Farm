@@ -146,11 +146,6 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
         movementBlocker.enabled = !property.IsAccessible;
     }
 
-    public void BreakFolliage()
-    {
-        folliageRenderer.sprite = null;
-    }
-
     private void RenderOutline(bool[] unmatchedNeighbor)
     {
         int unmatchedCount = unmatchedNeighbor.Count(n => n);

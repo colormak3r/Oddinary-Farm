@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class Fence : Structure
 {
-    /*[Header("Fence Settings")]
-    [SerializeField]*/
-
     private Collider2D fenceHitbox;
     private SpriteBlender spriteBlender;
 
@@ -24,11 +21,11 @@ public class Fence : Structure
         spriteBlender.Blend(true);
     }
 
-    protected override void RemoveOnClient()
+    public override void OnNetworkDespawn()
     {
+        base.OnNetworkDespawn();
         fenceHitbox.enabled = false;
         spriteBlender.ReblendNeighbors();
-        base.RemoveOnClient();
     }
 }
 

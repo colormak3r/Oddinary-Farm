@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63517db498b643c42b0decdd941ba821, type: 3}
   m_Name: Carrot Property
   m_EditorClassIdentifier: 
-  seedProperty: {fileID: 0}
+  seedProperty: {fileID: 11400000, guid: 9dfd615188d3a5d4ca3bd3e8986fbe39, type: 2}
   stages:
   - sprite: {fileID: -1045316009, guid: 7cd5c6b0e7452cb488e9871dbb777ab3, type: 3}
     duration: 1

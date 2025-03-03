@@ -33,25 +33,19 @@ public class Tool : Item
         toolProperty = (ToolProperty)newValue;
     }
 
-    protected void ClearFolliage(Vector2 position)
+    protected void ClearFoliage(Vector2 position)
     {
-        ClearFolliageRpc(position);
+        ClearFoliageRpc(position);
     }
 
     [Rpc(SendTo.Everyone)]
-    private void ClearFolliageRpc(Vector2 position)
+    private void ClearFoliageRpc(Vector2 position)
     {
         position = position.SnapToGrid();
 
-        var collider = Physics2D.OverlapPoint(position, toolProperty.TerrainLayer);
-        if (collider && collider.TryGetComponent<TerrainUnit>(out var terrainUnit))
-        {
-            terrainUnit.BreakFolliage();
-            /*if (IsServer)
-            {
-                WorldGenerator.Main.InvalidateFolliagePositionOnServer(position);
-            }*/
-        }
+        if (IsServer)
+            WorldGenerator.Main.InvalidateFolliageOnServer(position);
+        WorldGenerator.Main.RemoveFoliage(position);
     }
 
     protected Collider2D OverlapArea(Vector2 size, Vector2 position, LayerMask layers, float precision = 0.9f)

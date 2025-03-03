@@ -7,15 +7,6 @@ public class Hoe : Tool
 {
     private HoeProperty hoeProperty;
 
-    /*private List<Vector2> hoeSize = new List<Vector2>
-    {
-        new Vector2(1, 1),
-        new Vector2(2, 2),
-        new Vector2(3, 3)
-    };
-
-    private int currentHoeAltMode = 0;*/
-
     protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
     {
         base.HandleOnPropertyChanged(previousValue, newValue);
@@ -65,7 +56,7 @@ public class Hoe : Tool
         HoePrimaryRpc(position);
 
         // Run on both client and server
-        ClearFolliage(position);
+        ClearFoliage(position);
     }
 
     [Rpc(SendTo.Server)]
@@ -73,7 +64,6 @@ public class Hoe : Tool
     {
         GameObject go = Instantiate(AssetManager.Main.FarmPlotPrefab, position - TransformUtility.HALF_UNIT_Y_V2, Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
-        go.GetComponent<FarmPlot>().ChangeSizeOnServer(Vector2.one);
     }
 
     public override bool CanSecondaryAction(Vector2 position)
@@ -121,7 +111,7 @@ public class Hoe : Tool
             else
             {
                 if (showDebug) Debug.Log($"Plant and Farm Plot at {position} is removed");
-                Destroy(farmPlotCollider.gameObject);
+                farmPlotCollider.GetComponent<NetworkObject>().Despawn();
                 AssetManager.Main.SpawnItem(plant.Seed, position, transform.root.gameObject);
             }
         }

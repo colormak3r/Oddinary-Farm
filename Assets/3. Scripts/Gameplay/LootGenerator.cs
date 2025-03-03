@@ -8,21 +8,15 @@ public class LootGenerator : MonoBehaviour
     [SerializeField]
     private LootTable lootTable;
 
-    /*[ContextMenu("Drop Loot")]
+    [ContextMenu("Drop Loot")]
     public void DropLoot()
     {
-        DropLootOnServer(true);
-    }*/
+        DropLootOnServer(new NetworkObjectReference());
+    }
 
     public void Initialize(LootTable lootTable)
     {
         this.lootTable = lootTable;
-    }
-
-    [ContextMenu("Test")]
-    private void LootTest()
-    {
-        DropLootOnServer(new NetworkObjectReference());
     }
 
     public void DropLootOnServer(NetworkObjectReference preferRef)
@@ -36,7 +30,14 @@ public class LootGenerator : MonoBehaviour
         {
             for (int i = 0; i < loot.Count; i++)
             {
-                AssetManager.Main.SpawnItem(loot.Property, position, preferRef);
+                if (preferRef.TryGet(out var preferObj) && preferObj.TryGetComponent<PlayerInventory>(out var inventory))
+                {
+                    AssetManager.Main.SpawnItem(loot.Property, position, preferRef);
+                }
+                else
+                {
+                    AssetManager.Main.SpawnItem(loot.Property, position);
+                }
             }
         }
     }
