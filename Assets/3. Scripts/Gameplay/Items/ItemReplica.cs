@@ -25,9 +25,6 @@ public class ItemReplica : NetworkBehaviour
     private ItemProperty currentProperty;
     public ItemProperty CurrentProperty => currentProperty;
 
-    /*[SerializeField]
-    private Transform currentPicker;
-    public Transform CurrentPicker => currentPicker;*/
 
     [SerializeField]
     private Transform ignorePicker;
@@ -49,6 +46,8 @@ public class ItemReplica : NetworkBehaviour
     private Coroutine ignoreCoroutine;
     private Coroutine timeoutCoroutine;
 
+    private bool isWokenUp = false;
+
     private void Awake()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -57,6 +56,7 @@ public class ItemReplica : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        AddRandomForce();
         HandlePropertyChanged(null, Property.Value);
         Property.OnValueChanged += HandlePropertyChanged;
         Owner.OnValueChanged += HandleOwnerChanged;
@@ -90,10 +90,7 @@ public class ItemReplica : NetworkBehaviour
 
         spriteRenderer.sprite = currentProperty.Sprite;
 
-        if (IsOwner)
-        {
-            AddRandomForce();
-        }
+        if (IsOwner) AddRandomForce();
     }
 
     [ContextMenu("Mock Property Change")]
@@ -112,6 +109,7 @@ public class ItemReplica : NetworkBehaviour
     {
         yield return new WaitForSeconds(pickupRecovery);
         yield return new WaitUntil(() => IsSpawned);
+        isWokenUp = true;
 
         if (IsServer)
         {
@@ -134,6 +132,12 @@ public class ItemReplica : NetworkBehaviour
         if (Owner.Value.TryGet(out var networkObject) && networkObject.transform == picker)
         {
             if (showDebugs) Debug.Log($"Already picked up by the same picker: {picker}");
+            return;
+        }
+
+        if (!IsSpawned)
+        {
+            if (showDebugs) Debug.Log("Not spawned yet.");
             return;
         }
 
@@ -179,6 +183,7 @@ public class ItemReplica : NetworkBehaviour
         Owner.Value = pickerNetObj;
         CanBePickup.Value = false;
 
+        yield return new WaitUntil(() => isWokenUp);
         yield return new WaitUntil(() => IsSpawned);
         NetworkObject.ChangeOwnership(pickerNetObj.OwnerClientId);
 
