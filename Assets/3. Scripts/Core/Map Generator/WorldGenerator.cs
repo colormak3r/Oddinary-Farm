@@ -149,6 +149,10 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private bool isInitialized = false;
     public bool IsInitialized => isInitialized;
+    [SerializeField]
+    private bool showGizmos;
+    [SerializeField]
+    private bool showStep;
 
     public IEnumerator Initialize()
     {
@@ -369,6 +373,7 @@ public class WorldGenerator : NetworkBehaviour
                     chunk.folliages.Add(SpawnFolliage(terrainPos, folliagePrefabs.GetRandomElement()));
                 //var canSpawnFolliage = !resourceGenerator.ResourcePositions.Contains(new Vector2Int((int)position.x, (int)position.y));
                 //SpawnTerrainUnit(terrainPos, chunk, property, !invalidFolliagePositionHashSet.Contains(terrainPos));
+                if (showStep) yield return null;
             }
         }
 
@@ -415,13 +420,14 @@ public class WorldGenerator : NetworkBehaviour
         foreach (var terrainUnit in chunk.terrainUnits)
         {
             LocalObjectPooling.Main.Despawn(terrainUnit);
+            if (showStep) yield return null;
         }
         chunk.terrainUnits.Clear();
 
         foreach (var folliage in chunk.folliages)
         {
             LocalObjectPooling.Main.Despawn(folliage);
-            yield return null;
+            if (showStep) yield return null;
         }
 
         positionToChunk.Remove(chunk.position);
@@ -490,23 +496,23 @@ public class WorldGenerator : NetworkBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
+        if (!showGizmos) return;
+
         Gizmos.color = Color.blue;
-        if (chunkMap != null)
+
+        foreach (var chunk in positionToChunk.Values)
         {
-            foreach (var chunk in chunkMap)
-            {
-                if (chunk == null) continue;
-                Gizmos.DrawWireCube(chunk.position, Vector3.one * chunk.size);
-                //Gizmos.DrawSphere(chunk.position, 0.1f);
-                //Handles.Label(chunk.position + Vector2.one * 0.1f, $"({chunk.position.x},{chunk.position.y})");
-            }
+            if (chunk == null) continue;
+            Gizmos.DrawWireCube(chunk.position, Vector3.one * chunk.size);
+            Gizmos.DrawSphere(chunk.position, 0.1f);
+            //Handles.Label(chunk.position + Vector2.one * 0.1f, $"({chunk.position.x},{chunk.position.y})");
         }
-        Gizmos.color = Color.red;
+
+        //Gizmos.color = Color.red;
         //Gizmos.DrawWireCube(Vector3.zero, new Vector3(mapSize.x, mapSize.y, 0));
         //Gizmos.DrawWireCube(Vector3.zero, new Vector3(trueMapSize.x, trueMapSize.y, 0));
     }
 #endif
-
 }
 
 /*using ColorMak3r.Utility;

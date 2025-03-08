@@ -2662,6 +2662,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Network Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 2711573201124717444, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2819685107502346686, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2703,8 +2707,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: m_PresetReference
-      value: 7488553303055532100
+      value: 4285873409989279814
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: 'managedReferences[1135955169269514243]'
@@ -2724,6 +2732,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: 'managedReferences[2087352936041545795]'
+      value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: 'managedReferences[4285873409989279812]'
+      value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: 'managedReferences[4285873409989279814]'
       value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -2759,6 +2775,14 @@ PrefabInstance:
       value: None
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279812].<Name>k__BackingField
+      value: None
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279814].<Name>k__BackingField
+      value: None
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[7488553300764393540].<Name>k__BackingField
       value: None
       objectReference: {fileID: 0}
@@ -2788,6 +2812,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[2087352936041545795].<Description>k__BackingField
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279812].<Description>k__BackingField
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279814].<Description>k__BackingField
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -2823,6 +2855,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279812].<PacketDelayMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279814].<PacketDelayMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[7488553300764393540].<PacketDelayMs>k__BackingField
       value: 0
       objectReference: {fileID: 0}
@@ -2852,6 +2892,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[2087352936041545795].<PacketJitterMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279812].<PacketJitterMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279814].<PacketJitterMs>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -2887,6 +2935,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279812].<PacketLossPercent>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279814].<PacketLossPercent>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[7488553300764393540].<PacketLossPercent>k__BackingField
       value: 0
       objectReference: {fileID: 0}
@@ -2916,6 +2972,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[2087352936041545795].<PacketLossInterval>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279812].<PacketLossInterval>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[4285873409989279814].<PacketLossInterval>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -3040,15 +3104,15 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.00079239305
-    y: 0.0014084507
-    width: 0.99841523
-    height: 0.9971831
+    x: 0.0006165228
+    y: 0.0013386881
+    width: 0.99876696
+    height: 0.9959839
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 11.0625
+  orthographic size: 11.625
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -13246,6 +13310,8 @@ MonoBehaviour:
   resourceMap: {fileID: 1454340021}
   moistureMap: {fileID: 1454340023}
   isInitialized: 0
+  showGizmos: 0
+  showStep: 0
 --- !u!114 &1454340020
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21994,7 +22060,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2101735983
 Transform:
   m_ObjectHideFlags: 0
