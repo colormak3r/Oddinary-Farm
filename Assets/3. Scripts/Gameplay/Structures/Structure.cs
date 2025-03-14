@@ -66,7 +66,7 @@ public class Structure : NetworkBehaviour
 
     protected virtual void RemoveOnServer()
     {
-        AssetManager.Main.SpawnItem(property.StructureItemProperty, transform.position);
+        AssetManager.Main.SpawnItem(property.BlueprintProperty, transform.position);
         NetworkObject.Despawn(false);
     }
 }

@@ -10,6 +10,32 @@ public static class SerializationExtensions
 {
     private static string NULL_STRING = "null";
 
+    /*#region Item
+    public static void WriteValueSafe(this FastBufferWriter writer, in Item obj)
+    {
+        writer.WriteValueSafe(new NetworkBehaviourReference(obj));
+    }
+
+    public static void ReadValueSafe(this FastBufferReader reader, out Item obj)
+    {
+
+        reader.ReadValueSafe(out NetworkBehaviourReference objref);
+        if (objref.TryGet(out var behaviour))
+        {
+            obj = (Item)behaviour;
+        }
+        else
+        {
+            obj = null;
+        }
+    }
+
+    public static void DuplicateValue(in Item value, ref Item duplicatedValue)
+    {
+        duplicatedValue = value;
+    }
+    #endregion*/
+
     #region Item Property
     public static void WriteValueSafe(this FastBufferWriter writer, in ItemProperty obj)
     {
@@ -22,6 +48,36 @@ public static class SerializationExtensions
     }
 
     public static void DuplicateValue(in ItemProperty value, ref ItemProperty duplicatedValue)
+    {
+        duplicatedValue = value;
+    }
+    #endregion
+
+    #region SpawnerProperty
+    public static void WriteValueSafe(this FastBufferWriter writer, in SpawnerProperty obj)
+    {
+        writer.WriteValueSafeInternal(obj);
+    }
+    public static void ReadValueSafe(this FastBufferReader reader, out SpawnerProperty obj)
+    {
+        reader.ReadValueSafeInternal(out obj);
+    }
+    public static void DuplicateValue(in SpawnerProperty value, ref SpawnerProperty duplicatedValue)
+    {
+        DuplicateValueInternal(value, ref duplicatedValue);
+    }
+    #endregion
+
+    #region RangedWeaponProperty
+    public static void WriteValueSafe(this FastBufferWriter writer, in RangedWeaponProperty obj)
+    {
+        writer.WriteValueSafeInternal(obj);
+    }
+    public static void ReadValueSafe(this FastBufferReader reader, out RangedWeaponProperty obj)
+    {
+        reader.ReadValueSafeInternal(out obj);
+    }
+    public static void DuplicateValue(in RangedWeaponProperty value, ref RangedWeaponProperty duplicatedValue)
     {
         duplicatedValue = value;
     }

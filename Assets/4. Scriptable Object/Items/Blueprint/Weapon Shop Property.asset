@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa3f02b719936f94eb03088a62ba5f4e, type: 3}
-  m_Name: Structure Shop Property
+  m_Script: {fileID: 11500000, guid: d80ae4708320ff14fbb054f6f1d4d8f6, type: 3}
+  m_Name: Weapon Shop Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: 1073595741, guid: 8ceadfd081e64d647a843992361bc3c5, type: 3}
+  sprite: {fileID: 61433538, guid: 8ceadfd081e64d647a843992361bc3c5, type: 3}
   prefab: {fileID: 949117059081605438, guid: 43faad68a0f5c3f46864295e4caf8f6c, type: 3}
   isConsummable: 1
   maxStack: 1
   isSellable: 1
-  price: 800
-  range: 10
+  price: 200
+  range: 15
   primaryCdr: 0.25
   secondaryCdr: 0.25
   pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
@@ -35,12 +35,12 @@ MonoBehaviour:
     m_Bits: 0
   invalidLayers:
     serializedVersion: 2
-    m_Bits: 2415927040
-  previewIconSprite: {fileID: 21300000, guid: 38745fd3491b67844a22419e34ef642a, type: 3}
-  previewIconOffset: {x: 0, y: -1.5}
+    m_Bits: 268443392
+  previewIconSprite: {fileID: 609075896, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
+  previewIconOffset: {x: 0, y: 0}
   previewValidColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
   previewInvalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}
-  prefabToSpawn: {fileID: 2843391503052374053, guid: 007598b9c7f88b44182213340542feda, type: 3}
+  prefabToSpawn: {fileID: 4294250761585886378, guid: 34aa875e58329a94790c23056ec568c8, type: 3}
   spawnOffset: {x: 0, y: -1.5}
   structureLayer:
     serializedVersion: 2

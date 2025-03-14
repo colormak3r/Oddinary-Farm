@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StructureItem : Spawner
+public class Blueprint : Spawner
 {
-    private StructureItemProperty blueprintProperty;
+    private BlueprintProperty blueprintProperty;
 
-    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
+    public override void Initialize(ItemProperty baseProperty)
     {
-        base.HandleOnPropertyChanged(previousValue, newValue);
-        blueprintProperty = (StructureItemProperty)newValue;
+        base.Initialize(baseProperty);
+        blueprintProperty = (BlueprintProperty)baseProperty;
     }
 
     public override bool CanSecondaryAction(Vector2 position)
@@ -20,7 +20,7 @@ public class StructureItem : Spawner
         {
             // Check if the position of the structure is in range
             position = (Vector2)structureHit.transform.position + structure.Property.Offset;
-            if (!IsInRange(position)) return false;
+            if (!ItemSystem.IsInRange(position, blueprintProperty.Range)) return false;
 
             return true;
         }

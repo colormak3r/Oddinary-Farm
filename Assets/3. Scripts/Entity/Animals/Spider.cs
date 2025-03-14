@@ -7,7 +7,7 @@ public class Spider : Animal
 {
     [Header("Spider Settings")]
     [SerializeField]
-    private AxeProperty axeProperty;
+    private WeaponProperty weaponProperty;
     [SerializeField]
     private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
     private float nextIdleStateChange;
@@ -27,7 +27,7 @@ public class Spider : Animal
         base.OnNetworkSpawn();
         if (IsServer)
         {
-            Item.PropertyValue = axeProperty;
+            CurrentItem.Initialize(weaponProperty);
 
             thinkingState = new ThinkingState(this);
             burrowingState = new BurrowingState(this);
@@ -69,7 +69,7 @@ public class Spider : Animal
         {
             nextIdleStateChange = 0;
 
-            if (TargetDetector.DistanceToTarget > axeProperty.Range)
+            if (TargetDetector.DistanceToTarget > weaponProperty.Range)
             {
                 if (currentState != chasingState) ChangeState(chasingState);
             }

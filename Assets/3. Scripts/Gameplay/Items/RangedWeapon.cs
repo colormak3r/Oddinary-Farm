@@ -3,68 +3,17 @@ using UnityEngine;
 
 public class RangedWeapon : Item
 {
-    private RangedWeaponProperty rangedWeaponProperty;
-    private Transform muzzleTransform;
+    protected RangedWeaponProperty rangedWeaponProperty { get; private set; }
 
-    protected override void Initialize()
+    public override void Initialize(ItemProperty baseProperty)
     {
-        base.Initialize();
-
-        muzzleTransform = transform.root.GetComponent<TransformReference>()?.Get();
-        if (muzzleTransform == null) Debug.LogError("Failed to get muzzle transform");
+        base.Initialize(baseProperty);
+        rangedWeaponProperty = (RangedWeaponProperty)baseProperty;
     }
 
-    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
+    public override void OnPrimaryAction(Vector2 position)
     {
-        base.HandleOnPropertyChanged(previousValue, newValue);
-        rangedWeaponProperty = (RangedWeaponProperty)newValue;
-    }
-
-    // This method can run on both server and client
-    protected virtual void ShootProjectiles(Vector2 position)
-    {
-        SpawnProjectile(position, transform.root, true);
-        ShootProjectilesRpc(position, transform.root.gameObject);
-    }
-
-    [Rpc(SendTo.NotMe)]
-    private void ShootProjectilesRpc(Vector3 lookPosition, NetworkObjectReference ownerRef)
-    {
-        Transform owner = null;
-        if (ownerRef.TryGet(out var networkObject))
-        {
-            owner = networkObject.transform;
-        }
-        else
-        {
-            Debug.LogError("Failed to get owner transform");
-            return;
-        }
-
-        SpawnProjectile(lookPosition, owner, false);
-    }
-
-    private void SpawnProjectile(Vector3 lookPosition, Transform owner, bool isAuthoritative)
-    {
-        // Todo: Create isInitialized bool and check it here instead
-        if (!muzzleTransform) return;
-
-        for (int i = 0; i < rangedWeaponProperty.ProjectileCount; i++)
-        {
-            var spread = rangedWeaponProperty.ProjectileSpread;
-            if (!rangedWeaponProperty.IsDeterninedSpread)
-            {
-                spread = Random.Range(-spread, spread);
-            }
-
-            var muzzlePosition = muzzleTransform.position;
-            var direction = Quaternion.Euler(0, 0, spread) * (lookPosition - muzzlePosition).normalized;
-            var rotation = Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, 90) * direction);
-            var projectile = LocalObjectPooling.Main.Spawn(AssetManager.Main.ProjectilePrefab);
-            projectile.transform.position = muzzlePosition;
-            projectile.transform.rotation = rotation;
-            projectile.GetComponent<Projectile>().Initialize(owner, rangedWeaponProperty.ProjectileProperty, isAuthoritative);
-        }
+        base.OnPrimaryAction(position);
     }
 
     private void OnDrawGizmos()

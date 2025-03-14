@@ -56,9 +56,9 @@ public class Projectile : MonoBehaviour
     {
         if (!isInitialized || owner == null) return;
 
-        if (showDebugs) Debug.Log(collider.name);
+        if (showDebugs) Debug.Log(collider.transform.root.name);
 
-        if (collider.TryGetComponent<IDamageable>(out var damageable))
+        if (collider.transform.root.TryGetComponent<IDamageable>(out var damageable))
         {
             if (isAuthoritative)
             {

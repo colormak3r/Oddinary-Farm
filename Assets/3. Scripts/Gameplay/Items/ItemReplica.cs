@@ -253,7 +253,7 @@ public class ItemReplica : NetworkBehaviour
         }
 
         var inventory = picker.GetComponent<PlayerInventory>();
-        if (inventory.AddItemOnClient(Property.Value))
+        if (inventory.AddItem(Property.Value))
         {
             gameObject.SetActive(false);
             DestroyServerRpc();

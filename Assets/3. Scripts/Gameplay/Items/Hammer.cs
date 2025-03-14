@@ -6,10 +6,10 @@ public class Hammer : Tool
 {
     private HammerProperty hammerProperty;
 
-    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
+    public override void Initialize(ItemProperty baseProperty)
     {
-        base.HandleOnPropertyChanged(previousValue, newValue);
-        hammerProperty = (HammerProperty)newValue;
+        base.Initialize(baseProperty);
+        hammerProperty = baseProperty as HammerProperty;
     }
 
     public override void OnPreview(Vector2 position, Previewer previewer)
@@ -49,7 +49,7 @@ public class Hammer : Tool
         {
             // Check if the position of the structure is in range
             position = (Vector2)structureHit.transform.position + structure.Property.Offset;
-            if (!IsInRange(position)) return false;
+            if (!ItemSystem.IsInRange(position, hammerProperty.Range)) return false;
 
             return true;
         }
@@ -63,23 +63,9 @@ public class Hammer : Tool
     {
         position = position.SnapToGrid();
         base.OnPrimaryAction(position);
-        HammerPrimary(position);
+        ItemSystem.FixStructure(position, hammerProperty.StructureLayer);
     }
 
-    private void HammerPrimary(Vector2 position)
-    {
-        base.OnPrimaryAction(position);
-        FixStructureOnServer(position);
-    }
-
-    private void FixStructureOnServer(Vector2 position)
-    {
-        var structureHit = Physics2D.OverlapPoint(position, hammerProperty.StructureLayer);
-        if (structureHit && structureHit.TryGetComponent(out StructureStatus structureStatus))
-        {
-            structureStatus.GetHealed(1);
-        }
-    }
 
     public override bool CanSecondaryAction(Vector2 position)
     {
@@ -89,7 +75,7 @@ public class Hammer : Tool
         {
             // Check if the position of the structure is in range
             position = (Vector2)structureHit.transform.position + structure.Property.Offset;
-            if (!IsInRange(position)) return false;
+            if (!ItemSystem.IsInRange(position, hammerProperty.Range)) return false;
 
             return true;
         }
@@ -102,16 +88,8 @@ public class Hammer : Tool
     public override void OnSecondaryAction(Vector2 position)
     {
         base.OnSecondaryAction(position);
-        RemoveStructureOnServer(position);
+        ItemSystem.RemoveStructure(position, hammerProperty.StructureLayer);
     }
 
-    private void RemoveStructureOnServer(Vector2 position)
-    {
-        var structureHit = Physics2D.OverlapPoint(position, hammerProperty.StructureLayer);
-        if (structureHit && structureHit.TryGetComponent(out Structure structure))
-        {
-            structure.RemoveStructure();
-            Previewer.Main.Show(false);
-        }
-    }
+
 }

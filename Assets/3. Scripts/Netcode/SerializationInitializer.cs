@@ -11,6 +11,14 @@ public class SerializationInitializer : MonoBehaviour
         UserNetworkVariableSerialization<ItemProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<ItemProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
 
+        UserNetworkVariableSerialization<SpawnerProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<SpawnerProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
+        UserNetworkVariableSerialization<SpawnerProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
+        UserNetworkVariableSerialization<RangedWeaponProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<RangedWeaponProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
+        UserNetworkVariableSerialization<RangedWeaponProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
         UserNetworkVariableSerialization<PlantProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<PlantProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<PlantProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;

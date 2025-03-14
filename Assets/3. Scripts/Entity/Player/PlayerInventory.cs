@@ -1,4 +1,304 @@
 using Unity.Netcode;
+using System;
+using UnityEngine;
+using UnityEngine.Events;
+
+[System.Serializable]
+public class ItemStack
+{
+    public ItemProperty Property;
+    public uint Count;
+    public bool IsStackFull => Count >= Property.MaxStack;
+    public bool IsStackEmpty => Property == null || Count <= 0;
+
+    public ItemStack(ItemProperty property = null, uint count = 0)
+    {
+        Property = property;
+        Count = count;
+    }
+
+    public void EmptyStack()
+    {
+        Property = null;
+        Count = 0;
+    }
+}
+
+[System.Serializable]
+public struct InventorySlot
+{
+    public Item Item;
+    public uint Count;
+
+    public ItemProperty Property => Item?.BaseProperty;
+    public bool IsFull => Item != null && Count >= Item.BaseProperty.MaxStack;
+    public bool IsEmpty => Item == null || Count == 0;
+
+    public InventorySlot(Item item, uint count = 1)
+    {
+        Item = item;
+        Count = count;
+    }
+}
+
+// Must include this line [GenerateSerializationForType(typeof(byte))] somewhere in the project
+// See: https://github.com/Unity-Technologies/com.unity.netcode.gameobjects/issues/2920#issuecomment-2173886545
+// [GenerateSerializationForType(typeof(byte))]
+public class PlayerInventory : NetworkBehaviour, IControllable
+{
+    private static int MAX_INVENTORY_SLOTS = 30;
+
+    [Header("Inventory Settings")]
+    [SerializeField]
+    private HandProperty handProperty;
+    [SerializeField]
+    private Transform inventoryTransform;
+    [SerializeField]
+    private ItemStack[] defaultInventory;
+
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showDebug;
+    [SerializeField]
+    private InventorySlot[] inventory = new InventorySlot[MAX_INVENTORY_SLOTS];
+    public InventorySlot[] Inventory => inventory;
+
+    [SerializeField]
+    private NetworkVariable<ulong> Wallet = new NetworkVariable<ulong>(10, default, NetworkVariableWritePermission.Owner);
+    public ulong WalletValue => Wallet.Value;
+    [HideInInspector]
+    public UnityEvent<ulong> OnCoinsValueChanged;
+
+    private int currentHotbarIndex;
+    public int CurrentHotbarIndex => currentHotbarIndex;
+
+    public Action<Item> OnCurrentItemChanged;
+
+    private InventoryUI inventoryUI;
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            // Initialize the inventory UI
+            inventoryUI = InventoryUI.Main;
+            inventoryUI.Initialize(this);
+
+            //Add the hand to the inventory
+            AddItem(handProperty);
+
+            // Add the default items to the inventory
+            foreach (var itemStack in defaultInventory)
+            {
+                for (int i = 0; i < itemStack.Count; i++)
+                    AddItem(itemStack.Property, false);
+            }
+
+            // Set the current item to the Hand
+            ChangeHotBarIndex(0);
+
+            // Update the wallet
+            inventoryUI.UpdateWallet(WalletValue);
+        }
+
+        //CurrentItem.OnValueChanged += HandleCurrentItemChanged;
+        Wallet.OnValueChanged += HandleCoinValueChanged;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        //CurrentItem.OnValueChanged -= HandleCurrentItemChanged;
+        Wallet.OnValueChanged -= HandleCoinValueChanged;
+
+        if (IsServer)
+        {
+            // Clean up when a client despawns
+            foreach (var slot in inventory)
+            {
+                if (slot.Item != null)
+                {
+                    var netObj = slot.Item.GetComponent<NetworkObject>();
+                    if (netObj != null && netObj.IsSpawned) netObj.Despawn();
+                }
+            }
+        }
+    }
+
+    private void HandleCoinValueChanged(ulong previousValue, ulong newValue)
+    {
+        OnCoinsValueChanged?.Invoke(newValue);
+    }
+
+    public bool AddItem(ItemProperty property, bool playSound = true)
+    {
+        if (property is CurrencyProperty)
+        {
+            var currency = property as CurrencyProperty;
+            var value = currency.Value;
+            AddCoinsOnClient(value);
+            return true;
+        }
+        else if (property.MaxStack > 1 && FindPartialSlot(property, out var partialIndex))
+        {
+            inventory[partialIndex].Count++;
+            inventoryUI.UpdateSlot(partialIndex, property.Sprite, (int)inventory[partialIndex].Count);
+            return true;
+        }
+        else if (FindEmptySlot(out var emptyIndex))
+        {
+            // Create and initialize the item
+            var obj = Instantiate(property.Prefab, inventoryTransform);
+            var item = obj.GetComponent<Item>();
+            item.Initialize(property);
+
+            // Add the item to the inventory
+            inventory[emptyIndex] = new InventorySlot(item);
+
+            // Update the UI
+            inventoryUI.UpdateSlot(emptyIndex, property.Sprite, 1);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool CanConsumeItemOnClient(int index)
+    {
+        return !inventory[index].IsEmpty;
+    }
+
+    public void ConsumeItemOnClient(int index)
+    {
+        inventory[index].Count--;
+        if (inventory[index].Count == 0)
+        {
+            Destroy(inventory[index].Item.gameObject);
+            inventory[index].Item = null;
+            inventoryUI.UpdateSlot(index, null, 0);
+        }
+        else
+        {
+            inventoryUI.UpdateSlot(index, inventory[index].Property.Sprite, (int)inventory[index].Count);
+        }
+
+        ChangeHotBarIndex(currentHotbarIndex);
+    }
+
+    public void DropItem(int index)
+    {
+        if (inventory[index].IsEmpty) return;
+
+        var property = inventory[index].Property;
+        ConsumeItemOnClient(index);
+        AssetManager.Main.SpawnItem(property, transform.position, default, gameObject);
+    }
+
+    public void SwapItem(int index1, int index2)
+    {
+        var temp = inventory[index1];
+        inventory[index1] = inventory[index2];
+        inventory[index2] = temp;
+
+        if (!inventory[index1].IsEmpty)
+            inventoryUI.UpdateSlot(index1, inventory[index1].Property.Sprite, (int)inventory[index1].Count);
+        else
+            inventoryUI.UpdateSlot(index1, null, 0);
+
+        if (!inventory[index2].IsEmpty)
+            inventoryUI.UpdateSlot(index2, inventory[index2].Property.Sprite, (int)inventory[index2].Count);
+        else
+            inventoryUI.UpdateSlot(index2, null, 0);
+
+        ChangeHotBarIndex(currentHotbarIndex);
+    }
+
+    #region Search Algorithms
+    private bool FindPartialSlot(ItemProperty property, out int index)
+    {
+        index = -1;
+
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i].Property == property && inventory[i].Count < property.MaxStack)
+            {
+                index = i;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool FindEmptySlot(out int index)
+    {
+        index = -1;
+
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i].Property == null)
+            {
+                index = i;
+                return true;
+            }
+        }
+
+        return false;
+    }
+    #endregion
+
+    #region Currency
+    public void AddCoinsOnClient(uint value)
+    {
+        Wallet.Value += value;
+        inventoryUI.UpdateWallet(Wallet.Value);
+        if (showDebug) Debug.Log($"Added {value} coins to inventory. Total coins = {Wallet.Value}");
+    }
+
+    public void ConsumeCoinsOnClient(ulong value)
+    {
+        if (value > Wallet.Value)
+        {
+            if (showDebug) Debug.Log($"Not enough coins to consume {value}. Total coins = {Wallet.Value}");
+            return;
+        }
+
+        Wallet.Value -= value;
+        inventoryUI.UpdateWallet(Wallet.Value);
+        if (showDebug) Debug.Log($"Consumed {value} coins from inventory. Total coins = {Wallet.Value}");
+    }
+    #endregion
+
+    public void ChangeHotBarIndex(int index)
+    {
+        currentHotbarIndex = index;
+        var currentSlot = inventory[currentHotbarIndex];
+        if (currentSlot.Item == null)
+        {
+            // If the selected slot is empty, switch to the hand
+            currentSlot = inventory[0];
+        }
+
+        // Update the current item reference
+        OnCurrentItemChanged?.Invoke(currentSlot.Item);
+
+        // Play the select sound
+        if (!currentSlot.IsEmpty)
+            AudioManager.Main.PlayOneShot(currentSlot.Property.SelectSound);
+
+        // UI update
+        inventoryUI.SelectSlot(index);
+    }
+
+    private bool isControllable = true;
+    public void SetControllable(bool value)
+    {
+        isControllable = value;
+    }
+}
+
+
+/*using Unity.Netcode;
 using ColorMak3r.Utility;
 using System;
 using UnityEngine;
@@ -28,20 +328,22 @@ public class ItemStack
 }
 
 [System.Serializable]
-public struct ItemRefElement : INetworkSerializable, IEquatable<ItemRefElement>
+public struct InventorySlot : INetworkSerializable, IEquatable<InventorySlot>
 {
-    public int Index;
-    public NetworkBehaviourReference ItemRef;
+    public ItemProperty ItemProperty;
+    public uint Count;
+    public Item ItemRef;
 
-    public ItemRefElement(int index, NetworkBehaviourReference itemRef)
+    public InventorySlot(ItemProperty itemProperty, uint count, Item itemRef)
     {
-        Index = index;
+        ItemProperty = itemProperty;
+        Count = count;
         ItemRef = itemRef;
     }
 
-    public bool Equals(ItemRefElement other)
+    public bool Equals(InventorySlot other)
     {
-        return Index == other.Index && ItemRef.Equals(other.ItemRef);
+        return ItemProperty == other.ItemProperty && Count == other.Count && ItemRef == other.ItemRef;
     }
 
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -49,13 +351,15 @@ public struct ItemRefElement : INetworkSerializable, IEquatable<ItemRefElement>
         if (serializer.IsReader)
         {
             var reader = serializer.GetFastBufferReader();
-            reader.ReadValueSafe(out Index);
+            reader.ReadValueSafe(out ItemProperty);
+            reader.ReadValueSafe(out Count);
             reader.ReadValueSafe(out ItemRef);
         }
         else
         {
             var writer = serializer.GetFastBufferWriter();
-            writer.WriteValueSafe(Index);
+            writer.WriteValueSafe(ItemProperty);
+            writer.WriteValueSafe(Count);
             writer.WriteValueSafe(ItemRef);
         }
     }
@@ -63,7 +367,7 @@ public struct ItemRefElement : INetworkSerializable, IEquatable<ItemRefElement>
 
 // Must include this line [GenerateSerializationForType(typeof(byte))] somewhere in the project
 // See: https://github.com/Unity-Technologies/com.unity.netcode.gameobjects/issues/2920#issuecomment-2173886545
-[GenerateSerializationForType(typeof(byte))]
+// [GenerateSerializationForType(typeof(byte))]
 public class PlayerInventory : NetworkBehaviour, IControllable
 {
     private static int MAX_INVENTORY_SLOTS = 30;
@@ -91,10 +395,12 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     private bool showItemGizmos;
     [SerializeField]
     private int currentHotbarIndex;
-    [SerializeField]
+    *//*[SerializeField]
     private ItemStack[] inventory;
     [SerializeField]
-    private Item[] itemRefs;
+    private Item[] itemRefs;*//*
+
+    private InventorySlot[] inventory = new InventorySlot[MAX_INVENTORY_SLOTS];
 
     private bool isControllable = true;
 
@@ -112,12 +418,13 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     public Action<Item> OnCurrentItemChanged;
 
     private InventoryUI inventoryUI;
+    public ulong WalletValue => Wallet.Value;
 
     public int CurrentHotbarIndex => currentHotbarIndex;
-    public ulong WalletValue => Wallet.Value;
-    public ItemStack[] Inventory => inventory;
 
-    private void Awake()
+    //public ItemStack[] Inventory => inventory;
+
+    *//*private void Awake()
     {
         inventory = new ItemStack[MAX_INVENTORY_SLOTS];
         itemRefs = new Item[MAX_INVENTORY_SLOTS];
@@ -125,7 +432,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         {
             inventory[i] = new ItemStack();
         }
-    }
+    }*//*
 
     public override void OnNetworkSpawn()
     {
@@ -261,7 +568,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         }
     }
 
-    /*public bool ConsumeItemOnClient(ItemProperty property, uint amount = 1)
+    *//*public bool ConsumeItemOnClient(ItemProperty property, uint amount = 1)
     {
         if (!IsOwner) return false;
 
@@ -273,7 +580,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             }
         }
         return false;
-    }*/
+    }*//*
 
     public bool CanConsumeItemOnClient(int index, uint amount = 1)
     {
@@ -341,7 +648,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             // TODO: Fulfill the remaining amount by consuming from other stacks
 
             // Wrong Implementation
-            /*var amountNeeded = amount - itemStack.Count;
+            *//*var amountNeeded = amount - itemStack.Count;
 
             // Remove the current item stack
             itemStack.EmptyStack();
@@ -366,7 +673,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             else
             {
                 return true;
-            }*/
+            }*//*
         }
     }
 
@@ -431,6 +738,18 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     public void SwapItems(int index1, int index2)
     {
         if (index1 < 0 || index1 >= inventory.Length || index2 < 0 || index2 >= inventory.Length) return;
+        if (!inventory[index1].IsStackEmpty && itemRefs[index1] == null)
+        {
+            //if (showDebug) 
+            Debug.Log($"Cannot swap empty item slots, Item index {index1} is null");
+            return;
+        }
+        if (!inventory[index2].IsStackEmpty && itemRefs[index2] == null)
+        {
+            //if (showDebug) 
+            Debug.Log($"Cannot swap empty item slots. Item index {index2} is null");
+            return;
+        }
 
         var stack = inventory[index1];
         inventory[index1] = inventory[index2];
@@ -571,4 +890,4 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
 #endif
 
-}
+}*/

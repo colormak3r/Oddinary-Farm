@@ -44,7 +44,8 @@ public class InventorySlotUI : MonoBehaviour, IDropHandler
 
     public void UpdateSlot(Sprite sprite, int amount)
     {
-        itemUI.UpdateImage(sprite);
+        if (index != 0)
+            itemUI.UpdateImage(sprite);
         itemAmount.text = amount == 0 ? "" : amount.ToString();
     }
 
@@ -71,7 +72,7 @@ public class InventorySlotUI : MonoBehaviour, IDropHandler
             InventoryItemUI item = eventData.pointerDrag.GetComponent<InventoryItemUI>();
             if (item != null && item.IsInteractable)
             {
-                playerInventory.SwapItems(item.Index, index);
+                playerInventory.SwapItem(item.Index, index);
             }
         }
     }

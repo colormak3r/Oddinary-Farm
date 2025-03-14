@@ -14,4 +14,5 @@ public class SpawnerProperty : ToolProperty
 
     public GameObject PrefabToSpawn => prefabToSpawn;
     public Vector2 SpawnOffset => spawnOffset;
+    public virtual ScriptableObject InitScript => null;
 }

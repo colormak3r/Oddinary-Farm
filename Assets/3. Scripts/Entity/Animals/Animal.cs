@@ -33,8 +33,8 @@ public abstract class Animal : NetworkBehaviour
     private TargetDetector targetDetector;
     public TargetDetector TargetDetector => targetDetector;
 
-    private Item item;
-    public Item Item => item;
+    private Item currentItem;
+    public Item CurrentItem => currentItem;
 
     public float RemainingDistance { get; private set; }
 
@@ -82,7 +82,7 @@ public abstract class Animal : NetworkBehaviour
         movement = GetComponent<EntityMovement>();
         status = GetComponent<EntityStatus>();
         targetDetector = GetComponent<TargetDetector>();
-        item = GetComponentInChildren<Item>();
+        currentItem = GetComponentInChildren<Item>();
     }
 
     private void FixedUpdate()

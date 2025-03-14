@@ -24,6 +24,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2437604844209166044, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: showGizmos
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2474804323160958134, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: detectRange
       value: 20

@@ -37,7 +37,7 @@ public class Turret : NetworkBehaviour
         if (IsServer)
         {
             // Set the property value
-            projectileGun.PropertyValue = projectileGunProperty;
+            projectileGun.Initialize(projectileGunProperty);
         }
     }
 

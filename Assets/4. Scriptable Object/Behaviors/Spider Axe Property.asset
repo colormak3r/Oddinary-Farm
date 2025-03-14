@@ -16,11 +16,17 @@ MonoBehaviour:
   prefab: {fileID: 4068801595506240673, guid: 9e2bf8251c91bd941bb059b64ddbdb8f, type: 3}
   isConsummable: 0
   maxStack: 1
+  isSellable: 1
+  price: 1
+  range: 1
   primaryCdr: 2
   secondaryCdr: 0.25
-  range: 1.5
-  price: 1
-  radius: 0.5
+  pickupSound: {fileID: 0}
+  selectSound: {fileID: 0}
+  primarySound: {fileID: 0}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}
+  radius: 0.1
   damage: 1
   damageType: 2
   hostility: 2
@@ -28,3 +34,4 @@ MonoBehaviour:
   damageableLayer:
     serializedVersion: 2
     m_Bits: 2147485184
+  canHarvest: 0

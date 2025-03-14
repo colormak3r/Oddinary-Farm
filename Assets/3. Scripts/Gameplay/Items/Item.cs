@@ -1,12 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using UnityEngine.UIElements;
-using Unity.VisualScripting;
-using UnityEngine.Rendering.Universal;
 
-public class Item : NetworkBehaviour
+public class Item : MonoBehaviour
 {
     [Header("Debugs")]
     [SerializeField]
@@ -14,58 +10,26 @@ public class Item : NetworkBehaviour
     [SerializeField]
     protected bool showGizmos;
     [SerializeField]
-    protected NetworkVariable<ItemProperty> Property = new NetworkVariable<ItemProperty>();
-    private ItemProperty property;
+    private ItemProperty baseProperty;
+    public ItemProperty BaseProperty => baseProperty;
 
-    private AudioSource audioSource;
+    public ItemSystem ItemSystem { get; private set; }
+    public AudioSource AudioSource { get; private set; }
 
-    public ItemProperty PropertyValue
+    public virtual void Initialize(ItemProperty baseProperty)
     {
-        get { return Property.Value; }
-        set { Property.Value = value; }
-    }
+        AudioSource = transform.root.GetComponent<AudioSource>();
+        if (!AudioSource) Debug.LogError("AudioSource not found in parent object", this);
 
-    private void Awake()
-    {
-        StartCoroutine(InitializeCoroutine());
-    }
+        ItemSystem = transform.root.GetComponent<ItemSystem>();
+        if (!ItemSystem) Debug.LogError("ItemSystem not found in parent object", this);
 
-    private IEnumerator InitializeCoroutine()
-    {
-        yield return new WaitUntil(() => transform.root != null);
-        Initialize();
-    }
-
-    protected virtual void Initialize()
-    {
-        audioSource = transform.root.GetComponent<AudioSource>();
-        if (!audioSource) Debug.LogError("AudioSource not found in parent object", this);
-    }
-
-    public override void OnNetworkSpawn()
-    {
-        HandleOnPropertyChanged(null, PropertyValue);
-        Property.OnValueChanged += HandleOnPropertyChanged;
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        Property.OnValueChanged -= HandleOnPropertyChanged;
-    }
-
-    protected virtual void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
-    {
-        property = newValue;
+        this.baseProperty = baseProperty;
     }
 
     public virtual void OnPreview(Vector2 position, Previewer previewer)
     {
         previewer.Show(false);
-    }
-
-    protected bool IsInRange(Vector2 position)
-    {
-        return ((Vector2)transform.position - position).magnitude < property.Range;
     }
 
     #region Primary Action
@@ -77,27 +41,15 @@ public class Item : NetworkBehaviour
 
     public virtual void OnPrimaryAction(Vector2 position)
     {
-        if (property.PrimarySound) PlayPrimarySoundRpc();
+        if (baseProperty.PrimarySound) PlayPrimarySoundRpc();
     }
 
     [Rpc(SendTo.Everyone)]
     private void PlayPrimarySoundRpc()
     {
-        if (!IsSpawned || audioSource == null) return;
+        if (AudioSource == null) return;
 
-        if (audioSource == null)
-        {
-            Debug.LogError("AudioSource is null", this);
-        }
-        if (property == null)
-        {
-            Debug.LogError("Property is null", this);
-        }
-        if (property.PrimarySound == null)
-        {
-            Debug.LogError("PrimarySound is null", this);
-        }
-        audioSource.PlayOneShot(property.PrimarySound);
+        AudioSource.PlayOneShot(baseProperty.PrimarySound);
     }
 
     #endregion
@@ -110,13 +62,13 @@ public class Item : NetworkBehaviour
 
     public virtual void OnSecondaryAction(Vector2 position)
     {
-        if (property.SecondarySound) PlaySecondarySoundRpc();
+        if (baseProperty.SecondarySound) PlaySecondarySoundRpc();
     }
 
     [Rpc(SendTo.Everyone)]
     private void PlaySecondarySoundRpc()
     {
-        audioSource.PlayOneShot(property.SecondarySound);
+        AudioSource.PlayOneShot(baseProperty.SecondarySound);
     }
 
     #endregion
@@ -129,13 +81,13 @@ public class Item : NetworkBehaviour
 
     public virtual void OnAlternativeAction(Vector2 position)
     {
-        if (property.AlternativeSound) PlayAlternativeSoundRpc();
+        if (baseProperty.AlternativeSound) PlayAlternativeSoundRpc();
     }
 
     [Rpc(SendTo.Everyone)]
     private void PlayAlternativeSoundRpc()
     {
-        audioSource.PlayOneShot(property.AlternativeSound);
+        AudioSource.PlayOneShot(baseProperty.AlternativeSound);
     }
     #endregion
 

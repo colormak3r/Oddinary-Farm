@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17df9f3208bdf30459bd463744a4bd16, type: 3}
+  m_Name: Ranged Spider Property
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 0}
+  prefab: {fileID: 6493089648266601401, guid: 485f96db894dc62428366905bf64fda6, type: 3}
+  isConsummable: 0
+  maxStack: 1
+  isSellable: 1
+  price: 1
+  range: 10
+  primaryCdr: 3
+  secondaryCdr: 3
+  pickupSound: {fileID: 0}
+  selectSound: {fileID: 0}
+  primarySound: {fileID: 0}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}
+  projectileProperty: {fileID: 11400000, guid: ef029d74a43b2854a8c6788928f02089, type: 2}
+  projectileCount: 1
+  projectileSpread: 0
+  spreadEvenly: 0

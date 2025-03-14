@@ -3,7 +3,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Plant : NetworkBehaviour, IWaterable
+public class Plant : NetworkBehaviour, IWaterable, IItemInitable
 {
     [Header("Settings")]
     [SerializeField]
@@ -84,8 +84,15 @@ public class Plant : NetworkBehaviour, IWaterable
         Property.Value = mockProperty;
     }
 
-    public void Initialize(PlantProperty property)
+    public void Initialize(ScriptableObject baseProperty)
     {
+        var property = (PlantProperty)baseProperty;
+        if (property == null)
+        {
+            Debug.LogError("PlantProperty is null, cannot initialize Plant.");
+            return;
+        }
+
         Property.Value = property;
         lootGenerator.Initialize(property.LootTable);
         CurrentStage.Value = 0;
@@ -97,6 +104,7 @@ public class Plant : NetworkBehaviour, IWaterable
             farmPlot.GetDriedOnServer();
         }
     }
+
 
     public void GetWatered()
     {

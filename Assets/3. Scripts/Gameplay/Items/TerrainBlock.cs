@@ -15,15 +15,15 @@ public class TerrainBlock : Item
         worldGenerator = WorldGenerator.Main;
     }
 
-    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
+    public override void Initialize(ItemProperty baseProperty)
     {
-        base.HandleOnPropertyChanged(previousValue, newValue);
-        terrainBlockProperty = (TerrainBlockProperty)newValue;
+        base.Initialize(baseProperty);
+        terrainBlockProperty = (TerrainBlockProperty)baseProperty;
     }
 
     public override bool CanPrimaryAction(Vector2 position)
     {
-        if (!IsInRange(position)) return false;
+        if (!ItemSystem.IsInRange(position, terrainBlockProperty.Range)) return false;
 
         position = position.SnapToGrid();
         var hit = Physics2D.OverlapPoint(position, terrainBlockProperty.PlaceableLayer);

@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stages:
   - prompt: 
-    cost: 5000
+    cost: 6400
     sprite: {fileID: -1621638092, guid: 0bc699f3d8cf9484fb364fc4d9e5c78b, type: 3}
   - prompt: Add Burner to Hot Air Balloon?
-    cost: 50000
+    cost: 12800
     sprite: {fileID: 1330486549, guid: 0bc699f3d8cf9484fb364fc4d9e5c78b, type: 3}
   - prompt: Add Envelope to Hot Air Balloon?
-    cost: 500000
+    cost: 25600
     sprite: {fileID: -1346301965, guid: 0bc699f3d8cf9484fb364fc4d9e5c78b, type: 3}

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeWeaponProperty : ItemProperty
+public class MeleeWeaponProperty : WeaponProperty
 {
     [Header("Melee Weapon Settings")]
     [SerializeField]

@@ -111,18 +111,26 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (isOwner) Preview(lookPosition);
 
+        if (item == null)
+        {
+            armRotation.SetActive(false);
+            arm.SetActive(true);
+            itemRenderer.sprite = null;
+            return;
+        }
+
         rotateArm = item is RangedWeapon;
         if (rotateArm)
         {
             armRotation.SetActive(true);
             arm.SetActive(false);
-            itemRotationRenderer.sprite = item.PropertyValue.Sprite;
+            itemRotationRenderer.sprite = item.BaseProperty.Sprite;
         }
         else
         {
             armRotation.SetActive(false);
             arm.SetActive(true);
-            itemRenderer.sprite = item.PropertyValue.Sprite;
+            itemRenderer.sprite = item.BaseProperty.Sprite;
         }
     }
 
@@ -370,7 +378,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         {
             if (currentItem != null && Time.time > nextPrimary)
             {
-                var itemProperty = currentItem.PropertyValue;
+                var itemProperty = currentItem.BaseProperty;
                 nextPrimary = Time.time + itemProperty.PrimaryCdr;
 
                 if (currentItem is RangedWeapon)
@@ -410,7 +418,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (!isPrimaryCoroutineRunning && firstCallIgnored) return;
 
-        var itemProperty = currentItem.PropertyValue;
+        var itemProperty = currentItem.BaseProperty;
         switch (mode)
         {
             case AnimationMode.Primary:

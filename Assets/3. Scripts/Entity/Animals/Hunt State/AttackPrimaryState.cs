@@ -21,8 +21,8 @@ public class AttackPrimaryState : BehaviourState
         base.ExecuteState();
         if (Time.time > nextAction && animal.TargetDetector.CurrentTarget != null)
         {
-            animal.Item.OnPrimaryAction(animal.TargetDetector.CurrentTarget.position);
-            nextAction = Time.time + animal.Item.PropertyValue.PrimaryCdr;
+            animal.CurrentItem.OnPrimaryAction(animal.TargetDetector.CurrentTarget.position);
+            nextAction = Time.time + animal.CurrentItem.BaseProperty.PrimaryCdr;
             animal.NetworkAnimator.SetTrigger("PrimaryAction");
         }
     }
