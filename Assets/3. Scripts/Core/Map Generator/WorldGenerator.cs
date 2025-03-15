@@ -141,8 +141,6 @@ public class WorldGenerator : NetworkBehaviour
     private Offset2DArray<bool> folliageMap;
     private NetworkVariable<HashSet<Vector2>> invalidFolliagePositionHashSet = new NetworkVariable<HashSet<Vector2>>(new HashSet<Vector2>());
 
-
-    private Offset2DArray<Chunk> chunkMap;
     private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
 
     [Header("Debugs")]
@@ -455,6 +453,13 @@ public class WorldGenerator : NetworkBehaviour
     }
 
     #endregion
+
+    private int positionToChunkCount => positionToChunk.Count;
+    private void Update()
+    {
+        
+    }
+
 
     #region Utility
     public TerrainUnitProperty GetMappedProperty(int x, int y)
