@@ -2,6 +2,7 @@ using Unity.Netcode;
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.Rendering.DebugUI;
 
 [System.Serializable]
 public class ItemStack
@@ -60,10 +61,12 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     [SerializeField]
     private bool showDebug;
     [SerializeField]
+    private bool isControllable = true;
+    [SerializeField]
     private InventorySlot[] inventory = new InventorySlot[MAX_INVENTORY_SLOTS];
     public InventorySlot[] Inventory => inventory;
 
-    [SerializeField]
+
     private NetworkVariable<ulong> Wallet = new NetworkVariable<ulong>(10, default, NetworkVariableWritePermission.Owner);
     public ulong WalletValue => Wallet.Value;
     [HideInInspector]
@@ -72,9 +75,14 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     private int currentHotbarIndex;
     public int CurrentHotbarIndex => currentHotbarIndex;
 
+
+    private NetworkVariable<ItemProperty> CurrentItemProperty = new NetworkVariable<ItemProperty>(default, default, NetworkVariableWritePermission.Owner);
+    public Action<ItemProperty> OnCurrentItemPropertyChanged;
+    private Item currentItem;
     public Action<Item> OnCurrentItemChanged;
 
     private InventoryUI inventoryUI;
+    private AudioElement audioElement;
 
     public override void OnNetworkSpawn()
     {
@@ -83,9 +91,10 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             // Initialize the inventory UI
             inventoryUI = InventoryUI.Main;
             inventoryUI.Initialize(this);
+            audioElement = GetComponent<AudioElement>();
 
             //Add the hand to the inventory
-            AddItem(handProperty);
+            AddItem(handProperty, false);
 
             // Add the default items to the inventory
             foreach (var itemStack in defaultInventory)
@@ -103,12 +112,14 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
         //CurrentItem.OnValueChanged += HandleCurrentItemChanged;
         Wallet.OnValueChanged += HandleCoinValueChanged;
+        CurrentItemProperty.OnValueChanged += HandleCurrentItemChanged;
     }
 
     public override void OnNetworkDespawn()
     {
         //CurrentItem.OnValueChanged -= HandleCurrentItemChanged;
         Wallet.OnValueChanged -= HandleCoinValueChanged;
+        CurrentItemProperty.OnValueChanged -= HandleCurrentItemChanged;
 
         if (IsServer)
         {
@@ -124,6 +135,11 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         }
     }
 
+    private void HandleCurrentItemChanged(ItemProperty previousValue, ItemProperty newValue)
+    {
+        OnCurrentItemPropertyChanged?.Invoke(newValue);
+    }
+
     private void HandleCoinValueChanged(ulong previousValue, ulong newValue)
     {
         OnCoinsValueChanged?.Invoke(newValue);
@@ -136,12 +152,24 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             var currency = property as CurrencyProperty;
             var value = currency.Value;
             AddCoinsOnClient(value);
+
+            if (playSound) audioElement.PlayOneShot(property.PickupSound);
+
             return true;
         }
         else if (property.MaxStack > 1 && FindPartialSlot(property, out var partialIndex))
         {
             inventory[partialIndex].Count++;
+
             inventoryUI.UpdateSlot(partialIndex, property.Sprite, (int)inventory[partialIndex].Count);
+
+            if (playSound) audioElement.PlayOneShot(property.PickupSound);
+
+            if (partialIndex == currentHotbarIndex)
+            {
+                ChangeHotBarIndex(partialIndex);
+            }
+
             return true;
         }
         else if (FindEmptySlot(out var emptyIndex))
@@ -156,6 +184,13 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
             // Update the UI
             inventoryUI.UpdateSlot(emptyIndex, property.Sprite, 1);
+
+            if (playSound) audioElement.PlayOneShot(property.PickupSound);
+
+            if (emptyIndex == currentHotbarIndex)
+            {
+                ChangeHotBarIndex(emptyIndex);
+            }
 
             return true;
         }
@@ -280,7 +315,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         }
 
         // Update the current item reference
-        OnCurrentItemChanged?.Invoke(currentSlot.Item);
+        CurrentItemProperty.Value = currentSlot.Property;
+        currentItem = currentSlot.Item;
+        OnCurrentItemChanged?.Invoke(currentItem);
 
         // Play the select sound
         if (!currentSlot.IsEmpty)
@@ -290,7 +327,6 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         inventoryUI.SelectSlot(index);
     }
 
-    private bool isControllable = true;
     public void SetControllable(bool value)
     {
         isControllable = value;

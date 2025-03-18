@@ -91,12 +91,15 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private void OnEnable()
     {
-        inventory.OnCurrentItemChanged += HandleCurrentItemPropertyChanged;
+        inventory.OnCurrentItemPropertyChanged += HandleCurrentItemPropertyChanged;
+        inventory.OnCurrentItemChanged += HandleCurrentItemChanged;
     }
 
     private void OnDisable()
     {
-        inventory.OnCurrentItemChanged -= HandleCurrentItemPropertyChanged;
+        inventory.OnCurrentItemPropertyChanged -= HandleCurrentItemPropertyChanged;
+        inventory.OnCurrentItemChanged -= HandleCurrentItemChanged;
+
 
         if (isOwner)
         {
@@ -105,13 +108,13 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
     }
 
-    private void HandleCurrentItemPropertyChanged(Item item)
-    {
-        currentItem = item;
+    private void HandleCurrentItemChanged(Item item) => currentItem = item;
 
+    private void HandleCurrentItemPropertyChanged(ItemProperty itemProperty)
+    {
         if (isOwner) Preview(lookPosition);
 
-        if (item == null)
+        if (itemProperty == null)
         {
             armRotation.SetActive(false);
             arm.SetActive(true);
@@ -119,18 +122,18 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             return;
         }
 
-        rotateArm = item is RangedWeapon;
+        rotateArm = itemProperty is RangedWeaponProperty;
         if (rotateArm)
         {
             armRotation.SetActive(true);
             arm.SetActive(false);
-            itemRotationRenderer.sprite = item.BaseProperty.Sprite;
+            itemRotationRenderer.sprite = itemProperty.Sprite;
         }
         else
         {
             armRotation.SetActive(false);
             arm.SetActive(true);
-            itemRenderer.sprite = item.BaseProperty.Sprite;
+            itemRenderer.sprite = itemProperty.Sprite;
         }
     }
 

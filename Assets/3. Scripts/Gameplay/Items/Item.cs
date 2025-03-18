@@ -14,12 +14,12 @@ public class Item : MonoBehaviour
     public ItemProperty BaseProperty => baseProperty;
 
     public ItemSystem ItemSystem { get; private set; }
-    public AudioSource AudioSource { get; private set; }
+    public AudioElement AudioElement { get; private set; }
 
     public virtual void Initialize(ItemProperty baseProperty)
     {
-        AudioSource = transform.root.GetComponent<AudioSource>();
-        if (!AudioSource) Debug.LogError("AudioSource not found in parent object", this);
+        AudioElement = transform.root.GetComponent<AudioElement>();
+        if (!AudioElement) Debug.LogError("AudioElement not found in parent object", this);
 
         ItemSystem = transform.root.GetComponent<ItemSystem>();
         if (!ItemSystem) Debug.LogError("ItemSystem not found in parent object", this);
@@ -47,9 +47,9 @@ public class Item : MonoBehaviour
     [Rpc(SendTo.Everyone)]
     private void PlayPrimarySoundRpc()
     {
-        if (AudioSource == null) return;
+        if (AudioElement == null) return;
 
-        AudioSource.PlayOneShot(baseProperty.PrimarySound);
+        AudioElement.PlayOneShot(baseProperty.PrimarySound);
     }
 
     #endregion
@@ -68,7 +68,7 @@ public class Item : MonoBehaviour
     [Rpc(SendTo.Everyone)]
     private void PlaySecondarySoundRpc()
     {
-        AudioSource.PlayOneShot(baseProperty.SecondarySound);
+        AudioElement.PlayOneShot(baseProperty.SecondarySound);
     }
 
     #endregion
@@ -87,7 +87,7 @@ public class Item : MonoBehaviour
     [Rpc(SendTo.Everyone)]
     private void PlayAlternativeSoundRpc()
     {
-        AudioSource.PlayOneShot(baseProperty.AlternativeSound);
+        AudioElement.PlayOneShot(baseProperty.AlternativeSound);
     }
     #endregion
 
