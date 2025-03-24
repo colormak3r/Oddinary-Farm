@@ -5,6 +5,8 @@ public class ElevationMap : PerlinNoiseGenerator
     /*[Header("Elevation Map Settings")]
     [SerializeField]
     private float islandSharpness = 2f; // Adjust this value to change the island shape sharpness*/
+    private float maxValue;
+    public float MaxValue => maxValue;
 
     protected override float GetValue(float x, float y, Vector2Int mapSize)
     {
@@ -13,7 +15,9 @@ public class ElevationMap : PerlinNoiseGenerator
         var nx = 2 * x / mapSize.x - 1;
         var ny = 2 * y / mapSize.y - 1;
         var d = 1 - (1 - nx * nx) * (1 - ny * ny);
-        return Mathf.Clamp01(Mathf.Lerp(noise, 1 - d, 0.5f));
+        var value = Mathf.Clamp01(Mathf.Lerp(noise, 1 - d, 0.5f));
+        if (value > maxValue) maxValue = value;
+        return value;
 
         /* // Original perlin noise value
          var noise = base.GetValue(x, y, mapSize);

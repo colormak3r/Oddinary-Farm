@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerAppearance : NetworkBehaviour
 {
+    private static string NO_HAT_VALUE = "No Hat";
     public static PlayerAppearance Owner;
 
     [Header("Required Components")]
@@ -35,6 +36,10 @@ public class PlayerAppearance : NetworkBehaviour
     private NetworkVariable<Head> CurrentHead = new NetworkVariable<Head>(default, default, NetworkVariableWritePermission.Owner);
     private NetworkVariable<Hat> CurrentHat = new NetworkVariable<Hat>(default, default, NetworkVariableWritePermission.Owner);
     private NetworkVariable<Outfit> CurrentOutfit = new NetworkVariable<Outfit>(default, default, NetworkVariableWritePermission.Owner);
+
+    public Sprite CurrentFaceSprite => CurrentFace.Value.DisplaySprite;
+    public Sprite CurrentHeadSprite => CurrentHead.Value.DisplaySprite;
+    public Sprite CurrentHatSprite => CurrentHat.Value.name == NO_HAT_VALUE ? null : CurrentHat.Value.DisplaySprite;
 
     public override void OnNetworkSpawn()
     {
@@ -89,7 +94,7 @@ public class PlayerAppearance : NetworkBehaviour
     private void HandleHatChanged(Hat previousValue, Hat newValue)
     {
         if (showDebugs) Debug.Log($"Hat Changed: {previousValue} -> {newValue}");
-        if (newValue.name == "No Hat")
+        if (newValue.name == NO_HAT_VALUE)
             hatRenderer.sprite = null;
         else
             hatRenderer.sprite = newValue.DisplaySprite;

@@ -2,10 +2,9 @@ using ColorMak3r.Utility;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Chunk
 {
@@ -58,6 +57,20 @@ public class Offset2DArray<T> : IEnumerable<T>
     {
         get { return array[x + offsetX, y + offsetY]; }
         set { array[x + offsetX, y + offsetY] = value; }
+    }
+
+    public bool GetElementSafe(int x, int y, out T value)
+    {
+        if (x < minX || x > maxX || y < minY || y > maxY)
+        {
+            value = default;
+            return false;
+        }
+        else
+        {
+            value = this[x, y];
+            return true;
+        }
     }
 
     // Implementation of IEnumerable<T>
@@ -129,6 +142,10 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private MoistureMap moistureMap;
 
+    [Header("Map Components")]
+    [SerializeField]
+    private TMP_Text heightText;
+
     private Vector2Int halfMapSize;
     private Vector2Int paddingSize;
     private Vector2Int trueHalfMapSize;
@@ -152,12 +169,49 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private bool showStep;
 
+    public float HighestElevation => elevationMap.MaxValue;
+
     public IEnumerator Initialize()
     {
         yield return GenerateWorld();
         yield return BuildWorld(Vector2.zero);
 
         isInitialized = true;
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        FloodManager.Main.OnFloodLevelChanged += HandleOnFloodLevelChanged;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        FloodManager.Main.OnFloodLevelChanged -= HandleOnFloodLevelChanged;
+    }
+
+    Coroutine floodCoroutine;
+    private void HandleOnFloodLevelChanged(float floodLevel)
+    {
+        if (floodCoroutine != null) StopCoroutine(floodCoroutine);
+        floodCoroutine = StartCoroutine(FloodLevelChangeCoroutine(floodLevel));
+    }
+
+    private IEnumerator FloodLevelChangeCoroutine(float floodLevel)
+    {
+        yield return new WaitUntil(() => GameManager.Main.IsInitialized);
+        var map = elevationMap.RawMap;
+        for (int i = map.minX; i < map.maxX; i++)
+        {
+            for (int j = map.minY; j < map.maxY; j++)
+            {
+                if (map[i, j] < floodLevel)
+                {
+                    var position = new Vector2(i, j);
+                    if (IsServer) InvalidateFolliageOnServer(position);
+                    RemoveFoliage(position);
+                }
+            }
+        }
     }
 
 
@@ -301,7 +355,8 @@ public class WorldGenerator : NetworkBehaviour
     public IEnumerator BuildWorld(Vector2 position)
     {
         MapUI.Main.UpdatePlayerPosition(position, trueMapSize);
-
+        var snappedPosition = position.SnapToGrid();
+        heightText.text = Mathf.Round((GetElevation((int)snappedPosition.x, (int)snappedPosition.y) - FloodManager.Main.BaseFloodLevel) * 1000) + "ft";
         yield return BuildTerrain(position);
     }
 
@@ -365,12 +420,12 @@ public class WorldGenerator : NetworkBehaviour
             {
                 var terrainPos = new Vector2Int((int)position.x + i, (int)position.y + j);
                 var property = GetMappedProperty(terrainPos.x, terrainPos.y);
-
-                chunk.terrainUnits.Add(SpawnTerrainUnit(terrainPos, property));
-                if (folliageMap[terrainPos.x, terrainPos.y] && !invalidFolliagePositionHashSet.Value.Contains(terrainPos))
+                var terrainUnit = SpawnTerrainUnit(terrainPos, property);
+                chunk.terrainUnits.Add(terrainUnit);
+                terrainUnit.GetComponent<FloodController>().SetFloodThreshhold(GetElevation(terrainPos.x, terrainPos.y));
+                folliageMap.GetElementSafe(terrainPos.x, terrainPos.y, out var canSpawnFolliage);
+                if (canSpawnFolliage && !invalidFolliagePositionHashSet.Value.Contains(terrainPos))
                     chunk.folliages.Add(SpawnFolliage(terrainPos, folliagePrefabs.GetRandomElement()));
-                //var canSpawnFolliage = !resourceGenerator.ResourcePositions.Contains(new Vector2Int((int)position.x, (int)position.y));
-                //SpawnTerrainUnit(terrainPos, chunk, property, !invalidFolliagePositionHashSet.Contains(terrainPos));
                 if (showStep) yield return null;
             }
         }
@@ -454,14 +509,13 @@ public class WorldGenerator : NetworkBehaviour
 
     #endregion
 
-    private int positionToChunkCount => positionToChunk.Count;
-    private void Update()
+    #region Utility
+    public float GetElevation(int x, int y)
     {
-        
+        elevationMap.RawMap.GetElementSafe(x, y, out var elevation);
+        return elevation;
     }
 
-
-    #region Utility
     public TerrainUnitProperty GetMappedProperty(int x, int y)
     {
         if (x < -halfMapSize.x || x >= halfMapSize.x || y < -halfMapSize.y || y >= halfMapSize.y)

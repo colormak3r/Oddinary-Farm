@@ -1666,6 +1666,8 @@ MonoBehaviour:
   deathEffectPrefab: {fileID: 3380964621595077600, guid: b46a9319c9fc1e04ab28e16ec8f3db02, type: 3}
   damagedSound: {fileID: 8300000, guid: 20a7d71691b827846a2db73d37f293ba, type: 3}
   deathSound: {fileID: 8300000, guid: 67c6fdff6c0b6b94ba316fcfa79f9e3d, type: 3}
+  drownTickRate: 1
+  waterTransform: {fileID: 0}
   showDebugs: 0
   CurrentHealth:
     m_InternalValue: 0
@@ -1740,9 +1742,69 @@ MonoBehaviour:
     Count: 4
   - Property: {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
     Count: 1
-  currentHotbarIndex: 0
-  Wallet:
-    m_InternalValue: 10
+  showDebug: 0
+  isControllable: 1
+  inventory:
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
+  - Item: {fileID: 0}
+    Count: 0
   OnCoinsValueChanged:
     m_PersistentCalls:
       m_Calls: []

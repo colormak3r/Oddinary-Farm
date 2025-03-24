@@ -143,7 +143,7 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
         }
 
         // Block movement if not accessible
-        movementBlocker.enabled = !property.IsAccessible;
+        //movementBlocker.enabled = !property.IsAccessible;
     }
 
     private void RenderOutline(bool[] unmatchedNeighbor)

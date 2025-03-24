@@ -80,7 +80,7 @@ public class AnimalManager : NetworkBehaviour
             currentSafeRadius = baseSafeRadius;
             currentSpawnRadius = currentSafeRadius + baseSpawnRadius;
             TimeManager.Main.OnHourChanged.AddListener(OnHourChanged);
-            StartCoroutine(SpawnMonsterWaves());
+            if (canSpawn) StartCoroutine(SpawnMonsterWaves());
         }
     }
 

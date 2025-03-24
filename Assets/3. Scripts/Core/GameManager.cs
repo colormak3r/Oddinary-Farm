@@ -45,6 +45,7 @@ public class GameManager : NetworkBehaviour
         isInitializing = true;
 
         yield return WorldGenerator.Main.Initialize();
+        FloodManager.Main.Initialize();
         yield return TransitionUI.Main.HideCoroutine();
 
         if (TimeManager.Main.IsDay)
