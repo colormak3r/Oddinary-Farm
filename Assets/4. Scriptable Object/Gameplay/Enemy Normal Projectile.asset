@@ -17,5 +17,6 @@ MonoBehaviour:
   speed: 20
   damage: 1
   lifeTime: 2
+  playVfx: 1
   damageType: 1
   hostility: 2

@@ -7,6 +7,8 @@ public class Projectile : MonoBehaviour
     [Header("Properties")]
     [SerializeField]
     private ProjectileProperty property;
+    [SerializeField]
+    private ParticleSystem vfxSystem;
 
     [Header("Debugs")]
     [SerializeField]
@@ -40,6 +42,10 @@ public class Projectile : MonoBehaviour
         this.isAuthoritative = isAuthoritative;
 
         spriteRenderer.sprite = property.Sprite;
+        if (property.PlayVfx)
+        {
+            vfxSystem.Play();
+        }
         //animator.runtimeAnimatorController = property.Animator.runtimeAnimatorController;
 
         despawnCoroutine = StartCoroutine(DespawnCoroutine());

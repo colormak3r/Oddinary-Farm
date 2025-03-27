@@ -43,24 +43,7 @@ public class HotAirBalloon : Structure, IInteractable
 
     private void HandleCurrentOwnerChanged(NetworkObjectReference previousValue, NetworkObjectReference newValue)
     {
-        /*if (newValue.TryGet(out var newNetworkObject))
-        {
-            var appearance = newNetworkObject.GetComponent<PlayerAppearance>();
-            headRenderer.sprite = appearance.CurrentHeadSprite;
-            faceRenderer.sprite = appearance.CurrentFaceSprite;
-            hatRenderer.sprite = appearance.CurrentHatSprite;
-        }
-        else
-        {
-            if (previousValue.TryGet(out var oldNetworkObject))
-            {
 
-            }
-
-            headRenderer.sprite = null;
-            faceRenderer.sprite = null;
-            hatRenderer.sprite = null;
-        }*/
     }
 
     public void Interact(Transform source)

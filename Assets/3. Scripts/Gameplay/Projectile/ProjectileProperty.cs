@@ -16,6 +16,8 @@ public class ProjectileProperty : ScriptableObject
     [SerializeField]
     private float lifeTime = 5;
     [SerializeField]
+    private bool playVfx;
+    [SerializeField]
     private DamageType damageType = DamageType.Pierce;
     [SerializeField]
     private Hostility hostility;
@@ -25,6 +27,7 @@ public class ProjectileProperty : ScriptableObject
     public float Speed => speed;
     public uint Damage => damage;
     public float LifeTime => lifeTime;
+    public bool PlayVfx => playVfx;
     public DamageType DamageType => damageType;
     public Hostility Hostility => hostility;
 }
