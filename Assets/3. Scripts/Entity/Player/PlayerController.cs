@@ -1,14 +1,9 @@
 using ColorMak3r.Utility;
-using System;
 using System.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
-using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI;
 
 public enum AnimationMode
 {
@@ -17,7 +12,7 @@ public enum AnimationMode
     Alternative
 }
 
-public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayActions, IControllable
+public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayActions, IControllable, IMoveable
 {
     private static Vector3 LEFT_DIRECTION = new Vector3(-1, 1, 1);
     private static Vector3 RIGHT_DIRECTION = new Vector3(1, 1, 1);
@@ -47,9 +42,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     [SerializeField]
     private bool showGizmos;
 
-    private bool isControllable = true;
     private Vector2 lookPosition;
-    [SerializeField]
     private Vector2 playerPosition_cached = Vector2.one;
     private Vector2 mousePosition;
 
@@ -59,9 +52,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private EntityMovement movement;
     private PlayerInventory inventory;
     private PlayerInteraction interaction;
-
     private Previewer previewer;
-
+    private Rigidbody2D rbody;
     private Animator animator;
     private NetworkAnimator networkAnimator;
     private PlayerAnimationController animationController;
@@ -86,6 +78,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         interaction = GetComponent<PlayerInteraction>();
         animator = GetComponentInChildren<Animator>();
         networkAnimator = GetComponent<NetworkAnimator>();
+        rbody = GetComponent<Rigidbody2D>();
         animationController = GetComponentInChildren<PlayerAnimationController>();
     }
 
@@ -103,7 +96,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (isOwner)
         {
-            Camera.main.transform.parent = null;
             InputManager.Main.InputActions.Gameplay.SetCallbacks(null);
         }
     }
@@ -191,11 +183,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private IEnumerator InitializeCoroutine()
     {
         // Set camera
-        Camera.main.transform.parent = transform;
-        Camera.main.transform.localPosition = Camera.main.transform.position;
-
-        CharacterCamera.Main.transform.parent = transform;
-        CharacterCamera.Main.transform.localPosition = CharacterCamera.Main.transform.position;
+        CinemachineManager.Main.CinemachineCamera.Follow = transform;
 
         yield return new WaitUntil(() => GameManager.Main.IsInitialized);
 
@@ -216,7 +204,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (!isControllable) return;
+        if (!isControllable || !isMoveable) return;
 
         var direction = context.ReadValue<Vector2>().normalized;
         movement.SetDirection(direction);
@@ -555,6 +543,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     #endregion
 
+    private bool isControllable = true;
     public void SetControllable(bool value)
     {
         isControllable = value;
@@ -563,6 +552,20 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         {
             movement.SetDirection(Vector2.zero);
             animator.SetBool("IsMoving", false);
+            rbody.linearVelocity = Vector2.zero;
+            OnPrimaryCancelled();
+        }
+    }
+
+    private bool isMoveable = true;
+    public void SetMoveable(bool value)
+    {
+        isMoveable = value;
+        if (!isMoveable)
+        {
+            movement.SetDirection(Vector2.zero);
+            animator.SetBool("IsMoving", false);
+            rbody.linearVelocity = Vector2.zero;
             OnPrimaryCancelled();
         }
     }

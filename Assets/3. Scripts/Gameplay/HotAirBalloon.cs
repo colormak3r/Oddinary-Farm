@@ -10,16 +10,19 @@ public class HotAirBalloon : Structure, IInteractable
     [SerializeField]
     private SpriteRenderer spriteRenderer;
     [SerializeField]
+    private Vector3 playerOffset;
+    /*[SerializeField]
     private SpriteRenderer headRenderer;
     [SerializeField]
     private SpriteRenderer faceRenderer;
     [SerializeField]
-    private SpriteRenderer hatRenderer;
+    private SpriteRenderer hatRenderer;*/
 
     private NetworkVariable<int> CurrentStage = new NetworkVariable<int>();
     private NetworkVariable<NetworkObjectReference> CurrentOwner = new NetworkVariable<NetworkObjectReference>();
 
     public int CurrentStageValue => CurrentStage.Value;
+    private Vector2 playerPosition;
 
     public override void OnNetworkSpawn()
     {
@@ -40,7 +43,7 @@ public class HotAirBalloon : Structure, IInteractable
 
     private void HandleCurrentOwnerChanged(NetworkObjectReference previousValue, NetworkObjectReference newValue)
     {
-        if (newValue.TryGet(out var newNetworkObject))
+        /*if (newValue.TryGet(out var newNetworkObject))
         {
             var appearance = newNetworkObject.GetComponent<PlayerAppearance>();
             headRenderer.sprite = appearance.CurrentHeadSprite;
@@ -57,7 +60,7 @@ public class HotAirBalloon : Structure, IInteractable
             headRenderer.sprite = null;
             faceRenderer.sprite = null;
             hatRenderer.sprite = null;
-        }
+        }*/
     }
 
     public void Interact(Transform source)
@@ -71,11 +74,18 @@ public class HotAirBalloon : Structure, IInteractable
                 if (networkObject == source.GetComponent<NetworkObject>())
                 {
                     SetOwnerRpc(default);
+
+                    source.transform.position = playerPosition;
+                    source.GetComponent<HotAirBalloonController>().SetControl(false);
                 }
             }
             else
             {
                 SetOwnerRpc(source.gameObject);
+                playerPosition = source.position;
+
+                source.GetComponent<HotAirBalloonController>().SetControl(true);
+                source.transform.position = transform.position + playerOffset;
             }
         }
     }

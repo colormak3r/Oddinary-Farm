@@ -48,6 +48,23 @@ public class AppearanceUI : UIBehaviour
     private Transform contentTransform;
     [SerializeField]
     private Image background;
+    [SerializeField]
+    private Image faceImage;
+    [SerializeField]
+    private Image headImage;
+    [SerializeField]
+    private Image hatImage;
+    [SerializeField]
+    private Image torsoImage;
+    [SerializeField]
+    private Image leftArmImage;
+    [SerializeField]
+    private Image rightArmImage;
+    [SerializeField]
+    private Image leftLegImage;
+    [SerializeField]
+    private Image rightLegImage;
+
 
     [Header("Debugs")]
     [SerializeField]
@@ -176,24 +193,44 @@ public class AppearanceUI : UIBehaviour
     private void SetFace(Face face)
     {
         currentFace = face;
+        faceImage.sprite = face.DisplaySprite;
+
         if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateFace(face);
     }
 
     private void SetHead(Head head)
     {
         currentHead = head;
+        headImage.sprite = head.DisplaySprite;
+
         if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateHead(head);
     }
 
     private void SetHat(Hat hat)
     {
         currentHat = hat;
+        if (hat.name == "No Hat")
+        {
+            hatImage.enabled = false;
+        }
+        else
+        {
+            hatImage.enabled = true;
+            hatImage.sprite = hat.DisplaySprite;
+        }
+
         if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateHat(hat);
     }
 
     private void SetOutfit(Outfit outfit)
     {
         currentOutfit = outfit;
+        torsoImage.sprite = outfit.TorsoSprite;
+        leftArmImage.sprite = outfit.LeftArmSprite;
+        rightArmImage.sprite = outfit.RightArmSprite;
+        leftLegImage.sprite = outfit.LeftLegSprite;
+        rightLegImage.sprite = outfit.RightLegSprite;
+
         if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateOutfit(outfit);
     }
 }
