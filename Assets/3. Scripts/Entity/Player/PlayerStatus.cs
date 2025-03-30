@@ -102,7 +102,7 @@ public class PlayerStatus : EntityStatus
         yield return audioCoroutine;
 
         // Disable all renderers
-        foreach (var renderer in renderers) renderer.enabled = false;
+        //foreach (var renderer in renderers) renderer.enabled = false;
         foreach (var light in lights) light.enabled = false;
 
         // Determain respawn position
@@ -125,7 +125,7 @@ public class PlayerStatus : EntityStatus
         yield return new WaitUntil(() => transform.position == respawnPos);
 
         foreach (var collider in colliders) collider.enabled = true;
-        foreach (var renderer in renderers) renderer.enabled = true;
+        //foreach (var renderer in renderers) renderer.enabled = true;
         foreach (var light in lights) light.enabled = true;
 
         if (IsOwner)

@@ -190,7 +190,7 @@ public class WorldGenerator : NetworkBehaviour
     }
 
     Coroutine floodCoroutine;
-    private void HandleOnFloodLevelChanged(float floodLevel)
+    private void HandleOnFloodLevelChanged(float floodLevel, float waterLevel)
     {
         if (floodCoroutine != null) StopCoroutine(floodCoroutine);
         floodCoroutine = StartCoroutine(FloodLevelChangeCoroutine(floodLevel));
@@ -298,7 +298,7 @@ public class WorldGenerator : NetworkBehaviour
                 }
                 else
                 {
-                    if (terrainMap[x, y] != voidUnitProperty && resourceMap.RawMap[x, y] >= 0.99f)
+                    if (terrainMap[x, y] != voidUnitProperty && resourceMap.RawMap[x, y] >= 0.99f && terrainMap[x, y].Elevation.min > FloodManager.Main.CurrentWaterLevel)
                     {
                         SpawnResource(x, y);
                         count++;

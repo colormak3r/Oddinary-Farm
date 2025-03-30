@@ -1,6 +1,7 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public class HotAirBalloon : Structure, IInteractable
 {
@@ -11,12 +12,6 @@ public class HotAirBalloon : Structure, IInteractable
     private SpriteRenderer spriteRenderer;
     [SerializeField]
     private Vector3 playerOffset;
-    /*[SerializeField]
-    private SpriteRenderer headRenderer;
-    [SerializeField]
-    private SpriteRenderer faceRenderer;
-    [SerializeField]
-    private SpriteRenderer hatRenderer;*/
 
     private NetworkVariable<int> CurrentStage = new NetworkVariable<int>();
     private NetworkVariable<NetworkObjectReference> CurrentOwner = new NetworkVariable<NetworkObjectReference>();
@@ -34,6 +29,11 @@ public class HotAirBalloon : Structure, IInteractable
     {
         CurrentStage.OnValueChanged -= HandleCurrentStageChanged;
         CurrentOwner.OnValueChanged -= HandleCurrentOwnerChanged;
+
+        if (IsServer)
+        {
+            HandleOnPlayerDieOnServer();
+        }
     }
 
     private void HandleCurrentStageChanged(int previousValue, int newValue)
@@ -76,7 +76,33 @@ public class HotAirBalloon : Structure, IInteractable
     [Rpc(SendTo.Server)]
     private void SetOwnerRpc(NetworkObjectReference networkObjectReference)
     {
-        CurrentOwner.Value = networkObjectReference;
+        if (networkObjectReference.TryGet(out var networkObject))
+        {
+            var playerStatus = networkObject.GetComponent<PlayerStatus>();
+            playerStatus.OnDeathOnServer.AddListener(HandleOnPlayerDieOnServer);
+            CurrentOwner.Value = networkObjectReference;
+        }
+        else
+        {
+            HandleOnPlayerDieOnServer();
+        }
+    }
+
+    private void HandleOnPlayerDieOnServer()
+    {
+        PlayerStatus playerStatus = null;
+        if (CurrentOwner.Value.TryGet(out var networkObject))
+        {
+            var playerGO = networkObject.gameObject;
+            playerGO.GetComponent<HotAirBalloonController>().SetControl(false);
+            playerStatus = networkObject.GetComponent<PlayerStatus>();
+        }
+
+        if (playerStatus)
+            playerStatus.OnDeathOnServer.AddListener(HandleOnPlayerDieOnServer);
+
+
+        CurrentOwner.Value = default;
     }
 
     public void UpgradeBalloon()

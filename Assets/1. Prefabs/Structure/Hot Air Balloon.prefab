@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3716032498
+  GlobalObjectIdHash: 1485063722
   InScenePlacedSourceGlobalObjectIdHash: 1485063722
   DeferredDespawnTick: 0
   Ownership: 1
@@ -190,7 +190,7 @@ MonoBehaviour:
   property: {fileID: 11400000, guid: b9bded3ffc69f894bb40a4891116a709, type: 2}
   upgradeStages: {fileID: 11400000, guid: 3b0c73b5f2dc8654292082cc4fbeb893, type: 2}
   spriteRenderer: {fileID: 6487843671388318122}
-  playerOffset: {x: 0, y: 0, z: 0}
+  playerOffset: {x: 0, y: -0.001, z: 0}
 --- !u!1 &2707789027467210874
 GameObject:
   m_ObjectHideFlags: 0

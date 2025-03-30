@@ -33,6 +33,25 @@ public class HotAirBalloonController : NetworkBehaviour
 
     public void SetControl(bool isControlled)
     {
+        if (IsServer)
+        {
+            SetControlRpc(isControlled);
+        }
+        else
+        {
+            SetControlInternal(isControlled);
+        }
+
+    }
+
+    [Rpc(SendTo.Owner)]
+    private void SetControlRpc(bool isControlled)
+    {
+        SetControlInternal(isControlled);
+    }
+
+    private void SetControlInternal(bool isControlled)
+    {
         physicCollider.enabled = !isControlled;
         moveableController.SetMoveable(!isControlled);
         entityMovement.SetCanBeKnockback(!isControlled);

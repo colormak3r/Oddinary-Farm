@@ -20,13 +20,15 @@ public class FloodManager : NetworkBehaviour
     [SerializeField]
     private NetworkVariable<float> CurrentFloodLevel = new NetworkVariable<float>();
     public float CurrentFloodLevelValue => CurrentFloodLevel.Value;
+    public float CurrentWaterLevel => CurrentFloodLevel.Value + 3 * floodLevelChangePerHour;
     public float BaseFloodLevel => baseFloodLevel;
 
-    public Action<float> OnFloodLevelChanged;
+    public Action<float, float> OnFloodLevelChanged;
 
     private float floodLevelChangePerHour;
-    private Coroutine floodCoroutine;
+    public float FloodLevelChangePerHour => floodLevelChangePerHour;
 
+    private Coroutine floodCoroutine;
     private void Awake()
     {
         if (Main)
@@ -68,7 +70,7 @@ public class FloodManager : NetworkBehaviour
 
     private void HandleCurrentFloodLevelChanged(float previousValue, float newValue)
     {
-        OnFloodLevelChanged?.Invoke(newValue);
+        OnFloodLevelChanged?.Invoke(newValue, newValue + floodLevelChangePerHour);
     }
 
     public void Initialize()

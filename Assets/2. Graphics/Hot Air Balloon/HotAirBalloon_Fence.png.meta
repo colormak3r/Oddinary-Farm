@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      HotAirBalloon_Fence_0: -1456769801641234266
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

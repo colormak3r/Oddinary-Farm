@@ -77,7 +77,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (IsServer)
         {
             FloodManager.Main.OnFloodLevelChanged += HandleOnFloodLevelChange;
-            HandleOnFloodLevelChange(FloodManager.Main.CurrentFloodLevelValue);
+            HandleOnFloodLevelChange(FloodManager.Main.CurrentFloodLevelValue, FloodManager.Main.CurrentWaterLevel);
             if (rbody != null) StartCoroutine(DynamicDrownBootstrap());
 
             CurrentHealth.Value = maxHealth;
@@ -108,7 +108,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     #region Flood Level
 
-    private void HandleOnFloodLevelChange(float currentFloodLevel)
+    private void HandleOnFloodLevelChange(float currentFloodLevel, float waterLevel)
     {
         if (rbody == null)
         {

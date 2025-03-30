@@ -34,8 +34,6 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
     [SerializeField]
     private Sprite[] outlineSprites;
     [SerializeField]
-    private SpriteRenderer folliageRenderer;
-    [SerializeField]
     private SpriteRenderer outlineRenderer;
     [SerializeField]
     private SpriteRenderer spillOverRenderer;
@@ -67,13 +65,6 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
     {
         initCount++;
         this.property = property;
-
-        // Folliage
-        var folliage = property.FolliageSprite;
-        if (canSpawnFolliage && folliage != null && property.FolliageChance > Random.value)
-            folliageRenderer.sprite = folliage;
-        else
-            folliageRenderer.sprite = null;
 
         // Overlay
         overlayRenderer.sprite = property.OverlayChance > Random.value ? property.OverlaySprite : null;
