@@ -33,8 +33,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     [Header("Flood Settings")]
     [SerializeField]
     private float drownTickRate = 1f;
-    [SerializeField]
-    private Transform waterTransform;
 
     [Header("Debugs")]
     [SerializeField]

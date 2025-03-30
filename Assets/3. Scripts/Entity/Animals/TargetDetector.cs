@@ -107,6 +107,7 @@ public class TargetDetector : NetworkBehaviour
             if (currentTarget != null)
             {
                 targetStatus.OnDeathOnServer.AddListener(HandleOnTargetDie);
+                OnPostTargetDetected(targetStatus);
 
                 if (showDebugs) Debug.Log("New target detected: " + currentTarget);
                 OnTargetDetected?.Invoke(currentTarget);
@@ -167,9 +168,19 @@ public class TargetDetector : NetworkBehaviour
         return targetStatus != null && targetStatus.Hostility == targetHostility;
     }
 
+    protected virtual void OnPostTargetDetected(EntityStatus targetStatus)
+    {
+
+    }
+
     private void HandleOnTargetDie()
     {
-        if (showDebugs) Debug.Log($"{currentTarget} died");
+        DeselectTarget($"{currentTarget} died");
+    }
+
+    protected void DeselectTarget(string reason)
+    {
+        if (showDebugs) Debug.Log($"Deselecting target: {reason}");
         currentTarget = null;
     }
 

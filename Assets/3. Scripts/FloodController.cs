@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class FloodController : MonoBehaviour
 {
-    private static string FLOODED_ID = "_Flooded";
     // Cache the shader property ID for performance.
     private static readonly int FloodedId = Shader.PropertyToID("_Flooded");
 

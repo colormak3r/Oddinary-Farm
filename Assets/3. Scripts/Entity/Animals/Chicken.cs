@@ -1,9 +1,8 @@
 using UnityEngine;
-using ColorMak3r.Utility;
 
-public class Snail : Animal
+public class Chicken : Animal
 {
-    [Header("Snail Settings")]
+    [Header("Chicken Settings")]
     [SerializeField]
     private HandProperty handProperty;
     [SerializeField]
@@ -68,5 +67,3 @@ public class Snail : Animal
         }
     }
 }
-
-

@@ -1,4 +1,5 @@
 using ColorMak3r.Utility;
+using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -26,6 +27,8 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable
 
     public bool IsHarvestable => Property.Value.Stages[CurrentStage.Value].isHarvestStage;
     public ItemProperty Seed => Property.Value.SeedProperty;
+
+    public Action<Plant> OnHarvested;
 
     private void Awake()
     {
@@ -157,6 +160,7 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable
         if (!IsHarvestable) return;
 
         lootGenerator.DropLootOnServer(harvester);
+        OnHarvested?.Invoke(this);
 
         var stage = Property.Value.Stages[CurrentStage.Value];
         CurrentStage.Value += stage.stageIncrement;

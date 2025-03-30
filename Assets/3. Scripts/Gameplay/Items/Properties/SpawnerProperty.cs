@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = " Property", menuName = "Scriptable Objects/Item/Spawner")]
 public class SpawnerProperty : ToolProperty
 {
     [Header("Spawner Settings")]
