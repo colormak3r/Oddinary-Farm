@@ -6,7 +6,9 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
 {
     [Header("Item Settings")]
     [SerializeField]
-    private Sprite sprite;
+    private Sprite iconSprite;
+    [SerializeField]
+    private Sprite objectSprite;
     [SerializeField]
     private GameObject prefab;
     [SerializeField]
@@ -39,7 +41,8 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     private AudioClip alternativeSound;
 
     public string Name => name.Replace(" Property", "");
-    public Sprite Sprite => sprite;
+    public Sprite IconSprite => iconSprite;
+    public Sprite ObjectSprite => objectSprite == null ? iconSprite : objectSprite;
     public GameObject Prefab => prefab;
     public bool IsConsummable => isConsummable;
     public uint MaxStack => maxStack;

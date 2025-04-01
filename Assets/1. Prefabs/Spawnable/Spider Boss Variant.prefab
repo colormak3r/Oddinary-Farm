@@ -116,6 +116,10 @@ PrefabInstance:
       propertyPath: axeProperty
       value: 
       objectReference: {fileID: 11400000, guid: 9d61bc704392b564eb572050215e35f9, type: 2}
+    - target: {fileID: 5811680737040740820, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: isCaptureable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7587470008011550257, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_Mass
       value: 3

@@ -580,6 +580,8 @@ MonoBehaviour:
   graphicTransform: {fileID: 4287736005901102148}
   spriteFacingRight: 1
   roamRadius: 5
+  isCaptureable: 0
+  captureItemProperty: {fileID: 0}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:
@@ -643,6 +645,7 @@ MonoBehaviour:
   deathEffectPrefab: {fileID: 8974835140030421475, guid: 4144d76cc68cc3845a0b657c8e9b0fc7, type: 3}
   damagedSound: {fileID: 8300000, guid: 20a7d71691b827846a2db73d37f293ba, type: 3}
   deathSound: {fileID: 8300000, guid: 67c6fdff6c0b6b94ba316fcfa79f9e3d, type: 3}
+  drownTickRate: 1
   showDebugs: 0
   CurrentHealth:
     m_InternalValue: 0

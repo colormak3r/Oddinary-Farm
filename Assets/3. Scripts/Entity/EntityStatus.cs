@@ -94,7 +94,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (IsServer)
         {
             FloodManager.Main.OnFloodLevelChanged -= HandleOnFloodLevelChange;
-            if (rbody != null) StartCoroutine(DynamicDrownBootstrap());
         }
         CurrentHealth.OnValueChanged -= HandleCurrentHealthChange;
     }

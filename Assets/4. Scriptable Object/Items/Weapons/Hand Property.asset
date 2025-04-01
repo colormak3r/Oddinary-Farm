@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d102d6fc7069c4c8dea1bfbea0948c, type: 3}
   m_Name: Hand Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
+  iconSprite: {fileID: 0}
+  objectSprite: {fileID: 0}
   prefab: {fileID: 278873172899980473, guid: 6c458cf87ac56e34f932ddc4d95aa583, type: 3}
   isConsummable: 0
   maxStack: 1
   isSellable: 0
   price: 1
-  range: 5
+  range: 3
   primaryCdr: 0.25
   secondaryCdr: 0.25
   pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
@@ -26,7 +27,7 @@ MonoBehaviour:
   primarySound: {fileID: 0}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
-  radius: 1
+  radius: 0.1
   damage: 1
   damageType: 0
   hostility: 0

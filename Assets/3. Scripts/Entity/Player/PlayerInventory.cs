@@ -83,6 +83,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     private InventoryUI inventoryUI;
     private AudioElement audioElement;
+    private RangeIndicator rangeIndicator;
 
     public override void OnNetworkSpawn()
     {
@@ -92,6 +93,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             inventoryUI = InventoryUI.Main;
             inventoryUI.Initialize(this);
             audioElement = GetComponent<AudioElement>();
+            rangeIndicator = GetComponent<RangeIndicator>();
 
             //Add the hand to the inventory
             AddItem(handProperty, false);
@@ -161,7 +163,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         {
             inventory[partialIndex].Count++;
 
-            inventoryUI.UpdateSlot(partialIndex, property.Sprite, (int)inventory[partialIndex].Count);
+            inventoryUI.UpdateSlot(partialIndex, property.IconSprite, (int)inventory[partialIndex].Count);
 
             if (playSound) audioElement.PlayOneShot(property.PickupSound);
 
@@ -183,7 +185,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             inventory[emptyIndex] = new InventorySlot(item);
 
             // Update the UI
-            inventoryUI.UpdateSlot(emptyIndex, property.Sprite, 1);
+            inventoryUI.UpdateSlot(emptyIndex, property.IconSprite, 1);
 
             if (playSound) audioElement.PlayOneShot(property.PickupSound);
 
@@ -214,7 +216,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         }
         else
         {
-            inventoryUI.UpdateSlot(index, inventory[index].Property.Sprite, (int)inventory[index].Count);
+            inventoryUI.UpdateSlot(index, inventory[index].Property.IconSprite, (int)inventory[index].Count);
         }
 
         ChangeHotBarIndex(currentHotbarIndex);
@@ -236,12 +238,12 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         inventory[index2] = temp;
 
         if (!inventory[index1].IsEmpty)
-            inventoryUI.UpdateSlot(index1, inventory[index1].Property.Sprite, (int)inventory[index1].Count);
+            inventoryUI.UpdateSlot(index1, inventory[index1].Property.IconSprite, (int)inventory[index1].Count);
         else
             inventoryUI.UpdateSlot(index1, null, 0);
 
         if (!inventory[index2].IsEmpty)
-            inventoryUI.UpdateSlot(index2, inventory[index2].Property.Sprite, (int)inventory[index2].Count);
+            inventoryUI.UpdateSlot(index2, inventory[index2].Property.IconSprite, (int)inventory[index2].Count);
         else
             inventoryUI.UpdateSlot(index2, null, 0);
 
@@ -325,6 +327,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
         // UI update
         inventoryUI.SelectSlot(index);
+        rangeIndicator.Show(currentSlot.Property.Range);
     }
 
     public void SetControllable(bool value)

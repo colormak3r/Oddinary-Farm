@@ -106,7 +106,9 @@ MonoBehaviour:
   graphicTransform: {fileID: 4644328530611537964}
   spriteFacingRight: 1
   roamRadius: 5
-  showDebug: 0
+  isCaptureable: 1
+  captureItemProperty: {fileID: 11400000, guid: 63e6cf15d1384c74d9b27bc6dd797d6d, type: 2}
+  showDebug: 1
   destination: {x: 0, y: 0}
   OnDestinationReached:
     m_PersistentCalls:
@@ -138,8 +140,8 @@ MonoBehaviour:
   targetMask:
     serializedVersion: 2
     m_Bits: 512
-  showDebugs: 0
-  showGizmos: 0
+  showDebugs: 1
+  showGizmos: 1
   currentTarget: {fileID: 0}
   distanceToTarget: 0
   OnTargetDetected:

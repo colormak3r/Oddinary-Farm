@@ -11,11 +11,6 @@ public class Hand : MeleeWeapon
         handProperty = (HandProperty)baseProperty;
     }
 
-    public override bool CanPrimaryAction(Vector2 position)
-    {
-        return ItemSystem.IsInRange(position, handProperty.Range);
-    }
-
     public override void OnPrimaryAction(Vector2 position)
     {
         base.OnPrimaryAction(position);

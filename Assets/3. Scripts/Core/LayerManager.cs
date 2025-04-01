@@ -27,4 +27,8 @@ public class LayerManager : MonoBehaviour
     [SerializeField]
     private LayerMask farmPlotLayer;
     public LayerMask FarmPlotLayer => farmPlotLayer;
+
+    [SerializeField]
+    private LayerMask animalLayer;
+    public LayerMask AnimalLayer => animalLayer;
 }

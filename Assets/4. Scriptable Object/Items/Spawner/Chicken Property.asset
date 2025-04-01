@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f60cdaca0f0c61444bca228631a32b64, type: 3}
   m_Name: Chicken Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: 67225136, guid: e411fe9661c1b9142946b28507ff81bf, type: 3}
+  iconSprite: {fileID: -2096492524, guid: 473cc50d187042a4b83ebe63138273d5, type: 3}
+  objectSprite: {fileID: 0}
   prefab: {fileID: 1045763407051405252, guid: d103c838c6e33ec4eb41e29473de5835, type: 3}
   isConsummable: 1
   maxStack: 5

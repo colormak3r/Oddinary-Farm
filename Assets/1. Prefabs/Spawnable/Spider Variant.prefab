@@ -218,6 +218,8 @@ MonoBehaviour:
   graphicTransform: {fileID: 3213396557102681403}
   spriteFacingRight: 0
   roamRadius: 5
+  isCaptureable: 0
+  captureItemProperty: {fileID: 0}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:

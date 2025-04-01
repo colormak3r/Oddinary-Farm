@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d80ae4708320ff14fbb054f6f1d4d8f6, type: 3}
   m_Name: Blueprint Shop Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: 1073595741, guid: 8ceadfd081e64d647a843992361bc3c5, type: 3}
+  iconSprite: {fileID: 1073595741, guid: 8ceadfd081e64d647a843992361bc3c5, type: 3}
+  objectSprite: {fileID: 0}
   prefab: {fileID: 949117059081605438, guid: 43faad68a0f5c3f46864295e4caf8f6c, type: 3}
   isConsummable: 1
   maxStack: 1

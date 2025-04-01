@@ -35,6 +35,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private SpriteRenderer itemRotationRenderer;
     [SerializeField]
     private GameObject armRotation;
+    [SerializeField]
+    private RenderTexture renderTexture;
 
     [Header("Debug")]
     [SerializeField]
@@ -42,9 +44,12 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     [SerializeField]
     private bool showGizmos;
 
+    [SerializeField]
     private Vector2 lookPosition;
+    public static Vector2 LookPosition { get; private set; }
     private Vector2 playerPosition_cached = Vector2.one;
-    private Vector2 mousePosition;
+    [SerializeField]
+    private Vector2 screenMousePos;
 
     private float nextPrimary;
     private float nextSecondary;
@@ -63,13 +68,15 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
-    public static Vector2 LookPosition { get; private set; }
+
 
     public static Transform MuzzleTransform;
 
     private bool rotateArm = false;
 
     private Item currentItem;
+    private Camera mainCamera;
+    private GameplayRenderer gameplayRenderer;
 
     private void Awake()
     {
@@ -80,6 +87,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         networkAnimator = GetComponent<NetworkAnimator>();
         rbody = GetComponent<Rigidbody2D>();
         animationController = GetComponentInChildren<PlayerAnimationController>();
+        mainCamera = Camera.main;
+        gameplayRenderer = GameplayRenderer.Main;
     }
 
     private void OnEnable()
@@ -119,13 +128,13 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         {
             armRotation.SetActive(true);
             arm.SetActive(false);
-            itemRotationRenderer.sprite = itemProperty.Sprite;
+            itemRotationRenderer.sprite = itemProperty.ObjectSprite;
         }
         else
         {
             armRotation.SetActive(false);
             arm.SetActive(true);
-            itemRenderer.sprite = itemProperty.Sprite;
+            itemRenderer.sprite = itemProperty.ObjectSprite;
         }
     }
 
@@ -165,7 +174,26 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             StartCoroutine(WorldGenerator.Main.BuildWorld(transform.position));
         }
 
-        lookPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        var rawImageRectTransform = gameplayRenderer.RawImage.rectTransform;
+        // Convert mouse position to local position within RawImage
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rawImageRectTransform,
+            screenMousePos,
+            gameplayRenderer.UICamera,
+            out var localMousePos);
+
+        // Normalize local coordinates (0-1)
+        Rect rect = rawImageRectTransform.rect;
+        float normalizedX = (localMousePos.x - rect.x) / rect.width;
+        float normalizedY = (localMousePos.y - rect.y) / rect.height;
+
+        // Convert normalized coordinates to RenderTexture coordinates
+        renderTexPos = new Vector3(
+            normalizedX * renderTexture.width,
+            normalizedY * renderTexture.height,
+            mainCamera.nearClipPlane);
+
+        lookPosition = mainCamera.ScreenToWorldPoint(renderTexPos);
         LookPosition = lookPosition;
         IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;
 
@@ -173,6 +201,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         Preview(lookPosition);
     }
+    [SerializeField]
+    Vector3 renderTexPos;
 
     private void Initialize()
     {
@@ -217,7 +247,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (Camera.main == null) return;
 
-        mousePosition = context.ReadValue<Vector2>();
+        screenMousePos = context.ReadValue<Vector2>();
     }
 
     public void OnLookDirection(InputAction.CallbackContext context)

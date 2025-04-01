@@ -88,7 +88,7 @@ public class ItemReplica : NetworkBehaviour
         currentProperty = current;
         if (currentProperty == null) return;
 
-        spriteRenderer.sprite = currentProperty.Sprite;
+        spriteRenderer.sprite = currentProperty.IconSprite;
 
         if (IsOwner) AddRandomForce();
     }

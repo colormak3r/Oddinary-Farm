@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e84fa230aa18ab449a5f359e550e2296, type: 3}
   m_Name: Seeds Shop Inventory
   m_EditorClassIdentifier: 
-  shopName: Amanda's Garden
+  shopName: Amanda Garden
   saleMultiplier: 0.9
   penaltyMultiplier: 0.7
   itemProperties:

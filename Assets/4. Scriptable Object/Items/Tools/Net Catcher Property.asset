@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 692cd8a4820acfa4786d7cb9c8cacf63, type: 3}
+  m_Name: Net Catcher Property
+  m_EditorClassIdentifier: 
+  iconSprite: {fileID: -431928425, guid: 473cc50d187042a4b83ebe63138273d5, type: 3}
+  objectSprite: {fileID: 21300000, guid: e82d0bd2b5ba2ee45878d957ffd293a8, type: 3}
+  prefab: {fileID: 5535072926760408326, guid: 2c73df67315ad9c44baa4ce8dd5f89a5, type: 3}
+  isConsummable: 0
+  maxStack: 1
+  isSellable: 1
+  price: 100
+  range: 5
+  primaryCdr: 0.25
+  secondaryCdr: 0.25
+  pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
+  selectSound: {fileID: 0}
+  primarySound: {fileID: 0}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}

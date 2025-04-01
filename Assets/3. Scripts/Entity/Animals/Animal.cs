@@ -17,6 +17,14 @@ public abstract class Animal : NetworkBehaviour
     [SerializeField]
     private float roamRadius = 5f;
 
+    [Header("Capture Settings")]
+    [SerializeField]
+    private bool isCaptureable = true;
+    public bool IsCaptureable => isCaptureable && captureItemProperty != null;
+    [SerializeField]
+    private ItemProperty captureItemProperty;
+    public ItemProperty CaptureItemProperty => captureItemProperty;
+
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
     private Animator animator;
@@ -160,6 +168,18 @@ public abstract class Animal : NetworkBehaviour
     public Vector2 GetRandomPointInRange()
     {
         return (Vector2)transform.position + Random.insideUnitCircle * roamRadius;
+    }
+
+    public void Capture()
+    {
+        CaptureRpc();
+    }
+
+    [Rpc(SendTo.Server)]
+    private void CaptureRpc()
+    {
+        AssetManager.Main.SpawnItem(captureItemProperty, transform.position);
+        Destroy(gameObject);
     }
 
     private void OnDrawGizmos()

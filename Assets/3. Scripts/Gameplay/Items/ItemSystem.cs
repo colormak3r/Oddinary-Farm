@@ -237,4 +237,27 @@ public class ItemSystem : NetworkBehaviour
             gameobject.GetComponent<IItemInitable>().Initialize(spawnerProperty.InitScript);
     }
     #endregion
+
+    #region Net Capture
+
+    public void NetCapture(Vector2 position, float range)
+    {
+        NetCaptureRpc(position, range);
+    }
+
+    [Rpc(SendTo.Server)]
+    public void NetCaptureRpc(Vector2 position, float range)
+    {
+        var direction = position - ObjectPosition;
+        var hits = Physics2D.RaycastAll(ObjectPosition, direction, range, LayerManager.Main.AnimalLayer);
+        foreach (var hit in hits)
+        {
+            if (hit.collider.TryGetComponent(out Animal animal) && animal.IsCaptureable)
+            {
+                animal.Capture();
+            }
+        }
+    }
+
+    #endregion
 }

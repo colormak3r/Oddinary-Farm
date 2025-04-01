@@ -130,7 +130,7 @@ PrefabInstance:
       objectReference: {fileID: 1219960550920258598, guid: 642fe77dad2128649af87c7621d6f14f, type: 3}
     - target: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Name
-      value: Spider Variant 1
+      value: Spider Ranged Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8210972803629294697, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: guid
@@ -186,6 +186,8 @@ MonoBehaviour:
   graphicTransform: {fileID: 3213396557102681403}
   spriteFacingRight: 0
   roamRadius: 5
+  isCaptureable: 0
+  captureItemProperty: {fileID: 0}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:
