@@ -499,6 +499,7 @@ MonoBehaviour:
   maxSpeed: 50
   smoothTime: 0.01
   showDebugs: 0
+  speedMultiplier: 1
   velocity: 0
 --- !u!58 &2502610467928102923
 CircleCollider2D:
@@ -580,6 +581,7 @@ MonoBehaviour:
   graphicTransform: {fileID: 4287736005901102148}
   spriteFacingRight: 1
   roamRadius: 5
+  activeTime: 0
   isCaptureable: 0
   captureItemProperty: {fileID: 0}
   showDebug: 0
@@ -608,7 +610,6 @@ MonoBehaviour:
   raycastTarget: 1
   detectRange: 10
   escapeRange: 15
-  activeTime: 0
   penaltyRange: 2
   targetHostility: 0
   targetMask:

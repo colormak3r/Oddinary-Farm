@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271843c45096f3e4a9b382fc1baf905b, type: 3}
+  m_Name: Billy Hat
+  m_EditorClassIdentifier: 
+  displaySprite: {fileID: -6043673076894090343, guid: afa4e1d1ba29d7f4f87b11246792d289, type: 3}

@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Corn Property
   m_EditorClassIdentifier: 
   seedProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+  foodType: 1
+  foodColor: 3
   stages:
   - sprite: {fileID: 957528551, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
     duration: 1

@@ -58,7 +58,7 @@ public class ItemSystem : NetworkBehaviour
                 // Deal damage to the object
                 if (collider.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    damageable.GetDamaged(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType, meleeWeaponProperty.Hostility, transform.root);
+                    damageable.TakeDamage(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType, meleeWeaponProperty.Hostility, transform.root);
 
                     if (damageable.GetHostility() == meleeWeaponProperty.Hostility)
                     {
@@ -149,8 +149,19 @@ public class ItemSystem : NetworkBehaviour
     {
         position = position.SnapToGrid();
 
-        if (IsServer) WorldGenerator.Main.InvalidateFolliageOnServer(position);
-        WorldGenerator.Main.RemoveFoliage(position);
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                Vector2 offset = new Vector2(x, y);
+                Vector2 gridPos = (position + offset).SnapToGrid();
+
+                if (IsServer)
+                    WorldGenerator.Main.InvalidateFolliageOnServer(gridPos);
+
+                WorldGenerator.Main.RemoveFoliage(gridPos);
+            }
+        }
     }
     #endregion
 
@@ -165,7 +176,7 @@ public class ItemSystem : NetworkBehaviour
     {
         GameObject go = Instantiate(AssetManager.Main.FarmPlotPrefab, position - TransformUtility.HALF_UNIT_Y_V2, Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
-        AnimalManager.Main.UpdateSafeRadius(Mathf.CeilToInt(Mathf.Max(Mathf.Abs(position.x), Mathf.Abs(position.y))) + 5);
+        CreatureSpawnManager.Main.UpdateSafeRadius(Mathf.CeilToInt(Mathf.Max(Mathf.Abs(position.x), Mathf.Abs(position.y))) + 5);
     }
 
     public void RemoveFarmPlot(Vector2 position)

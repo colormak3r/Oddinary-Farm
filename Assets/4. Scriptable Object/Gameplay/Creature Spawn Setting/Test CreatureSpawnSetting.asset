@@ -1,0 +1,122 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e61a253932c9d84fb0b31ad190ffdda, type: 3}
+  m_Name: Test CreatureSpawnSetting
+  m_EditorClassIdentifier: 
+  creatureDays:
+  - creatureWaves:
+    - spawnHour: 8
+      creatureSpawns:
+      - creaturePrefab: {fileID: 3872211501604868882, guid: 318b52c2b82b3f04b88341a4a4b1edc5, type: 3}
+        spawnCount: 1
+    - spawnHour: 20
+      creatureSpawns:
+      - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+        spawnCount: 3
+  - creatureWaves:
+    - spawnHour: 8
+      creatureSpawns:
+      - creaturePrefab: {fileID: 3872211501604868882, guid: 318b52c2b82b3f04b88341a4a4b1edc5, type: 3}
+        spawnCount: 2
+    - spawnHour: 20
+      creatureSpawns:
+      - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+        spawnCount: 3
+      - creaturePrefab: {fileID: 8862408004728527693, guid: d16681cace399384294a68fa2487800e, type: 3}
+        spawnCount: 1
+  - creatureWaves:
+    - spawnHour: 8
+      creatureSpawns:
+      - creaturePrefab: {fileID: 3872211501604868882, guid: 318b52c2b82b3f04b88341a4a4b1edc5, type: 3}
+        spawnCount: 3
+    - spawnHour: 20
+      creatureSpawns:
+      - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+        spawnCount: 4
+      - creaturePrefab: {fileID: 8862408004728527693, guid: d16681cace399384294a68fa2487800e, type: 3}
+        spawnCount: 2
+  - creatureWaves:
+    - spawnHour: 8
+      creatureSpawns:
+      - creaturePrefab: {fileID: 3872211501604868882, guid: 318b52c2b82b3f04b88341a4a4b1edc5, type: 3}
+        spawnCount: 4
+    - spawnHour: 20
+      creatureSpawns:
+      - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+        spawnCount: 5
+      - creaturePrefab: {fileID: 8862408004728527693, guid: d16681cace399384294a68fa2487800e, type: 3}
+        spawnCount: 3
+      - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
+        spawnCount: 1
+  - creatureWaves:
+    - spawnHour: 8
+      creatureSpawns:
+      - creaturePrefab: {fileID: 3872211501604868882, guid: 318b52c2b82b3f04b88341a4a4b1edc5, type: 3}
+        spawnCount: 5
+    - spawnHour: 20
+      creatureSpawns:
+      - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+        spawnCount: 5
+      - creaturePrefab: {fileID: 8862408004728527693, guid: d16681cace399384294a68fa2487800e, type: 3}
+        spawnCount: 3
+      - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
+        spawnCount: 1
+    - spawnHour: 22
+      creatureSpawns:
+      - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+        spawnCount: 5
+      - creaturePrefab: {fileID: 8862408004728527693, guid: d16681cace399384294a68fa2487800e, type: 3}
+        spawnCount: 3
+      - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
+        spawnCount: 1
+  - creatureWaves:
+    - spawnHour: 8
+      creatureSpawns:
+      - creaturePrefab: {fileID: 3872211501604868882, guid: 318b52c2b82b3f04b88341a4a4b1edc5, type: 3}
+        spawnCount: 5
+    - spawnHour: 20
+      creatureSpawns:
+      - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+        spawnCount: 10
+      - creaturePrefab: {fileID: 8862408004728527693, guid: d16681cace399384294a68fa2487800e, type: 3}
+        spawnCount: 5
+      - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
+        spawnCount: 3
+    - spawnHour: 21
+      creatureSpawns:
+      - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+        spawnCount: 5
+      - creaturePrefab: {fileID: 8862408004728527693, guid: d16681cace399384294a68fa2487800e, type: 3}
+        spawnCount: 3
+      - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
+        spawnCount: 1
+    - spawnHour: 22
+      creatureSpawns:
+      - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+        spawnCount: 5
+      - creaturePrefab: {fileID: 8862408004728527693, guid: d16681cace399384294a68fa2487800e, type: 3}
+        spawnCount: 3
+      - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
+        spawnCount: 1
+  - creatureWaves:
+    - spawnHour: 8
+      creatureSpawns:
+      - creaturePrefab: {fileID: 3872211501604868882, guid: 318b52c2b82b3f04b88341a4a4b1edc5, type: 3}
+        spawnCount: 5
+    - spawnHour: 22
+      creatureSpawns:
+      - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+        spawnCount: 10
+      - creaturePrefab: {fileID: 8862408004728527693, guid: d16681cace399384294a68fa2487800e, type: 3}
+        spawnCount: 5
+      - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
+        spawnCount: 3

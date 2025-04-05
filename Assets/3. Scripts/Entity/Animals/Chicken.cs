@@ -4,7 +4,7 @@ public class Chicken : Animal
 {
     [Header("Chicken Settings")]
     [SerializeField]
-    private HandProperty handProperty;
+    private bool isTamed;
     [SerializeField]
     private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
     private float nextIdleStateChange;
@@ -13,8 +13,8 @@ public class Chicken : Animal
     private BehaviourState nibblingState;
     private BehaviourState roamingState;
 
-    private BehaviourState chasingState;
-    private BehaviourState attackPrimaryState;
+    private BehaviourState runawayState;
+    private BehaviourState seekfoodState;
 
     private BehaviourState[] idleStates;
     private BehaviourState[] activeStates;
@@ -25,45 +25,57 @@ public class Chicken : Animal
 
         if (IsServer)
         {
-            CurrentItem.Initialize(handProperty);
-
             thinkingState = new ThinkingState(this);
             nibblingState = new NibblingState(this);
             roamingState = new RoamingState(this);
 
-            chasingState = new ChasingState(this);
-            attackPrimaryState = new AttackPrimaryState(this);
+            runawayState = new RunawayState(this);
+            seekfoodState = new SeekFoodState(this);
 
             idleStates = new BehaviourState[] { thinkingState, nibblingState, roamingState };
-            activeStates = new BehaviourState[] { chasingState, attackPrimaryState };
         }
     }
 
     protected override void HandleTransitions()
     {
-        if (TargetDetector.CurrentTarget == null)
+        if (ThreatDetector.CurrentThreat == null)
         {
-            // Idle States
-            if (Time.time > nextIdleStateChange)
+            if (isTamed && HungerStimulus.IsHungry)
             {
-                nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
-
-                var newState = idleStates[Random.Range(0, idleStates.Length)];
-                ChangeState(newState);
+                if (HungerStimulus.TargetFood == null)
+                {
+                    if (currentState != roamingState)
+                    {
+                        ChangeState(roamingState);
+                    }
+                }
+                else
+                {
+                    if (currentState != seekfoodState)
+                    {
+                        ChangeState(seekfoodState);
+                    }
+                }
+            }
+            else
+            {
+                // Idle States
+                if (Time.time > nextIdleStateChange)
+                {
+                    var newState = idleStates[Random.Range(0, idleStates.Length)];
+                    ChangeState(newState);
+                }
             }
         }
         else
         {
-            // Active States
-            nextIdleStateChange = 0;
-            if (TargetDetector.DistanceToTarget > handProperty.Range)
-            {
-                if (currentState != chasingState) ChangeState(chasingState);
-            }
-            else
-            {
-                if (currentState != attackPrimaryState) ChangeState(attackPrimaryState);
-            }
+            if (currentState != runawayState) ChangeState(runawayState);
         }
+
+    }
+
+    protected override void OnStateChanged(BehaviourState oldState, BehaviourState newState)
+    {
+        nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
     }
 }

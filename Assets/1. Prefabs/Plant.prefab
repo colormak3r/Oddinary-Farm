@@ -55,7 +55,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 1ea7b98f1bc748b4d8bba8ec4b7b39df, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -391,6 +391,7 @@ MonoBehaviour:
   deathEffectPrefab: {fileID: 3783789229217093166, guid: f6b6bd460b33f204ab916029cd13f1c1, type: 3}
   damagedSound: {fileID: 8300000, guid: e635d50c429164a468b90dfb2f90b51d, type: 3}
   deathSound: {fileID: 8300000, guid: 5bf1fb59c710a6e418440949089738cd, type: 3}
+  drownTickRate: 1
   showDebugs: 0
   CurrentHealth:
     m_InternalValue: 0

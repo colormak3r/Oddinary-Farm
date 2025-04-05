@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Carrot Property
   m_EditorClassIdentifier: 
   seedProperty: {fileID: 11400000, guid: 9dfd615188d3a5d4ca3bd3e8986fbe39, type: 2}
+  foodType: 1
+  foodColor: 5
   stages:
   - sprite: {fileID: -1045316009, guid: 7cd5c6b0e7452cb488e9871dbb777ab3, type: 3}
     duration: 1

@@ -19,11 +19,17 @@ public class PlantProperty : ScriptableObject, IEquatable<PlantProperty>
     [SerializeField]
     private SeedProperty seedProperty;
     [SerializeField]
+    private FoodType foodType;
+    [SerializeField]
+    private FoodColor foodColor;
+    [SerializeField]
     private PlantStage[] stages;
     [SerializeField]
     private LootTable lootTable;
 
     public SeedProperty SeedProperty => seedProperty;
+    public FoodType FoodType => foodType;
+    public FoodColor FoodColor => foodColor;
     public PlantStage[] Stages => stages;
     public LootTable LootTable => lootTable;
 

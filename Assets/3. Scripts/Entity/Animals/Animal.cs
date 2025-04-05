@@ -4,10 +4,21 @@ using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.Events;
 
+public enum ActiveTime
+{
+    Neutral,
+    Day,
+    Night
+}
+
 public abstract class Animal : NetworkBehaviour
 {
     private static Vector3 LEFT_DIRECTION = new Vector3(-1, 1, 1);
     private static Vector3 RIGHT_DIRECTION = new Vector3(1, 1, 1);
+    public static string ANIMATOR_IS_MOVING = "IsMoving";
+    public static string ANIMATOR_IS_NIBBLING = "IsNibbling";
+    public static string ANIMATOR_PRIMARY_ACTION = "PrimaryAction";
+    public static string ANIMATOR_IS_SITTING = "IsSitting";
 
     [Header("Animal Settings")]
     [SerializeField]
@@ -40,6 +51,14 @@ public abstract class Animal : NetworkBehaviour
 
     private TargetDetector targetDetector;
     public TargetDetector TargetDetector => targetDetector;
+
+    private ThreatDetector threatDetector;
+    public ThreatDetector ThreatDetector => threatDetector;
+
+    private HungerStimulus hungerStimulus;
+    public HungerStimulus HungerStimulus => hungerStimulus;
+    private FollowStimulus followStimulus;
+    public FollowStimulus FollowStimulus => followStimulus;
 
     private Item currentItem;
     public Item CurrentItem => currentItem;
@@ -90,6 +109,9 @@ public abstract class Animal : NetworkBehaviour
         movement = GetComponent<EntityMovement>();
         status = GetComponent<EntityStatus>();
         targetDetector = GetComponent<TargetDetector>();
+        threatDetector = GetComponent<ThreatDetector>();
+        hungerStimulus = GetComponent<HungerStimulus>();
+        followStimulus = GetComponent<FollowStimulus>();
         currentItem = GetComponentInChildren<Item>();
     }
 
@@ -97,8 +119,8 @@ public abstract class Animal : NetworkBehaviour
     {
         if (!IsServer || !IsSpawned) return;
 
-        currentState?.ExecuteState();
         HandleTransitions();
+        currentState?.ExecuteState();
     }
 
     protected abstract void HandleTransitions();
@@ -106,10 +128,19 @@ public abstract class Animal : NetworkBehaviour
     public void ChangeState(BehaviourState newState)
     {
         if (showDebug) Debug.Log($"Change state from {currentStateName} to {newState.GetType().Name}");
+
+        var oldState = currentState;
         currentState?.ExitState();
         currentState = newState;
         currentStateName = newState.GetType().Name;
         currentState.EnterState();
+
+        OnStateChanged(oldState, newState);
+    }
+
+    protected virtual void OnStateChanged(BehaviourState oldState, BehaviourState newState)
+    {
+
     }
 
     public void MoveTo(Vector2 position, float precision = 0.1f)
@@ -139,6 +170,7 @@ public abstract class Animal : NetworkBehaviour
 
     private IEnumerator MoveCoroutine(Vector2 position, float precision)
     {
+        RemainingDistance = float.PositiveInfinity;
         while (RemainingDistance > precision)
         {
             var direction = position - (Vector2)transform.position;
@@ -167,7 +199,12 @@ public abstract class Animal : NetworkBehaviour
 
     public Vector2 GetRandomPointInRange()
     {
-        return (Vector2)transform.position + Random.insideUnitCircle * roamRadius;
+        const float minDistance = 1f;
+        float angle = Random.Range(0f, Mathf.PI * 2f);
+        float distance = Mathf.Sqrt(Random.Range(minDistance * minDistance, roamRadius * roamRadius));
+
+        Vector2 offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * distance;
+        return (Vector2)transform.position + offset;
     }
 
     public void Capture()
@@ -180,6 +217,11 @@ public abstract class Animal : NetworkBehaviour
     {
         AssetManager.Main.SpawnItem(captureItemProperty, transform.position);
         Destroy(gameObject);
+    }
+
+    public void SetFacing(bool isFacingRight)
+    {
+        IsFacingRight.Value = isFacingRight;
     }
 
     private void OnDrawGizmos()

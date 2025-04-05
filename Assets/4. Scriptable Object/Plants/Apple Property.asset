@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Apple Property
   m_EditorClassIdentifier: 
   seedProperty: {fileID: 11400000, guid: 4730fab78f887a545a3e7218b4a76356, type: 2}
+  foodType: 4
+  foodColor: 2
   stages:
   - sprite: {fileID: -1708265602, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
     duration: 2

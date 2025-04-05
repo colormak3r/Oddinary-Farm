@@ -446,7 +446,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aff06d0f8f7ee0042893d97459f9c972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alphaFlood: 0
   alwaysFlood: 0
   spriteRenderer: {fileID: 4102021133114471918}
   alphaRenderer:
@@ -508,7 +507,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 1ea7b98f1bc748b4d8bba8ec4b7b39df, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

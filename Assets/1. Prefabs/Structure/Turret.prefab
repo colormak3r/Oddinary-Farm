@@ -515,11 +515,12 @@ GameObject:
   - component: {fileID: 3500477510027685364}
   - component: {fileID: 7898758061958629585}
   - component: {fileID: 2765544993643186310}
-  - component: {fileID: 8196869412201575716}
   - component: {fileID: 2252018209570721719}
   - component: {fileID: 2892963004461302067}
   - component: {fileID: 5370952979220722898}
   - component: {fileID: 1429127181994273071}
+  - component: {fileID: 8196869412201575716}
+  - component: {fileID: -5939728544036363060}
   m_Layer: 10
   m_Name: Turret
   m_TagString: Untagged
@@ -662,9 +663,9 @@ MonoBehaviour:
   raycastTarget: 1
   detectRange: 7
   escapeRange: 10
-  activeTime: 0
   penaltyRange: 2
-  targetHostility: 2
+  hostility: 0
+  activeTime: 0
   targetMask:
     serializedVersion: 2
     m_Bits: 2048
@@ -693,6 +694,111 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   turretHeadTransform: {fileID: 6423409739379036040}
   projectileGunProperty: {fileID: 11400000, guid: 163d0f0319637a74883f09f9c1b55184, type: 2}
+--- !u!61 &2252018209570721719
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837993320125130146}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0.5}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 2, y: 2}
+  m_EdgeRadius: 0
+--- !u!114 &2892963004461302067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837993320125130146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d979647c76ea91e4abe3abd25226efa0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  isMovable: 1
+  isRemovable: 1
+  property: {fileID: 11400000, guid: 810374ba7a9268445ae392af69c9e693, type: 2}
+--- !u!114 &5370952979220722898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837993320125130146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dc9dcf7df3ec624b91d39dbcb9b77fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  hostility: 0
+  maxHealth: 5
+  iframeDuration: 0.1
+  isInvincible: 0
+  damagedEffectPrefab: {fileID: 3303192038522874649, guid: eaa16f0896e08a04684297aa24c4a3ba, type: 3}
+  deathEffectPrefab: {fileID: 2017998240076956080, guid: 903b72d91589cde4e9657311c38725ea, type: 3}
+  damagedSound: {fileID: 8300000, guid: 54b6510704152384cac1cad9aaec8da0, type: 3}
+  deathSound: {fileID: 8300000, guid: e0c07741e59101440b11ff3b27b8e408, type: 3}
+  drownTickRate: 1
+  showDebugs: 0
+  CurrentHealth:
+    m_InternalValue: 0
+  OnDeathOnServer:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1429127181994273071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837993320125130146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 889f97ae4ec18e5488213714541575da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  offset: {x: 0, y: 0.5}
+  muzzleTransform: {fileID: 810560053875789270}
 --- !u!82 &8196869412201575716
 AudioSource:
   m_ObjectHideFlags: 0
@@ -790,53 +896,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!61 &2252018209570721719
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8837993320125130146}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.5}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 2, y: 2}
-  m_EdgeRadius: 0
---- !u!114 &2892963004461302067
+--- !u!114 &-5939728544036363060
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -845,55 +905,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8837993320125130146}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d979647c76ea91e4abe3abd25226efa0, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c08a32213073e44996dd553fede6e6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  isMovable: 1
-  isRemovable: 1
-  property: {fileID: 11400000, guid: 810374ba7a9268445ae392af69c9e693, type: 2}
---- !u!114 &5370952979220722898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8837993320125130146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dc9dcf7df3ec624b91d39dbcb9b77fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  hostility: 0
-  maxHealth: 5
-  iframeDuration: 0.1
-  isInvincible: 0
-  damagedEffectPrefab: {fileID: 3303192038522874649, guid: eaa16f0896e08a04684297aa24c4a3ba, type: 3}
-  deathEffectPrefab: {fileID: 2017998240076956080, guid: 903b72d91589cde4e9657311c38725ea, type: 3}
-  damagedSound: {fileID: 8300000, guid: 54b6510704152384cac1cad9aaec8da0, type: 3}
-  deathSound: {fileID: 8300000, guid: e0c07741e59101440b11ff3b27b8e408, type: 3}
-  showDebugs: 0
-  CurrentHealth:
-    m_InternalValue: 0
-  OnDeathOnServer:
-    m_PersistentCalls:
-      m_Calls: []
---- !u!114 &1429127181994273071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8837993320125130146}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 889f97ae4ec18e5488213714541575da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  offset: {x: 0, y: 0.5}
-  muzzleTransform: {fileID: 810560053875789270}
+  soundEffects: []
 --- !u!1001 &9118820903780815706
 PrefabInstance:
   m_ObjectHideFlags: 0

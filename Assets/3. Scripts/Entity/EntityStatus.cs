@@ -163,7 +163,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         while (CurrentHealthValue > 0)
         {
             yield return new WaitForSeconds(drownTickRate);
-            GetDamaged();
+            TakeDamage();
         }
     }
 
@@ -212,15 +212,15 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     }
     #endregion
 
-    #region Get Damaged
+    #region Take Damaged
 
-    [ContextMenu("Get Damaged")]
-    private void GetDamaged()
+    [ContextMenu("Take Damaged")]
+    private void TakeDamage()
     {
-        GetDamaged(1, DamageType.Slash, Hostility.Neutral, null);
+        TakeDamage(1, DamageType.Slash, Hostility.Neutral, null);
     }
 
-    public bool GetDamaged(uint damage, DamageType type, Hostility hostility, Transform attacker)
+    public bool TakeDamage(uint damage, DamageType type, Hostility hostility, Transform attacker)
     {
         if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {hostility}");
 
@@ -234,13 +234,13 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         nextDamagable = Time.time + iframeDuration;
 
 
-        GetDamagedRpc(damage, type, attacker?.gameObject);
+        TakeDamageRpc(damage, type, attacker?.gameObject);
 
         return true;
     }
 
     [Rpc(SendTo.Everyone)]
-    private void GetDamagedRpc(uint damage, DamageType type, NetworkObjectReference attackerRef)
+    private void TakeDamageRpc(uint damage, DamageType type, NetworkObjectReference attackerRef)
     {
         if (CurrentHealthValue > damage)
         {

@@ -31,4 +31,12 @@ public class LayerManager : MonoBehaviour
     [SerializeField]
     private LayerMask animalLayer;
     public LayerMask AnimalLayer => animalLayer;
+
+    [SerializeField]
+    private LayerMask playerLayer;
+    public LayerMask PlayerLayer => playerLayer;
+
+    [SerializeField]
+    private LayerMask animalFeedLayer;
+    public LayerMask AnimalFeedLayer => animalFeedLayer;
 }

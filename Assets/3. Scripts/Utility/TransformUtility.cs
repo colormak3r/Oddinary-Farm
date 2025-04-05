@@ -93,22 +93,22 @@ namespace ColorMak3r.Utility
         #region Pop In/Out
         public static IEnumerator PopCoroutine(this Transform transform, float start, float end, float duration = 0.5f)
         {
-            var original = new Vector3(start, start, start);
-            var target = new Vector3(end, end, end);
-            yield return PopCoroutine(transform, original, target, duration);
+            var startScale = new Vector3(start, start, start);
+            var endScale = new Vector3(end, end, end);
+            yield return PopCoroutine(transform, startScale, endScale, duration);
         }
 
-        public static IEnumerator PopCoroutine(this Transform transform, Vector3 original, Vector3 target, float duration = 0.5f)
+        public static IEnumerator PopCoroutine(this Transform transform, Vector3 start, Vector3 end, float duration = 0.5f)
         {
             float t = 0;
             while (t < 1)
             {
-                transform.localScale = Vector3.Lerp(original, target, t);
+                transform.localScale = Vector3.Lerp(start, end, t);
                 t += Time.deltaTime / duration;
                 yield return null;
             }
 
-            transform.localScale = target;
+            transform.localScale = end;
         }
         #endregion
     }

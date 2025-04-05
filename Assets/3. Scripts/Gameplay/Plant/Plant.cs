@@ -4,7 +4,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Plant : NetworkBehaviour, IWaterable, IItemInitable
+public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
 {
     [Header("Settings")]
     [SerializeField]
@@ -27,6 +27,11 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable
 
     public bool IsHarvestable => Property.Value.Stages[CurrentStage.Value].isHarvestStage;
     public ItemProperty Seed => Property.Value.SeedProperty;
+
+    public FoodColor FoodColor => Property.Value.FoodColor;
+    public FoodType FoodType => Property.Value.FoodType;
+    public Transform Transform => transform;
+    public bool CanBeConsumed => IsHarvestable;
 
     public Action<Plant> OnHarvested;
 
@@ -160,6 +165,25 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable
         if (!IsHarvestable) return;
 
         lootGenerator.DropLootOnServer(harvester);
+        GetHarvestedInternal();
+    }
+
+
+    public bool Consume()
+    {
+        if (!IsHarvestable)
+        {
+            return false;
+        }
+        else
+        {
+            GetHarvestedInternal();
+            return true;
+        }
+    }
+
+    private void GetHarvestedInternal()
+    {
         OnHarvested?.Invoke(this);
 
         var stage = Property.Value.Stages[CurrentStage.Value];

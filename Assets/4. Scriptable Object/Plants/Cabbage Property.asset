@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Cabbage Property
   m_EditorClassIdentifier: 
   seedProperty: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
+  foodType: 1
+  foodColor: 0
   stages:
   - sprite: {fileID: 1155793255, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
     duration: 1

@@ -4,7 +4,6 @@ using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class PlayerStatus : EntityStatus
 {

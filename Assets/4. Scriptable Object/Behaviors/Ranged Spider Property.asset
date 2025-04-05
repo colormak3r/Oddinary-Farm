@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17df9f3208bdf30459bd463744a4bd16, type: 3}
   m_Name: Ranged Spider Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
+  iconSprite: {fileID: 0}
+  objectSprite: {fileID: 0}
   prefab: {fileID: 6493089648266601401, guid: 485f96db894dc62428366905bf64fda6, type: 3}
   isConsummable: 0
   maxStack: 1
-  isSellable: 1
+  isSellable: 0
   price: 1
   range: 10
   primaryCdr: 3

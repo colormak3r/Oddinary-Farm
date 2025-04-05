@@ -4,7 +4,7 @@ using UnityEngine;
 public class FloodController : MonoBehaviour
 {
     // Cache the shader property ID for performance.
-    private static readonly int FloodedId = Shader.PropertyToID("_Flooded");
+    private static readonly int FLOOD_ID = Shader.PropertyToID("_Flooded");
 
     [Header("Settings")]
     [SerializeField]
@@ -81,19 +81,19 @@ public class FloodController : MonoBehaviour
     [ContextMenu("Flood")]
     private void Flood()
     {
-        StartCoroutine(FloodedCoroutine(mpb.GetFloat(FloodedId), 1, floodDuration));
+        StartCoroutine(FloodedCoroutine(mpb.GetFloat(FLOOD_ID), 1, floodDuration));
     }
 
     [ContextMenu("Half Flood")]
     private void HalfFlood()
     {
-        StartCoroutine(FloodedCoroutine(mpb.GetFloat(FloodedId), 0.5f, floodDuration));
+        StartCoroutine(FloodedCoroutine(mpb.GetFloat(FLOOD_ID), 0.5f, floodDuration));
     }
 
     [ContextMenu("Dry")]
     private void Dry()
     {
-        StartCoroutine(FloodedCoroutine(mpb.GetFloat(FloodedId), 0, floodDuration));
+        StartCoroutine(FloodedCoroutine(mpb.GetFloat(FLOOD_ID), 0, floodDuration));
     }
 
     private IEnumerator FloodedCoroutine(float start, float end, float duration)
@@ -116,7 +116,7 @@ public class FloodController : MonoBehaviour
             renderer.color = new Color(1, 1, 1, 1 - value);
 
         spriteRenderer.GetPropertyBlock(mpb);
-        mpb.SetFloat(FloodedId, value);
+        mpb.SetFloat(FLOOD_ID, value);
         spriteRenderer.SetPropertyBlock(mpb);
     }
 }
