@@ -45,6 +45,12 @@ public class MainMenuUI : UIBehaviour
         OptionsUI.Main.Show();
     }
 
+    public void CreditsButtonClicked()
+    {
+        HideNoFade();
+        CreditsUI.Main.Show();
+    }
+
     public void QuitButtonClicked()
     {
         Application.Quit();
