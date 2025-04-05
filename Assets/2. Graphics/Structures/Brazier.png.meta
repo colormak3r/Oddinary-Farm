@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Brazier_0: 6294297277211375775
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
