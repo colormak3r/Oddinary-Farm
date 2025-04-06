@@ -1,7 +1,7 @@
 using ColorMak3r.Utility;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -436,13 +436,16 @@ public class WorldGenerator : NetworkBehaviour
 
     private IEnumerator RemoveExcessChunks(Vector2 closetChunkPosition)
     {
-        List<Vector2> positionsToRemove = new List<Vector2>();
+        /*List<Vector2> positionsToRemove = new List<Vector2>();
 
         // Determine the bounds of the loop
-        int minX = (int)closetChunkPosition.x - (renderDistance + renderXOffset) * chunkSize;
-        int maxX = (int)closetChunkPosition.x + (renderDistance + 1 + renderXOffset) * chunkSize;
-        int minY = (int)closetChunkPosition.y - renderDistance * chunkSize;
-        int maxY = (int)closetChunkPosition.y + renderDistance * chunkSize;
+        int rangeX = (renderDistance + renderXOffset) * chunkSize;
+        int rangeY = renderDistance * chunkSize;
+
+        int minX = (int)closetChunkPosition.x - rangeX;
+        int maxX = (int)closetChunkPosition.x + rangeX;
+        int minY = (int)closetChunkPosition.y - rangeY;
+        int maxY = (int)closetChunkPosition.y + rangeY;
 
         // Iterate over the dictionary to find chunks outside the bounds
         foreach (var entry in positionToChunk)
@@ -452,19 +455,17 @@ public class WorldGenerator : NetworkBehaviour
             {
                 positionsToRemove.Add(pos);
             }
-        }
+        }*/
+
+        List<Vector2> positionsToRemove = positionToChunk.Keys.Where(pos =>
+        Mathf.Abs(pos.x - closetChunkPosition.x) > (renderDistance + renderXOffset) * chunkSize ||
+        Mathf.Abs(pos.y - closetChunkPosition.y) > renderDistance * chunkSize).ToList();
 
         // Remove the identified chunks
-        var coroutines = new List<Coroutine>();
         foreach (var pos in positionsToRemove)
         {
             var chunk = positionToChunk[pos];
-            coroutines.Add(StartCoroutine(RemoveChunk(chunk)));
-        }
-
-        foreach (var coroutine in coroutines)
-        {
-            yield return coroutine;
+            yield return RemoveChunk(chunk);
         }
     }
 

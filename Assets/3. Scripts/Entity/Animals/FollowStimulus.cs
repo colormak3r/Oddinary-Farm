@@ -1,57 +1,41 @@
 using UnityEngine;
+using ColorMak3r.Utility;
 
 public class FollowStimulus : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private Rigidbody2D targetRbody;
     [SerializeField] private float aheadDistance = 2f;
-    [SerializeField] private float followDistance = 5f;
-    [SerializeField] private float minPredictionTime = 0.1f;
-    [SerializeField] private float maxPredictionTime = 0.7f;
-    [SerializeField] private float maxDistance = 10f;
-    [SerializeField] private float smoothingFactor = 0.2f;
-
-    private Vector2 smoothedAheadPosition;
+    [SerializeField] private float minOffsetTime = 3f;
+    [SerializeField] private float maxOffsetTime = 5f;
+    [SerializeField]
+    private Vector2 aheadPosition;
+    public Vector2 AheadPosition => aheadPosition;
+    [SerializeField]
+    private Vector2 randomAheadOffset;
+    private float nextOffset;
 
     public Rigidbody2D TargetRBody => targetRbody;
 
-    private void Awake()
+    private void Update()
     {
-        if (targetRbody != null)
-            smoothedAheadPosition = targetRbody.position;
-    }
+        if (targetRbody == null) return;
 
-    public Vector2 GetAheadPosition(Vector2 petPosition)
-    {
-        if (targetRbody == null)
-            return petPosition;
+        var targetPosition = targetRbody.position;
+        var targetVelocity = targetRbody.linearVelocity.normalized;
+        //if (targetVelocity == Vector2.zero) targetVelocity = Vector2.right;
 
-        Vector2 playerPos = targetRbody.position;
-        Vector2 playerVelocity = targetRbody.linearVelocity;
-
-        float distance = Vector2.Distance(petPosition, playerPos);
-        float dynamicPredictionTime = Mathf.Lerp(minPredictionTime, maxPredictionTime, distance / maxDistance);
-
-        Vector2 predictedPosition;
-
-        if (playerVelocity.magnitude > 0.1f)
+        if (Time.time > nextOffset)
         {
-            // Position ahead of player in the direction of velocity
-            predictedPosition = playerPos + playerVelocity.normalized * aheadDistance;
-        }
-        else
-        {
-            // Player stopped; just maintain a default offset position
-            predictedPosition = playerPos + (petPosition - playerPos).normalized * aheadDistance;
+            randomAheadOffset = targetVelocity == Vector2.zero ? MiscUtility.RandomPointInRange(aheadDistance / 2f, aheadDistance) : MiscUtility.RandomPointInRange(0.5f, aheadDistance / 2f);
+            nextOffset = Time.time + Random.Range(minOffsetTime, maxOffsetTime);
         }
 
-        // Smooth prediction
-        smoothedAheadPosition = Vector2.Lerp(smoothedAheadPosition, predictedPosition, smoothingFactor);
-        return smoothedAheadPosition;
+        aheadPosition = targetPosition + targetVelocity * aheadDistance + randomAheadOffset;
     }
 
-    public bool IsOutsideFollowDistance(Vector2 petPosition)
+    public bool IsNotAtAheadPosition(Vector2 petPosition)
     {
-        return Vector2.Distance(petPosition, targetRbody.position) > followDistance;
+        return Vector2.Distance(petPosition, aheadPosition) > 0.1f;
     }
 }

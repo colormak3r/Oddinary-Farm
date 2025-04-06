@@ -70,6 +70,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 906312249135965744, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: moveSpeed
+      value: 5500
+      objectReference: {fileID: 0}
     - target: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -112,7 +116,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 1804698199
+      value: 3059374472
+      objectReference: {fileID: 0}
+    - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 321873665
+      objectReference: {fileID: 0}
+    - target: {fileID: 3034646669894491093, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3587442703509697360, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Controller
@@ -133,6 +145,10 @@ PrefabInstance:
     - target: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Layer
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870924125776796283, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1713903147799318877, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
@@ -227,8 +243,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e8aaa9c827bee640a7546016bc518c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followDistance: 5
-  target: {fileID: 0}
+  targetRbody: {fileID: 0}
+  aheadDistance: 3
+  minOffsetTime: 3
+  maxOffsetTime: 5
+  aheadPosition: {x: 0, y: 0}
+  randomAheadOffset: {x: 0, y: 0}
 --- !u!4 &4618742774218740578 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}

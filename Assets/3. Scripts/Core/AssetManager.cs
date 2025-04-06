@@ -339,7 +339,7 @@ public class AssetManager : NetworkBehaviour
     {
         for (int i = 0; i < spawnCount; i++)
         {
-            GameObject go = Instantiate(prefab, position.RandomPointInRange(randomRange), Quaternion.identity); // Use the selected prefab
+            GameObject go = Instantiate(prefab, position + MiscUtility.RandomPointInRange(randomRange), Quaternion.identity); // Use the selected prefab
             go.GetComponent<NetworkObject>().Spawn();
             yield return new WaitForSeconds(spawnDelay);
         }

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d3ab299ab74363540b3e4e8d7f969254, type: 3}
-  m_Name: Fence StructureProperty
+  m_Name: Concrete Fence StructureProperty
   m_EditorClassIdentifier: 
-  blueprintProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
-  sprite: {fileID: 980374976, guid: 5627e76524169d641b0dba169e76adde, type: 3}
+  blueprintProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+  sprite: {fileID: -8223695143317770974, guid: 7da93153281079e438a511266b42dfe4, type: 3}
   offset: {x: 0, y: 0.5}
   size: {x: 1, y: 1}

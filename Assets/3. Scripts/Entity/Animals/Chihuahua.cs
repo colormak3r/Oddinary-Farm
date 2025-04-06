@@ -14,6 +14,8 @@ public class Chihuahua : Animal
     private BehaviourState chasingState;
     private BehaviourState attackPrimaryState;
 
+    private float nextSittingTime;
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -37,13 +39,25 @@ public class Chihuahua : Animal
         {
             if (FollowStimulus.TargetRBody != null)
             {
-                if (FollowStimulus.IsOutsideFollowDistance(transform.position))
+                if (FollowStimulus.IsNotAtAheadPosition(transform.position))
                 {
-                    if (currentState != followingState) ChangeState(followingState);
+                    if (currentState != followingState)
+                    {
+                        nextSittingTime = 0f;
+                        ChangeState(followingState);
+                    }
                 }
                 else
                 {
-                    if (currentState != sittingState) ChangeState(sittingState);
+                    if (nextSittingTime == 0f)
+                    {
+                        nextSittingTime = Time.time + Random.Range(1f, 3f);
+                        if (currentState != thinkingState) ChangeState(thinkingState);
+                    }
+                    else if (Time.time >= nextSittingTime)
+                    {
+                        if (currentState != sittingState) ChangeState(sittingState);
+                    }
                 }
             }
             else
@@ -63,5 +77,4 @@ public class Chihuahua : Animal
             }
         }
     }
-
 }

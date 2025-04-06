@@ -20,11 +20,10 @@ public class FollowingState : BehaviourState
         if (followStimulus.TargetRBody == null) return;
 
         Vector2 petPosition = animal.transform.position;
-        Vector2 targetPosition = followStimulus.GetAheadPosition(petPosition);
-        Vector2 directionToTarget = targetPosition - petPosition;
+        Vector2 directionToTarget = followStimulus.AheadPosition - petPosition;
 
         // Move if pet is significantly away from the target position
-        if (directionToTarget.magnitude > 0.1f)
+        if (followStimulus.IsNotAtAheadPosition(petPosition))
         {
             animal.MoveDirection(directionToTarget.normalized);
         }

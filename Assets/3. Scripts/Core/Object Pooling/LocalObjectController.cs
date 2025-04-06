@@ -103,6 +103,7 @@ public class LocalObjectController : MonoBehaviour
         }
         else
         {
+            StopAllCoroutines();
             StartCoroutine(SpawnCoroutine());
         }
     }
@@ -124,7 +125,8 @@ public class LocalObjectController : MonoBehaviour
 
     public void LocalDespawn(bool instant)
     {
-        if (gameObject.activeInHierarchy == false) return;
+        if (gameObject.activeInHierarchy == false) Debug.Log("Object is already inactive.", gameObject);
+        gameObject.SetActive(true);
 
         if (instant)
         {
@@ -144,6 +146,7 @@ public class LocalObjectController : MonoBehaviour
         }
         else
         {
+            StopAllCoroutines();
             StartCoroutine(DespawnCoroutine());
         }
     }

@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 7489642395375847181}
   - component: {fileID: 3608521828551919829}
   m_Layer: 10
-  m_Name: Fence
+  m_Name: Wooden Fence
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
