@@ -116,7 +116,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 3059374472
+      value: 321873665
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
@@ -135,8 +135,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -2377735727823366626, guid: 6e953f30850c9c04db9e498980988bab, type: 3}
     - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: hostility
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: isInvincible
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916497549773872499, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: maxWaterY
+      value: -1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916497549773872499, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: canBeDrowned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7017927651199965673, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.5
       objectReference: {fileID: 0}
     - target: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Name
@@ -148,6 +164,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8870924125776796283, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878487423511282838, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: CanBeDrowned.m_InternalValue
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
@@ -200,6 +220,7 @@ MonoBehaviour:
       m_Calls: []
   currentStateName: 
   weaponProperty: {fileID: 11400000, guid: 386cf64c07f7f7a4e91258b04256168f, type: 2}
+  nextSittingTime: 0
 --- !u!114 &1523214623172210129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,6 +239,7 @@ MonoBehaviour:
   escapeRange: 15
   penaltyRange: 2
   activeTime: 0
+  targetHostility: 2
   targetMask:
     serializedVersion: 2
     m_Bits: 2048

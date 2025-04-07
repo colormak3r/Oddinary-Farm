@@ -71,6 +71,14 @@ public class UIBehaviour : MonoBehaviour
 
         if (delayShow) yield return new WaitForSeconds(fadeDuration);
 
+        if (dsffoRenderers != null && dsffoRenderers.Length > 0)
+        {
+            foreach (var dsffoRenderer in dsffoRenderers)
+            {
+                dsffoRenderer.SetAlpha(0);
+            }
+        }
+
         isShowing = true;
 
         container.SetActive(true);

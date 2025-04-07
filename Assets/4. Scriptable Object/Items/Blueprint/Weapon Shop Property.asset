@@ -43,6 +43,4 @@ MonoBehaviour:
   previewInvalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}
   prefabToSpawn: {fileID: 4294250761585886378, guid: 34aa875e58329a94790c23056ec568c8, type: 3}
   spawnOffset: {x: 0, y: -1.5}
-  structureLayer:
-    serializedVersion: 2
-    m_Bits: 1024
+  clearFoliage: 1

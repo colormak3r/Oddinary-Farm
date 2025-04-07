@@ -4884,6 +4884,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba5071ecd286f06469efcfe83a616b4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forcedInstant: 1
   guid: f9ab5b72-8233-4900-af54-7ef87d0bf5d4
 --- !u!210 &488404508481491538
 SortingGroup:
@@ -4893,8 +4894,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8772308463145437618}
   m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1107561163
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_SortAtRoot: 0
 --- !u!212 &6238139810068811040

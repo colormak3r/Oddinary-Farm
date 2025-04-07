@@ -17,4 +17,5 @@ MonoBehaviour:
   penaltyMultiplier: 0.7
   itemProperties:
   - {fileID: 11400000, guid: 17cd4711bcc2ce542a3f7398cbd92307, type: 2}
+  - {fileID: 11400000, guid: 63d7aa30540d8de4e82ee223d5f2ca92, type: 2}
   - {fileID: 11400000, guid: 451f0ecb909c3f54d89bb0dbc9960fd6, type: 2}

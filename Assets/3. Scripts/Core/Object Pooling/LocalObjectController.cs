@@ -33,6 +33,8 @@ public class LocalObjectController : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField]
+    private bool forcedInstant = false;
+    [SerializeField]
     private string guid;
     public string Guid => guid;
     private Transform pool;
@@ -87,7 +89,7 @@ public class LocalObjectController : MonoBehaviour
         gameObject.SetActive(true);
         transform.localScale = Vector3.zero;
 
-        if (instant)
+        if (instant || forcedInstant)
         {
             transform.localScale = defaultScale;
 

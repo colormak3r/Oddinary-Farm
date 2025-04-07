@@ -18,6 +18,8 @@ public class TargetDetector : NetworkBehaviour
     [SerializeField]
     private ActiveTime activeTime = ActiveTime.Neutral;
     [SerializeField]
+    private Hostility targetHostility;
+    [SerializeField]
     private LayerMask targetMask;
 
     [Header("Debugs")]
@@ -170,7 +172,7 @@ public class TargetDetector : NetworkBehaviour
         }
 
         targetStatus = target.GetComponent<EntityStatus>();
-        return targetStatus != null && entityStatus.Hostility != targetStatus.Hostility;
+        return targetStatus != null && targetHostility == targetStatus.Hostility;
     }
 
     protected virtual void OnPostTargetDetected(EntityStatus targetStatus)

@@ -23,12 +23,11 @@ public class FollowStimulus : MonoBehaviour
 
         var targetPosition = targetRbody.position;
         var targetVelocity = targetRbody.linearVelocity.normalized;
-        //if (targetVelocity == Vector2.zero) targetVelocity = Vector2.right;
 
         if (Time.time > nextOffset)
         {
             randomAheadOffset = targetVelocity == Vector2.zero ? MiscUtility.RandomPointInRange(aheadDistance / 2f, aheadDistance) : MiscUtility.RandomPointInRange(0.5f, aheadDistance / 2f);
-            nextOffset = Time.time + Random.Range(minOffsetTime, maxOffsetTime);
+            nextOffset = Time.time + (targetVelocity == Vector2.zero ? 10f * Random.Range(minOffsetTime, maxOffsetTime) : Random.Range(minOffsetTime, maxOffsetTime));
         }
 
         aheadPosition = targetPosition + targetVelocity * aheadDistance + randomAheadOffset;
@@ -36,6 +35,11 @@ public class FollowStimulus : MonoBehaviour
 
     public bool IsNotAtAheadPosition(Vector2 petPosition)
     {
-        return Vector2.Distance(petPosition, aheadPosition) > 0.1f;
+        return (petPosition - aheadPosition).sqrMagnitude > 0.04f;
+    }
+
+    public void SetTargetRbody(Rigidbody2D rigidbody2D)
+    {
+        targetRbody = rigidbody2D;
     }
 }

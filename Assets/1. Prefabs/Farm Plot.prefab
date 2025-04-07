@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5980385349177380000}
   - component: {fileID: 4323746698192529180}
   - component: {fileID: 5790521468510067924}
+  - component: {fileID: 6369002669889084}
   m_Layer: 8
   m_Name: Farm Plot
   m_TagString: Untagged
@@ -197,6 +198,22 @@ MonoBehaviour:
   movementBlocker: {fileID: 0}
   showGizmos: 0
   showDebugs: 0
+--- !u!114 &6369002669889084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5625321612986297944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb3a73215c6ef244bb1c51d2ce68c82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  drownTickRate: 1
+  CanBeDrowned:
+    m_InternalValue: 1
 --- !u!1 &6760149712984731374
 GameObject:
   m_ObjectHideFlags: 0

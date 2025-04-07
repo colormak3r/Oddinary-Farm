@@ -31,14 +31,14 @@ public class StructureNetworkTransform : NetworkTransform
 
     private void PreMove()
     {
-        hitBox.enabled = false;
-        spriteBlender.ReblendNeighbors();
+        if (hitBox) hitBox.enabled = false;
+        if (spriteBlender) spriteBlender.ReblendNeighbors();
     }
 
     private void PostMove()
     {
-        hitBox.enabled = true;
-        spriteBlender.Blend(true);
+        if (hitBox) hitBox.enabled = true;
+        if (spriteBlender) spriteBlender.Blend(true);
     }
 
     protected override void OnBeforeUpdateTransformState()

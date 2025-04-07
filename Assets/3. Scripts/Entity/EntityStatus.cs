@@ -30,10 +30,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     [SerializeField]
     protected AudioClip deathSound;
 
-    [Header("Flood Settings")]
-    [SerializeField]
-    private float drownTickRate = 1f;
-
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs;
@@ -52,7 +48,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     protected Collider2D[] colliders;
     protected SpriteRenderer[] renderers;
     protected Light2D[] lights;
-    private Coroutine drownCoroutine;
 
     private float nextDamagable;
 
@@ -74,10 +69,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
         if (IsServer)
         {
-            FloodManager.Main.OnFloodLevelChanged += HandleOnFloodLevelChange;
-            HandleOnFloodLevelChange(FloodManager.Main.CurrentFloodLevelValue, FloodManager.Main.CurrentWaterLevel);
-            if (rbody != null) StartCoroutine(DynamicDrownBootstrap());
-
             CurrentHealth.Value = maxHealth;
             OnEntitySpawnOnServer();
         }
@@ -91,10 +82,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     public override void OnNetworkDespawn()
     {
-        if (IsServer)
-        {
-            FloodManager.Main.OnFloodLevelChanged -= HandleOnFloodLevelChange;
-        }
         CurrentHealth.OnValueChanged -= HandleCurrentHealthChange;
     }
 
@@ -102,72 +89,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     {
 
     }
-
-    #region Flood Level
-
-    private void HandleOnFloodLevelChange(float currentFloodLevel, float waterLevel)
-    {
-        if (rbody == null)
-        {
-            StartCoroutine(StaticDrownBootstrap(currentFloodLevel));
-        }
-        else
-        {
-            if (WorldGenerator.Main.IsInitialized)
-                CheckFloodLevel(((Vector2)transform.position).SnapToGrid());
-        }
-    }
-
-    private Vector2 position_cached = Vector2.one;
-    private IEnumerator DynamicDrownBootstrap()
-    {
-        yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
-        while (IsSpawned)
-        {
-            var position = ((Vector2)transform.position).SnapToGrid();
-            if (position != position_cached)
-            {
-                position_cached = position;
-                CheckFloodLevel(position);
-            }
-            yield return null;
-        }
-    }
-
-    private void CheckFloodLevel(Vector2 position)
-    {
-        if (FloodManager.Main.CurrentFloodLevelValue > WorldGenerator.Main.GetElevation((int)position.x, (int)position.y))
-        {
-            if (drownCoroutine == null) drownCoroutine = StartCoroutine(DrownCoroutine());
-        }
-        else
-        {
-            if (drownCoroutine != null) { StopCoroutine(drownCoroutine); drownCoroutine = null; }
-        }
-    }
-
-    private IEnumerator StaticDrownBootstrap(float currentFloodLevel)
-    {
-        yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
-
-        var position = ((Vector2)transform.position).SnapToGrid();
-        if (currentFloodLevel > WorldGenerator.Main.GetElevation((int)position.x, (int)position.y))
-        {
-            if (drownCoroutine != null) StopCoroutine(drownCoroutine);
-            drownCoroutine = StartCoroutine(DrownCoroutine());
-        }
-    }
-
-    private IEnumerator DrownCoroutine()
-    {
-        while (CurrentHealthValue > 0)
-        {
-            yield return new WaitForSeconds(drownTickRate);
-            TakeDamage();
-        }
-    }
-
-    #endregion
 
     #region Heal
 
@@ -233,7 +154,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (Time.time < nextDamagable) return false;
         nextDamagable = Time.time + iframeDuration;
 
-
         TakeDamageRpc(damage, type, attacker?.gameObject);
 
         return true;
@@ -275,7 +195,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
                 // TODO: Create virtual method that check for loot drop condition
                 // TODO: Pass attacker as prefer picker to loot generator
-                if (lootGenerator != null)
+                if (lootGenerator != null && type != DamageType.Water)
                 {
                     if (TryGetComponent(out Plant plant))
                     {
@@ -399,9 +319,32 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     #endregion
 
     #region Utility
-
     public uint GetCurrentHealth() => CurrentHealthValue;
     public Hostility GetHostility() => Hostility;
 
+    private void OnValidate()
+    {
+        // Check how many bits are set
+        int bitsSet = CountSetBits((int)hostility);
+
+        if (bitsSet > 1)
+        {
+            Debug.LogWarning("Only one Hostility value can be selected at a time. Defaulting to first selected.");
+            // Keep the least significant bit only
+            int firstBit = (int)hostility & -(int)hostility;
+            hostility = (Hostility)firstBit;
+        }
+    }
+
+    private int CountSetBits(int value)
+    {
+        int count = 0;
+        while (value != 0)
+        {
+            count += value & 1;
+            value >>= 1;
+        }
+        return count;
+    }
     #endregion
 }

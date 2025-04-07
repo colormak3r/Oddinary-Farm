@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -2982946501442613671, guid: c975d2a602e40c545b257ba41009d930, type: 3}
+    - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: hostility
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6444526639934246005, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: lootTable
       value: 
@@ -113,7 +117,6 @@ MonoBehaviour:
   graphicTransform: {fileID: 4644328530611537964}
   spriteFacingRight: 1
   roamRadius: 5
-  activeTime: 0
   isCaptureable: 1
   captureItemProperty: {fileID: 11400000, guid: 63e6cf15d1384c74d9b27bc6dd797d6d, type: 2}
   showDebug: 0
@@ -141,6 +144,7 @@ MonoBehaviour:
   detectRange: 7
   escapeRange: 9
   penaltyRange: 2
+  activeTime: 0
   threatLayer:
     serializedVersion: 2
     m_Bits: 2147485696

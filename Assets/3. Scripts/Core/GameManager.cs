@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -17,6 +18,9 @@ public class GameManager : NetworkBehaviour
     private bool isInitialized;
     [SerializeField]
     private bool isInitializing;
+    [SerializeField]
+    private bool isGameOver;
+    public bool IsGameOver => isGameOver;
 
     public bool IsInitialized => isInitialized;
 
@@ -69,5 +73,23 @@ public class GameManager : NetworkBehaviour
         yield return OptionsUI.Main.HideCoroutine();
 
         ConnectionManager.Main.Disconnect(false);
+    }
+
+    private Coroutine gameOverCoroutine;
+    public void GameOver(bool escaped)
+    {
+        if (gameOverCoroutine != null) return;
+        isGameOver = true;
+        GameOverUI.Main.SetGameoverText(escaped);
+        gameOverCoroutine = StartCoroutine(GameOverCoroutine());
+    }
+
+    public IEnumerator GameOverCoroutine()
+    {
+        yield return OptionsUI.Main.HideCoroutine();
+        yield return GameOverUI.Main.ShowCoroutine();
+        yield return new WaitForSeconds(5f);
+        yield return TransitionUI.Main.ShowCoroutine();
+        StartCoroutine(ReturnToMainMenuCoroutine());
     }
 }

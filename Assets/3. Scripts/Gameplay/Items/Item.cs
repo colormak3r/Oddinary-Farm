@@ -15,6 +15,7 @@ public class Item : MonoBehaviour
 
     public ItemSystem ItemSystem { get; private set; }
     public AudioElement AudioElement { get; private set; }
+    public LayerManager LayerManager { get; private set; }
 
     public virtual void Initialize(ItemProperty baseProperty)
     {
@@ -24,6 +25,7 @@ public class Item : MonoBehaviour
         ItemSystem = transform.root.GetComponent<ItemSystem>();
         if (!ItemSystem) Debug.LogError("ItemSystem not found in parent object", this);
 
+        LayerManager = LayerManager.Main;
         this.baseProperty = baseProperty;
     }
 

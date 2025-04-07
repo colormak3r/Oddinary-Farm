@@ -45,7 +45,7 @@ public class FloodManager : NetworkBehaviour
         if (IsServer)
         {
             CurrentFloodLevel.Value = baseFloodLevel;
-            TimeManager.Main.OnDayChanged.AddListener(HandleDayChanged);
+            TimeManager.Main.OnDateChanged.AddListener(HandleDayChanged);
         }
     }
 
@@ -55,7 +55,7 @@ public class FloodManager : NetworkBehaviour
         CurrentFloodLevel.OnValueChanged -= HandleCurrentFloodLevelChanged;
         if (IsServer)
         {
-            TimeManager.Main.OnDayChanged.RemoveListener(HandleDayChanged);
+            TimeManager.Main.OnDateChanged.RemoveListener(HandleDayChanged);
         }
     }
 

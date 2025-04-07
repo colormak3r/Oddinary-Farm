@@ -69,7 +69,7 @@ public class CreatureSpawnManager : NetworkBehaviour
     {
         if (!canSpawn) return;
 
-        var currentDay = timeManager.CurrentDay;
+        var currentDay = timeManager.CurrentDate;
         var currentDaySetting = creatureSpawnSetting.creatureDays[creatureSpawnSetting.creatureDays.Length - 1];
         if (currentDay < creatureSpawnSetting.creatureDays.Length) currentDaySetting = creatureSpawnSetting.creatureDays[currentDay];
 

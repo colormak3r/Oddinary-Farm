@@ -15,7 +15,7 @@ public class Blueprint : Spawner
     public override bool CanSecondaryAction(Vector2 position)
     {
         // Check if a valid structure exist at the position
-        var structureHit = Physics2D.OverlapPoint(position, blueprintProperty.StructureLayer);
+        var structureHit = Physics2D.OverlapPoint(position, LayerManager.StructureLayer);
         if (structureHit && structureHit.TryGetComponent(out Structure structure))
         {
             // Check if the position of the structure is in range
@@ -38,7 +38,7 @@ public class Blueprint : Spawner
 
     private void RemoveStructureOnServer(Vector2 position)
     {
-        var structureHit = Physics2D.OverlapPoint(position, blueprintProperty.StructureLayer);
+        var structureHit = Physics2D.OverlapPoint(position, LayerManager.StructureLayer);
         if (structureHit && structureHit.TryGetComponent(out Structure structure))
         {
             structure.RemoveStructure();

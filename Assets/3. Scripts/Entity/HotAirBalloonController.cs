@@ -12,9 +12,14 @@ public class HotAirBalloonController : NetworkBehaviour
     [SerializeField]
     private EntityMovement entityMovement;
     [SerializeField]
+    private DrownController drownController;
+    [SerializeField]
     private SpriteRenderer spriteRenderer;
 
+    [Header("Debugs")]
+    [SerializeField]
     private NetworkVariable<bool> IsControlled = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
+    public bool IsControlledValue => IsControlled.Value;
 
     override public void OnNetworkSpawn()
     {
@@ -56,5 +61,6 @@ public class HotAirBalloonController : NetworkBehaviour
         moveableController.SetMoveable(!isControlled);
         entityMovement.SetCanBeKnockback(!isControlled);
         IsControlled.Value = isControlled;
+        drownController.SetCanBeDrowned(!isControlled);
     }
 }

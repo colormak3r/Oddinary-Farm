@@ -13,7 +13,7 @@ public class Chihuahua : Animal
 
     private BehaviourState chasingState;
     private BehaviourState attackPrimaryState;
-
+    [SerializeField]
     private float nextSittingTime;
 
     public override void OnNetworkSpawn()

@@ -22,15 +22,7 @@ public class FollowingState : BehaviourState
         Vector2 petPosition = animal.transform.position;
         Vector2 directionToTarget = followStimulus.AheadPosition - petPosition;
 
-        // Move if pet is significantly away from the target position
-        if (followStimulus.IsNotAtAheadPosition(petPosition))
-        {
-            animal.MoveDirection(directionToTarget.normalized);
-        }
-        else
-        {
-            animal.StopMovement();
-        }
+        animal.MoveDirection(directionToTarget.normalized);
     }
 
     public override void ExitState()

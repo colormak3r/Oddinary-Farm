@@ -246,6 +246,8 @@ public class ItemSystem : NetworkBehaviour
         gameobject.GetComponent<NetworkObject>().Spawn();
         if (spawnerProperty.InitScript)
             gameobject.GetComponent<IItemInitable>().Initialize(spawnerProperty.InitScript);
+        if (spawnerProperty.ClearFoliage)
+            ClearFoliageRpc(position);
     }
     #endregion
 

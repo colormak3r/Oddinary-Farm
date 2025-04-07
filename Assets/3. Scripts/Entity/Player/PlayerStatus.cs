@@ -108,6 +108,12 @@ public class PlayerStatus : EntityStatus
         var respawnPos = respawnPoint != null ? respawnPoint.position : Vector3.zero;
         var deathPos = transform.position;
 
+        var int_respawnPos = ((Vector2)respawnPos).ToInt();
+        if (WorldGenerator.Main.GetElevation(int_respawnPos.x, int_respawnPos.y) < FloodManager.Main.CurrentFloodLevelValue)
+        {
+            yield break;
+        }
+
         // Black out and move player to respawn position
         if (IsOwner)
         {

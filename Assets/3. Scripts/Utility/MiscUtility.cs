@@ -138,7 +138,7 @@ namespace ColorMak3r.Utility
 
         public static Vector2Int ToInt(this Vector2 vector)
         {
-            return new Vector2Int((int)vector.x, (int)vector.y);
+            return new Vector2Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y));
         }
 
         public static float Snap(this float value, float size = 0.1f)

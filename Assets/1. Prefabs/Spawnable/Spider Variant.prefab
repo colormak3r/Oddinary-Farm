@@ -218,7 +218,6 @@ MonoBehaviour:
   graphicTransform: {fileID: 3213396557102681403}
   spriteFacingRight: 0
   roamRadius: 5
-  activeTime: 2
   isCaptureable: 0
   captureItemProperty: {fileID: 0}
   showDebug: 0
@@ -248,8 +247,8 @@ MonoBehaviour:
   detectRange: 10
   escapeRange: 15
   penaltyRange: 2
-  hostility: 2
   activeTime: 2
+  targetHostility: 0
   targetMask:
     serializedVersion: 2
     m_Bits: 2147487232

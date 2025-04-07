@@ -64,12 +64,12 @@ public class TimeManager : NetworkBehaviour
     private NetworkManager networkManager;
 
     public TimeSpan CurrentTimeSpan => timeSpan;
-    public int CurrentDay => timeSpan.Days;
+    public int CurrentDate => timeSpan.Days;
     public int CurrentHour => timeSpan.Hours;
     public float HourDuration => SECONDS_AN_HOUR / timeScale;
 
     [HideInInspector]
-    public UnityEvent<int> OnDayChanged;
+    public UnityEvent<int> OnDateChanged;
     [HideInInspector]
     public UnityEvent<int> OnHourChanged;
     [HideInInspector]
@@ -117,7 +117,7 @@ public class TimeManager : NetworkBehaviour
         if (timeSpan.Days != day_cached)
         {
             day_cached = timeSpan.Days;
-            OnDayChanged?.Invoke(day_cached);
+            OnDateChanged?.Invoke(day_cached);
         }
 
         if (timeSpan.Hours != hour_cached)

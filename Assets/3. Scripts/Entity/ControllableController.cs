@@ -84,4 +84,11 @@ public class ControllableController : NetworkBehaviour
         }
     }
 
+    public void SetControl(bool value)
+    {
+        foreach (var controllable in controllables)
+        {
+            controllable.SetControllable(value);
+        }
+    }
 }

@@ -96,7 +96,7 @@ public class AnimalManager : NetworkBehaviour
     {
         if (hour == spawnHour)
         {
-            if (canSpawn && TimeManager.Main.CurrentDay >= startDay)
+            if (canSpawn && TimeManager.Main.CurrentDate >= startDay)
             {
                 StartCoroutine(SpawnMonsterWaves());
                 currentTotalWave += waveTotalIncrement;

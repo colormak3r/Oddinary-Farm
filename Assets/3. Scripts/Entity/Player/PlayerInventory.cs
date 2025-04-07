@@ -55,6 +55,8 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     [SerializeField]
     private Transform inventoryTransform;
     [SerializeField]
+    private uint startingCoins = 10;
+    [SerializeField]
     private ItemStack[] defaultInventory;
 
     [Header("Debugs")]
@@ -67,7 +69,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     public InventorySlot[] Inventory => inventory;
 
 
-    private NetworkVariable<ulong> Wallet = new NetworkVariable<ulong>(10, default, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<ulong> Wallet = new NetworkVariable<ulong>(0, default, NetworkVariableWritePermission.Owner);
     public ulong WalletValue => Wallet.Value;
     [HideInInspector]
     public UnityEvent<ulong> OnCoinsValueChanged;
@@ -109,7 +111,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             ChangeHotBarIndex(0);
 
             // Update the wallet
-            inventoryUI.UpdateWallet(WalletValue);
+            AddCoinsOnClient(startingCoins);
         }
 
         //CurrentItem.OnValueChanged += HandleCurrentItemChanged;

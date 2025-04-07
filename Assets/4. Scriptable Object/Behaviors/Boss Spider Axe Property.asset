@@ -19,7 +19,7 @@ MonoBehaviour:
   maxStack: 1
   isSellable: 0
   price: 1
-  range: 1.5
+  range: 2
   primaryCdr: 2
   secondaryCdr: 0.25
   pickupSound: {fileID: 0}

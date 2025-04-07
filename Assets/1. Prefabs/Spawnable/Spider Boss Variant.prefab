@@ -105,6 +105,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5062778191627551025, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: hostility
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5062778191627551025, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: maxHealth
       value: 10
       objectReference: {fileID: 0}
