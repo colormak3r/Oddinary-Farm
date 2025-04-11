@@ -52,17 +52,17 @@ public class CreatureSpawnManager : NetworkBehaviour
     {
         if (IsServer)
         {
-            timeManager = TimeManager.Main;
-            timeManager.OnHourChanged.AddListener(OnHourChanged);
             currentSafeRadius = baseSafeRadius;
             currentSpawnRadius = baseSpawnRadius + currentSafeRadius;
         }
+
+        timeManager = TimeManager.Main;
+        timeManager.OnHourChanged.AddListener(OnHourChanged);
     }
 
     public override void OnNetworkDespawn()
     {
-        if (IsServer)
-            timeManager.OnHourChanged.RemoveListener(OnHourChanged);
+        timeManager.OnHourChanged.RemoveListener(OnHourChanged);
     }
 
     private void OnHourChanged(int currentHour)
@@ -77,7 +77,12 @@ public class CreatureSpawnManager : NetworkBehaviour
         {
             if (currentHour == wave.spawnHour)
             {
-                StartCoroutine(SpawnWave(wave));
+                if (IsServer)
+                    StartCoroutine(SpawnWave(wave));
+            }
+            else if (currentHour == wave.spawnHour - 1 && wave.showWarning)
+            {
+                WarningUI.Main.ShowWarning($"Breach Detected");
             }
         }
     }

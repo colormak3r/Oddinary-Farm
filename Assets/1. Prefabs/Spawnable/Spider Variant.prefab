@@ -186,6 +186,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2474804323160958134}
+    - targetCorrespondingSourceObject: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5217574162761703751}
   m_SourcePrefab: {fileID: 100100000, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
 --- !u!4 &3213396557102681403 stripped
 Transform:
@@ -244,8 +247,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   raycastTarget: 1
-  detectRange: 10
-  escapeRange: 15
+  detectRange: 15
+  escapeRange: 20
   penaltyRange: 2
   activeTime: 2
   targetHostility: 0
@@ -262,3 +265,16 @@ MonoBehaviour:
   OnTargetEscaped:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5217574162761703751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8862408004728527693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0223d8d11493cd144b63daa29e164585, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetPosition: {x: 0, y: 0}

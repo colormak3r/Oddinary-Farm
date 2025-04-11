@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1e5fd2c0583c894ba5fc8fad3a93211, type: 3}
   m_Name: Water Terrain Property
   m_EditorClassIdentifier: 
-  mapColor: {r: 0.15686275, g: 0.8000001, b: 0.8745099, a: 1}
+  mapColor: {r: 0.3019608, g: 0.60784316, b: 0.9019608, a: 1}
   elevation:
     min: 0
     max: 0.4
@@ -22,12 +22,7 @@ MonoBehaviour:
   folliageChance: 0
   folliageSprite: []
   overlayChance: 0.3
-  overlaySprite:
-  - {fileID: -1688970406, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
-  - {fileID: -1577913362, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
-  - {fileID: -472659378, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
-  - {fileID: -644541894, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
-  - {fileID: -240749585, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  overlaySprite: []
   baseSprite:
   - {fileID: 534781604, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   underlaySprite: []

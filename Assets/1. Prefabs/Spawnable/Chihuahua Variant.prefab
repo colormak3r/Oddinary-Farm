@@ -72,7 +72,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 906312249135965744, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: moveSpeed
-      value: 5500
+      value: 4000
       objectReference: {fileID: 0}
     - target: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_LocalPosition.x
@@ -148,7 +148,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5916497549773872499, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: canBeDrowned
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5916497549773872499, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: rangeOverride
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7017927651199965673, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_LocalPosition.y

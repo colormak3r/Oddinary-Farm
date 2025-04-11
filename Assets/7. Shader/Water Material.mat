@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Flooded_Water Material
+  m_Name: Water Material
   m_Shader: {fileID: -6465566751694194690, guid: 4b3a45acb6450864889cbbe59b3f740f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -57,8 +57,14 @@ Material:
     - _Alpha: 1
     - _Cell_Density: 2
     - _CoordScale: 1
-    - _Flooded: 0.5
+    - _Depth: 1
+    - _Flooded: 1
+    - _Height: 1
     - _ShowWaterShader: 0
+    - _UseTextureAlpha: 1
+    - _WaterOpacity: 1
+    - _WaveRange: 0.1
+    - _WaveSpeed: 1
     m_Colors:
     - _Coordinate: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

@@ -96,7 +96,7 @@ public class TargetDetector : NetworkBehaviour
         if (currentTarget == null)
         {
             currentTarget = ScanForTarget(transform.position, out var targetStatus);
-            if (currentTarget != null)
+            if (currentTarget != null && targetStatus != null)
             {
                 targetStatus.OnDeathOnServer.AddListener(HandleOnTargetDie);
                 OnPostTargetDetected(targetStatus);

@@ -82,6 +82,8 @@ public class HotAirBalloon : Structure, IInteractable
             collider.enabled = false;
         }
 
+        GetComponent<DrownGraphic>().SetCanBeWet(false);
+
         // Move the hot air balloon
         if (IsOwner)
             GetComponent<EntityMovement>().SetDirection(Vector2.up);
@@ -215,5 +217,12 @@ public class HotAirBalloon : Structure, IInteractable
     {
         if (CurrentStage.Value < upgradeStages.GetStageCount() - 1)
             CurrentStage.Value++;
+    }
+
+    [ContextMenu("Take Off")]
+    private void TakeOff()
+    {
+        if (!IsServer) return;
+        IsTakenOff.Value = true;
     }
 }

@@ -289,10 +289,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canBeDrowned: 1
+  wetPercentage: 0.1
+  rangeOverride: -2.25
   waterTransform: {fileID: 7814316579326043387}
   speed: 2
-  maxWaterY: -1
-  minWaterY: -3.5
+  waterLevel: 0.5
 --- !u!1 &7479066920920115073
 GameObject:
   m_ObjectHideFlags: 0

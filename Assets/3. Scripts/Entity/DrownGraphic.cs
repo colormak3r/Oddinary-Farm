@@ -3,50 +3,70 @@ using UnityEngine;
 
 public class DrownGraphic : MonoBehaviour
 {
-
     [Header("Drown Graphic")]
     [SerializeField]
-    private bool canBeDrowned = true;
+    private bool canBeDrown = true;
+    [SerializeField]
+    private bool canBeWet = true;
+    [SerializeField]
+    private float wetPercentage = 0.1f;
+    [SerializeField]
+    private float rangeOverride = 1f;
     [SerializeField]
     private Transform waterTransform;
     [SerializeField]
     private float speed = 2f;
-    [SerializeField]
+
     private float maxWaterY = -1.25f;
-    [SerializeField]
-    private float minWaterY = -3.5f;
+    private float minWaterY = -2.5f;
 
     private float range;
+    private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
         range = maxWaterY - minWaterY;
+        spriteRenderer = waterTransform.GetComponent<SpriteRenderer>();
     }
 
+    [Header("Debugs")]
+    [SerializeField]
+    private float waterLevel = 0.5f;
     private void Update()
     {
-        if (!canBeDrowned)
+        if (WorldGenerator.Main == null || FloodManager.Main == null || !WorldGenerator.Main.IsInitialized) return;
+        var floodManager = FloodManager.Main;
+        var elevation = WorldGenerator.Main.GetElevation(transform.position.x, transform.position.y);
+
+        if (canBeWet)
         {
-            waterTransform.localPosition = Vector2.Lerp(waterTransform.localPosition, new Vector2(0, minWaterY), speed * Time.deltaTime);
+            if (canBeDrown)
+            {
+                if (elevation > floodManager.CurrentSafeLevel)
+                {
+                    waterLevel = 0;
+                }
+                else if (elevation > floodManager.CurrentFloodLevelValue && elevation <= floodManager.CurrentSafeLevel)
+                {
+                    waterLevel = Mathf.Clamp01((floodManager.CurrentSafeLevel - elevation) / wetPercentage);
+                }
+                else
+                {
+                    waterLevel = Mathf.Clamp((floodManager.CurrentFloodLevelValue - elevation) / (floodManager.DepthRange), wetPercentage, 1f);
+                }
+            }
+            else
+            {
+                waterLevel = wetPercentage;
+            }
         }
         else
         {
-            if (WorldGenerator.Main == null || FloodManager.Main == null || !WorldGenerator.Main.IsInitialized) return;
-
-            var snappedPos = ((Vector2)transform.position).SnapToGrid().ToInt();
-            var closetElevation = WorldGenerator.Main.GetElevation(snappedPos.x, snappedPos.y);
-            var offsetX = Mathf.RoundToInt(Mathf.Sign(transform.position.x - snappedPos.x));
-            var offsetY = Mathf.RoundToInt(Mathf.Sign(transform.position.y - snappedPos.y));
-            var offsetElevation = WorldGenerator.Main.GetElevation(snappedPos.x + offsetX, snappedPos.y + offsetY);
-            var elevation = Mathf.Lerp(closetElevation, offsetElevation, 1 - Vector2.Distance(transform.position, snappedPos));
-            var waterLevel = Mathf.Clamp01((FloodManager.Main.CurrentWaterLevel - elevation) / (FloodManager.Main.CurrentFloodLevelValue * 0.1f));
-            waterTransform.localPosition = Vector2.Lerp(waterTransform.localPosition, new Vector2(0, waterLevel * range + minWaterY), speed * Time.deltaTime);
+            waterLevel = 0;
         }
-    }
 
-    public void SetCanBeDrowned(bool canBeDrowned)
-    {
-        this.canBeDrowned = canBeDrowned;
+        waterTransform.localPosition = Vector2.Lerp(waterTransform.localPosition, new Vector2(0, waterLevel * range + minWaterY), speed * Time.deltaTime);
+        spriteRenderer.color = Color.Lerp(spriteRenderer.color, spriteRenderer.color.SetAlpha(waterLevel), speed * Time.deltaTime);
     }
 
     [ContextMenu("Test Min")]
@@ -59,5 +79,23 @@ public class DrownGraphic : MonoBehaviour
     private void TestMax()
     {
         waterTransform.localPosition = new Vector2(0, maxWaterY);
+    }
+
+    public void SetCanBeDrown(bool canBeDrown)
+    {
+        this.canBeDrown = canBeDrown;
+    }
+
+    public void SetCanBeWet(bool canBeWet)
+    {
+        this.canBeWet = canBeWet;
+        if (!canBeWet)
+        {
+            var renderers = GetComponentsInChildren<SpriteMask>();
+            foreach (var renderer in renderers)
+            {
+                renderer.enabled = false;
+            }
+        }
     }
 }

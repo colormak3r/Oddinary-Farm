@@ -59,6 +59,8 @@ public abstract class Animal : NetworkBehaviour
     public HungerStimulus HungerStimulus => hungerStimulus;
     private FollowStimulus followStimulus;
     public FollowStimulus FollowStimulus => followStimulus;
+    private MoveTowardStimulus moveTowardStimulus;
+    public MoveTowardStimulus MoveTowardStimulus => moveTowardStimulus;
 
     private Item currentItem;
     public Item CurrentItem => currentItem;
@@ -112,6 +114,7 @@ public abstract class Animal : NetworkBehaviour
         threatDetector = GetComponent<ThreatDetector>();
         hungerStimulus = GetComponent<HungerStimulus>();
         followStimulus = GetComponent<FollowStimulus>();
+        moveTowardStimulus = GetComponent<MoveTowardStimulus>();
         currentItem = GetComponentInChildren<Item>();
     }
 

@@ -12,6 +12,10 @@ public class FloodManager : NetworkBehaviour
     [SerializeField]
     private float baseFloodLevel = 0.4f;
     [SerializeField]
+    private float safeMultiplier = 3f;
+    [SerializeField]
+    private float depthMultiplier = 3f;
+    [SerializeField]
     private int floodStartDate = 7;
     [SerializeField]
     private float floodCompleteDuration = 1;
@@ -19,14 +23,16 @@ public class FloodManager : NetworkBehaviour
     [Header("Debugs")]
     [SerializeField]
     private NetworkVariable<float> CurrentFloodLevel = new NetworkVariable<float>();
-    public float CurrentFloodLevelValue => CurrentFloodLevel.Value;
-    public float CurrentWaterLevel => CurrentFloodLevel.Value + 3 * floodLevelChangePerHour;
-    public float BaseFloodLevel => baseFloodLevel;
-
-    public Action<float, float> OnFloodLevelChanged;
-
+    [SerializeField]
     private float floodLevelChangePerHour;
     public float FloodLevelChangePerHour => floodLevelChangePerHour;
+    public float CurrentFloodLevelValue => CurrentFloodLevel.Value;
+    public float CurrentSafeLevel => Mathf.Clamp01(CurrentFloodLevel.Value + safeMultiplier * floodLevelChangePerHour);
+    public float CurrentDepthLevel => Mathf.Clamp01(CurrentFloodLevel.Value - depthMultiplier * floodLevelChangePerHour);
+    public float DepthRange => depthMultiplier * floodLevelChangePerHour;
+    public float WaterRange => (safeMultiplier + depthMultiplier) * floodLevelChangePerHour;
+    public float BaseFloodLevel => baseFloodLevel;
+    public Action<float, float, float> OnFloodLevelChanged;
 
     private Coroutine floodCoroutine;
     private void Awake()
@@ -61,7 +67,7 @@ public class FloodManager : NetworkBehaviour
 
     private void HandleDayChanged(int currentDay)
     {
-        if (currentDay == floodStartDate)
+        if (currentDay >= floodStartDate)
         {
             if (floodCoroutine == null)
                 floodCoroutine = StartCoroutine(FloodCoroutine());
@@ -70,7 +76,7 @@ public class FloodManager : NetworkBehaviour
 
     private void HandleCurrentFloodLevelChanged(float previousValue, float newValue)
     {
-        OnFloodLevelChanged?.Invoke(newValue, newValue + floodLevelChangePerHour);
+        OnFloodLevelChanged?.Invoke(newValue, CurrentSafeLevel, CurrentDepthLevel);
     }
 
     public void Initialize()
@@ -79,7 +85,7 @@ public class FloodManager : NetworkBehaviour
     }
 
     [ContextMenu("Flood")]
-    public void Flood()
+    private void Flood()
     {
         if (!IsServer) return;
         if (floodCoroutine == null)

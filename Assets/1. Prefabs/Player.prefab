@@ -2519,7 +2519,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   handProperty: {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
   inventoryTransform: {fileID: 8285960112913659381}
-  startingCoins: 1000000
+  startingCoins: 10
   defaultInventory:
   - Property: {fileID: 11400000, guid: b48705ea45197984890949b39fbc67f0, type: 2}
     Count: 1
@@ -2528,14 +2528,6 @@ MonoBehaviour:
   - Property: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
     Count: 4
   - Property: {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
-    Count: 1
-  - Property: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
-    Count: 20
-  - Property: {fileID: 11400000, guid: 17cd4711bcc2ce542a3f7398cbd92307, type: 2}
-    Count: 1
-  - Property: {fileID: 11400000, guid: acf5787fae590e74ca10497b40091a27, type: 2}
-    Count: 1
-  - Property: {fileID: 11400000, guid: 63d7aa30540d8de4e82ee223d5f2ca92, type: 2}
     Count: 1
   showDebug: 0
   isControllable: 1
@@ -2877,11 +2869,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 723511e5159bf03468db437cbb55f1da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canBeDrowned: 1
+  canBeDrown: 1
+  canBeWet: 1
+  wetPercentage: 0.1
+  rangeOverride: -2.25
   waterTransform: {fileID: 5462536194489437288}
   speed: 2
-  maxWaterY: -1.25
-  minWaterY: -3.5
+  waterLevel: 0.5
 --- !u!114 &199473237824664443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4327,7 +4321,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6574075588252130358, guid: 48aec4ff834e87c4fb8ba85f12462faa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.5
+      value: -2.5
       objectReference: {fileID: 0}
     - target: {fileID: 6574075588252130358, guid: 48aec4ff834e87c4fb8ba85f12462faa, type: 3}
       propertyPath: m_LocalPosition.z

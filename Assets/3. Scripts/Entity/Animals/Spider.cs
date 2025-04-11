@@ -15,12 +15,15 @@ public class Spider : Animal
     private BehaviourState thinkingState;
     private BehaviourState burrowingState;
     private BehaviourState roamingState;
+    private BehaviourState moveTowardState;
 
     private BehaviourState chasingState;
     private BehaviourState attackPrimaryState;
 
     private BehaviourState[] idleStates;
     private BehaviourState[] activeStates;
+
+    private bool reachedOrigin = false;
 
     public override void OnNetworkSpawn()
     {
@@ -32,13 +35,14 @@ public class Spider : Animal
             thinkingState = new ThinkingState(this);
             burrowingState = new BurrowingState(this);
             roamingState = new RoamingState(this);
+            moveTowardState = new MoveTowardState(this);
 
             chasingState = new ChasingState(this);
             attackPrimaryState = new AttackPrimaryState(this);
 
             idleStates = new BehaviourState[] { thinkingState, burrowingState, roamingState };
             activeStates = new BehaviourState[] { chasingState, attackPrimaryState };
-        }        
+        }
     }
 
     protected override void HandleTransitions()
@@ -61,7 +65,18 @@ public class Spider : Animal
                 }
                 else
                 {
-                    ChangeState(roamingState);
+                    if (!reachedOrigin)
+                    {
+                        ChangeState(moveTowardState);
+                        if (((Vector2)transform.position - MoveTowardStimulus.TargetPosition).SqrMagnitude() < 25f)
+                        {
+                            reachedOrigin = true;
+                        }
+                    }
+                    else
+                    {
+                        ChangeState(roamingState);
+                    }
                 }
             }
         }

@@ -11,8 +11,8 @@ public struct CreatureWave
 {
     [Range(0, 23)]
     public int spawnHour;
+    public bool showWarning;
     public CreatureSpawn[] creatureSpawns;
-
 }
 
 [System.Serializable]

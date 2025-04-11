@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class DrownController : NetworkBehaviour
 {
@@ -39,7 +40,7 @@ public class DrownController : NetworkBehaviour
             floodManager = FloodManager.Main;
             worldGenerator = WorldGenerator.Main;
             floodManager.OnFloodLevelChanged += HandleOnFloodLevelChange;
-            HandleOnFloodLevelChange(floodManager.CurrentFloodLevelValue, floodManager.CurrentWaterLevel);
+            HandleOnFloodLevelChange(floodManager.CurrentFloodLevelValue, floodManager.CurrentSafeLevel, floodManager.CurrentDepthLevel);
             if (rbody != null) StartCoroutine(DynamicDrownBootstrap());
         }
 
@@ -59,18 +60,18 @@ public class DrownController : NetworkBehaviour
 
     private void HandleCanBeDrownedChanged(bool previousValue, bool newValue)
     {
-        if (drownGraphic) drownGraphic.SetCanBeDrowned(newValue);
+        //if (drownGraphic) drownGraphic.SetCanBeDrowned(newValue);
     }
 
     #region Flood Level
 
-    private void HandleOnFloodLevelChange(float currentFloodLevel, float waterLevel)
+    private void HandleOnFloodLevelChange(float floodLevel, float waterLevel, float depthLevel)
     {
         if (!CanBeDrowned.Value) return;
 
         if (rbody == null)
         {
-            StartCoroutine(StaticDrownBootstrap(currentFloodLevel));
+            StartCoroutine(StaticDrownBootstrap(depthLevel));
         }
         else
         {
@@ -99,7 +100,8 @@ public class DrownController : NetworkBehaviour
     {
         if (!CanBeDrowned.Value) return;
 
-        if (floodManager.CurrentFloodLevelValue > worldGenerator.GetElevation((int)position.x, (int)position.y))
+        var elevation = WorldGenerator.Main.GetElevation(position.x, position.y);
+        if (floodManager.CurrentDepthLevel > elevation)
         {
             if (drownCoroutine == null) drownCoroutine = StartCoroutine(DrownCoroutine());
         }
@@ -109,16 +111,16 @@ public class DrownController : NetworkBehaviour
         }
     }
 
-    private IEnumerator StaticDrownBootstrap(float currentFloodLevel)
+    private IEnumerator StaticDrownBootstrap(float currentDepthLevel)
     {
         yield return new WaitUntil(() => worldGenerator.IsInitialized);
-
-        var position = ((Vector2)transform.position).SnapToGrid();
-        if (currentFloodLevel > worldGenerator.GetElevation((int)position.x, (int)position.y))
+        CheckFloodLevel(transform.position);
+        /*var position = ((Vector2)transform.position).SnapToGrid();
+        if (currentDepthLevel > worldGenerator.GetElevation(position.x, position.y))
         {
             if (drownCoroutine != null) StopCoroutine(drownCoroutine);
             drownCoroutine = StartCoroutine(DrownCoroutine());
-        }
+        }*/
     }
 
     private IEnumerator DrownCoroutine()
