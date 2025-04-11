@@ -9,8 +9,6 @@ public class WarningUI : UIBehaviour
     [SerializeField]
     private float waitDuration = 1f;
     [SerializeField]
-    private TMP_Text warningText;
-    [SerializeField]
     private AudioClip warningSound;
 
     private void Awake()
@@ -29,7 +27,6 @@ public class WarningUI : UIBehaviour
 
     private IEnumerator ShowWarningCoroutine(string message)
     {
-        warningText.text = message;
         for (int i = 0; i < 3; i++)
         {
             AudioManager.Main.PlayOneShot(warningSound);

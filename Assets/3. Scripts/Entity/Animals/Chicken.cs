@@ -40,20 +40,31 @@ public class Chicken : Animal
     {
         if (ThreatDetector.CurrentThreat == null)
         {
-            if (isTamed && HungerStimulus.IsHungry)
+            if (isTamed)
             {
-                if (HungerStimulus.TargetFood == null)
+                if (HungerStimulus.IsHungry)
                 {
-                    if (currentState != roamingState)
+                    if (HungerStimulus.TargetFood == null)
                     {
-                        ChangeState(roamingState);
+                        if (currentState != roamingState)
+                        {
+                            ChangeState(roamingState);
+                        }
+                    }
+                    else
+                    {
+                        if (currentState != seekfoodState)
+                        {
+                            ChangeState(seekfoodState);
+                        }
                     }
                 }
                 else
                 {
-                    if (currentState != seekfoodState)
+                    if (Time.time > nextIdleStateChange)
                     {
-                        ChangeState(seekfoodState);
+                        var newState = idleStates[Random.Range(0, idleStates.Length)];
+                        ChangeState(newState);
                     }
                 }
             }

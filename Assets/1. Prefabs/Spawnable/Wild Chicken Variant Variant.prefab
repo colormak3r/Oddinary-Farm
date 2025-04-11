@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wild Chicken Variant Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 1829850606512251754, guid: 74f997006c8ba654f8a4063668afbe0a, type: 3}
+      propertyPath: hourTilHunger
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 3074030984091370534, guid: 74f997006c8ba654f8a4063668afbe0a, type: 3}
       propertyPath: hostility
       value: 1

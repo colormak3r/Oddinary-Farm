@@ -724,7 +724,7 @@ MonoBehaviour:
   escapeRange: 10
   penaltyRange: 2
   activeTime: 0
-  targetHostility: 0
+  targetHostility: 2
   targetMask:
     serializedVersion: 2
     m_Bits: 2048
@@ -995,11 +995,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 723511e5159bf03468db437cbb55f1da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canBeDrowned: 1
+  canBeDrown: 1
+  canBeWet: 1
+  wetPercentage: 0.1
+  rangeOverride: 1
   waterTransform: {fileID: 3724707478680289675}
   speed: 2
-  maxWaterY: -1.25
-  minWaterY: -3.5
+  waterLevel: 0.5
 --- !u!1001 &7533149286178954685
 PrefabInstance:
   m_ObjectHideFlags: 0

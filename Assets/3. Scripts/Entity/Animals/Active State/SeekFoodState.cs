@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class SeekFoodState : BehaviourState
 {
-    private Transform targetFood;
-    private Transform cached_targetFood;
-
     public SeekFoodState(Animal animal) : base(animal)
     {
 
@@ -19,12 +16,9 @@ public class SeekFoodState : BehaviourState
     public override void ExecuteState()
     {
         base.ExecuteState();
-        targetFood = animal.HungerStimulus.TargetFood?.Transform;
-        if (cached_targetFood != targetFood)
-        {
-            cached_targetFood = targetFood;
-            if (targetFood != null) animal.MoveTo(targetFood.position);
-        }
+        var targetFood = animal.HungerStimulus.TargetFood?.Transform;
+        if (targetFood == null) return;
+        animal.MoveDirection((targetFood.position - animal.transform.position).normalized);
     }
 
     public override void ExitState()
