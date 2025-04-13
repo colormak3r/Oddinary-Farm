@@ -63,6 +63,8 @@ public class UIBehaviour : MonoBehaviour
         this.allRenderers = allRenderers.ToArray();
         this.dsffoRenderers = dsffoRenderers.ToArray();
         this.ignoreRenderers = ignoreRenderers.ToArray();
+
+        if (isShowing) UIManager.Main.CurrentUIBehaviour = this;
     }
 
     public IEnumerator ShowCoroutine(bool fade = true)
@@ -114,6 +116,8 @@ public class UIBehaviour : MonoBehaviour
     public void Show()
     {
         if (IsShowing || isAnimating) return;
+
+        if (UIManager.Main != null) UIManager.Main.CurrentUIBehaviour = this;
 
         StartCoroutine(ShowCoroutine());
     }

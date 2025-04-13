@@ -49,6 +49,8 @@ public class LobbyUI : UIBehaviour
     [SerializeField]
     private TMP_Text inviteButtonText;
     [SerializeField]
+    private TMP_Text copyPasteButtonText;
+    [SerializeField]
     private Button startButton;
     [SerializeField]
     private Button inviteButton;
@@ -77,8 +79,7 @@ public class LobbyUI : UIBehaviour
         SteamMatchmaking.OnLobbyMemberLeave -= OnLobbyMemberLeave;
     }
 
-    #region Steam Callbacks
-
+    #region Initialization
     public void Host()
     {
         lobbyMode = LobbyMode.Host;
@@ -94,7 +95,8 @@ public class LobbyUI : UIBehaviour
         startButton.gameObject.SetActive(true);
 
         inviteButton.interactable = false;
-        inviteButtonText.text = "Creating Room";
+        inviteButtonText.text = "Loading";
+        copyPasteButtonText.text = "Copy";
 
         ConnectionManager.Main.CreateLobby();
 
@@ -105,6 +107,7 @@ public class LobbyUI : UIBehaviour
     {
         lobbyMode = LobbyMode.Client;
         lobbyIdInputField.readOnly = false;
+
         lobbyIdInputField.text = "";
 
         lobbyInstructionText.text = "Enter Lobby ID or join a friend from steam overlay.";
@@ -117,15 +120,29 @@ public class LobbyUI : UIBehaviour
 
         inviteButton.interactable = true;
         inviteButtonText.text = "Join";
+        copyPasteButtonText.text = "Paste";
+
+        if (ConnectionManager.Main.CurrentLobby.HasValue)
+        {
+            lobbyIdInputField.text = ConnectionManager.Main.CurrentLobby.Value.ToString();
+            OnLobbyEntered(ConnectionManager.Main.CurrentLobby.Value);
+        }
+        else
+        {
+            lobbyIdInputField.text = "";
+        }
 
         Show();
     }
+    #endregion
 
-    public void InviteButtonClicked()
+    #region Steam Callbacks 
+    public void InviteJoinButtonClicked()
     {
         if (lobbyMode == LobbyMode.Host)
         {
-            SteamFriends.OpenOverlay("friends");
+            //SteamFriends.OpenOverlay("friends");
+            SteamFriends.OpenGameInviteOverlay(ConnectionManager.Main.CurrentLobby.Value.Id);
         }
         else
         {
@@ -135,7 +152,8 @@ public class LobbyUI : UIBehaviour
             }
             else
             {
-                SteamFriends.OpenOverlay("friends");
+                //SteamFriends.OpenOverlay("friends");
+                SteamFriends.OpenGameInviteOverlay(ConnectionManager.Main.CurrentLobby.Value.Id);
             }
         }
     }
@@ -151,6 +169,20 @@ public class LobbyUI : UIBehaviour
         else
         {
             ConnectionManager.Main.StartGameMultiplayerOnlineClient();
+        }
+    }
+
+    public void CopyPasteButtonClicked()
+    {
+        if (lobbyMode == LobbyMode.Host)
+        {
+            GUIUtility.systemCopyBuffer = lobbyIdInputField.text;
+            copyPasteButtonText.text = "Copied!";
+        }
+        else
+        {
+            lobbyIdInputField.text = GUIUtility.systemCopyBuffer;
+            copyPasteButtonText.text = "Pasted!";
         }
     }
 
@@ -197,10 +229,12 @@ public class LobbyUI : UIBehaviour
             if (lobbyMode == LobbyMode.Host)
             {
                 startButtonText.text = "Start";
+                copyPasteButtonText.text = "Copy";
             }
             else
             {
                 startButtonText.text = "Join";
+                copyPasteButtonText.text = "Paste";
             }
             startButton.gameObject.SetActive(true);
 

@@ -54,8 +54,8 @@ MonoBehaviour:
   uiClickSfx: {fileID: 8300000, guid: c7e7238f161c0ce46a2d0e7394da7732, type: 3}
   uiHoverSfx: {fileID: 8300000, guid: a36ee6fc858e46048b3481d8c6ac227c, type: 3}
   uiErrorSfx: {fileID: 8300000, guid: ec8a041c0f362c5468c6b5072a0866fd, type: 3}
-  mainMenuMusic: {fileID: 8300000, guid: d71692609d356d943854e8fff3caa3d5, type: 3}
-  mainGameMusic: {fileID: 8300000, guid: 39e1f4a898e3f914eae1b6c6fe72f9c9, type: 3}
+  mainMenuMusic: {fileID: 8300000, guid: e9698595bbc55c643aabacb8f54118e4, type: 3}
+  mainGameMusic: {fileID: 8300000, guid: e9698595bbc55c643aabacb8f54118e4, type: 3}
   dayClip: {fileID: 8300000, guid: 0d644ebcad18ebd4a878aa5d50e9a32e, type: 3}
   nightClip: {fileID: 8300000, guid: 8b05ef3ff52690249b49434d3f22635e, type: 3}
   rainClip: {fileID: 8300000, guid: ae2e0b534c4656d478a7ff7f4525733c, type: 3}
@@ -74,6 +74,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -170,6 +171,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -266,6 +268,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

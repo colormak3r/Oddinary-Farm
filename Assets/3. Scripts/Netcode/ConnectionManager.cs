@@ -188,6 +188,12 @@ public class ConnectionManager : MonoBehaviour
 
     #region Steam Callback
 
+    [ContextMenu("Test Game Lobby Join Requested")]
+    private void TestGameLobbyJoinRequested()
+    {
+        OnGameLobbyJoinRequested(new Lobby(), new SteamId());
+    }
+
     private void OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
     {
         // On invite accepted
@@ -200,9 +206,11 @@ public class ConnectionManager : MonoBehaviour
 
     private IEnumerator JoinLobbyFromInviteCoroutine()
     {
-        yield return TransitionUI.Main.ShowCoroutine();
+        if (showDebugs) Debug.Log("Joining lobby from invite");
+
         if (networkManager.IsServer || networkManager.IsClient)
         {
+            yield return TransitionUI.Main.ShowCoroutine();
             if (showDebugs) Debug.Log("Already in a game, disconnecting");
 
             CurrentLobby?.Leave();
@@ -216,9 +224,16 @@ public class ConnectionManager : MonoBehaviour
             }
         }
 
-        if (showDebugs) Debug.Log("Joining lobby from invite");
+        float nextSkipTime = Time.time + 5f;
+        while (UIManager.Main.CurrentUIBehaviour == null && Time.time < nextSkipTime)
+        {
+            yield return null;
+        }
 
-        StartGameMultiplayerOnlineClient();
+        UIManager.Main.CurrentUIBehaviour?.Hide();
+        LobbyUI.Main.Client();
+
+        yield return TransitionUI.Main.HideCoroutine();
     }
 
     private void OnLobbyGameCreated(Lobby lobby, uint arg2, ushort arg3, SteamId id)
