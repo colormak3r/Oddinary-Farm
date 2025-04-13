@@ -13,6 +13,8 @@ public class UIBehaviour : MonoBehaviour
     protected float fadeDuration = 0.25f;
     [SerializeField]
     protected bool delayShow;
+    [SerializeField]
+    private bool excludeFromManager = false;
     [Tooltip("These objects appear after others and fade out first.")]
     [SerializeField]
     protected GameObject[] delayShowFadeFirstObjects;
@@ -64,7 +66,7 @@ public class UIBehaviour : MonoBehaviour
         this.dsffoRenderers = dsffoRenderers.ToArray();
         this.ignoreRenderers = ignoreRenderers.ToArray();
 
-        if (isShowing) UIManager.Main.CurrentUIBehaviour = this;
+        if (isShowing && !excludeFromManager && UIManager.Main != null) UIManager.Main.CurrentUIBehaviour = this;
     }
 
     public IEnumerator ShowCoroutine(bool fade = true)

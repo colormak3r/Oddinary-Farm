@@ -16,6 +16,9 @@ public class ConnectionManager : MonoBehaviour
     public static string LOBBY_PASSWORD_KEY = "!E18@tfR!urQSsTxYmbM";
     public static string LOBBY_PASSWORD_VAL = "zYVMH1mhH41*%FQaFm41";
 
+    public static string LOBBY_STATUS_KEY = "LOBBY_STATUS";
+    public static string LOBBY_INGAME_VAL = "INGAME";
+
     private void Awake()
     {
         if (Main == null)
@@ -90,6 +93,7 @@ public class ConnectionManager : MonoBehaviour
     private IEnumerator LaunchCoroutine(bool isHost, NetworkTransport networkTransport)
     {
         launched = true;
+        CurrentLobby?.SetData(LOBBY_STATUS_KEY,  LOBBY_INGAME_VAL);
         yield return TransitionUI.Main.ShowCoroutine();
 
         networkManager.NetworkConfig.NetworkTransport = networkTransport;

@@ -124,8 +124,7 @@ public class LobbyUI : UIBehaviour
 
         if (ConnectionManager.Main.CurrentLobby.HasValue)
         {
-            lobbyIdInputField.text = ConnectionManager.Main.CurrentLobby.Value.ToString();
-            OnLobbyEntered(ConnectionManager.Main.CurrentLobby.Value);
+            ConnectionManager.Main.JoinLobby(ConnectionManager.Main.CurrentLobby.Value.Id);
         }
         else
         {
@@ -146,7 +145,7 @@ public class LobbyUI : UIBehaviour
         }
         else
         {
-            if (!ConnectionManager.Main.CurrentLobby.HasValue && lobbyIdInputField.text != "")
+            if (!ConnectionManager.Main.CurrentLobby.HasValue && lobbyIdInputField.text != "" && ConnectionManager.Main.CurrentLobby.Value.Id != 0)
             {
                 ConnectionManager.Main.JoinLobby(ulong.Parse(lobbyIdInputField.text));
             }
@@ -168,7 +167,14 @@ public class LobbyUI : UIBehaviour
         }
         else
         {
-            ConnectionManager.Main.StartGameMultiplayerOnlineClient();
+            if (ConnectionManager.Main.CurrentLobby?.GetData(ConnectionManager.LOBBY_STATUS_KEY) != ConnectionManager.LOBBY_INGAME_VAL)
+            {
+                lobbyInstructionText.text = "Host has not started the game. Please try again later!";
+            }
+            else
+            {
+                ConnectionManager.Main.StartGameMultiplayerOnlineClient();
+            }
         }
     }
 
@@ -210,31 +216,34 @@ public class LobbyUI : UIBehaviour
     {
         if (showDebugs) Debug.Log("Entered lobby " + lobby.Id);
 
-        if (lobby.MemberCount == 0)
+        if (lobby.MemberCount == 0 || lobby.Id.Value == 0)
         {
+            if (showDebugs) Debug.LogError($"Invalid lobby ID: {lobby.Id}, playerCount = {lobby.MemberCount}");
             lobbyInstructionText.text = "Invalid Lobby ID. Try again!";
         }
         else
         {
             var builder = $"Player Count = {lobby.MemberCount}/100" +
-                $"\n\nPlayer List:\n";
+               $"\n\nPlayer List:\n";
             foreach (var member in lobby.Members)
             {
                 builder += "> " + member.Name + "\n";
             }
             lobbyPlayerText.text = builder;
 
-            lobbyInstructionText.text = "Enter Lobby ID or join a friend from steam overlay.";
-
             if (lobbyMode == LobbyMode.Host)
             {
                 startButtonText.text = "Start";
                 copyPasteButtonText.text = "Copy";
+                lobbyIdInputField.text = lobby.Id.ToString();
+                lobbyInstructionText.text = "Invite more friends or click Start to launch the game!";
             }
             else
             {
                 startButtonText.text = "Join";
                 copyPasteButtonText.text = "Paste";
+                lobbyIdInputField.text = lobby.Id.ToString();
+                lobbyInstructionText.text = "Invite more friends or click Join to launch the game!";
             }
             startButton.gameObject.SetActive(true);
 

@@ -1869,6 +1869,7 @@ MonoBehaviour:
   container: {fileID: 6026101150664435241}
   fadeDuration: 0.25
   delayShow: 0
+  excludeFromManager: 1
   delayShowFadeFirstObjects: []
   ignoreObjects: []
   isShowing: 0

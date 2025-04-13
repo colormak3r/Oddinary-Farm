@@ -873,6 +873,7 @@ MonoBehaviour:
   container: {fileID: 6879947483148304765}
   fadeDuration: 0.25
   delayShow: 0
+  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
   isShowing: 0
@@ -1355,6 +1356,7 @@ MonoBehaviour:
   container: {fileID: 4015737620064458180}
   fadeDuration: 0.25
   delayShow: 0
+  excludeFromManager: 1
   delayShowFadeFirstObjects: []
   ignoreObjects: []
   isShowing: 0
@@ -1451,6 +1453,7 @@ MonoBehaviour:
   container: {fileID: 6693289304348250490}
   fadeDuration: 0.25
   delayShow: 0
+  excludeFromManager: 1
   delayShowFadeFirstObjects: []
   ignoreObjects: []
   isShowing: 0
@@ -4357,6 +4360,7 @@ MonoBehaviour:
   container: {fileID: 1673673297662526984}
   fadeDuration: 0.25
   delayShow: 0
+  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
   isShowing: 0
@@ -5985,6 +5989,7 @@ MonoBehaviour:
   container: {fileID: 2118267123691162797}
   fadeDuration: 0.25
   delayShow: 0
+  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
   isShowing: 0
@@ -8269,6 +8274,7 @@ MonoBehaviour:
   container: {fileID: 2926741140887195492}
   fadeDuration: 1
   delayShow: 0
+  excludeFromManager: 0
   delayShowFadeFirstObjects:
   - {fileID: 2544226400747503105}
   ignoreObjects: []
@@ -8331,6 +8337,7 @@ MonoBehaviour:
   container: {fileID: 9120147950843072736}
   fadeDuration: 0.25
   delayShow: 0
+  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
   isShowing: 0

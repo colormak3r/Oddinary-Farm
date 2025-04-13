@@ -1,10 +1,8 @@
 using ColorMak3r.Utility;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
 using TMPro;
 using Unity.Multiplayer.Tools.NetStatsMonitor;
 using Unity.Netcode;
@@ -53,6 +51,11 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     private TMP_Text suggestionText;
     [SerializeField]
     private ScrollRect scrollRect;
+
+    [Header("Debugs")]
+    [SerializeField]
+    private int spectateId = -1;
+    public int SpectateId => spectateId;
 
     private string log;
     private string filename = "";
@@ -208,7 +211,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "LogToFile",
     "Spawn",
     "PrintItemIdList",
-    "PrintSpawnableIdList"};
+    "PrintSpawnableIdList",
+    "Spectate"};
 
     private string[] commandHelps =
     {"Help",
@@ -217,7 +221,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "LogToFile [bool]",
     "Spawn [id] [x] [y] [count]",
     "PrintItemIdList",
-    "PrintSpawnableIdList"};
+    "PrintSpawnableIdList",
+    "Spectate [int]"};
 
     private void ParseCommand(string input)
     {
@@ -227,7 +232,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
         // Set default value for 1-argument commands
         var defaultBool = true;
-        if (args.Length == 2)
+        if (args.Length == 2 && args[1] == "")
         {
             defaultBool = ParseBool(args[1]);
         }
@@ -274,6 +279,37 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
             {
                 if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
                 AssetManager.Main.PrintSpawnableIDs();
+            }
+            else if (command == commands[7].ToLower())
+            {
+                if (args.Length == 2)
+                {
+                    int id = int.Parse(args[1]);
+                    if (id < 0 || id >= NetworkManager.Singleton.ConnectedClients.Count)
+                        throw new ArgumentException(UNKNOWN_ARGUMENT + $" '{args[1]}'");
+                    spectateId = id;
+                }
+                else
+                {
+                    spectateId = -1;
+                }
+
+                if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+                {
+                    if (spectateId < 0)
+                    {
+                        Debug.Log("Spectate disabled");
+                    }
+                    else
+                    {
+                        Debug.Log($"Spectating player {NetworkManager.Singleton.ConnectedClients[(ulong)spectateId].ClientId}");
+                        NetworkManager.Singleton.ConnectedClients[(ulong)spectateId].PlayerObject.GetComponent<PlayerController>().SetCamera((ulong)spectateId);
+                    }
+                }
+                else
+                {
+                    Debug.Log("Game is not launched. Spectator mode will enable when the game launch");
+                }
             }
             else
             {

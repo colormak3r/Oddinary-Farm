@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -12,6 +13,8 @@ public class UIManager : MonoBehaviour
         get => currentUIBehavior;
         set => currentUIBehavior = value;
     }
+
+    private List<UIBehaviour> allUIBehaviours;
 
     private void Awake()
     {
