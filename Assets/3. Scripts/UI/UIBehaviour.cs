@@ -3,6 +3,8 @@ using UnityEngine;
 using ColorMak3r.Utility;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIBehaviour : MonoBehaviour
 {
@@ -13,13 +15,17 @@ public class UIBehaviour : MonoBehaviour
     protected float fadeDuration = 0.25f;
     [SerializeField]
     protected bool delayShow;
-    [SerializeField]
-    private bool excludeFromManager = false;
     [Tooltip("These objects appear after others and fade out first.")]
     [SerializeField]
     protected GameObject[] delayShowFadeFirstObjects;
     [SerializeField]
     protected GameObject[] ignoreObjects;
+
+    [Header("Persistence UI Settings")]
+    [SerializeField]
+    private bool excludeFromUIManager = false;
+    [SerializeField]
+    private Image background;
 
     [Header("UI Behaviour Debugs")]
     [SerializeField]
@@ -34,6 +40,26 @@ public class UIBehaviour : MonoBehaviour
 
     [HideInInspector]
     public UnityEvent<bool> OnVisibilityChanged;
+
+    protected virtual void Start()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+    }
+
+    protected virtual void Destroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    protected virtual void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (!excludeFromUIManager)
+            UIManager.Main.RegisterUI(this);
+
+        // Disable background in the main menu if it exist
+        if (background) background.enabled = scene.buildIndex != 0;
+    }
 
     protected virtual void OnEnable()
     {
@@ -65,8 +91,6 @@ public class UIBehaviour : MonoBehaviour
         this.allRenderers = allRenderers.ToArray();
         this.dsffoRenderers = dsffoRenderers.ToArray();
         this.ignoreRenderers = ignoreRenderers.ToArray();
-
-        if (isShowing && !excludeFromManager && UIManager.Main != null) UIManager.Main.CurrentUIBehaviour = this;
     }
 
     public IEnumerator ShowCoroutine(bool fade = true)

@@ -112,14 +112,16 @@ public class ShopUI : UIBehaviour
 
         InventoryUI.Main.CloseInventory();
 
-        if (shopMode == ShopMode.Buy)
+        // Always default to buy mode
+        ShopModeBuy();
+        /*if (shopMode == ShopMode.Buy)
         {
             ShopModeBuy();
         }
         else
         {
             ShopModeSell();
-        }
+        }*/
 
         StartCoroutine(ShowCoroutine());
     }

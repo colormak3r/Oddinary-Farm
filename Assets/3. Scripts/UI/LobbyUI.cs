@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Netcode.Transports.Facepunch;
 using Steamworks;
 using Steamworks.Data;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -61,8 +57,10 @@ public class LobbyUI : UIBehaviour
     [SerializeField]
     private LobbyMode lobbyMode;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         SteamMatchmaking.OnLobbyCreated += OnLobbyCreated;
         SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
 
@@ -70,8 +68,10 @@ public class LobbyUI : UIBehaviour
         SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeave;
     }
 
-    private void OnDestroy()
+    protected override void Destroy()
     {
+        base.Destroy();
+
         SteamMatchmaking.OnLobbyCreated -= OnLobbyCreated;
         SteamMatchmaking.OnLobbyEntered -= OnLobbyEntered;
 

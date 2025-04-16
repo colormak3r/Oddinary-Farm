@@ -8,8 +8,10 @@ public class VersionUI : UIBehaviour
     [SerializeField]
     private TMP_Text versionText;
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         versionText.text = "v" + VersionUtility.VERSION;
     }
 }

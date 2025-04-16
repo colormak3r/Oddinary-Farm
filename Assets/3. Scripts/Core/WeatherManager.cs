@@ -220,18 +220,11 @@ public class WeatherManager : NetworkBehaviour
             isRainning_cached = isRainning;
             if (isRainning)
             {
-                AudioManager.Main.PlayAmbientSound(AmbientTrack.Rain);
-
                 OnRainStarted?.Invoke();
                 rainParticleSystem.Play();
             }
             else
             {
-                if (timeManager.IsDay)
-                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Day);
-                else
-                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Night);
-
                 OnRainStopped?.Invoke();
                 rainParticleSystem?.Stop();
             }

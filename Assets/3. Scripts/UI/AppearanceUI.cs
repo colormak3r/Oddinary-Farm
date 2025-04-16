@@ -47,8 +47,6 @@ public class AppearanceUI : UIBehaviour
     [SerializeField]
     private Transform contentTransform;
     [SerializeField]
-    private Image background;
-    [SerializeField]
     private Image faceImage;
     [SerializeField]
     private Image headImage;
@@ -81,32 +79,10 @@ public class AppearanceUI : UIBehaviour
     public Hat CurrentHat => currentHat;
     public Outfit CurrentOutfit => currentOutfit;
 
-    protected override void OnEnable()
+    protected override void Start()
     {
-        base.OnEnable();
+        base.Start();
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.buildIndex == 0)
-        {
-            background.enabled = false;
-        }
-        else
-        {
-            background.enabled = true;
-        }
-    }
-
-    private void Start()
-    {
         currentFace = defaultFace;
         currentHead = defaultHead;
         currentHat = defaultHat;

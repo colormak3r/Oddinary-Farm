@@ -866,9 +866,10 @@ MonoBehaviour:
   container: {fileID: 1386967621}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 1
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -1638,6 +1639,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112972634}
   m_CullTransparentMesh: 1
+--- !u!1 &121765256
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 121765258}
+  - component: {fileID: 121765257}
+  m_Layer: 0
+  m_Name: Spectator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &121765257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121765256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d2be005796765547ab6a94fbc0aa3ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &121765258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121765256}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &126323262
 GameObject:
   m_ObjectHideFlags: 0
@@ -3365,6 +3410,16 @@ MonoBehaviour:
   spawnBlockLayer:
     serializedVersion: 2
     m_Bits: 268436736
+  testCreatureWave:
+    spawnHour: 0
+    showWarning: 0
+    creatureSpawns:
+    - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      spawnCount: 30
+    - creaturePrefab: {fileID: 8862408004728527693, guid: d16681cace399384294a68fa2487800e, type: 3}
+      spawnCount: 10
+    - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
+      spawnCount: 5
   showGizmos: 1
   currentSafeRadius: 0
   currentSpawnRadius: 0
@@ -4379,7 +4434,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: m_PresetReference
-      value: 8593542388336296069
+      value: 2119826888588525642
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: 'managedReferences[2119826888588525639]'
+      value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: 'managedReferences[2119826888588525640]'
+      value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: 'managedReferences[2119826888588525641]'
+      value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: 'managedReferences[2119826888588525642]'
+      value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: 'managedReferences[8593542336651198616]'
@@ -4402,6 +4473,22 @@ PrefabInstance:
       value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525639].<Name>k__BackingField
+      value: None
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525640].<Name>k__BackingField
+      value: None
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525641].<Name>k__BackingField
+      value: None
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525642].<Name>k__BackingField
+      value: None
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[8593542336651198616].<Name>k__BackingField
       value: None
       objectReference: {fileID: 0}
@@ -4420,6 +4507,22 @@ PrefabInstance:
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[8593542388336296069].<Name>k__BackingField
       value: None
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525639].<Description>k__BackingField
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525640].<Description>k__BackingField
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525641].<Description>k__BackingField
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525642].<Description>k__BackingField
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[8593542336651198616].<Description>k__BackingField
@@ -4442,6 +4545,22 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525639].<PacketDelayMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525640].<PacketDelayMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525641].<PacketDelayMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525642].<PacketDelayMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[8593542336651198616].<PacketDelayMs>k__BackingField
       value: 0
       objectReference: {fileID: 0}
@@ -4459,6 +4578,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[8593542388336296069].<PacketDelayMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525639].<PacketJitterMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525640].<PacketJitterMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525641].<PacketJitterMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525642].<PacketJitterMs>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -4482,6 +4617,22 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525639].<PacketLossPercent>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525640].<PacketLossPercent>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525641].<PacketLossPercent>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525642].<PacketLossPercent>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[8593542336651198616].<PacketLossPercent>k__BackingField
       value: 0
       objectReference: {fileID: 0}
@@ -4499,6 +4650,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[8593542388336296069].<PacketLossPercent>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525639].<PacketLossInterval>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525640].<PacketLossInterval>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525641].<PacketLossInterval>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[2119826888588525642].<PacketLossInterval>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -11035,6 +11202,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 705423756}
+  - component: {fileID: 705423757}
   m_Layer: 5
   m_Name: Container
   m_TagString: Untagged
@@ -11064,6 +11232,30 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &705423757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705423755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6ede1c9cefa604bbdb50c86e74c30a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  container: {fileID: 745665263}
+  fadeDuration: 0.25
+  delayShow: 0
+  delayShowFadeFirstObjects: []
+  ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
+  isShowing: 0
+  isAnimating: 0
+  OnVisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &715689610
 GameObject:
   m_ObjectHideFlags: 0
@@ -11120,12 +11312,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  realMinutesPerInGameDay: 5
+  RealMinutesPerInGameDay:
+    m_InternalValue: 5
   dayStartTime: 6
   nightStartTime: 20
-  dayOffset: 1
-  hourOffset: 7
-  minuteOffset: 30
+  DayOffset:
+    m_InternalValue: 1
+  HourOffset:
+    m_InternalValue: 7
+  MinuteOffset:
+    m_InternalValue: 30
   timeText: {fileID: 670024580}
   isInitialized: 0
   runTime: 0
@@ -11168,12 +11364,12 @@ GameObject:
   - component: {fileID: 717601546}
   - component: {fileID: 717601545}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &717601544
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14109,6 +14305,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1128154999}
   m_CullTransparentMesh: 1
+--- !u!1 &1144435126
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1144435127}
+  - component: {fileID: 1144435128}
+  m_Layer: 5
+  m_Name: Pause UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1144435127
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144435126}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1496210034}
+  m_Father: {fileID: 1435793185}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -10, y: -10}
+  m_SizeDelta: {x: 20, y: 20}
+  m_Pivot: {x: 1, y: 1}
+--- !u!114 &1144435128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1144435126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6ede1c9cefa604bbdb50c86e74c30a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  container: {fileID: 1496210033}
+  fadeDuration: 0.25
+  delayShow: 0
+  delayShowFadeFirstObjects: []
+  ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
+  isShowing: 0
+  isAnimating: 0
+  OnVisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1152460884
 GameObject:
   m_ObjectHideFlags: 0
@@ -14493,7 +14750,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1190249395
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14526,6 +14783,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6105f692b66b267479191ab6782f5c54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  container: {fileID: 717601543}
+  fadeDuration: 0.25
+  delayShow: 0
+  delayShowFadeFirstObjects: []
+  ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
+  isShowing: 0
+  isAnimating: 0
+  OnVisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
   weatherUnitPrefab: {fileID: 658868028077853733, guid: 8c81b9a96202461428fd85aebc651a26, type: 3}
   weatherUnitParent: {fileID: 1185126266}
   startPoint: {fileID: 678284763}
@@ -15574,6 +15843,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1309966472}
+  - component: {fileID: 1309966473}
   m_Layer: 5
   m_Name: Time UI
   m_TagString: Untagged
@@ -15601,6 +15871,30 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 3}
   m_SizeDelta: {x: 120, y: 20}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &1309966473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309966471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6ede1c9cefa604bbdb50c86e74c30a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  container: {fileID: 1350618428}
+  fadeDuration: 0.25
+  delayShow: 0
+  delayShowFadeFirstObjects: []
+  ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
+  isShowing: 0
+  isAnimating: 0
+  OnVisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1317679554
 GameObject:
   m_ObjectHideFlags: 0
@@ -15842,7 +16136,7 @@ GameObject:
   - component: {fileID: 1350618431}
   - component: {fileID: 1350618430}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16535,7 +16829,7 @@ RectTransform:
   - {fileID: 1456745835}
   - {fileID: 30882138}
   - {fileID: 2016779268}
-  - {fileID: 1496210034}
+  - {fileID: 1144435127}
   - {fileID: 1600868688}
   - {fileID: 2071215136}
   - {fileID: 2031529259}
@@ -16764,10 +17058,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   mapSize: {x: 200, y: 200}
-  chunkSize: 5
+  chunkSize: 3
   paddingChunkCount: 2
-  renderDistance: 4
-  renderXOffset: 2
+  renderDistance: 1
+  renderXOffset: 0
   terrainUnitProperties:
   - {fileID: 11400000, guid: cdfb8f13db1fb6341aff37d65cae2cc5, type: 2}
   - {fileID: 11400000, guid: 2e0f68b5b9a38e44784d98fa11d1a5f6, type: 2}
@@ -17002,9 +17296,10 @@ MonoBehaviour:
   container: {fileID: 1022292164}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -17434,18 +17729,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1496210033}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 844793488}
-  m_Father: {fileID: 1435793185}
+  m_Father: {fileID: 1144435127}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -5, y: -5}
-  m_SizeDelta: {x: 20, y: 20}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1496210035
 MonoBehaviour:
@@ -22726,6 +23021,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1545713071}
+  - component: {fileID: 1545713072}
   m_Layer: 5
   m_Name: Height UI
   m_TagString: Untagged
@@ -22753,6 +23049,30 @@ RectTransform:
   m_AnchoredPosition: {x: -85, y: 0}
   m_SizeDelta: {x: 60, y: 16}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &1545713072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545713070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6ede1c9cefa604bbdb50c86e74c30a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  container: {fileID: 1370250728}
+  fadeDuration: 0.25
+  delayShow: 0
+  delayShowFadeFirstObjects: []
+  ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
+  isShowing: 0
+  isAnimating: 0
+  OnVisibilityChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1564907285
 GameObject:
   m_ObjectHideFlags: 0
@@ -23162,9 +23482,10 @@ MonoBehaviour:
   container: {fileID: 1516249273}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -24944,6 +25265,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1311943064949587215, guid: d4eb9025c2ea56b4c8f5c13e851f07eb, type: 3}
+      propertyPath: excludeFromUIManager
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1334284644275406873, guid: d4eb9025c2ea56b4c8f5c13e851f07eb, type: 3}
       propertyPath: m_Camera
       value: 
@@ -25670,10 +25995,11 @@ MonoBehaviour:
   container: {fileID: 1247827723}
   fadeDuration: 3
   delayShow: 0
-  excludeFromManager: 0
   delayShowFadeFirstObjects:
   - {fileID: 539931861}
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -26867,9 +27193,10 @@ MonoBehaviour:
   container: {fileID: 745665263}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -26887,18 +27214,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb6995c182e74ea4f8266e138e80c0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  container: {fileID: 1128154999}
+  container: {fileID: 705423755}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 1
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
     m_PersistentCalls:
       m_Calls: []
-  inventoryBehaviour: {fileID: 2016779269}
+  hotbarUIBehaviour: {fileID: 705423757}
   walletText: {fileID: 557067300}
   walletUI: {fileID: 1412995239}
   inventorySlots:
@@ -26989,9 +27317,10 @@ MonoBehaviour:
   container: {fileID: 1541476186}
   fadeDuration: 0.5
   delayShow: 0
-  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -28033,6 +28362,7 @@ SceneRoots:
   - {fileID: 1577237158}
   - {fileID: 353218142}
   - {fileID: 1649803884}
+  - {fileID: 121765258}
   - {fileID: 1448123952}
   - {fileID: 3886028087406855206}
   - {fileID: 98597106}

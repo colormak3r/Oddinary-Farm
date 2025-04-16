@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Chunk
 {
@@ -156,7 +157,7 @@ public class WorldGenerator : NetworkBehaviour
     private Texture2D terrainMapTexture;
 
     private Offset2DArray<bool> folliageMap;
-    private NetworkVariable<HashSet<Vector2>> invalidFolliagePositionHashSet = new NetworkVariable<HashSet<Vector2>>(new HashSet<Vector2>());
+    private HashSet<Vector2> invalidFolliagePositionHashSet = new HashSet<Vector2>();
 
     private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
 
@@ -201,6 +202,7 @@ public class WorldGenerator : NetworkBehaviour
         yield return new WaitUntil(() => GameManager.Main.IsInitialized);
         var map = elevationMap.RawMap;
         var halfMapSize = mapSize / 2;
+        var invalidPosition = new List<Vector2>();
         for (int i = map.minX; i < map.maxX; i++)
         {
             for (int j = map.minY; j < map.maxY; j++)
@@ -209,11 +211,13 @@ public class WorldGenerator : NetworkBehaviour
                 {
                     terrainMapTexture.SetPixel(i + halfMapSize.x, j + halfMapSize.y, Color.blue);
                     var position = new Vector2(i, j);
-                    if (IsServer) InvalidateFolliageOnServer(position);
+                    invalidPosition.Add(position);
                     RemoveFoliage(position);
                 }
             }
         }
+
+        if (IsServer) InvalidateFolliage(invalidPosition.ToArray());
 
         terrainMapTexture.Apply();
         UpdateMapTexture(terrainMapTexture);
@@ -436,7 +440,7 @@ public class WorldGenerator : NetworkBehaviour
                 chunk.terrainUnits.Add(terrainUnit);
                 terrainUnit.GetComponent<FloodController>().SetFloodThreshhold(GetElevation(terrainPos.x, terrainPos.y));
                 folliageMap.GetElementSafe(terrainPos.x, terrainPos.y, out var canSpawnFolliage);
-                if (canSpawnFolliage && !invalidFolliagePositionHashSet.Value.Contains(terrainPos))
+                if (canSpawnFolliage && !invalidFolliagePositionHashSet.Contains(terrainPos) && resourceMap.RawMap[terrainPos.x, terrainPos.y] < 0.99f)
                     chunk.folliages.Add(SpawnFolliage(terrainPos, folliagePrefabs.GetRandomElement()));
                 if (showStep) yield return null;
             }
@@ -553,9 +557,23 @@ public class WorldGenerator : NetworkBehaviour
         return terrainMap[x, y].Elevation.min == 0.55f; // Elevation of grass
     }
 
-    public void InvalidateFolliageOnServer(Vector2 position)
+    public void InvalidateFolliage(Vector2[] positions)
     {
-        invalidFolliagePositionHashSet.Value.Add(position);
+        InvalidateFolliageRpc(positions);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void InvalidateFolliageRpc(Vector2[] positions)
+    {
+        foreach (var position in positions)
+        {
+            invalidFolliagePositionHashSet.Add(position);
+        }
+    }
+
+    public void InvalidateFolliageOnClient(Vector2 position)
+    {
+        invalidFolliagePositionHashSet.Add(position);
     }
 
     public void RemoveFoliage(Vector2 position)

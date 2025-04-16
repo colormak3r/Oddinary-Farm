@@ -1,4 +1,6 @@
 using ColorMak3r.Utility;
+using NUnit.Framework;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -156,9 +158,7 @@ public class ItemSystem : NetworkBehaviour
                 Vector2 offset = new Vector2(x, y);
                 Vector2 gridPos = (position + offset).SnapToGrid();
 
-                if (IsServer)
-                    WorldGenerator.Main.InvalidateFolliageOnServer(gridPos);
-
+                WorldGenerator.Main.InvalidateFolliageOnClient(gridPos);
                 WorldGenerator.Main.RemoveFoliage(gridPos);
             }
         }

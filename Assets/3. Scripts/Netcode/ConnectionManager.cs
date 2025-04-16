@@ -93,7 +93,7 @@ public class ConnectionManager : MonoBehaviour
     private IEnumerator LaunchCoroutine(bool isHost, NetworkTransport networkTransport)
     {
         launched = true;
-        CurrentLobby?.SetData(LOBBY_STATUS_KEY,  LOBBY_INGAME_VAL);
+        CurrentLobby?.SetData(LOBBY_STATUS_KEY, LOBBY_INGAME_VAL);
         yield return TransitionUI.Main.ShowCoroutine();
 
         networkManager.NetworkConfig.NetworkTransport = networkTransport;
@@ -174,12 +174,12 @@ public class ConnectionManager : MonoBehaviour
         }
     }
 
-    private void SetLobby(Lobby lobby, SteamId id)
+    private void SetLobby(Lobby lobby)
     {
-        if (showDebugs) Debug.Log("Setting lobby " + lobby.Id + " with owner " + id + " as current lobby");
+        if (showDebugs) Debug.Log("Setting lobby " + lobby.Id + " with owner " + lobby.Owner.Id + " as current lobby");
 
         CurrentLobby = lobby;
-        facepunchTransport.targetSteamId = id;
+        facepunchTransport.targetSteamId = lobby.Owner.Id;
     }
 
     public void LeaveLobby()
@@ -204,7 +204,7 @@ public class ConnectionManager : MonoBehaviour
         if (showDebugs) Debug.Log("Joining lobby " + lobby.Id);
         if (showDebugs) Debug.Log("OnLobbyEntered Host: lobby = " + lobby.Id + ", id = " + lobby.Owner.Id);
 
-        SetLobby(lobby, id);
+        SetLobby(lobby);
         StartCoroutine(JoinLobbyFromInviteCoroutine());
     }
 
@@ -242,14 +242,14 @@ public class ConnectionManager : MonoBehaviour
 
     private void OnLobbyGameCreated(Lobby lobby, uint arg2, ushort arg3, SteamId id)
     {
-        if (showDebugs) Debug.Log("Game created in lobby " + lobby.Id);
+        if (showDebugs) Debug.Log($"Game created in lobby {lobby.Id}, maxPlayer = {lobby.MaxMembers}");
 
-        SetLobby(lobby, id);
+        SetLobby(lobby);
     }
 
     private void OnLobbyEntered(Lobby lobby)
     {
-        if (showDebugs) Debug.Log("Entered lobby " + lobby.Id);
+        if (showDebugs) Debug.Log($"Entered lobby {lobby.Id}, maxPlayer = {lobby.MaxMembers}");
 
         if (lobby.MemberCount <= 0)
         {
@@ -258,7 +258,7 @@ public class ConnectionManager : MonoBehaviour
             return;
         }
 
-        SetLobby(lobby, lobby.Owner.Id);
+        SetLobby(lobby);
     }
 
     private void OnLobbyInvite(Friend friend, Lobby lobby)

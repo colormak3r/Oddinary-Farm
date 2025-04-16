@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using static UnityEngine.Splines.SplineInstantiate;
 
 public class CreatureSpawnManager : NetworkBehaviour
 {
@@ -36,6 +37,10 @@ public class CreatureSpawnManager : NetworkBehaviour
     private int baseSafeRadius = 10;
     [SerializeField]
     private LayerMask spawnBlockLayer;
+
+    [Header("Testing")]
+    [SerializeField]
+    private CreatureWave testCreatureWave;
 
     [Header("Debugs")]
     [SerializeField]
@@ -78,7 +83,7 @@ public class CreatureSpawnManager : NetworkBehaviour
             if (currentHour == wave.spawnHour)
             {
                 if (IsServer)
-                    StartCoroutine(SpawnWave(wave));
+                    StartCoroutine(SpawnWave(wave, Vector2.zero, currentSafeRadius, currentSpawnRadius));
             }
             else if (currentHour == wave.spawnHour - 1 && wave.showWarning)
             {
@@ -87,19 +92,19 @@ public class CreatureSpawnManager : NetworkBehaviour
         }
     }
 
-    private IEnumerator SpawnWave(CreatureWave wave)
+    private IEnumerator SpawnWave(CreatureWave wave, Vector2 position, int safeRadius, int spawnRadius)
     {
         spawnablePositions = new List<Vector2>();
-        for (int x = -currentSpawnRadius; x < currentSpawnRadius; x++)
+        for (int x = -spawnRadius; x < spawnRadius; x++)
         {
-            for (int y = -currentSpawnRadius; y < currentSpawnRadius; y++)
+            for (int y = -spawnRadius; y < spawnRadius; y++)
             {
-                if (Mathf.Abs(x) <= currentSafeRadius && Mathf.Abs(y) <= currentSafeRadius) continue;
-                var position = new Vector2(x, y);
-                position = position.SnapToGrid();
-                if (Physics2D.OverlapPoint(position, spawnBlockLayer) == null)
+                if (Mathf.Abs(x) <= safeRadius && Mathf.Abs(y) <= safeRadius) continue;
+                var offsetPos = new Vector2(x, y) + position;
+                offsetPos = offsetPos.SnapToGrid();
+                if (Physics2D.OverlapPoint(offsetPos, spawnBlockLayer) == null)
                 {
-                    spawnablePositions.Add(position);
+                    spawnablePositions.Add(offsetPos);
                 }
             }
         }
@@ -127,6 +132,29 @@ public class CreatureSpawnManager : NetworkBehaviour
         currentSafeRadius = value;
         currentSpawnRadius = value + baseSpawnRadius;
     }
+
+    public void SetCanSpawn(bool canSpawn)
+    {
+        SetCanSpawnRpc(canSpawn);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SetCanSpawnRpc(bool canSpawn)
+    {
+        this.canSpawn = canSpawn;
+    }
+
+    public void SpawnTestWave(Vector2 position, int safeRadius, int spawnRadius)
+    {
+        SpawnTestWaveRpc(position, safeRadius, spawnRadius);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SpawnTestWaveRpc(Vector2 position, int safeRadius, int spawnRadius)
+    {
+        StartCoroutine(SpawnWave(testCreatureWave, position, safeRadius, spawnRadius));
+    }
+
 
     private void OnDrawGizmos()
     {

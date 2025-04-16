@@ -52,11 +52,6 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     [SerializeField]
     private ScrollRect scrollRect;
 
-    [Header("Debugs")]
-    [SerializeField]
-    private int spectateId = -1;
-    public int SpectateId => spectateId;
-
     private string log;
     private string filename = "";
     private float verticalNormalizedPosition_cached;
@@ -80,8 +75,10 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         logToFile = PlayerPrefs.GetInt(LOG_TO_FILE, 1) == 1;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         InputManager.Main.InputActions.Console.SetCallbacks(this);
 
         inputField.text = "";
@@ -90,6 +87,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
         UnfocusOnInputField();
     }
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -212,30 +210,33 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "Spawn",
     "PrintItemIdList",
     "PrintSpawnableIdList",
-    "Spectate"};
+    "Spectate",
+    "ShowUI",
+    "SpawnTestWave",
+    "CanSpawn",
+    "SetMinutesPerDay",
+    "SetTimeOffset"};
 
     private string[] commandHelps =
     {"Help",
-    "ShowStackTrace [bool]",
+    "ShowStackTrace[bool]",
     "ShowNetStat [bool]",
     "LogToFile [bool]",
-    "Spawn [id] [x] [y] [count]",
+    "Spawn [id] [x=0] [y=0] [count=1]",
     "PrintItemIdList",
     "PrintSpawnableIdList",
-    "Spectate [int]"};
+    "Spectate [id] [x] [y]",
+    "ShowUI [bool]",
+    "SpawnTestWave [x=0] [y=0] [safeRadius=5] [spawnRadius=10]",
+    "CanSpawn [bool]",
+    "SetMinutesPerDay [realMinutePerDay]",
+    "SetTimeOffset [day] [hour] [minute]"};
 
     private void ParseCommand(string input)
     {
         input = input.ToLower();
         var args = input.Split(" ");
         var command = args[0];
-
-        // Set default value for 1-argument commands
-        var defaultBool = true;
-        if (args.Length == 2 && args[1] == "")
-        {
-            defaultBool = ParseBool(args[1]);
-        }
 
         // Clear the input field
         Debug.Log(">> " + input);
@@ -246,70 +247,109 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         {
             if (command == commands[0].ToLower())
             {
+                // Help
                 string builder = "";
                 foreach (var cc in commandHelps) builder += "\n>> " + cc;
                 Debug.Log($"List of commands:{builder}");
             }
             else if (command == commands[1].ToLower())
             {
+                // ShowStackTrace [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
                 showStackTrace = defaultBool;
                 PlayerPrefs.SetInt(SHOW_STACK_TRACE, showStackTrace ? 1 : 0);
             }
             else if (command == commands[2].ToLower())
             {
+                // ShowNetStat [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
                 NetworkManager.Singleton.gameObject.GetComponent<RuntimeNetStatsMonitor>().Visible = defaultBool;
             }
             else if (command == commands[3].ToLower())
             {
+                // LogToFile [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
                 logToFile = defaultBool;
                 PlayerPrefs.SetInt(LOG_TO_FILE, logToFile ? 1 : 0);
             }
             else if (command == commands[4].ToLower())
             {
+                // Spawn [id] [x=0] [y=0] [count=1]
                 if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
 
-                AssetManager.Main.SpawnByID(int.Parse(args[1]), new Vector2(float.Parse(args[2]), float.Parse(args[3])), int.Parse(args[4]), true);
+                var x = args.Length > 2 ? float.Parse(args[2]) : 0f;
+                var y = args.Length > 3 ? float.Parse(args[3]) : 0f;
+                var count = args.Length > 4 ? int.Parse(args[4]) : 1;
+
+                AssetManager.Main.SpawnByID(int.Parse(args[1]), new Vector2(x, y), count, true);
             }
             else if (command == commands[5].ToLower())
             {
+                // PrintItemIdList
                 if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
                 AssetManager.Main.PrintItemIDs();
             }
             else if (command == commands[6].ToLower())
             {
+                // PrintSpawnableIdList
                 if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
                 AssetManager.Main.PrintSpawnableIDs();
             }
             else if (command == commands[7].ToLower())
             {
-                if (args.Length == 2)
-                {
-                    int id = int.Parse(args[1]);
-                    if (id < 0 || id >= NetworkManager.Singleton.ConnectedClients.Count)
-                        throw new ArgumentException(UNKNOWN_ARGUMENT + $" '{args[1]}'");
-                    spectateId = id;
-                }
-                else
-                {
-                    spectateId = -1;
-                }
+                ulong id = args.Length > 1 ? ulong.Parse(args[1]) : 999;
+                var owner = (NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsHost) ? NetworkManager.Singleton.LocalClient.PlayerObject.transform.position : Vector3.zero;
+                var x = args.Length > 2 ? float.Parse(args[2]) : owner.x;
+                var y = args.Length > 3 ? float.Parse(args[3]) : owner.y;
 
-                if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
-                {
-                    if (spectateId < 0)
-                    {
-                        Debug.Log("Spectate disabled");
-                    }
-                    else
-                    {
-                        Debug.Log($"Spectating player {NetworkManager.Singleton.ConnectedClients[(ulong)spectateId].ClientId}");
-                        NetworkManager.Singleton.ConnectedClients[(ulong)spectateId].PlayerObject.GetComponent<PlayerController>().SetCamera((ulong)spectateId);
-                    }
-                }
+                if (Spectator.Main == null) throw new Exception("Spectator not found. Has the game started yet?");
+                Spectator.Main.SetCamera(id);
+                Spectator.Main.SetPosition(new Vector2(x, y));
+            }
+            else if (command == commands[8].ToLower())
+            {
+                // ShowUI [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
+                if (defaultBool)
+                    UIManager.Main.ShowUI();
                 else
-                {
-                    Debug.Log("Game is not launched. Spectator mode will enable when the game launch");
-                }
+                    UIManager.Main.HideUI();
+            }
+            else if (command == commands[9].ToLower())
+            {
+                // SpawnTestWave [x=0] [y=0] [safeRadius=5] [spawnRadius=10]
+                var x = args.Length > 1 ? float.Parse(args[1]) : 0f;
+                var y = args.Length > 2 ? float.Parse(args[2]) : 0f;
+                var safeRadius = args.Length > 3 ? int.Parse(args[3]) : 5;
+                var spawnRadius = args.Length > 4 ? int.Parse(args[4]) : 10;
+
+                if (CreatureSpawnManager.Main == null) throw new Exception("CreatureSpawnManager not found. Has the game started yet?");
+                CreatureSpawnManager.Main.SpawnTestWave(new Vector2(x, y), safeRadius, spawnRadius);
+            }
+            else if (command == commands[10].ToLower())
+            {
+                // CanSpawn [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
+                if (CreatureSpawnManager.Main == null) throw new Exception("CreatureSpawnManager not found. Has the game started yet?");
+                CreatureSpawnManager.Main.SetCanSpawn(defaultBool);
+            }
+            else if (command == commands[11].ToLower())
+            {
+                // SetMinutesPerDay [realMinutePerDay]
+                var realMinutesPerDay = args.Length > 1 ? float.Parse(args[1]) : 5f;
+
+                if (TimeManager.Main == null) throw new Exception("TimeManager not found. Has the game started yet?");
+                TimeManager.Main.SetRealMinutesPerDay(realMinutesPerDay);
+            }
+            else if (command == commands[12].ToLower())
+            {
+                // SetTimeOffset [day] [hour] [minute]
+                var day = args.Length > 1 ? int.Parse(args[1]) : 1;
+                var hour = args.Length > 2 ? int.Parse(args[2]) : 7;
+                var minute = args.Length > 3 ? int.Parse(args[3]) : 30;
+
+                if (TimeManager.Main == null) throw new Exception("TimeManager not found. Has the game started yet?");
+                TimeManager.Main.SetTimeOffset(hour, minute, day);
             }
             else
             {
@@ -320,7 +360,12 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         catch (IndexOutOfRangeException i)
         {
             OutputNextFrame(input);
-            Debug.Log("Incorrect number of arguments: " + i.Message);
+            string argsOut = "";
+            foreach (var arg in args)
+            {
+                argsOut += arg + " ";
+            }
+            Debug.Log($"Incorrect number of arguments:\n- Args.Lengths = {args.Length}\n- Args: {argsOut}\n- {i.Message}");
         }
         catch (Exception e)
         {

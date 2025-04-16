@@ -24,42 +24,26 @@ public class OptionsUI : UIBehaviour
     private GameObject appearanceButton;
     [SerializeField]
     private Button backButton;
-    [SerializeField]
-    private Image background;
 
     private TMP_Text backButtonText;
 
-    protected override void OnEnable()
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        base.OnEnable();
+        base.OnSceneLoaded(scene, mode);
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
         if (scene.buildIndex == 0)
         {
             leaveButton.SetActive(false);
-            //appearanceButton.SetActive(false);
             backButtonText.text = "Back";
             backButton.onClick.RemoveListener(ResumeButtonClicked);
             backButton.onClick.AddListener(BackButtonClicked);
-            background.enabled = false;
         }
         else
         {
             leaveButton.SetActive(true);
-            //appearanceButton.SetActive(true);
             backButtonText.text = "Resume";
             backButton.onClick.RemoveListener(BackButtonClicked);
             backButton.onClick.AddListener(ResumeButtonClicked);
-            background.enabled = true;
         }
     }
 

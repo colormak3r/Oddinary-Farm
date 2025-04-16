@@ -68,8 +68,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
-
-
     public static Transform MuzzleTransform;
 
     private bool rotateArm = false;
@@ -212,10 +210,10 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private IEnumerator InitializeCoroutine()
     {
-        // Set camera
-        SetCamera((ulong)ConsoleUI.Main.SpectateId);
-
         yield return new WaitUntil(() => GameManager.Main.IsInitialized);
+
+        // Set camera
+        Spectator.Main.SetCamera(OwnerClientId);
 
         // Set control
         InputManager.Main.InputActions.Gameplay.SetCallbacks(this);
@@ -230,28 +228,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         isOwner = true;
 
         isInitialized = true;
-    }
-
-    public void SetCamera(ulong id)
-    {
-        if (id > 100)
-        {
-            CinemachineManager.Main.CinemachineCamera.Follow = transform;
-        }
-        else
-        {
-            var connectedClients = NetworkManager.Singleton.ConnectedClientsList;
-            foreach (var client in connectedClients)
-            {
-                Debug.Log($"ClientId: {client.ClientId}, PlayerId: {client.PlayerObject.GetComponent<NetworkObject>().NetworkObjectId}");
-                if (client.ClientId == id)
-                {
-                    CinemachineManager.Main.CinemachineCamera.Follow = client.PlayerObject.transform;
-                    return;
-                }
-            }
-            Debug.LogError($"Cannot find SpectateId: {id}");
-        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -379,6 +355,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             // Prevent player drifting when opening console
             // movement.SetDirection(Vector2.zero);
             ConsoleUI.Main.OpenConsole();
+        }
+    }
+
+    public void OnToggleUI(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            UIManager.Main.ToggleUI();
         }
     }
 

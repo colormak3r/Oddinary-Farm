@@ -15,8 +15,8 @@ public class TimeManager : NetworkBehaviour
         else
             Destroy(gameObject);
 
-        day_cached = dayOffset;
-        hour_cached = hourOffset;
+        day_cached = DayOffset.Value;
+        hour_cached = HourOffset.Value;
         minute_cached = -1;
     }
 
@@ -27,8 +27,7 @@ public class TimeManager : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField]
-    private float realMinutesPerInGameDay = 12f;
-
+    private NetworkVariable<float> RealMinutesPerInGameDay = new NetworkVariable<float>(5);
 
     [SerializeField]
     private float dayStartTime = 6;
@@ -39,11 +38,11 @@ public class TimeManager : NetworkBehaviour
 
     [Header("Offset")]
     [SerializeField]
-    private int dayOffset = 1;
+    private NetworkVariable<int> DayOffset = new NetworkVariable<int>(1);
     [SerializeField]
-    private int hourOffset = 4;
+    private NetworkVariable<int> HourOffset = new NetworkVariable<int>(7);
     [SerializeField]
-    private int minuteOffset = 30;
+    private NetworkVariable<int> MinuteOffset = new NetworkVariable<int>(30);
 
     [Header("Required Components")]
     [SerializeField]
@@ -59,7 +58,7 @@ public class TimeManager : NetworkBehaviour
     private int day_cached = -1;
     private int hour_cached = -1;
     private int minute_cached = -1;
-    private float timeScale => MINUTES_A_DAY / realMinutesPerInGameDay;
+    private float timeScale => MINUTES_A_DAY / RealMinutesPerInGameDay.Value;
 
     private NetworkManager networkManager;
 
@@ -100,9 +99,9 @@ public class TimeManager : NetworkBehaviour
 
         // Get runtime after offset
         var offsetTime = (runTime +
-            dayOffset * SECONDS_A_DAY / timeScale +
-            hourOffset * SECONDS_AN_HOUR / timeScale +
-            minuteOffset * SECONDS_A_MINUTE / timeScale)
+            DayOffset.Value * SECONDS_A_DAY / timeScale +
+            HourOffset.Value * SECONDS_AN_HOUR / timeScale +
+            MinuteOffset.Value * SECONDS_A_MINUTE / timeScale)
             * timeScale;
 
         // Get timeSpan and display it in Day 1 - 12:30 format
@@ -126,17 +125,51 @@ public class TimeManager : NetworkBehaviour
 
             if (hour_cached == nightStartTime)
             {
-                AudioManager.Main.PlayAmbientSound(AmbientTrack.Night);
+                if (!WeatherManager.Main.IsRainning)
+                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Night);
+                else
+                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Rain);
+
                 OnNightStart?.Invoke();
             }
             else if (hour_cached == dayStartTime)
             {
-                AudioManager.Main.PlayAmbientSound(AmbientTrack.Day);
+                if (!WeatherManager.Main.IsRainning)
+                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Day);
+                else
+                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Rain);
+
                 OnDayStart?.Invoke();
             }
 
             OnHourChanged?.Invoke(hour_cached);
         }
     }
+
+    #region Utility
+    public void SetRealMinutesPerDay(float realMinutesPerDay)
+    {
+        SetRealMinutesPerDayRpc(realMinutesPerDay);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SetRealMinutesPerDayRpc(float realMinutesPerDay)
+    {
+        RealMinutesPerInGameDay.Value = realMinutesPerDay;
+    }
+
+    public void SetTimeOffset(int dayOffset, int hourOffset, int minuteOffset)
+    {
+        SetTimeOffSetRpc(dayOffset, hourOffset, minuteOffset);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SetTimeOffSetRpc(int dayOffset, int hourOffset, int minuteOffset)
+    {
+        DayOffset.Value = dayOffset;
+        HourOffset.Value = hourOffset;
+        MinuteOffset.Value = minuteOffset;
+    }
+    #endregion
 }
 
