@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Title-Animation_Truncate_0: 8777644296619209692
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

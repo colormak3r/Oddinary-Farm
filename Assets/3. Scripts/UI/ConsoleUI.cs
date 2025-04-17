@@ -215,7 +215,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "SpawnTestWave",
     "CanSpawn",
     "SetMinutesPerDay",
-    "SetTimeOffset"};
+    "SetTimeOffset",
+    "Window"};
 
     private string[] commandHelps =
     {"Help",
@@ -230,7 +231,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "SpawnTestWave [x=0] [y=0] [safeRadius=5] [spawnRadius=10]",
     "CanSpawn [bool]",
     "SetMinutesPerDay [realMinutePerDay]",
-    "SetTimeOffset [day] [hour] [minute]"};
+    "SetTimeOffset [day] [hour] [minute]",
+    "Window [fullwin, fullscreen, windowed, fullHD, 2k, 4k, size] [WxH] [fullscreen]"};
 
     private void ParseCommand(string input)
     {
@@ -350,6 +352,49 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
                 if (TimeManager.Main == null) throw new Exception("TimeManager not found. Has the game started yet?");
                 TimeManager.Main.SetTimeOffset(hour, minute, day);
+            }
+            else if (command == commands[13].ToLower())
+            {
+                var fullscreen = args.Length > 3 ? ParseBool(args[3]) : false;
+                switch (args[1])
+                {
+                    case "fullwin":
+                        Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
+                        break;
+                    case "fullscreen":
+                        Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+                        break;
+                    case "windowed":
+                        Screen.SetResolution(480, 270, FullScreenMode.Windowed);
+                        break;
+                    case "fullhd":
+                        fullscreen = args.Length > 2 ? ParseBool(args[2]) : false;
+                        Screen.SetResolution(1920, 1080, fullscreen);
+                        break;
+                    case "2k":
+                        fullscreen = args.Length > 2 ? ParseBool(args[2]) : false;
+                        Screen.SetResolution(2560, 1440, fullscreen);
+                        break;
+                    case "4k":
+                        fullscreen = args.Length > 2 ? ParseBool(args[2]) : false;
+                        Screen.SetResolution(3840, 2160, fullscreen);
+                        break;
+                    case "size":
+                        var size = args[2].Split("x");
+                        if (size.Length == 2)
+                        {
+                            int width = int.Parse(size[0]);
+                            int height = int.Parse(size[1]);
+                            Screen.SetResolution(width, height, fullscreen);
+                        }
+                        else
+                        {
+                            throw new ArgumentException(UNKNOWN_ARGUMENT + $" '{args[2]}'");
+                        }
+                        break;
+                    default:
+                        throw new ArgumentException(UNKNOWN_ARGUMENT + $" '{args[1]}'");
+                }
             }
             else
             {

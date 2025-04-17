@@ -11,8 +11,6 @@ public class DrownGraphic : MonoBehaviour
     [SerializeField]
     private float wetPercentage = 0.1f;
     [SerializeField]
-    private float rangeOverride = 1f;
-    [SerializeField]
     private Transform waterTransform;
     [SerializeField]
     private float speed = 2f;
