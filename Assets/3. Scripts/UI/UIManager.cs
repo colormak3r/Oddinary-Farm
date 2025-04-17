@@ -46,13 +46,29 @@ public class UIManager : MonoBehaviour
     private void OnActiveSceneChanged(Scene arg0, Scene arg1)
     {
         if (showDebugs) Debug.Log($"Clear sceneUIBehaviour");
-        sceneUIBehaviours.Clear();
+        foreach(var ui in sceneUIBehaviours.Keys)
+        {
+            if (ui != null)
+            {
+                ui.OnSceneChanged(arg1);
+            }
+        }
     }
 
     public void RegisterUI(UIBehaviour behaviour)
     {
         sceneUIBehaviours.Add(behaviour, behaviour.IsShowing);
+        behaviour.OnSceneChanged(SceneManager.GetActiveScene());
         if (showDebugs) Debug.Log($"Register UI: {behaviour.name}, isShowing: {behaviour.IsShowing}");
+    }
+
+    public void UnregisterUI(UIBehaviour behaviour)
+    {
+        if (sceneUIBehaviours.ContainsKey(behaviour))
+        {
+            sceneUIBehaviours.Remove(behaviour);
+            if (showDebugs) Debug.Log($"Unregister UI: {behaviour.name}");
+        }
     }
 
     [ContextMenu("Hide All UI")]

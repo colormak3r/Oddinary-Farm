@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.GPUSort;
 
 public class OptionsUI : UIBehaviour
 {
@@ -27,9 +28,9 @@ public class OptionsUI : UIBehaviour
 
     private TMP_Text backButtonText;
 
-    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    public override void OnSceneChanged(Scene scene)
     {
-        base.OnSceneLoaded(scene, mode);
+        base.OnSceneChanged(scene);
 
         if (scene.buildIndex == 0)
         {

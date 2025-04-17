@@ -68,9 +68,9 @@ public class LobbyUI : UIBehaviour
         SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeave;
     }
 
-    protected override void Destroy()
+    protected override void OnDestroy()
     {
-        base.Destroy();
+        base.OnDestroy();
 
         SteamMatchmaking.OnLobbyCreated -= OnLobbyCreated;
         SteamMatchmaking.OnLobbyEntered -= OnLobbyEntered;

@@ -5,6 +5,7 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.GPUSort;
 
 public class UIBehaviour : MonoBehaviour
 {
@@ -43,22 +44,18 @@ public class UIBehaviour : MonoBehaviour
 
     protected virtual void Start()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
-    }
+        if (this == null) return;
 
-    protected virtual void Destroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    protected virtual void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
         if (!excludeFromUIManager)
             UIManager.Main.RegisterUI(this);
+    }
 
-        // Disable background in the main menu if it exist
-        if (background) background.enabled = scene.buildIndex != 0;
+    protected virtual void OnDestroy()
+    {
+        if (this == null) return;
+
+        if (!excludeFromUIManager)
+            UIManager.Main.UnregisterUI(this);
     }
 
     protected virtual void OnEnable()
@@ -91,6 +88,16 @@ public class UIBehaviour : MonoBehaviour
         this.allRenderers = allRenderers.ToArray();
         this.dsffoRenderers = dsffoRenderers.ToArray();
         this.ignoreRenderers = ignoreRenderers.ToArray();
+    }
+
+    public virtual void OnSceneChanged(Scene scene)
+    {
+        // Disable background in the main menu if it exist
+        if (background)
+        {
+            background.enabled = SceneManager.GetActiveScene().buildIndex != 0;
+            // Debug.Log($"{name} background.enabled: {background.enabled}");
+        }
     }
 
     public IEnumerator ShowCoroutine(bool fade = true)
