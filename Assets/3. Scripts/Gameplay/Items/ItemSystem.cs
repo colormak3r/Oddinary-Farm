@@ -1,5 +1,6 @@
 using ColorMak3r.Utility;
 using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class ItemSystem : NetworkBehaviour
     private Vector2 offset = new Vector2(0, 0.5f);
     [SerializeField]
     private Transform muzzleTransform;
+    [SerializeField]
+    private GameObject muzzleFlash;
     private Vector2 ObjectPosition => (Vector2)transform.position + offset;
 
     #region Utility
@@ -121,6 +124,8 @@ public class ItemSystem : NetworkBehaviour
         // Todo: Create isInitialized bool and check it here instead
         if (!muzzleTransform) return;
 
+        if (muzzleFlash != null) StartCoroutine(MuzzleFlashCoroutine());
+
         for (int i = 0; i < rangedWeaponProperty.ProjectileCount; i++)
         {
             var spread = rangedWeaponProperty.ProjectileSpread;
@@ -138,6 +143,14 @@ public class ItemSystem : NetworkBehaviour
             projectile.GetComponent<Projectile>().Initialize(owner, rangedWeaponProperty.ProjectileProperty, isAuthoritative);
         }
     }
+
+    private IEnumerator MuzzleFlashCoroutine()
+    {
+        muzzleFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        muzzleFlash.SetActive(false);
+    }
+
     #endregion
 
     #region Clear Foliage

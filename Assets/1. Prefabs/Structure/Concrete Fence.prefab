@@ -98,6 +98,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
   AuthorityMode: 0
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
@@ -134,7 +144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   hostility: 0
-  maxHealth: 5
+  maxHealth: 10
   iframeDuration: 0.1
   isInvincible: 0
   damagedEffectPrefab: {fileID: 3303192038522874649, guid: 9bdc915fcce33d04e9b98594dcf5049e, type: 3}
@@ -368,11 +378,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 723511e5159bf03468db437cbb55f1da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canBeDrowned: 1
+  canBeDrown: 1
+  canBeWet: 1
+  wetPercentage: 0.1
   waterTransform: {fileID: 470960939170944398}
   speed: 2
-  maxWaterY: -2
-  minWaterY: -3.5
+  waterLevel: 0.5
 --- !u!1 &3221076355038008428
 GameObject:
   m_ObjectHideFlags: 0

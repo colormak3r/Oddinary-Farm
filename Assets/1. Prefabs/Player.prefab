@@ -2622,6 +2622,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   offset: {x: 0, y: 0.75}
   muzzleTransform: {fileID: 8182768967083580640}
+  muzzleFlash: {fileID: 4585333161443060368}
 --- !u!114 &9034817965285367963
 MonoBehaviour:
   m_ObjectHideFlags: 0
