@@ -239,8 +239,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   raycastTarget: 1
-  detectRange: 10
-  escapeRange: 15
+  detectRange: 7
+  escapeRange: 10
   penaltyRange: 2
   activeTime: 0
   targetHostility: 2

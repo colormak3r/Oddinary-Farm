@@ -151,6 +151,8 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     public bool AddItem(ItemProperty property, bool playSound = true)
     {
+        if(showDebug) Debug.Log($"Adding {property.Name} to inventory on client {OwnerClientId}");
+
         if (property is CurrencyProperty)
         {
             var currency = property as CurrencyProperty;

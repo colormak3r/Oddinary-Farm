@@ -46,7 +46,7 @@ public class UIManager : MonoBehaviour
     private void OnActiveSceneChanged(Scene arg0, Scene arg1)
     {
         if (showDebugs) Debug.Log($"Clear sceneUIBehaviour");
-        foreach(var ui in sceneUIBehaviours.Keys)
+        foreach (var ui in sceneUIBehaviours.Keys)
         {
             if (ui != null)
             {
@@ -90,6 +90,7 @@ public class UIManager : MonoBehaviour
                 sceneUIBehaviours[ui] = false;
             }
         }
+        Cursor.visible = false;
     }
 
     [ContextMenu("Show All UI")]
@@ -109,6 +110,7 @@ public class UIManager : MonoBehaviour
                 }
             }
         }
+        Cursor.visible = true;
     }
 
     [ContextMenu("Toggle All UI")]

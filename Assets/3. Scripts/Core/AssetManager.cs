@@ -248,11 +248,11 @@ public class AssetManager : NetworkBehaviour
 
         if (preferRef.TryGet(out var preferNetObj))
         {
-            itemReplica.PickupItemOnServer(preferNetObj);
+            itemReplica.PreferPickerOnServer(preferNetObj.transform);
         }
-        else if (ignoreRef.TryGet(out var ignore))
+        else if (ignoreRef.TryGet(out var ignoreNetObj))
         {
-            itemReplica.IgnorePickerOnServer(ignore.transform);
+            itemReplica.IgnorePickerOnServer(ignoreNetObj.transform);
         }
     }
 
@@ -260,10 +260,11 @@ public class AssetManager : NetworkBehaviour
     {
         var randomPos = randomRange * (Vector2)Random.onUnitSphere;
         position = position == default ? transform.position + (Vector3)randomPos : position + randomPos;
-        GameObject gameObject = Instantiate(itemReplicaPrefab, position, Quaternion.identity);
-        gameObject.GetComponent<NetworkObject>().Spawn();
+        /*GameObject gameObject = Instantiate(itemReplicaPrefab, position, Quaternion.identity);
+        gameObject.GetComponent<NetworkObject>().Spawn();*/
 
-        var itemReplica = gameObject.GetComponent<ItemReplica>();
+        var itemReplicaObj = NetworkObjectPool.Main.Spawn(itemReplicaPrefab, position);
+        var itemReplica = itemReplicaObj.GetComponent<ItemReplica>();
         itemReplica.SetProperty(itemProperty);
 
         return itemReplica;

@@ -7,6 +7,8 @@ public class PlayerNameUI : UIBehaviour
 {
     [Header("Settings")]
     [SerializeField]
+    private bool showPlayerName = true;
+    [SerializeField]
     private TMP_Text playerNameText;
     [SerializeField]
     private float showNameRange = 5f;
@@ -40,6 +42,8 @@ public class PlayerNameUI : UIBehaviour
 
     private void Update()
     {
+        if(!showPlayerName) return;
+
         if (Time.time < nextScan) return;
         nextScan = Time.time + scanInterval;
 

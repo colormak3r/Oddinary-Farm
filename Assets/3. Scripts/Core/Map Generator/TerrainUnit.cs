@@ -6,7 +6,7 @@ using UnityEngine;
 using static UnityEngine.Rendering.VolumeComponent;
 using Random = UnityEngine.Random;
 
-public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
+public class TerrainUnit : MonoBehaviour, ILocalObjectPoolBehaviour
 {
     private static Vector2[] SCAN_POSITION = new Vector2[]
     {

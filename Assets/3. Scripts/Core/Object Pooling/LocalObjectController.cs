@@ -40,7 +40,7 @@ public class LocalObjectController : MonoBehaviour
     private Transform pool;
     public Transform Pool => pool;
 
-    private ILocalObjectPoolingBehaviour[] behaviours;
+    private ILocalObjectPoolBehaviour[] behaviours;
 
     private ComponentDefaultState<Collider2D>[] colliderDefaultStates;
     private ComponentDefaultState<SpriteRenderer, Color>[] spriteRendererDedaultStates;
@@ -61,7 +61,7 @@ public class LocalObjectController : MonoBehaviour
 
     private void Awake()
     {
-        behaviours = GetComponentsInChildren<ILocalObjectPoolingBehaviour>(true);
+        behaviours = GetComponentsInChildren<ILocalObjectPoolBehaviour>(true);
         if (guid == "") Debug.LogError("GUID is empty.", gameObject);
 
         var colliders = GetComponentsInChildren<Collider2D>(true);

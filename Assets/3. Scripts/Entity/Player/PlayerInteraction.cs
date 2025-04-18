@@ -46,7 +46,7 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
         if (!isControllable) return;
 
         // Run on the server only
-        ScanItemPickupOnServer();
+        // ScanItemPickupOnServer();
     }
 
     public void Interact()
@@ -54,7 +54,7 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
         currentInteractable?.Interact(transform);
     }
 
-    private void ScanItemPickupOnServer()
+    /*private void ScanItemPickupOnServer()
     {
         if (!IsServer) return;
 
@@ -71,7 +71,7 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
                 }
             }
         }
-    }
+    }*/
 
     [SerializeField]
     private Collider2D[] cachedcolliders;

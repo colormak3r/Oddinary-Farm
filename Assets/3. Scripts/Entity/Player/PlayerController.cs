@@ -47,7 +47,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     [SerializeField]
     private Vector2 lookPosition;
     public static Vector2 LookPosition { get; private set; }
-    private Vector2 playerPosition_cached = Vector2.one;
+
     [SerializeField]
     private Vector2 screenMousePos;
 
@@ -166,11 +166,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (!GameManager.Main.IsInitialized) return;
 
-        if (playerPosition_cached != (Vector2)transform.position)
-        {
-            playerPosition_cached = transform.position;
-            StartCoroutine(WorldGenerator.Main.BuildWorld(transform.position));
-        }
+        // WorldGenerator.BuildWorld has been moved to WorldRenderer
+        // This is so the spectator can also make use of the world generator
 
         var rawImageRectTransform = gameplayRenderer.RawImage.rectTransform;
         // Convert mouse position to local position within RawImage
@@ -186,7 +183,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         float normalizedY = (localMousePos.y - rect.y) / rect.height;
 
         // Convert normalized coordinates to RenderTexture coordinates
-        renderTexPos = new Vector3(
+        var renderTexPos = new Vector3(
             normalizedX * renderTexture.width,
             normalizedY * renderTexture.height,
             mainCamera.nearClipPlane);
@@ -199,8 +196,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         Preview(lookPosition);
     }
-    [SerializeField]
-    Vector3 renderTexPos;
 
     private void Initialize()
     {

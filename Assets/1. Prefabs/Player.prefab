@@ -1869,14 +1869,16 @@ MonoBehaviour:
   container: {fileID: 6026101150664435241}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 1
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
     m_PersistentCalls:
       m_Calls: []
+  showPlayerName: 0
   playerNameText: {fileID: 8335167079609672860}
   showNameRange: 5
   scanInterval: 1
@@ -2316,6 +2318,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
   AuthorityMode: 1
   TickSyncChildren: 1
   UseUnreliableDeltas: 0
@@ -2485,7 +2497,6 @@ MonoBehaviour:
   showGizmos: 0
   lookPosition: {x: 0, y: 0}
   screenMousePos: {x: 0, y: 0}
-  renderTexPos: {x: 0, y: 0, z: 0}
 --- !u!114 &3602106504410570466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2824,7 +2835,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06a0555143022e4469f71d221ab8820f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showCircle: 1
+  showCircle: 0
   circleTransform: {fileID: 2381770749817415326}
 --- !u!114 &2314209063463895116
 MonoBehaviour:
@@ -2873,7 +2884,6 @@ MonoBehaviour:
   canBeDrown: 1
   canBeWet: 1
   wetPercentage: 0.1
-  rangeOverride: -2.25
   waterTransform: {fileID: 5462536194489437288}
   speed: 2
   waterLevel: 0.5

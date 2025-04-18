@@ -1,8 +1,5 @@
 using ColorMak3r.Utility;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.Properties;
 using UnityEngine;
 
 public class WateringCan : Tool
