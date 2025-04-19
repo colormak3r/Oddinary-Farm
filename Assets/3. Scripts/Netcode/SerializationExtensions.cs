@@ -134,6 +134,21 @@ public static class SerializationExtensions
     }
     #endregion
 
+    #region ConsummableProperty
+    public static void WriteValueSafe(this FastBufferWriter writer, in ConsummableProperty obj)
+    {
+        writer.WriteValueSafeInternal(obj);
+    }
+    public static void ReadValueSafe(this FastBufferReader reader, out ConsummableProperty obj)
+    {
+        reader.ReadValueSafeInternal(out obj);
+    }
+    public static void DuplicateValue(in ConsummableProperty value, ref ConsummableProperty duplicatedValue)
+    {
+        DuplicateValueInternal(value, ref duplicatedValue);
+    }
+    #endregion
+
     #region Face
     public static void WriteValueSafe(this FastBufferWriter writer, in Face obj)
     {

@@ -4935,7 +4935,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2800412259117624411, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3832826237017750057, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
       propertyPath: GlobalObjectIdHash
@@ -4993,7 +4993,8 @@ PrefabInstance:
     - {fileID: 4171257918591175091, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
     - {fileID: 5452321758450969809, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
     - {fileID: 3608521828551919829, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6268125392159815564, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5992046905657548847, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
       insertIndex: -1
@@ -5005,56 +5006,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 737704494243597508, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8052085387657986599}
-    - targetCorrespondingSourceObject: {fileID: 6268125392159815564, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 9038993841369538763}
   m_SourcePrefab: {fileID: 100100000, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
 --- !u!4 &174906291848382069 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5992046905657548847, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
   m_PrefabInstance: {fileID: 5856195404351727194}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &556678772164809174 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6268125392159815564, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
-  m_PrefabInstance: {fileID: 5856195404351727194}
-  m_PrefabAsset: {fileID: 0}
---- !u!58 &9038993841369538763
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 556678772164809174}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.4}
-  m_Radius: 0.4
 --- !u!1 &6591502824984652446 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 737704494243597508, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}

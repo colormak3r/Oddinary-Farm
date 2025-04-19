@@ -50,6 +50,8 @@ MonoBehaviour:
         spawnCount: 4
       - creaturePrefab: {fileID: 8862408004728527693, guid: d16681cace399384294a68fa2487800e, type: 3}
         spawnCount: 2
+      - creaturePrefab: {fileID: 1750125501492970077, guid: 34f790c3edd689343a81bfd343a6d02f, type: 3}
+        spawnCount: 10
   - creatureWaves:
     - spawnHour: 8
       showWarning: 0
@@ -65,6 +67,8 @@ MonoBehaviour:
         spawnCount: 3
       - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
         spawnCount: 1
+      - creaturePrefab: {fileID: 1750125501492970077, guid: 34f790c3edd689343a81bfd343a6d02f, type: 3}
+        spawnCount: 20
   - creatureWaves:
     - spawnHour: 8
       showWarning: 0
@@ -80,6 +84,8 @@ MonoBehaviour:
         spawnCount: 3
       - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
         spawnCount: 1
+      - creaturePrefab: {fileID: 1750125501492970077, guid: 34f790c3edd689343a81bfd343a6d02f, type: 3}
+        spawnCount: 20
     - spawnHour: 22
       showWarning: 1
       creatureSpawns:
@@ -89,6 +95,8 @@ MonoBehaviour:
         spawnCount: 3
       - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
         spawnCount: 1
+      - creaturePrefab: {fileID: 1750125501492970077, guid: 34f790c3edd689343a81bfd343a6d02f, type: 3}
+        spawnCount: 20
   - creatureWaves:
     - spawnHour: 8
       showWarning: 0
@@ -104,6 +112,8 @@ MonoBehaviour:
         spawnCount: 5
       - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
         spawnCount: 3
+      - creaturePrefab: {fileID: 1750125501492970077, guid: 34f790c3edd689343a81bfd343a6d02f, type: 3}
+        spawnCount: 20
     - spawnHour: 21
       showWarning: 1
       creatureSpawns:
@@ -113,6 +123,8 @@ MonoBehaviour:
         spawnCount: 3
       - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
         spawnCount: 1
+      - creaturePrefab: {fileID: 1750125501492970077, guid: 34f790c3edd689343a81bfd343a6d02f, type: 3}
+        spawnCount: 20
     - spawnHour: 22
       showWarning: 1
       creatureSpawns:
@@ -122,13 +134,15 @@ MonoBehaviour:
         spawnCount: 3
       - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
         spawnCount: 1
+      - creaturePrefab: {fileID: 1750125501492970077, guid: 34f790c3edd689343a81bfd343a6d02f, type: 3}
+        spawnCount: 20
   - creatureWaves:
     - spawnHour: 8
       showWarning: 0
       creatureSpawns:
       - creaturePrefab: {fileID: 3872211501604868882, guid: 318b52c2b82b3f04b88341a4a4b1edc5, type: 3}
         spawnCount: 5
-    - spawnHour: 22
+    - spawnHour: 20
       showWarning: 1
       creatureSpawns:
       - creaturePrefab: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
@@ -137,3 +151,5 @@ MonoBehaviour:
         spawnCount: 5
       - creaturePrefab: {fileID: 5206241926383299386, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
         spawnCount: 3
+      - creaturePrefab: {fileID: 1750125501492970077, guid: 34f790c3edd689343a81bfd343a6d02f, type: 3}
+        spawnCount: 50

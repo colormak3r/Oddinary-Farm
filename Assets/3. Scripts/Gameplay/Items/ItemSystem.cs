@@ -1,9 +1,11 @@
 using ColorMak3r.Utility;
 using NUnit.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ItemSystem : NetworkBehaviour
 {
@@ -15,6 +17,12 @@ public class ItemSystem : NetworkBehaviour
     [SerializeField]
     private GameObject muzzleFlash;
     private Vector2 ObjectPosition => (Vector2)transform.position + offset;
+
+    private EntityStatus entityStatus;
+    private void Awake()
+    {
+        entityStatus = GetComponent<EntityStatus>();
+    }
 
     #region Utility
     public bool IsInRange(Vector2 position, float range)
@@ -285,5 +293,19 @@ public class ItemSystem : NetworkBehaviour
         }
     }
 
+    #endregion
+
+    #region Consummable
+    public void UseConsummableSelf(ConsummableProperty consummableProperty)
+    {
+        UseConsummableSelfRpc(consummableProperty);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void UseConsummableSelfRpc(ConsummableProperty consummableProperty)
+    {
+        uint healAmount = Convert.ToUInt32(consummableProperty.HealAmount);
+        entityStatus.GetHealed(healAmount);
+    }
     #endregion
 }

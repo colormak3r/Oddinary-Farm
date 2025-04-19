@@ -3,6 +3,7 @@ using Steamworks;
 using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class PlayerStatus : EntityStatus
@@ -21,11 +22,13 @@ public class PlayerStatus : EntityStatus
     public PlayerNameUI PlayerNameUI => playerNameUI;
 
     private IControllable[] controllables;
+    private NetworkTransform networkTransform;
 
     protected override void Awake()
     {
         base.Awake();
         controllables = GetComponentsInChildren<IControllable>();
+        networkTransform = GetComponent<NetworkTransform>();
     }
 
     public override void OnNetworkSpawn()
@@ -39,7 +42,8 @@ public class PlayerStatus : EntityStatus
 
         if (IsOwner)
         {
-            PlayerName.Value = SteamClient.Name;
+            if (SteamClient.IsValid)
+                PlayerName.Value = SteamClient.Name;
         }
     }
 
@@ -127,9 +131,11 @@ public class PlayerStatus : EntityStatus
         }
 
         // Wait until player is at respawn position
-        yield return new WaitUntil(() => transform.position == respawnPos);
+        if (IsOwner) networkTransform.Teleport(respawnPos, Quaternion.identity, Vector3.one);
+        yield return new WaitUntil(() => Vector3.Distance(transform.position, respawnPos) < 0.01f);
 
         foreach (var collider in colliders) collider.enabled = true;
+
         //foreach (var renderer in renderers) renderer.enabled = true;
         foreach (var light in lights) light.enabled = true;
 

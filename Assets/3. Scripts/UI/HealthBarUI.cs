@@ -118,7 +118,10 @@ public class HealthBarUI : MonoBehaviour
     private IEnumerator FlashingCoroutine()
     {
         ResetColor();
-
+        var a = backgroundRenderer.color.a;
+        StartCoroutine(backgroundRenderer.SpriteFadeCoroutine(a, 1, 0.5f));
+        StartCoroutine(highlightRenderer.SpriteFadeCoroutine(a, 1, 0.5f));
+        StartCoroutine(outlineRenderer.SpriteFadeCoroutine(a, 1, 0.5f));
         while (true)
         {
             displayRenderer.color = flashColor;
