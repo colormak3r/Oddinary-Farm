@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -91,6 +92,11 @@ public class UIManager : MonoBehaviour
             }
         }
         Cursor.visible = false;
+
+        foreach (var obj in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            obj.PlayerObject.GetComponent<PlayerStatus>().PlayerNameUI.SetShowPlayerName(false);
+        }
     }
 
     [ContextMenu("Show All UI")]
@@ -111,6 +117,11 @@ public class UIManager : MonoBehaviour
             }
         }
         Cursor.visible = true;
+
+        foreach (var obj in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            obj.PlayerObject.GetComponent<PlayerStatus>().PlayerNameUI.SetShowPlayerName(true);
+        }
     }
 
     [ContextMenu("Toggle All UI")]
