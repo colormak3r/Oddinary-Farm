@@ -47,9 +47,10 @@ public class GameManager : NetworkBehaviour
     {
         if (isInitializing || isInitialized) yield break;
         isInitializing = true;
-
+        ;
         yield return WorldGenerator.Main.Initialize();
         yield return TransitionUI.Main.HideCoroutine();
+
 
         if (TimeManager.Main.IsDay)
             AudioManager.Main.PlayAmbientSound(AmbientTrack.Day);

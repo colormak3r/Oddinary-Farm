@@ -203,6 +203,7 @@ public class WorldGenerator : NetworkBehaviour
         var map = elevationMap.RawMap;
         var halfMapSize = mapSize / 2;
         var invalidPosition = new List<Vector2>();
+
         for (int i = map.minX; i < map.maxX; i++)
         {
             for (int j = map.minY; j < map.maxY; j++)
@@ -211,13 +212,11 @@ public class WorldGenerator : NetworkBehaviour
                 {
                     terrainMapTexture.SetPixel(i + halfMapSize.x, j + halfMapSize.y, Color.blue);
                     var position = new Vector2(i, j);
-                    invalidPosition.Add(position);
+                    InvalidateFolliageOnClient(position);
                     RemoveFoliage(position);
                 }
             }
         }
-
-        if (IsServer) InvalidateFolliage(invalidPosition.ToArray());
 
         terrainMapTexture.Apply();
         UpdateMapTexture(terrainMapTexture);
@@ -567,7 +566,7 @@ public class WorldGenerator : NetworkBehaviour
     {
         foreach (var position in positions)
         {
-            invalidFolliagePositionHashSet.Add(position);
+            InvalidateFolliageOnClient(position);
         }
     }
 

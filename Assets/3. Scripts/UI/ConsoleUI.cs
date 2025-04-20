@@ -351,7 +351,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                 var minute = args.Length > 3 ? int.Parse(args[3]) : 30;
 
                 if (TimeManager.Main == null) throw new Exception("TimeManager not found. Has the game started yet?");
-                TimeManager.Main.SetTimeOffset(hour, minute, day);
+                TimeManager.Main.SetTimeOffset(day, hour, minute);
             }
             else if (command == commands[13].ToLower())
             {

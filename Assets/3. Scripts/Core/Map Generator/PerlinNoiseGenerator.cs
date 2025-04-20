@@ -55,6 +55,11 @@ public class PerlinNoiseGenerator : MapGenerator
         mapTexture.Apply();
     }
 
+    public override void RandomizeMap()
+    {
+        origin = new Vector2(Random.Range(-1000, 1000), Random.Range(-1000, 1000));
+    }
+
     protected virtual void TransformMap(Vector2Int mapSize)
     {
         // Override this method to transform the map

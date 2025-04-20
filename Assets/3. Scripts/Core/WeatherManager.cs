@@ -212,7 +212,7 @@ public class WeatherManager : NetworkBehaviour
         }
 
         // Update current weather based on the new current hour
-        isRainning = weatherData[currentHour].rainChance >= rainThreshold;
+        isRainning = weatherData[currentHour].rainChance >= rainThreshold || TimeManager.Main.CurrentDate >= 7;
         if (showDebugs) Debug.Log($"Hour {currentHour} = {weatherData[currentHour].rainChance} - Rainning: {isRainning}");
 
         if (isRainning != isRainning_cached)

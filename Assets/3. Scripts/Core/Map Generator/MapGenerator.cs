@@ -27,4 +27,6 @@ public abstract class MapGenerator : NetworkBehaviour
 
     [ContextMenu("Generate Preview")]
     public void GeneratePreview() => GenerateMap(MOCK_MAP_SIZE);
+
+    public virtual void RandomizeMap() { }
 }
