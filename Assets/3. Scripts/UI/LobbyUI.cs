@@ -223,13 +223,7 @@ public class LobbyUI : UIBehaviour
         }
         else
         {
-            var builder = $"Player Count = {lobby.MemberCount}/100" +
-               $"\n\nPlayer List:\n";
-            foreach (var member in lobby.Members)
-            {
-                builder += "> " + member.Name + "\n";
-            }
-            lobbyPlayerText.text = builder;
+            RefreshPlayerList(lobby);
 
             if (lobbyMode == LobbyMode.Host)
             {
@@ -255,11 +249,26 @@ public class LobbyUI : UIBehaviour
     private void OnLobbyMemberLeave(Lobby lobby, Friend friend)
     {
         lobbyInfoText.text += $"\nPlayer {friend.Name} left the lobby";
+
+        RefreshPlayerList(lobby);
     }
 
     private void OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
         lobbyInfoText.text += $"\nPlayer {friend.Name} joined the lobby";
+
+        RefreshPlayerList(lobby);
+    }
+
+    private void RefreshPlayerList(Lobby lobby)
+    {
+        var builder = $"Player Count = {lobby.MemberCount}/{lobby.MaxMembers}" +
+               $"\n\nPlayer List:\n";
+        foreach (var member in lobby.Members)
+        {
+            builder += "> " + member.Name + "\n";
+        }
+        lobbyPlayerText.text = builder;
     }
 
     public void LeaveLobby()
