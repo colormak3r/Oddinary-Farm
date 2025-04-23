@@ -70,9 +70,13 @@ public class NetworkObjectPoolController : NetworkBehaviour
     {
         gameObject.SetActive(true);
 
-        foreach (var colliderDefaultState in colliderDefaultStates)
+        /*foreach (var colliderDefaultState in colliderDefaultStates)
         {
             colliderDefaultState.Component.enabled = colliderDefaultState.DefaultState;
+        }*/
+        if (rbody2D != null)
+        {
+            rbody2D.simulated = true;
         }
 
         foreach (var behaviour in behaviours)
@@ -93,15 +97,16 @@ public class NetworkObjectPoolController : NetworkBehaviour
             behaviour.NetworkDespawn();
         }
 
-        foreach (var colliderDefaultState in colliderDefaultStates)
+        /*foreach (var colliderDefaultState in colliderDefaultStates)
         {
             colliderDefaultState.Component.enabled = false;
-        }
+        }*/
 
         if (rbody2D != null)
         {
             rbody2D.linearVelocity = Vector2.zero;
             rbody2D.angularVelocity = 0f;
+            rbody2D.simulated = false;
         }
 
         gameObject.SetActive(false);

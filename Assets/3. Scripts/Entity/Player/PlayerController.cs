@@ -1,5 +1,6 @@
 using ColorMak3r.Utility;
 using System.Collections;
+using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
@@ -82,7 +83,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         inventory = GetComponent<PlayerInventory>();
         interaction = GetComponent<PlayerInteraction>();
         animator = GetComponentInChildren<Animator>();
-        networkAnimator = GetComponent<NetworkAnimator>();
         rbody = GetComponent<Rigidbody2D>();
         animationController = GetComponentInChildren<PlayerAnimationController>();
         mainCamera = Camera.main;
@@ -375,9 +375,12 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (context.performed)
         {
-            isPrimaryCoroutineRunning = true;
-            firstCallIgnored = false;
-            primaryCoroutine = StartCoroutine(PrimaryActionCoroutine());
+            if (!isPrimaryCoroutineRunning)
+            {
+                isPrimaryCoroutineRunning = true;
+                firstCallIgnored = false;
+                primaryCoroutine = StartCoroutine(PrimaryActionCoroutine());
+            }
         }
         else if (context.canceled)
         {
@@ -405,7 +408,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
                 if (currentItem is RangedWeapon)
                 {
-                    networkAnimator.SetTrigger("Shoot");
+                    SetTriggerRpc("Shoot");
                     currentItem.OnPrimaryAction(lookPosition);
                     SyncArmRotationRpc(lookPosition);
                 }
@@ -415,7 +418,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
                     {
                         primaryPosition = lookPosition;
                         animationController.ChopAnimationMode = AnimationMode.Primary;
-                        networkAnimator.SetTrigger("Chop");
+                        SetTriggerRpc("Chop");
                     }
                     else
                     {
@@ -432,6 +435,12 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private void SyncArmRotationRpc(Vector2 lookPosition)
     {
         RotateArm(lookPosition);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void SetTriggerRpc(FixedString32Bytes animation)
+    {
+        animator.SetTrigger(animation.ToString());
     }
 
     public void Chop(AnimationMode mode)
