@@ -29,7 +29,9 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     private NetworkVariable<NetworkObjectReference> Owner = new NetworkVariable<NetworkObjectReference>();
     private Transform ignorePicker;
     private float nextPickupTime = 0f;
+    private float nextScanTime = 0f;
     private bool canBePickedup = true;
+    private bool pickupPrefered = false;
     private Coroutine pickupCoroutine;
     private Coroutine ignoreCoroutine;
     private Coroutine preferCoroutine;
@@ -125,8 +127,9 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
 
     private void Update()
     {
-        if (IsServer && canBePickedup && Time.time > nextPickupTime)
+        if (IsServer && canBePickedup && !pickupPrefered && Time.time > nextPickupTime && Time.time > nextScanTime)
         {
+            nextScanTime = Time.time + 0.1f;
             var player = ScanForPlayer();
             if (player != null) PickupOnServer(player.transform);
         }
@@ -135,6 +138,7 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     public void PreferPickerOnServer(Transform prefered)
     {
         canBePickedup = false;
+        pickupPrefered = true;
         if (preferCoroutine != null) StopCoroutine(preferCoroutine);
         preferCoroutine = StartCoroutine(PreferCoroutine(prefered));
     }

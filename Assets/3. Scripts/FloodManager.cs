@@ -10,6 +10,10 @@ public class FloodManager : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField]
+    private bool canFlood = true;
+    [SerializeField]
+    private bool asap;
+    [SerializeField]
     private float baseFloodLevel = 0.4f;
     [SerializeField]
     private float safeMultiplier = 3f;
@@ -69,7 +73,7 @@ public class FloodManager : NetworkBehaviour
     {
         if (currentDay >= floodStartDate)
         {
-            if (floodCoroutine == null)
+            if (floodCoroutine == null && canFlood)
                 floodCoroutine = StartCoroutine(FloodCoroutine());
         }
     }
@@ -83,21 +87,48 @@ public class FloodManager : NetworkBehaviour
     {
         floodLevelChangePerHour = (WorldGenerator.Main.HighestElevation - baseFloodLevel) / (floodCompleteDuration * 24);
     }
-
-    [ContextMenu("Flood")]
-    private void Flood()
-    {
-        if (!IsServer) return;
-        if (floodCoroutine == null)
-            floodCoroutine = StartCoroutine(FloodCoroutine());
-    }
-
     private IEnumerator FloodCoroutine()
     {
         while (CurrentFloodLevel.Value < 1.01f)
         {
             CurrentFloodLevel.Value += floodLevelChangePerHour;
-            yield return new WaitForSeconds(TimeManager.Main.HourDuration);
+            if (asap)
+                yield return new WaitForSeconds(0.1f);
+            else
+                yield return new WaitForSeconds(TimeManager.Main.HourDuration);
         }
+    }
+
+    [ContextMenu("Start Normal Flood")]
+    public void StartNormalFlood()
+    {
+        StartFloodingRpc(false);
+    }
+
+    [ContextMenu("Start Instant Flood")]
+    public void StartInstantFlood()
+    {
+        StartFloodingRpc(true);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void StartFloodingRpc(bool asap)
+    {
+        this.asap = asap;
+        if (floodCoroutine == null)
+            floodCoroutine = StartCoroutine(FloodCoroutine());
+    }
+
+    public void SetCanFlood(bool canFlood)
+    {
+        SetCanFloodRpc(canFlood);
+    }
+
+
+    [Rpc(SendTo.Server)]
+    private void SetCanFloodRpc(bool canFlood)
+    {
+        this.canFlood = canFlood;
+        CurrentFloodLevel.Value = baseFloodLevel;
     }
 }

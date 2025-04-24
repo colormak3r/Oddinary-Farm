@@ -18,10 +18,6 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
     [Header("Settings")]
     [SerializeField]
-    private string version = "v0.1";
-    [SerializeField]
-    private string versionNumber = ".01";
-    [SerializeField]
     private int maxChar = 100000;
     [SerializeField]
     private bool showStackTrace = false;
@@ -185,7 +181,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
             // Format the DateTime as MMDDYY-HHMMSS
             string t = now.ToString("MMddyy-HHmmss");
             string r = UnityEngine.Random.Range(1000, 9999).ToString();
-            filename = d + "/log-" + t + "-" + r + "-" + version + versionNumber + ".txt";
+            filename = d + "/log-" + t + "-" + r + "-" + VersionUtility.VERSION + ".txt";
         }
 
         try
@@ -216,7 +212,10 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "CanSpawn",
     "SetMinutesPerDay",
     "SetTimeOffset",
-    "Window"};
+    "Window",
+    "StartNormalFlood",
+    "StartInstantFlood",
+    "SetCanFlood"};
 
     private string[] commandHelps =
     {"Help",
@@ -232,7 +231,10 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "CanSpawn [bool]",
     "SetMinutesPerDay [realMinutePerDay]",
     "SetTimeOffset [day] [hour] [minute]",
-    "Window [fullwin, fullscreen, windowed, fullHD, 2k, 4k, size] [WxH] [fullscreen]"};
+    "Window [fullwin, fullscreen, windowed, fullHD, 2k, 4k, size] [WxH] [fullscreen]",
+    "StartNormalFlood",
+    "StartInstantFlood",
+    "SetCanFlood [bool]"};
 
     private void ParseCommand(string input)
     {
@@ -355,6 +357,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
             }
             else if (command == commands[13].ToLower())
             {
+                // Window [fullwin, fullscreen, windowed, fullHD, 2k, 4k, size] [WxH] [fullscreen]
                 var fullscreen = args.Length > 3 ? ParseBool(args[3]) : false;
                 switch (args[1])
                 {
@@ -395,6 +398,27 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                     default:
                         throw new ArgumentException(UNKNOWN_ARGUMENT + $" '{args[1]}'");
                 }
+            }
+            else if (command == commands[14].ToLower())
+            {
+                // StartNormalFlood
+                if (FloodManager.Main == null) throw new Exception("FloodManager not found. Has the game started yet?");
+                FloodManager.Main.StartNormalFlood();
+
+            }
+            else if (command == commands[15].ToLower())
+            {
+                // StartInstantFlood
+                if (FloodManager.Main == null) throw new Exception("FloodManager not found. Has the game started yet?");
+                FloodManager.Main.StartInstantFlood();
+
+            }
+            else if (command == commands[16].ToLower())
+            {
+                // SetCanFlood [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
+                if (FloodManager.Main == null) throw new Exception("FloodManager not found. Has the game started yet?");
+                FloodManager.Main.SetCanFlood(defaultBool);
             }
             else
             {

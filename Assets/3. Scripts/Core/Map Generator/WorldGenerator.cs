@@ -18,7 +18,7 @@ public class Chunk
     public bool isRemoving;
 
     public List<GameObject> terrainUnits;
-    public List<GameObject> folliages;
+    public List<GameObject> foliages;
 
     public Chunk(Vector2 position, int size, Transform transform)
     {
@@ -32,8 +32,8 @@ public class Chunk
 
         terrainUnits = new List<GameObject>();
         terrainUnits.Capacity = size * size;
-        folliages = new List<GameObject>();
-        folliages.Capacity = size * size;
+        foliages = new List<GameObject>();
+        foliages.Capacity = size * size;
     }
 }
 
@@ -127,13 +127,17 @@ public class WorldGenerator : NetworkBehaviour
 
     [Header("Resource Settings")]
     [SerializeField]
+    private bool canSpawnResources = true;
+    [SerializeField]
     private GameObject[] resourcePrefabs;
     [SerializeField]
     private int countPerYield = 10;
 
     [Header("Folliage Settings")]
     [SerializeField]
-    private GameObject[] folliagePrefabs;
+    private bool canSpawnFoliage = true;
+    [SerializeField]
+    private GameObject[] foliagePrefabs;
 
     [Header("Map Components")]
     [SerializeField]
@@ -157,7 +161,7 @@ public class WorldGenerator : NetworkBehaviour
     private Texture2D terrainMapTexture;
 
     private Offset2DArray<bool> folliageMap;
-    private HashSet<Vector2> invalidFolliagePositionHashSet = new HashSet<Vector2>();
+    private HashSet<Vector2> invalidFoliagePositionHashSet = new HashSet<Vector2>();
 
     private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
 
@@ -300,6 +304,8 @@ public class WorldGenerator : NetworkBehaviour
     #region Resource Generation
     private IEnumerator GenerateResources()
     {
+        if (!canSpawnResources) yield break;
+
         var count = 0;
         for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x + 1; x++)
         {
@@ -314,7 +320,7 @@ public class WorldGenerator : NetworkBehaviour
                 {
                     if (terrainMap[x, y] != voidUnitProperty && resourceMap.RawMap[x, y] >= 0.99f && terrainMap[x, y].Elevation.min > FloodManager.Main.CurrentSafeLevel)
                     {
-                        //SpawnResource(x, y);
+                        SpawnResource(x, y);
                         count++;
                         if (count % countPerYield == 0)
                         {
@@ -438,9 +444,13 @@ public class WorldGenerator : NetworkBehaviour
                 var terrainUnit = SpawnTerrainUnit(terrainPos, property);
                 chunk.terrainUnits.Add(terrainUnit);
                 terrainUnit.GetComponent<FloodController>().SetFloodThreshhold(GetElevation(terrainPos.x, terrainPos.y));
-                folliageMap.GetElementSafe(terrainPos.x, terrainPos.y, out var canSpawnFolliage);
-                if (canSpawnFolliage && !invalidFolliagePositionHashSet.Contains(terrainPos) && resourceMap.RawMap[terrainPos.x, terrainPos.y] < 0.99f)
-                    chunk.folliages.Add(SpawnFolliage(terrainPos, folliagePrefabs.GetRandomElement()));
+
+                // Spawn Foliage
+                folliageMap.GetElementSafe(terrainPos.x, terrainPos.y, out var validFoliagePosition);
+                if (canSpawnFoliage && validFoliagePosition && !invalidFoliagePositionHashSet.Contains(terrainPos) && resourceMap.RawMap[terrainPos.x, terrainPos.y] < 0.99f)
+                    chunk.foliages.Add(SpawnFoliage(terrainPos, foliagePrefabs.GetRandomElement()));
+
+
                 if (showStep) yield return null;
             }
         }
@@ -448,6 +458,7 @@ public class WorldGenerator : NetworkBehaviour
         positionToChunk.Add(position, chunk);
         yield return null;
     }
+
 
     private IEnumerator RemoveExcessChunks(Vector2 closetChunkPosition)
     {
@@ -493,7 +504,7 @@ public class WorldGenerator : NetworkBehaviour
         }
         chunk.terrainUnits.Clear();
 
-        foreach (var folliage in chunk.folliages)
+        foreach (var folliage in chunk.foliages)
         {
             LocalObjectPooling.Main.Despawn(folliage);
             if (showStep) yield return null;
@@ -514,7 +525,7 @@ public class WorldGenerator : NetworkBehaviour
         return terrainObj;
     }
 
-    private GameObject SpawnFolliage(Vector2 position, GameObject prefab)
+    private GameObject SpawnFoliage(Vector2 position, GameObject prefab)
     {
         var folliageObj = LocalObjectPooling.Main.Spawn(prefab);
         folliageObj.transform.position = new Vector2(position.x, position.y - 0.5f);
@@ -572,7 +583,7 @@ public class WorldGenerator : NetworkBehaviour
 
     public void InvalidateFolliageOnClient(Vector2 position)
     {
-        invalidFolliagePositionHashSet.Add(position);
+        invalidFoliagePositionHashSet.Add(position);
     }
 
     public void RemoveFoliage(Vector2 position)
@@ -582,10 +593,10 @@ public class WorldGenerator : NetworkBehaviour
         {
             var chunk = positionToChunk[chunkPosition];
             position -= TransformUtility.HALF_UNIT_Y_V2;
-            var folliage = chunk.folliages.Find(f => (Vector2)f.transform.position == position);
+            var folliage = chunk.foliages.Find(f => (Vector2)f.transform.position == position);
             if (folliage != null)
             {
-                chunk.folliages.Remove(folliage);
+                chunk.foliages.Remove(folliage);
                 LocalObjectPooling.Main.Despawn(folliage);
             }
         }
