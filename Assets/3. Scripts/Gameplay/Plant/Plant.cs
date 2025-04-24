@@ -84,7 +84,6 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         GetWateredRpc();
     }
 
-
     [ContextMenu("Mock Property Change")]
     public void MockPropertyChange()
     {
@@ -195,5 +194,18 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         {
             GetWateredRpc();
         }
+    }
+
+
+    [ContextMenu("FullyGrow")]
+    public void FullyGrown()
+    {
+        FullyGrownRpc();
+    }
+
+    [Rpc(SendTo.Server)]
+    private void FullyGrownRpc()
+    {
+        CurrentStage.Value = Property.Value.Stages.Length - 1;
     }
 }

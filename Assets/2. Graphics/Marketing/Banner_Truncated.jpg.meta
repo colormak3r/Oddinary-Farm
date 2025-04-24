@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Banner_Truncated_0: -6449456036380514141
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

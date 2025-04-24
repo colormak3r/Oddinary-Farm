@@ -484,7 +484,22 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      RealSymbol_0: 8481392060098996671
+      RealSymbol_1: -8109225998214842726
+      RealSymbol_10: -2084753577157713480
+      RealSymbol_11: -3102485903295225300
+      RealSymbol_12: 1858848850080644730
+      RealSymbol_13: 8374893720472180106
+      RealSymbol_14: -882985080913058520
+      RealSymbol_2: 479932906314778149
+      RealSymbol_3: 6889418612325543429
+      RealSymbol_4: -4727398731568813723
+      RealSymbol_5: -6024488613837326706
+      RealSymbol_6: 7853613403594520953
+      RealSymbol_7: 6583548046614177853
+      RealSymbol_8: 8959930986975894414
+      RealSymbol_9: -7681987035318944464
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

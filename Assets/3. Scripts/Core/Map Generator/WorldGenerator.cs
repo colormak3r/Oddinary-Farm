@@ -314,7 +314,7 @@ public class WorldGenerator : NetworkBehaviour
                 {
                     if (terrainMap[x, y] != voidUnitProperty && resourceMap.RawMap[x, y] >= 0.99f && terrainMap[x, y].Elevation.min > FloodManager.Main.CurrentSafeLevel)
                     {
-                        SpawnResource(x, y);
+                        //SpawnResource(x, y);
                         count++;
                         if (count % countPerYield == 0)
                         {

@@ -74,6 +74,7 @@ public class NetworkObjectPoolController : NetworkBehaviour
         {
             colliderDefaultState.Component.enabled = colliderDefaultState.DefaultState;
         }*/
+
         if (rbody2D != null)
         {
             rbody2D.simulated = true;

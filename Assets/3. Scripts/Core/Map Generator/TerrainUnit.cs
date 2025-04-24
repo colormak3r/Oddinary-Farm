@@ -41,8 +41,6 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolBehaviour
     private SpriteRenderer overlayRenderer;
     [SerializeField]
     private SpriteRenderer baseRenderer;
-    [SerializeField]
-    private SpriteRenderer underlayRenderer;
 
     [Header("Debugs")]
     [SerializeField]

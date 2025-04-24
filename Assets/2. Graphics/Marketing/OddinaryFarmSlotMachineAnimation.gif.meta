@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      OddinaryFarmSlotMachineAnimation_0: -5277904650106978080
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
