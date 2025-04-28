@@ -7,7 +7,6 @@ using System.Text;
 using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 [Serializable]
@@ -333,17 +332,36 @@ public class AssetManager : NetworkBehaviour
             return;
         }
 
-        StartCoroutine(SpawnPrefabCoroutine(prefab, position, spawnCount, randomRange, spawnDelay));
+        var positionOffset = position + MiscUtility.RandomPointInRange(randomRange);
+        if (spawnCount == 1)
+        {
+            SpawnPrefabOnServer(prefab, positionOffset);
+        }
+        else if (spawnCount > 1)
+        {
+            StartCoroutine(SpawnPrefabCoroutine(prefab, positionOffset, spawnCount, spawnDelay));
+        }
+        else
+        {
+            Debug.LogError("Invalid spawn count: " + spawnCount);
+            return;
+        }
     }
 
-    private IEnumerator SpawnPrefabCoroutine(GameObject prefab, Vector2 position, int spawnCount, float randomRange, float spawnDelay)
+    private IEnumerator SpawnPrefabCoroutine(GameObject prefab, Vector2 position, int spawnCount, float spawnDelay)
     {
         for (int i = 0; i < spawnCount; i++)
         {
-            GameObject go = Instantiate(prefab, position + MiscUtility.RandomPointInRange(randomRange), Quaternion.identity); // Use the selected prefab
-            go.GetComponent<NetworkObject>().Spawn();
+            SpawnPrefabOnServer(prefab, position);
             yield return new WaitForSeconds(spawnDelay);
         }
+    }
+
+    public void SpawnPrefabOnServer(GameObject prefab, Vector2 position)
+    {
+        if (!IsServer) return;
+        GameObject go = Instantiate(prefab, position, Quaternion.identity);
+        go.GetComponent<NetworkObject>().Spawn();
     }
 
     #endregion
