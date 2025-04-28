@@ -3914,6 +3914,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  canFlood: 1
+  asap: 0
   baseFloodLevel: 0.45
   safeMultiplier: 2
   depthMultiplier: 5
@@ -26797,7 +26799,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8.4375
+  orthographic size: 9
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
