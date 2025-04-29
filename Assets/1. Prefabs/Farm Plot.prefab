@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4043741663618658510}
-  - component: {fileID: 4886082877013868103}
   - component: {fileID: 610265928260838425}
   - component: {fileID: 3051851916708624163}
   - component: {fileID: 5980385349177380000}
@@ -40,18 +39,6 @@ Transform:
   - {fileID: 631326410053028117}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &4886082877013868103
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5625321612986297944}
-  m_Enabled: 1
-  m_SortingLayerID: 1792883339
-  m_SortingLayer: -1
-  m_SortingOrder: 99
-  m_SortAtRoot: 0
 --- !u!114 &610265928260838425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,6 +78,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
   AuthorityMode: 0
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
@@ -257,8 +254,8 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 1792883339
   m_SortingLayer: -1
-  m_SortingOrder: 1
-  m_SortAtRoot: 0
+  m_SortingOrder: 99
+  m_SortAtRoot: 1
 --- !u!212 &6902956458330235354
 SpriteRenderer:
   m_ObjectHideFlags: 0

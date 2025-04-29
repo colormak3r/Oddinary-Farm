@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2916747403788541215, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
       propertyPath: m_Name
-      value: Resource Node Variant
+      value: Stone Node Variant
       objectReference: {fileID: 0}
     - target: {fileID: 3221880858544378413, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
       propertyPath: m_Sprite
@@ -74,14 +74,24 @@ PrefabInstance:
       objectReference: {fileID: 3303192038522874649, guid: eaa16f0896e08a04684297aa24c4a3ba, type: 3}
     - target: {fileID: 3988594065566451194, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 3803905971
+      value: 1267194495
       objectReference: {fileID: 0}
     - target: {fileID: 3988594065566451194, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 4265111786
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    - target: {fileID: 6222671028710945058, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7601428860570607732, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: waterTransform
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6222671028710945058, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 411467464007964719, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
