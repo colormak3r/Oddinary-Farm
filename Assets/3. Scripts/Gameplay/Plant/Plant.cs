@@ -19,6 +19,7 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
     private NetworkVariable<bool> isWatered;
 
     private NetworkVariable<PlantProperty> Property = new NetworkVariable<PlantProperty>();
+    public PlantProperty PropertyValue => Property.Value;
 
     private SpriteRenderer spriteRenderer;
     private LootGenerator lootGenerator;

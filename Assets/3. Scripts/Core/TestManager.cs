@@ -4,7 +4,9 @@ using UnityEngine;
 
 public enum TestPreset
 {
+    None,
     CornFarmDemo,
+    MidSizeFarmDemo,
 }
 
 public class TestManager : NetworkBehaviour
@@ -15,12 +17,17 @@ public class TestManager : NetworkBehaviour
     [SerializeField]
     private TestPreset testPreset;
 
+    [Header("Asset Spawn Preset")]
+    [SerializeField]
+    private AssetSpawnPreset cornFarmDemoPreset;
+    [SerializeField]
+    private AssetSpawnPreset midSizeFarmDemoPreset;
+
     [Header("Settings")]
     [SerializeField]
     private BlueprintProperty woodenFence;
     [SerializeField]
     private SeedProperty cornSeed;
-
 
     private LayerManager layerManager;
     private ItemSystem itemSystem;
@@ -50,6 +57,11 @@ public class TestManager : NetworkBehaviour
         {
             case TestPreset.CornFarmDemo:
                 yield return CornFarmDemo();
+                break;
+            case TestPreset.MidSizeFarmDemo:
+                yield return MidSizeFarmDemo();
+                break;
+            case TestPreset.None:
                 break;
         }
     }
@@ -83,6 +95,41 @@ public class TestManager : NetworkBehaviour
 
                 yield return null;
             }
+        }
+    }
+
+    private IEnumerator MidSizeFarmDemo()
+    {
+        foreach (var prefabPosition in midSizeFarmDemoPreset.PrefabPositions)
+        {
+            if (prefabPosition.Prefab == AssetManager.Main.FarmPlotPrefab)
+            {
+                itemSystem.SpawnFarmPlot(prefabPosition.Position);
+            }
+            else
+            {
+                AssetManager.Main.SpawnPrefabOnServer(prefabPosition.Prefab, prefabPosition.Position);
+            }
+
+            DestroyResource(prefabPosition.Position);
+            yield return null;
+        }
+
+        foreach (var prefabPosition in midSizeFarmDemoPreset.SpawnerPositions)
+        {
+            itemSystem.Spawn(prefabPosition.Position, prefabPosition.SpawnerProperty);
+            DestroyResource(prefabPosition.Position);
+            yield return null;
+        }
+        yield return null;
+    }
+
+    private void DestroyResource(Vector2 position)
+    {
+        var hit = Physics2D.OverlapPoint(position, layerManager.ResourceLayer);
+        if (hit != null)
+        {
+            Destroy(hit.gameObject);
         }
     }
 }

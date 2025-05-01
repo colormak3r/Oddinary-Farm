@@ -5,5 +5,4 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Blueprint Property", menuName = "Scriptable Objects/Item/Blueprint")]
 public class BlueprintProperty : SpawnerProperty
 {
-
 }

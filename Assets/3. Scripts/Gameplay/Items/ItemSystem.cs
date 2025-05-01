@@ -3,7 +3,9 @@ using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Principal;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,6 +18,21 @@ public class ItemSystem : NetworkBehaviour
     private Transform muzzleTransform;
     [SerializeField]
     private GameObject muzzleFlash;
+
+    [Header("Asset Spawn Preset")]
+    [SerializeField]
+    private bool recordPlantSpawns = false;
+    [SerializeField]
+    private bool recordFarmPlotSpawns = false;
+    [SerializeField]
+    private bool recordStructureSpawns = false;
+    [SerializeField]
+    private AssetSpawnPreset assetSpawnPreset;
+
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showDebugs = false;
+
     private Vector2 ObjectPosition => (Vector2)transform.position + offset;
 
     private EntityStatus entityStatus;
@@ -198,6 +215,11 @@ public class ItemSystem : NetworkBehaviour
         GameObject go = Instantiate(AssetManager.Main.FarmPlotPrefab, position - TransformUtility.HALF_UNIT_Y_V2, Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
         CreatureSpawnManager.Main.UpdateSafeRadius(Mathf.CeilToInt(Mathf.Max(Mathf.Abs(position.x), Mathf.Abs(position.y))) + 5);
+
+        if (recordFarmPlotSpawns)
+        {
+            RecordPrefabSpawn(AssetManager.Main.FarmPlotPrefab, position);
+        }
     }
 
     public void RemoveFarmPlot(Vector2 position)
@@ -211,6 +233,11 @@ public class ItemSystem : NetworkBehaviour
         var farmPlotCollider = Physics2D.OverlapPoint(position, LayerManager.Main.FarmPlotLayer);
         if (farmPlotCollider)
         {
+            if (recordFarmPlotSpawns)
+            {
+                RemovePrefabSpawn(farmPlotCollider.transform.root.gameObject, farmPlotCollider.transform.position);
+            }
+
             farmPlotCollider.GetComponent<NetworkObject>().Despawn();
         }
     }
@@ -226,6 +253,11 @@ public class ItemSystem : NetworkBehaviour
         var plantCollider = Physics2D.OverlapPoint(position, LayerManager.Main.PlantLayer);
         if (plantCollider && plantCollider.TryGetComponent(out Plant plant))
         {
+            if (recordPlantSpawns)
+            {
+                RemoveSpawnerSpawn(plantCollider.transform.position);
+            }
+
             AssetManager.Main.SpawnItem(plant.Seed, position, preferRef);
             plant.GetComponent<NetworkObject>().Despawn();
         }
@@ -247,6 +279,11 @@ public class ItemSystem : NetworkBehaviour
         var structureHit = Physics2D.OverlapPoint(position, structureLayer);
         if (structureHit && structureHit.TryGetComponent(out Structure structure))
         {
+            if (recordStructureSpawns)
+            {
+                RemoveSpawnerSpawn(structureHit.transform.position);
+            }
+
             structure.RemoveStructure();
             Previewer.Main.Show(false);
         }
@@ -263,12 +300,19 @@ public class ItemSystem : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void SpawnRpc(Vector2 position, SpawnerProperty spawnerProperty)
     {
-        var gameobject = Instantiate(spawnerProperty.PrefabToSpawn, position + spawnerProperty.SpawnOffset, Quaternion.identity);
+        var positionOffset = position + spawnerProperty.SpawnOffset;
+        var gameobject = Instantiate(spawnerProperty.PrefabToSpawn, positionOffset, Quaternion.identity);
         gameobject.GetComponent<NetworkObject>().Spawn();
         if (spawnerProperty.InitScript)
             gameobject.GetComponent<IItemInitable>().Initialize(spawnerProperty.InitScript);
         if (spawnerProperty.ClearFoliage)
             ClearFoliageRpc(position);
+
+        if ((recordPlantSpawns && spawnerProperty is SeedProperty)
+            || (recordStructureSpawns && spawnerProperty is BlueprintProperty))
+        {
+            RecordSpawnerSpawn(spawnerProperty, position, spawnerProperty.SpawnOffset);
+        }
     }
     #endregion
 
@@ -307,5 +351,80 @@ public class ItemSystem : NetworkBehaviour
         uint healAmount = Convert.ToUInt32(consummableProperty.HealAmount);
         entityStatus.GetHealed(healAmount);
     }
+    #endregion
+
+    #region Asset Spawn Preset
+
+    private void RecordPrefabSpawn(GameObject prefab, Vector2 position)
+    {
+#if UNITY_EDITOR
+        if (showDebugs) Debug.Log("Recording spawn: " + prefab.name + " at position: " + position);
+        assetSpawnPreset.PrefabPositions.Add(new PrefabPosition(prefab, position));
+        EditorUtility.SetDirty(assetSpawnPreset);
+        //AssetDatabase.SaveAssets();
+#endif
+    }
+
+    private void RemovePrefabSpawn(GameObject instance, Vector2 position)
+    {
+#if UNITY_EDITOR
+        var instanceName = instance.name.Replace("(Clone)", "");
+        var candidate = -1;
+        for (int i = 0; i < assetSpawnPreset.PrefabPositions.Count; i++)
+        {
+            var prefabPos = assetSpawnPreset.PrefabPositions[i];
+            if (prefabPos.Prefab.name == instanceName && Vector2.SqrMagnitude(prefabPos.Position - position) < Mathf.Epsilon)
+            {
+                candidate = i;
+                break;
+            }
+        }
+        if (candidate == -1)
+        {
+            Debug.LogWarning($"Prefab {instanceName} not found in AssetSpawnPreset");
+            return;
+        }
+
+        if (showDebugs) Debug.Log("Removing spawn: " + instanceName + " at position: " + position);
+        assetSpawnPreset.PrefabPositions.RemoveAt(candidate);
+        EditorUtility.SetDirty(assetSpawnPreset);
+#endif
+    }
+
+    private void RecordSpawnerSpawn(SpawnerProperty spawnerProperty, Vector2 position, Vector2 offset)
+    {
+#if UNITY_EDITOR
+        if (showDebugs) Debug.Log("Recording spawn: " + spawnerProperty.name + " at position: " + position);
+        assetSpawnPreset.SpawnerPositions.Add(new SpawnerPosition(spawnerProperty, position, offset));
+        EditorUtility.SetDirty(assetSpawnPreset);
+        //AssetDatabase.SaveAssets();
+#endif
+    }
+
+    private void RemoveSpawnerSpawn(Vector2 position)
+    {
+#if UNITY_EDITOR
+        var candidate = -1;
+        for (int i = 0; i < assetSpawnPreset.SpawnerPositions.Count; i++)
+        {
+            var spawnerPos = assetSpawnPreset.SpawnerPositions[i];
+            if (Vector2.SqrMagnitude(spawnerPos.Position - (position - spawnerPos.Offset)) < Mathf.Epsilon)
+            {
+                candidate = i;
+                break;
+            }
+        }
+        if (candidate == -1)
+        {
+            Debug.LogWarning($"Position {position} not found in AssetSpawnPreset");
+            return;
+        }
+
+        if (showDebugs) Debug.Log($"Removing candidate {candidate} at position: {(position - assetSpawnPreset.SpawnerPositions[candidate].Offset)}");
+        assetSpawnPreset.SpawnerPositions.RemoveAt(candidate);
+        EditorUtility.SetDirty(assetSpawnPreset);
+#endif
+    }
+
     #endregion
 }
