@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4669488781781266603}
   - component: {fileID: 2707483043122201943}
   - component: {fileID: 3211592142929367722}
+  - component: {fileID: 6135079755855790817}
   m_Layer: 12
   m_Name: Wood Node
   m_TagString: Untagged
@@ -277,6 +278,27 @@ MonoBehaviour:
   drownTickRate: 1
   CanBeDrowned:
     m_InternalValue: 1
+--- !u!114 &6135079755855790817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2916747403788541215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff06d0f8f7ee0042893d97459f9c972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alwaysFlood: 0
+  floodVertical: 1
+  floodDuration: 3
+  spriteRenderer: {fileID: 3221880858544378413}
+  alphaRenderer: []
+  isInitialized: 0
+  elevation: 0
+  previousWaterLevel: 0
+  previousDepth: 0
 --- !u!1 &3930633831116992502
 GameObject:
   m_ObjectHideFlags: 0

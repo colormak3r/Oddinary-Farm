@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 8525652869318048011}
   - component: {fileID: 3458568397082104985}
   - component: {fileID: 8968559354677375507}
+  - component: {fileID: 8725120439007353097}
   m_Layer: 10
   m_Name: General Shop
   m_TagString: Untagged
@@ -271,6 +272,26 @@ MonoBehaviour:
   isRemovable: 1
   property: {fileID: 11400000, guid: acc17e463b7ae194791f9ac5b7f2782d, type: 2}
   shopInventory: {fileID: 11400000, guid: 8e62a4ecd71e7084c8e62b77453db3cf, type: 2}
+--- !u!114 &8725120439007353097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4286882051922282244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff06d0f8f7ee0042893d97459f9c972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alwaysFlood: 0
+  floodVertical: 1
+  floodDuration: 3
+  spriteRenderer: {fileID: 199959186778421092}
+  alphaRenderer: []
+  elevation: 0
+  previousWaterLevel: 0
+  previousDepth: 0
 --- !u!1 &7479066920920115073
 GameObject:
   m_ObjectHideFlags: 0
@@ -339,7 +360,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9409c18c87099014f9e69b5e44cca0a8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

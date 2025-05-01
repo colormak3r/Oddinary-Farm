@@ -65,7 +65,7 @@ Material:
     - _UseTextureAlpha: 1
     - _WaterDepth: 0.5
     - _WaterLevel_XY: 0
-    - _WaterLevel_Z: 0.279
+    - _WaterLevel_Z: 0
     - _WaterOpacity: 0.8
     - _WaveRange: 0.1
     - _WaveSpeed: 1

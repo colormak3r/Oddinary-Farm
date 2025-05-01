@@ -2,20 +2,20 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public enum TestPreset
+public enum ScenarioPreset
 {
     None,
     CornFarmDemo,
     MidSizeFarmDemo,
 }
 
-public class TestManager : NetworkBehaviour
+public class ScenarioManager : NetworkBehaviour
 {
-    public static TestManager Main { get; private set; }
+    public static ScenarioManager Main { get; private set; }
 
     [Header("Settings")]
     [SerializeField]
-    private TestPreset testPreset;
+    private ScenarioPreset scenario;
 
     [Header("Asset Spawn Preset")]
     [SerializeField]
@@ -42,26 +42,24 @@ public class TestManager : NetworkBehaviour
         {
             Destroy(gameObject);
         }
+        DontDestroyOnLoad(gameObject);
 
         itemSystem = GetComponent<ItemSystem>();
     }
 
-    private void Start()
-    {
-        layerManager = LayerManager.Main;
-    }
-
     public IEnumerator RunTestPresetCoroutine()
     {
-        switch (testPreset)
+        layerManager = LayerManager.Main;
+
+        switch (scenario)
         {
-            case TestPreset.CornFarmDemo:
+            case ScenarioPreset.CornFarmDemo:
                 yield return CornFarmDemo();
                 break;
-            case TestPreset.MidSizeFarmDemo:
+            case ScenarioPreset.MidSizeFarmDemo:
                 yield return MidSizeFarmDemo();
                 break;
-            case TestPreset.None:
+            case ScenarioPreset.None:
                 break;
         }
     }
@@ -131,5 +129,10 @@ public class TestManager : NetworkBehaviour
         {
             Destroy(hit.gameObject);
         }
+    }
+
+    public void SetScenario(ScenarioPreset scenario)
+    {
+        this.scenario = scenario;
     }
 }

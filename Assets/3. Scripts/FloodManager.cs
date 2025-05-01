@@ -47,7 +47,7 @@ public class FloodManager : NetworkBehaviour
             Main = this;
     }
 
-    public override void OnNetworkSpawn()
+    protected override void OnNetworkPostSpawn()
     {
         CurrentFloodLevel.OnValueChanged += HandleCurrentFloodLevelChanged;
         HandleCurrentFloodLevelChanged(0, CurrentFloodLevelValue);

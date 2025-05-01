@@ -13,6 +13,10 @@ public class GameManager : NetworkBehaviour
     [SerializeField]
     private GameObject playerPrefab;
 
+    [Header("Gameover Settings")]
+    [SerializeField]
+    private bool canGameOver = true;
+
     [Header("Debugs")]
     [SerializeField]
     private bool isInitialized;
@@ -34,8 +38,26 @@ public class GameManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
+        TimeManager.Main.OnHourChanged.AddListener(OnHourChanged);
         Initialize();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        TimeManager.Main.OnHourChanged.RemoveListener(OnHourChanged);
+    }
+
+    private void OnHourChanged(int currentHour)
+    {
+        if (!canGameOver) return;
+
+        if (FloodManager.Main.CurrentDepthLevel > 1.0f)
+        {
+            var localPlayer = NetworkManager.Singleton.LocalClient.PlayerObject;
+            var escaped = localPlayer.GetComponent<HotAirBalloonController>().IsControlledValue;
+            localPlayer.GetComponent<ControllableController>().SetControl(false);
+            GameOver(escaped);
+        }
     }
 
     private void Initialize()
@@ -49,7 +71,7 @@ public class GameManager : NetworkBehaviour
         isInitializing = true;
         ;
         yield return WorldGenerator.Main.Initialize();
-        if(IsServer) yield return TestManager.Main.RunTestPresetCoroutine();
+        if (IsServer) yield return ScenarioManager.Main.RunTestPresetCoroutine();
         yield return TransitionUI.Main.HideCoroutine();
 
 
@@ -76,6 +98,8 @@ public class GameManager : NetworkBehaviour
         ConnectionManager.Main.Disconnect(false);
     }
 
+    #region Game Over
+
     private Coroutine gameOverCoroutine;
     public void GameOver(bool escaped)
     {
@@ -93,4 +117,6 @@ public class GameManager : NetworkBehaviour
         yield return TransitionUI.Main.ShowCoroutine();
         StartCoroutine(ReturnToMainMenuCoroutine());
     }
+
+    #endregion
 }

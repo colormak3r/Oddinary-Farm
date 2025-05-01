@@ -205,6 +205,7 @@ GameObject:
   - component: {fileID: -6155909306260649949}
   - component: {fileID: 6584886272789103332}
   - component: {fileID: 2381061234703857880}
+  - component: {fileID: 2269034370699265688}
   m_Layer: 9
   m_Name: Plant
   m_TagString: Untagged
@@ -534,6 +535,27 @@ MonoBehaviour:
   drownTickRate: 1
   CanBeDrowned:
     m_InternalValue: 1
+--- !u!114 &2269034370699265688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4773706747441023441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff06d0f8f7ee0042893d97459f9c972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alwaysFlood: 0
+  floodVertical: 1
+  floodDuration: 3
+  spriteRenderer: {fileID: 9159464650693773075}
+  alphaRenderer: []
+  isInitialized: 0
+  elevation: 0
+  previousWaterLevel: 0
+  previousDepth: 0
 --- !u!1001 &771624051194356418
 PrefabInstance:
   m_ObjectHideFlags: 0

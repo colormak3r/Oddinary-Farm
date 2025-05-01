@@ -21,4 +21,19 @@ public class UIController : MonoBehaviour, DefaultInputActions.IUIActions
     {
         // TODO: Implement concrete method of UI back action
     }
+
+    public void OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        
+    }
+
+    public void OnClick(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        
+    }
+
+    public void OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        
+    }
 }

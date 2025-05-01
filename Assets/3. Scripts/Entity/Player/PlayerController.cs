@@ -24,8 +24,17 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private Transform graphicTransform;
     [SerializeField]
     private Transform muzzleTransform;
+
     [SerializeField]
     private bool spriteFacingRight;
+
+    [Header("Controller Settings")]
+    [SerializeField]
+    private GameObject cursor;
+    [SerializeField]
+    private float sensitivity = 10f;
+    [SerializeField]
+    private float smoothing = 10f;
 
     [Header("Graphic Settings")]
     [SerializeField]
@@ -44,13 +53,16 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private bool showDebugs;
     [SerializeField]
     private bool showGizmos;
-
+    [SerializeField]
+    private bool isController;
     [SerializeField]
     private Vector2 lookPosition;
     public static Vector2 LookPosition { get; private set; }
 
     [SerializeField]
     private Vector2 screenMousePos;
+    [SerializeField]
+    private Vector2 controllerDirection;
 
     private float nextPrimary;
     private float nextSecondary;
@@ -144,6 +156,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         Initialize();
         HandleOnIsFacingRightChanged(false, IsFacingRight.Value);
     }
+
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
@@ -169,27 +182,57 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         // WorldGenerator.BuildWorld has been moved to WorldRenderer
         // This is so the spectator can also make use of the world generator
 
-        var rawImageRectTransform = gameplayRenderer.RawImage.rectTransform;
-        // Convert mouse position to local position within RawImage
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            rawImageRectTransform,
-            screenMousePos,
-            gameplayRenderer.UICamera,
-            out var localMousePos);
+        // Set cursor position
+        if (!isController)
+        {
+            var rawImageRectTransform = gameplayRenderer.RawImage.rectTransform;
+            // Convert mouse position to local position within RawImage
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rawImageRectTransform,
+                screenMousePos,
+                gameplayRenderer.UICamera,
+                out var localMousePos);
 
-        // Normalize local coordinates (0-1)
-        Rect rect = rawImageRectTransform.rect;
-        float normalizedX = (localMousePos.x - rect.x) / rect.width;
-        float normalizedY = (localMousePos.y - rect.y) / rect.height;
+            // Normalize local coordinates (0-1)
+            Rect rect = rawImageRectTransform.rect;
+            float normalizedX = (localMousePos.x - rect.x) / rect.width;
+            float normalizedY = (localMousePos.y - rect.y) / rect.height;
 
-        // Convert normalized coordinates to RenderTexture coordinates
-        var renderTexPos = new Vector3(
-            normalizedX * renderTexture.width,
-            normalizedY * renderTexture.height,
-            mainCamera.nearClipPlane);
+            // Convert normalized coordinates to RenderTexture coordinates
+            var renderTexPos = new Vector3(
+                normalizedX * renderTexture.width,
+                normalizedY * renderTexture.height,
+                mainCamera.nearClipPlane);
 
-        lookPosition = mainCamera.ScreenToWorldPoint(renderTexPos);
+            lookPosition = mainCamera.ScreenToWorldPoint(renderTexPos);
+        }
+        else
+        {
+            float camHeight = 2f * mainCamera.orthographicSize;
+            float camWidth = camHeight * mainCamera.aspect;
+
+            Vector3 camCenter = mainCamera.transform.position;
+
+            float left = camCenter.x - camWidth / 2f;
+            float right = camCenter.x + camWidth / 2f;
+            float bottom = camCenter.y - camHeight / 2f;
+            float top = camCenter.y + camHeight / 2f;
+
+            // Move cursor
+            Vector3 targetPos = cursor.transform.position + (Vector3)(controllerDirection.normalized * sensitivity);
+            cursor.transform.position = Vector3.Lerp(cursor.transform.position, targetPos, smoothing * Time.deltaTime);
+
+            // Clamp position
+            Vector2 clampedPos = cursor.transform.position;
+            clampedPos.x = Mathf.Clamp(clampedPos.x, left, right);
+            clampedPos.y = Mathf.Clamp(clampedPos.y, bottom, top);
+            cursor.transform.position = (Vector3)clampedPos;
+
+            lookPosition = cursor.transform.position;
+        }
+
         LookPosition = lookPosition;
+
         IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;
 
         if (rotateArm) RotateArm(lookPosition);
@@ -239,6 +282,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (!isControllable) return;
 
         if (Camera.main == null) return;
+        isController = false;
+        cursor.SetActive(false);
+        Cursor.visible = true;
 
         screenMousePos = context.ReadValue<Vector2>();
     }
@@ -248,8 +294,11 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (!isControllable) return;
 
         if (Camera.main == null) return;
+        isController = true;
+        cursor.SetActive(true);
+        Cursor.visible = false;
 
-        CursorUI.Main.MoveCursor(context.ReadValue<Vector2>().normalized);
+        controllerDirection = context.ReadValue<Vector2>();
     }
 
     private void RotateArm(Vector2 lookPosition)

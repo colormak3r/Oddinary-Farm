@@ -569,6 +569,7 @@ GameObject:
   - component: {fileID: 8196869412201575716}
   - component: {fileID: -5939728544036363060}
   - component: {fileID: -6368999011962406436}
+  - component: {fileID: 5113934168564665480}
   m_Layer: 10
   m_Name: Turret
   m_TagString: Untagged
@@ -857,6 +858,11 @@ MonoBehaviour:
   offset: {x: 0, y: 0.5}
   muzzleTransform: {fileID: 810560053875789270}
   muzzleFlash: {fileID: 2133435850586580014}
+  recordPlantSpawns: 0
+  recordFarmPlotSpawns: 0
+  recordStructureSpawns: 0
+  assetSpawnPreset: {fileID: 0}
+  showDebugs: 0
 --- !u!82 &8196869412201575716
 AudioSource:
   m_ObjectHideFlags: 0
@@ -983,6 +989,26 @@ MonoBehaviour:
   drownTickRate: 1
   CanBeDrowned:
     m_InternalValue: 1
+--- !u!114 &5113934168564665480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837993320125130146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff06d0f8f7ee0042893d97459f9c972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alwaysFlood: 0
+  floodVertical: 1
+  floodDuration: 3
+  spriteRenderer: {fileID: 2022928174899249857}
+  alphaRenderer: []
+  elevation: 0
+  previousWaterLevel: 0
+  previousDepth: 0
 --- !u!1001 &9118820903780815706
 PrefabInstance:
   m_ObjectHideFlags: 0
