@@ -4,6 +4,7 @@ using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public enum AnimationMode
@@ -84,6 +85,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     public static Transform MuzzleTransform;
 
     private bool rotateArm = false;
+    private bool isPointerOverUI;
 
     private Item currentItem;
     private Camera mainCamera;
@@ -181,6 +183,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         // WorldGenerator.BuildWorld has been moved to WorldRenderer
         // This is so the spectator can also make use of the world generator
+
+        isPointerOverUI = EventSystem.current.IsPointerOverGameObject();
 
         // Set cursor position
         if (!isController)
@@ -420,7 +424,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private bool firstCallIgnored;
     public void OnPrimary(InputAction.CallbackContext context)
     {
-        if (!isControllable) return;
+        if (!isControllable || isPointerOverUI) return;
 
         if (context.performed)
         {
