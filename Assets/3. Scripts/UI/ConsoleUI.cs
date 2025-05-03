@@ -215,7 +215,9 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "Window",
     "StartNormalFlood",
     "StartInstantFlood",
-    "SetCanFlood"};
+    "SetCanFlood",
+    "SetFlood",
+    "Scenario"};
 
     private string[] commandHelps =
     {"Help",
@@ -234,7 +236,9 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "Window [fullwin, fullscreen, windowed, fullHD, 2k, 4k, size] [WxH] [fullscreen]",
     "StartNormalFlood",
     "StartInstantFlood",
-    "SetCanFlood [bool]"};
+    "SetCanFlood [bool]",
+    "SetFlood [0~1]",
+    "Scenario [name]"};
 
     private void ParseCommand(string input)
     {
@@ -419,6 +423,45 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                 var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
                 if (FloodManager.Main == null) throw new Exception("FloodManager not found. Has the game started yet?");
                 FloodManager.Main.SetCanFlood(defaultBool);
+            }
+            else if (command == commands[17].ToLower())
+            {
+                // SetFlood [0~1]
+                var floodLevel = args.Length > 1 ? float.Parse(args[1]) : 0f;
+                if (FloodManager.Main == null) throw new Exception("FloodManager not found. Has the game started yet?");
+                FloodManager.Main.SetFloodLevel(floodLevel);
+            }
+            else if (command == commands[18].ToLower())
+            {
+                // Scenario [name]
+                if (ScenarioManager.Main == null) throw new Exception("Fatal Error: ScenarioManager not found.");
+                if (args.Length > 1)
+                {
+                    if (args[1].Contains("none"))
+                    {
+                        ScenarioManager.Main.SetScenario(ScenarioPreset.None);
+                    }
+                    else if (args[1].Contains("corn"))
+                    {
+                        ScenarioManager.Main.SetScenario(ScenarioPreset.CornFarmDemo);
+                    }
+                    else if (args[1].Contains("mid"))
+                    {
+                        ScenarioManager.Main.SetScenario(ScenarioPreset.MidSizeFarmDemo);
+                    }
+                    else if (args[1].Contains("chicken"))
+                    {
+                        ScenarioManager.Main.SetScenario(ScenarioPreset.ChickenFarmDemo);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(UNKNOWN_ARGUMENT + $" '{args[1]}'");
+                    }
+                }
+                else
+                {
+                    ScenarioManager.Main.SetScenario(ScenarioPreset.None);
+                }
             }
             else
             {

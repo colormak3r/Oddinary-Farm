@@ -258,10 +258,8 @@ public class AssetManager : NetworkBehaviour
     public ItemReplica SpawnItemOnServer(ItemProperty itemProperty, Vector2 position, float randomRange = 2f, bool randomForce = true)
     {
         var randomPos = randomRange * (Vector2)Random.onUnitSphere;
-        position = position == default ? transform.position + (Vector3)randomPos : position + randomPos;
-        /*GameObject gameObject = Instantiate(itemReplicaPrefab, position, Quaternion.identity);
-        gameObject.GetComponent<NetworkObject>().Spawn();*/
-
+        //position = position == default ? transform.position + (Vector3)randomPos : position + randomPos;
+        position += randomPos;
         var itemReplicaObj = NetworkObjectPool.Main.Spawn(itemReplicaPrefab, position);
         var itemReplica = itemReplicaObj.GetComponent<ItemReplica>();
         itemReplica.SetProperty(itemProperty);

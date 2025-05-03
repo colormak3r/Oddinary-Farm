@@ -18,32 +18,23 @@ public class RoamingState : BehaviourState
         animal.OnDestinationReached.AddListener(HandleOnDestinationReached);
     }
 
-   /* private Vector3 position_cached = Vector3.one;
-    private float nextStallCheck;
-    private float lastMoveCommandTime;
-    private float stallGracePeriod = 2f;
+    const float StallDelay = 0.1f;
+    private float stallStart = -1f;
     public override void ExecuteState()
     {
-        base.ExecuteState();
-        if (Time.time > nextStallCheck)
-        {
-            nextStallCheck = Time.time + 1f;
-            bool isStalled = Vector2.Distance(position_cached, animal.transform.position) < 0.01f;
+        var velocity = animal.Rbody.linearVelocity;
 
-            if (isStalled)
-            {
-                if (Time.time - lastMoveCommandTime > stallGracePeriod)
-                {
-                    animal.MoveTo(animal.GetRandomPointInRange());
-                    lastMoveCommandTime = Time.time;
-                }
-            }
-            else
-            {
-                position_cached = animal.transform.position;
-            }
+        if ((velocity.x == 0 || velocity.y == 0) && stallStart < 0f)
+            stallStart = Time.time;
+        else if (velocity.x != 0 && velocity.y != 0 && stallStart >= 0f)
+            stallStart = -1f;
+
+        if (stallStart >= 0f && Time.time - stallStart > StallDelay)
+        {
+            animal.MoveTo(animal.GetRandomPointInRange());
+            stallStart = -1f;
         }
-    }*/
+    }
 
     public override void ExitState()
     {

@@ -32,6 +32,13 @@ public struct SpawnerPosition
 [CreateAssetMenu(fileName = "AssetSpawnPreset", menuName = "Scriptable Objects/Asset Spawn Preset", order = 1)]
 public class AssetSpawnPreset : ScriptableObject
 {
+    [SerializeField]
+    private uint startingWallet = 10;
+    public uint StartingWallet => startingWallet;
+    [SerializeField]
+    private ItemProperty[] startingItems;
+    public ItemProperty[] StartingItems => startingItems;
+
     public List<PrefabPosition> PrefabPositions;
     public List<SpawnerPosition> SpawnerPositions;
 }

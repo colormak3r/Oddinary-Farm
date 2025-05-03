@@ -60,6 +60,12 @@ public class HungerStimulus : NetworkBehaviour
     private float nextDeath;
 
     private LootGenerator lootGenerator;
+    private ContextBubbleUI contextBubbleUI;
+
+    private void Awake()
+    {
+        contextBubbleUI = GetComponentInChildren<ContextBubbleUI>();
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -80,6 +86,9 @@ public class HungerStimulus : NetworkBehaviour
             isHungry = true;
             nextDeath = Time.time + hourTilDeath * TimeManager.Main.HourDuration;
             isDying = true;
+
+            ShowContextBubbleRpc();
+
             if (showDebugs) Debug.Log("I'm hungry", this);
         }
 
@@ -97,7 +106,7 @@ public class HungerStimulus : NetworkBehaviour
                 {
                     if (consummable.FoodType.HasFlag(foodType) && consummable.FoodColor.HasFlag(foodColor) && consummable.CanBeConsumed)
                     {
-                        if(showDebugs) Debug.Log($"Found food: {consummable.Transform.name}", this);
+                        if (showDebugs) Debug.Log($"Found food: {consummable.Transform.name}", this);
                         targetFood = consummable;
                         break;
                     }
@@ -116,6 +125,7 @@ public class HungerStimulus : NetworkBehaviour
                     isDying = false;
                     nextHunger = Time.time + hourTilHunger * TimeManager.Main.HourDuration;
                     lootGenerator.DropLoot();
+                    HideContextBubbleRpc();
                 }
                 else
                 {
@@ -123,6 +133,18 @@ public class HungerStimulus : NetworkBehaviour
                 }
             }
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void ShowContextBubbleRpc()
+    {
+        contextBubbleUI.Show();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void HideContextBubbleRpc()
+    {
+        contextBubbleUI.Hide();
     }
 
     private void OnDrawGizmos()

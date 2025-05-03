@@ -42,7 +42,7 @@ public class Chicken : Animal
         {
             if (isTamed)
             {
-                if (HungerStimulus.IsHungry)
+                if (HungerStimulus && HungerStimulus.IsHungry)
                 {
                     if (HungerStimulus.TargetFood == null)
                     {

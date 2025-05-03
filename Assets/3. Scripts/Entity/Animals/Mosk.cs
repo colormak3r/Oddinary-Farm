@@ -51,7 +51,8 @@ public class Mosk : Animal
                 }
                 else
                 {
-                    ChangeState(roamingState);
+                    if (currentState != roamingState)
+                        ChangeState(roamingState);
                 }
             }
         }

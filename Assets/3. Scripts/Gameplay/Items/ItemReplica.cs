@@ -110,7 +110,6 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     {
         if (newValue == null) return;
         spriteRenderer.sprite = newValue.IconSprite;
-        if (IsOwner) AddRandomForce();
     }
 
     [ContextMenu("Mock Property Change")]
@@ -123,6 +122,7 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     public void SetProperty(ItemProperty property)
     {
         Property.Value = property;
+        AddRandomForceRpcRpc();
     }
 
     private void Update()
@@ -253,6 +253,12 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     private void DespawnRpc()
     {
         NetworkObjectPool.Main.Despawn(gameObject);
+    }
+
+    [Rpc(SendTo.Owner)]
+    private void AddRandomForceRpcRpc()
+    {
+        AddRandomForce();
     }
 
     private void AddRandomForce()

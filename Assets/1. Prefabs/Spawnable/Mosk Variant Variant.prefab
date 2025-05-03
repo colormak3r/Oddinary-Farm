@@ -121,7 +121,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   graphicTransform: {fileID: 5633000217506403371}
   spriteFacingRight: 0
-  roamRadius: 5
+  roamRadius: 1
   isCaptureable: 1
   captureItemProperty: {fileID: 0}
   showDebug: 0

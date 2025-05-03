@@ -49,7 +49,7 @@ public class GameManager : NetworkBehaviour
         isInitializing = true;
         ;
         yield return WorldGenerator.Main.Initialize();
-        if(IsServer) yield return TestManager.Main.RunTestPresetCoroutine();
+        if(IsServer) yield return ScenarioManager.Main.RunTestPresetCoroutine();
         yield return TransitionUI.Main.HideCoroutine();
 
 

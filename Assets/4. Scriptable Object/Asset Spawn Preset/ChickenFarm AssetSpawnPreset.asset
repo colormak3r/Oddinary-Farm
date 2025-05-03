@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21169d3da4f6e5e42b73ed03f366f42e, type: 3}
+  m_Name: ChickenFarm AssetSpawnPreset
+  m_EditorClassIdentifier: 
+  startingWallet: 1000000
+  startingItems: []
+  PrefabPositions:
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -5, y: 0}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -5, y: 1}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -4, y: 1}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -4, y: 0}
+  SpawnerPositions:
+  - SpawnerProperty: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
+    Position: {x: -5, y: 1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
+    Position: {x: -4, y: 1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
+    Position: {x: -4, y: 0}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
+    Position: {x: -5, y: 0}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -5, y: 3}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -4, y: 3}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -3, y: 3}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -6, y: 3}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -7, y: 3}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -7, y: 2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -7, y: 1}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -7, y: 0}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -7, y: -1}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -7, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -6, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -5, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -4, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -3, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -2, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -2, y: -1}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -2, y: 0}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -2, y: 3}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -2, y: 2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -2, y: 1}
+    Offset: {x: 0, y: -0.5}

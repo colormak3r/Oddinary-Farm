@@ -2626,7 +2626,7 @@ MonoBehaviour:
   recordPlantSpawns: 0
   recordFarmPlotSpawns: 0
   recordStructureSpawns: 0
-  assetSpawnPreset: {fileID: 11400000, guid: 0c9d18ab2afe89d4f91ee4f36163fd91, type: 2}
+  assetSpawnPreset: {fileID: 11400000, guid: 2ade236206abd0a4191350db59650f67, type: 2}
   showDebugs: 0
 --- !u!114 &9034817965285367963
 MonoBehaviour:
@@ -2856,7 +2856,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  canSpawnPet: 1
+  canSpawnPet: 0
   pets:
   - {fileID: 875170009560843256, guid: db68934e500d2cb489bcaecea9f0d8be, type: 3}
 --- !u!114 &4142363607695392232

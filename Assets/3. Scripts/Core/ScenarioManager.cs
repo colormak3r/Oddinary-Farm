@@ -2,26 +2,29 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public enum TestPreset
+public enum ScenarioPreset
 {
     None,
     CornFarmDemo,
     MidSizeFarmDemo,
+    ChickenFarmDemo,
 }
 
-public class TestManager : NetworkBehaviour
+public class ScenarioManager : NetworkBehaviour
 {
-    public static TestManager Main { get; private set; }
+    public static ScenarioManager Main { get; private set; }
 
     [Header("Settings")]
     [SerializeField]
-    private TestPreset testPreset;
+    private ScenarioPreset currentScenario;
 
     [Header("Asset Spawn Preset")]
     [SerializeField]
     private AssetSpawnPreset cornFarmDemoPreset;
     [SerializeField]
     private AssetSpawnPreset midSizeFarmDemoPreset;
+    [SerializeField]
+    private AssetSpawnPreset chickenFarmDemoPreset;
 
     [Header("Settings")]
     [SerializeField]
@@ -46,22 +49,56 @@ public class TestManager : NetworkBehaviour
         itemSystem = GetComponent<ItemSystem>();
     }
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        layerManager = LayerManager.Main;
+        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
+    }
+
+    private void OnClientConnected(ulong clientId)
+    {
+        if (currentScenario == ScenarioPreset.None) return;
+
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            var playerObject = client.PlayerObject;
+            if (playerObject.IsLocalPlayer)
+            {
+                var inventory = playerObject.GetComponent<PlayerInventory>();
+                var preset = GetAssetSpawnPreset(currentScenario);
+
+                // Add starting coins to the player's inventory
+                inventory.AddCoinsOnClient(preset.StartingWallet);
+
+                // Add starting items to the player's inventory
+                foreach (var item in preset.StartingItems)
+                {
+                    inventory.AddItem(item);
+                }
+            }
+        }
     }
 
     public IEnumerator RunTestPresetCoroutine()
     {
-        switch (testPreset)
+        layerManager = LayerManager.Main;
+
+        switch (currentScenario)
         {
-            case TestPreset.CornFarmDemo:
+            case ScenarioPreset.CornFarmDemo:
                 yield return CornFarmDemo();
                 break;
-            case TestPreset.MidSizeFarmDemo:
+            case ScenarioPreset.MidSizeFarmDemo:
                 yield return MidSizeFarmDemo();
                 break;
-            case TestPreset.None:
+            case ScenarioPreset.ChickenFarmDemo:
+                yield return ChickenFarmDemo();
+                break;
+            case ScenarioPreset.None:
                 break;
         }
     }
@@ -100,7 +137,17 @@ public class TestManager : NetworkBehaviour
 
     private IEnumerator MidSizeFarmDemo()
     {
-        foreach (var prefabPosition in midSizeFarmDemoPreset.PrefabPositions)
+        yield return SpawnAssetPreset(midSizeFarmDemoPreset);
+    }
+
+    private IEnumerator ChickenFarmDemo()
+    {
+        yield return SpawnAssetPreset(chickenFarmDemoPreset);
+    }
+
+    private IEnumerator SpawnAssetPreset(AssetSpawnPreset assetSpawnPreset)
+    {
+        foreach (var prefabPosition in assetSpawnPreset.PrefabPositions)
         {
             if (prefabPosition.Prefab == AssetManager.Main.FarmPlotPrefab)
             {
@@ -115,12 +162,13 @@ public class TestManager : NetworkBehaviour
             yield return null;
         }
 
-        foreach (var prefabPosition in midSizeFarmDemoPreset.SpawnerPositions)
+        foreach (var prefabPosition in assetSpawnPreset.SpawnerPositions)
         {
             itemSystem.Spawn(prefabPosition.Position, prefabPosition.SpawnerProperty);
             DestroyResource(prefabPosition.Position);
             yield return null;
         }
+
         yield return null;
     }
 
@@ -131,5 +179,21 @@ public class TestManager : NetworkBehaviour
         {
             Destroy(hit.gameObject);
         }
+    }
+
+    public void SetScenario(ScenarioPreset scenario)
+    {
+        this.currentScenario = scenario;
+    }
+
+    private AssetSpawnPreset GetAssetSpawnPreset(ScenarioPreset scenario)
+    {
+        return scenario switch
+        {
+            ScenarioPreset.CornFarmDemo => cornFarmDemoPreset,
+            ScenarioPreset.MidSizeFarmDemo => midSizeFarmDemoPreset,
+            ScenarioPreset.ChickenFarmDemo => chickenFarmDemoPreset,
+            _ => null,
+        };
     }
 }

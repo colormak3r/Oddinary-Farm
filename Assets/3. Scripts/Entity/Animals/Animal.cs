@@ -46,8 +46,12 @@ public abstract class Animal : NetworkBehaviour
 
     private EntityMovement movement;
     public EntityMovement Movement => movement;
+
     private EntityStatus status;
     public EntityStatus Status => status;
+
+    private Rigidbody2D rbody;
+    public Rigidbody2D Rbody => rbody;
 
     private TargetDetector targetDetector;
     public TargetDetector TargetDetector => targetDetector;
@@ -57,8 +61,10 @@ public abstract class Animal : NetworkBehaviour
 
     private HungerStimulus hungerStimulus;
     public HungerStimulus HungerStimulus => hungerStimulus;
+
     private FollowStimulus followStimulus;
     public FollowStimulus FollowStimulus => followStimulus;
+
     private MoveTowardStimulus moveTowardStimulus;
     public MoveTowardStimulus MoveTowardStimulus => moveTowardStimulus;
 
@@ -110,6 +116,7 @@ public abstract class Animal : NetworkBehaviour
         networkAnimator = GetComponent<NetworkAnimator>();
         movement = GetComponent<EntityMovement>();
         status = GetComponent<EntityStatus>();
+        rbody = GetComponent<Rigidbody2D>();
         targetDetector = GetComponent<TargetDetector>();
         threatDetector = GetComponent<ThreatDetector>();
         hungerStimulus = GetComponent<HungerStimulus>();

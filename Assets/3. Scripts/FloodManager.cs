@@ -124,11 +124,24 @@ public class FloodManager : NetworkBehaviour
         SetCanFloodRpc(canFlood);
     }
 
-
     [Rpc(SendTo.Server)]
     private void SetCanFloodRpc(bool canFlood)
     {
         this.canFlood = canFlood;
         CurrentFloodLevel.Value = baseFloodLevel;
+    }
+
+    public void SetFloodLevel(float floodLevel)
+    {
+        SetFloodLevelRpc(floodLevel);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SetFloodLevelRpc(float floodLevel)
+    {
+        if (floodCoroutine != null) StopCoroutine(floodCoroutine);
+        floodCoroutine = null;
+
+        CurrentFloodLevel.Value = floodLevel;
     }
 }

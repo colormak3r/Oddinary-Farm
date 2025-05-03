@@ -13737,7 +13737,7 @@ GameObject:
   - component: {fileID: 1078844469}
   - component: {fileID: 1078844470}
   m_Layer: 0
-  m_Name: Test Manager
+  m_Name: Scenario Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13792,13 +13792,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1078844466}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38e76e9766aa39a49896390835ae5ca9, type: 3}
+  m_Script: {fileID: 11500000, guid: e208afcc19545b1479f2e6211c47790f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  testPreset: 2
+  currentScenario: 3
   cornFarmDemoPreset: {fileID: 0}
   midSizeFarmDemoPreset: {fileID: 11400000, guid: 0c9d18ab2afe89d4f91ee4f36163fd91, type: 2}
+  chickenFarmDemoPreset: {fileID: 11400000, guid: 2ade236206abd0a4191350db59650f67, type: 2}
   woodenFence: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
   cornSeed: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
 --- !u!114 &1078844470
@@ -16733,7 +16734,7 @@ MonoBehaviour:
   m_ScaleFactor: 5
   m_ReferenceResolution: {x: 480, y: 270}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -25467,6 +25468,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8833449246688809122, guid: d4eb9025c2ea56b4c8f5c13e851f07eb, type: 3}
+      propertyPath: m_MatchWidthOrHeight
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8880770317533707883, guid: d4eb9025c2ea56b4c8f5c13e851f07eb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -26456,6 +26461,7 @@ GameObject:
   - component: {fileID: 1957931177}
   - component: {fileID: 1957931176}
   - component: {fileID: 1957931178}
+  - component: {fileID: 1957931179}
   m_Layer: 5
   m_Name: Gameplay Renderer
   m_TagString: Untagged
@@ -26477,8 +26483,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1435793185}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -26531,6 +26537,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rawImage: {fileID: 1957931176}
   uiCamera: {fileID: 1996455799}
+--- !u!114 &1957931179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957931174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 1
+  m_AspectRatio: 1.7777778
 --- !u!1001 &1967988051
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26806,7 +26826,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 9
+  orthographic size: 8.4375
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -28238,6 +28258,10 @@ PrefabInstance:
     - target: {fileID: 2736238549693896932, guid: f9a4dcc0cd49dde40af3e06f8bc41874, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2703944593
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736238549693896932, guid: f9a4dcc0cd49dde40af3e06f8bc41874, type: 3}
+      propertyPath: SceneMigrationSynchronization
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3525045254264519028, guid: f9a4dcc0cd49dde40af3e06f8bc41874, type: 3}
       propertyPath: m_LocalPosition.x
