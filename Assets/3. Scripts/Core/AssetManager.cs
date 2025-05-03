@@ -76,6 +76,11 @@ public class AssetManager : NetworkBehaviour
     private GameObject projectilePrefab;
     public GameObject ProjectilePrefab => projectilePrefab;
 
+    [Header("Common Material")]
+    [SerializeField]
+    private Material waterMaterial;
+    public Material WaterMaterial => waterMaterial;
+
     [Header("Scriptable Object Assets")]
     [SerializeField]
     private List<ScriptableObject> scriptableObjectList = new List<ScriptableObject>();

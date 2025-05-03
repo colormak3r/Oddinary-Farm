@@ -347,8 +347,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1758342686541387045}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0.3, y: 0}
+  m_AnchorMax: {x: 0.3, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -873,9 +873,10 @@ MonoBehaviour:
   container: {fileID: 6879947483148304765}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 4634462996258427950}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -936,7 +937,6 @@ MonoBehaviour:
   defaultHat: {fileID: 11400000, guid: 899f2151539b0164ebde313c06f6e76a, type: 2}
   defaultOutfit: {fileID: 11400000, guid: 710610b97ca86be478b709f56fc425aa, type: 2}
   contentTransform: {fileID: 7696978310873636474}
-  background: {fileID: 4634462996258427950}
   faceImage: {fileID: 5319546156231005181}
   headImage: {fileID: 5193915515831283062}
   hatImage: {fileID: 7409632583608395868}
@@ -1356,9 +1356,10 @@ MonoBehaviour:
   container: {fileID: 4015737620064458180}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 1
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -1453,9 +1454,10 @@ MonoBehaviour:
   container: {fileID: 6693289304348250490}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 1
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -2639,9 +2641,9 @@ RectTransform:
   - {fileID: 4446792653178650140}
   m_Father: {fileID: 5815287577647755258}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 85, y: -135}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8208179840352264859
@@ -2793,7 +2795,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 170, y: 155}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1008323211534555368
 MonoBehaviour:
@@ -3557,8 +3559,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 143271532549366905}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4303,9 +4305,9 @@ RectTransform:
   - {fileID: 5118544377688484041}
   m_Father: {fileID: 5815287577647755258}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 85, y: -77.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3607473265750803401
@@ -4360,9 +4362,10 @@ MonoBehaviour:
   container: {fileID: 1673673297662526984}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 7913043872232458859}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -4371,7 +4374,6 @@ MonoBehaviour:
   leaveButton: {fileID: 500660980337035084}
   appearanceButton: {fileID: 6993480709963742797}
   backButton: {fileID: 2949071054042799713}
-  background: {fileID: 7913043872232458859}
 --- !u!1 &3837723364007977032
 GameObject:
   m_ObjectHideFlags: 0
@@ -5708,7 +5710,7 @@ RectTransform:
   m_Father: {fileID: 3860466472033398777}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0.3, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5783,7 +5785,7 @@ RectTransform:
   m_Father: {fileID: 4247725768290928895}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0.7, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5932,9 +5934,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5815287577647755258}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 85, y: -27.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4989799092230748457
@@ -5989,9 +5991,10 @@ MonoBehaviour:
   container: {fileID: 2118267123691162797}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 999117269316124358}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -6000,7 +6003,6 @@ MonoBehaviour:
   bgmSlider: {fileID: 5219202975040794146}
   sfxSlider: {fileID: 649687037323379098}
   abmSlider: {fileID: 6493437327399288305}
-  background: {fileID: 999117269316124358}
 --- !u!1 &5022085818547895440
 GameObject:
   m_ObjectHideFlags: 0
@@ -6836,7 +6838,7 @@ MonoBehaviour:
   m_ScaleFactor: 5
   m_ReferenceResolution: {x: 480, y: 270}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -7027,9 +7029,9 @@ RectTransform:
   - {fileID: 7128848178651537786}
   m_Father: {fileID: 5815287577647755258}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 85, y: -47.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6062536481751084417
@@ -7454,9 +7456,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5815287577647755258}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 85, y: -15}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8018263364199945274
@@ -8274,10 +8276,11 @@ MonoBehaviour:
   container: {fileID: 2926741140887195492}
   fadeDuration: 1
   delayShow: 0
-  excludeFromManager: 0
   delayShowFadeFirstObjects:
   - {fileID: 2544226400747503105}
   ignoreObjects: []
+  excludeFromUIManager: 0
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -8337,16 +8340,15 @@ MonoBehaviour:
   container: {fileID: 9120147950843072736}
   fadeDuration: 0.25
   delayShow: 0
-  excludeFromManager: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
+  excludeFromUIManager: 1
+  background: {fileID: 0}
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
     m_PersistentCalls:
       m_Calls: []
-  version: v0.1
-  versionNumber: .01
   maxChar: 100000
   showStackTrace: 0
   logToFile: 0
@@ -8459,7 +8461,7 @@ MonoBehaviour:
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 1
+  m_ScrollSensitivity: 2
   m_Viewport: {fileID: 6857790517876867459}
   m_HorizontalScrollbar: {fileID: 2986621059523135966}
   m_VerticalScrollbar: {fileID: 7539336145014022935}
@@ -9235,7 +9237,7 @@ RectTransform:
   m_Father: {fileID: 2248593289857284145}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -9309,8 +9311,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 7245118101087085882}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0.7, y: 0}
+  m_AnchorMax: {x: 0.7, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10145,9 +10147,9 @@ RectTransform:
   - {fileID: 6137611380669263200}
   m_Father: {fileID: 5815287577647755258}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 85, y: -107.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8970713316475038467

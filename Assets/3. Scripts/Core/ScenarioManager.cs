@@ -45,6 +45,7 @@ public class ScenarioManager : NetworkBehaviour
         {
             Destroy(gameObject);
         }
+        DontDestroyOnLoad(gameObject);
 
         itemSystem = GetComponent<ItemSystem>();
     }

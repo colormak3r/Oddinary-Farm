@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1007024104695103570}
-  - component: {fileID: 53937473564930443}
   - component: {fileID: 3019510986992774846}
+  - component: {fileID: 53937473564930443}
   m_Layer: 0
   m_Name: Outline
   m_TagString: Untagged
@@ -33,6 +33,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 313602632549185801}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &3019510986992774846
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864238496935939521}
+  m_Enabled: 1
+  m_SortingLayerID: 1792883339
+  m_SortingLayer: -1
+  m_SortingOrder: 3
+  m_SortAtRoot: 1
 --- !u!212 &53937473564930443
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -88,18 +100,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!210 &3019510986992774846
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 864238496935939521}
-  m_Enabled: 1
-  m_SortingLayerID: 1792883339
-  m_SortingLayer: -1
-  m_SortingOrder: 1
-  m_SortAtRoot: 1
 --- !u!1 &1734130187429010102
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,7 +109,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2721487729102862859}
-  - component: {fileID: 7748006893519636203}
   - component: {fileID: 4016410845780471113}
   - component: {fileID: 852702662833038589}
   - component: {fileID: 4416117027342734844}
@@ -139,18 +138,6 @@ Transform:
   - {fileID: 8258224067987578512}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &7748006893519636203
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1734130187429010102}
-  m_Enabled: 1
-  m_SortingLayerID: 1792883339
-  m_SortingLayer: -1
-  m_SortingOrder: 0
-  m_SortAtRoot: 0
 --- !u!114 &4016410845780471113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,6 +277,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6162780714447646810}
+  - component: {fileID: 9014180477718882578}
   - component: {fileID: 8491808111478147108}
   m_Layer: 0
   m_Name: Overlay
@@ -313,6 +301,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 313602632549185801}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &9014180477718882578
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4237099982565181360}
+  m_Enabled: 1
+  m_SortingLayerID: 1792883339
+  m_SortingLayer: -1
+  m_SortingOrder: 1
+  m_SortAtRoot: 1
 --- !u!212 &8491808111478147108
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -455,6 +455,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4321469583349579957}
+  - component: {fileID: 7623505022064937992}
   - component: {fileID: 1144094395796731678}
   m_Layer: 0
   m_Name: Spill Over
@@ -478,6 +479,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 313602632549185801}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &7623505022064937992
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7272914739600179898}
+  m_Enabled: 1
+  m_SortingLayerID: 1792883339
+  m_SortingLayer: -1
+  m_SortingOrder: 2
+  m_SortAtRoot: 1
 --- !u!212 &1144094395796731678
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -577,6 +590,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9128917213308401962}
+  - component: {fileID: 7503834503411949638}
   - component: {fileID: 4102021133114471918}
   m_Layer: 0
   m_Name: Base
@@ -600,6 +614,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 313602632549185801}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &7503834503411949638
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7649007572135388396}
+  m_Enabled: 1
+  m_SortingLayerID: 1792883339
+  m_SortingLayer: -1
+  m_SortingOrder: 0
+  m_SortAtRoot: 1
 --- !u!212 &4102021133114471918
 SpriteRenderer:
   m_ObjectHideFlags: 0

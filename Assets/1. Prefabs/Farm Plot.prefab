@@ -9,13 +9,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4043741663618658510}
-  - component: {fileID: 4886082877013868103}
   - component: {fileID: 610265928260838425}
   - component: {fileID: 3051851916708624163}
   - component: {fileID: 5980385349177380000}
   - component: {fileID: 4323746698192529180}
   - component: {fileID: 5790521468510067924}
   - component: {fileID: 6369002669889084}
+  - component: {fileID: 1152657473945683032}
   m_Layer: 8
   m_Name: Farm Plot
   m_TagString: Untagged
@@ -40,18 +40,6 @@ Transform:
   - {fileID: 631326410053028117}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &4886082877013868103
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5625321612986297944}
-  m_Enabled: 1
-  m_SortingLayerID: 1792883339
-  m_SortingLayer: -1
-  m_SortingOrder: 99
-  m_SortAtRoot: 0
 --- !u!114 &610265928260838425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,6 +79,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
   AuthorityMode: 0
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
@@ -214,6 +212,27 @@ MonoBehaviour:
   drownTickRate: 1
   CanBeDrowned:
     m_InternalValue: 1
+--- !u!114 &1152657473945683032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5625321612986297944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff06d0f8f7ee0042893d97459f9c972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alwaysFlood: 0
+  floodVertical: 0
+  floodDuration: 3
+  spriteRenderer: {fileID: 6902956458330235354}
+  alphaRenderer: []
+  isInitialized: 0
+  elevation: 0
+  previousWaterLevel: 0
+  previousDepth: 0
 --- !u!1 &6760149712984731374
 GameObject:
   m_ObjectHideFlags: 0
@@ -257,8 +276,8 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 1792883339
   m_SortingLayer: -1
-  m_SortingOrder: 1
-  m_SortAtRoot: 0
+  m_SortingOrder: 99
+  m_SortAtRoot: 1
 --- !u!212 &6902956458330235354
 SpriteRenderer:
   m_ObjectHideFlags: 0

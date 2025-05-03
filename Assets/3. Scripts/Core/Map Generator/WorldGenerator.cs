@@ -443,7 +443,6 @@ public class WorldGenerator : NetworkBehaviour
                 var property = GetMappedProperty(terrainPos.x, terrainPos.y);
                 var terrainUnit = SpawnTerrainUnit(terrainPos, property);
                 chunk.terrainUnits.Add(terrainUnit);
-                terrainUnit.GetComponent<FloodController>().SetFloodThreshhold(GetElevation(terrainPos.x, terrainPos.y));
 
                 // Spawn Foliage
                 folliageMap.GetElementSafe(terrainPos.x, terrainPos.y, out var validFoliagePosition);
@@ -521,6 +520,7 @@ public class WorldGenerator : NetworkBehaviour
         terrainObj.transform.position = position;
         terrainObj.transform.parent = transform;
         terrainObj.GetComponent<TerrainUnit>().Initialize(property);
+        terrainObj.GetComponent<FloodController>().SetElevation(GetElevation(position.x, position.y, true));
 
         return terrainObj;
     }
@@ -530,6 +530,7 @@ public class WorldGenerator : NetworkBehaviour
         var folliageObj = LocalObjectPooling.Main.Spawn(prefab);
         folliageObj.transform.position = new Vector2(position.x, position.y - 0.5f);
         folliageObj.transform.parent = transform;
+        folliageObj.GetComponent<FloodController>().SetElevation(GetElevation(position.x, position.y, true));
 
         return folliageObj;
     }

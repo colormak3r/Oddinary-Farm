@@ -4,12 +4,16 @@ using UnityEngine;
 public class FloodController : MonoBehaviour
 {
     // Cache the shader property ID for performance.
-    private static readonly int FLOOD_ID = Shader.PropertyToID("_Flooded");
-    private static readonly int DEPTH_ID = Shader.PropertyToID("_Depth");
+    private static readonly int SPRITE_HEIGHT_ID = Shader.PropertyToID("_SpriteHeight");
+    private static readonly int WATER_LEVEL_XY_ID = Shader.PropertyToID("_WaterLevel_XY");
+    private static readonly int WATER_LEVEL_Z_ID = Shader.PropertyToID("_WaterLevel_Z");
+    private static readonly int WATER_DEPTH_ID = Shader.PropertyToID("_WaterDepth");
 
     [Header("Settings")]
     [SerializeField]
     private bool alwaysFlood = false;
+    [SerializeField]
+    private bool floodVertical = false;
     [SerializeField]
     private float floodDuration = 3f;
     [SerializeField]
@@ -21,110 +25,135 @@ public class FloodController : MonoBehaviour
     [SerializeField]
     private float elevation;
     [SerializeField]
-    private float previousFloodLevel = 0;
+    private float previousWaterLevel = 0;
     [SerializeField]
-    private float previousDepthLevel = 0;
+    private float previousDepth = 0;
 
-    private bool isInitialized = false;
+    private Material defaultMaterial;
 
     private MaterialPropertyBlock mpb;
-    private FloodManager floodManager;
 
     private void Awake()
     {
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
 
+        //Debug.Log(spriteRenderer.bounds.max.y - spriteRenderer.bounds.min.y, this);
+        defaultMaterial = spriteRenderer.material;
         mpb = new MaterialPropertyBlock();
-        floodManager = FloodManager.Main;
+    }
 
+    private void Start()
+    {
         if (!alwaysFlood)
-            floodManager.OnFloodLevelChanged += HandleFloodLevelChange;
+        {
+            FloodManager.Main.OnFloodLevelChanged += HandleFloodLevelChange;
+        }
         else
-            SetFloodedMaterial(1, 0.5f);
+        {
+            SetFloodMaterial(1, 0.5f);
+        }
+
     }
 
     private void OnDestroy()
     {
         if (!alwaysFlood)
-            floodManager.OnFloodLevelChanged -= HandleFloodLevelChange;
+            FloodManager.Main.OnFloodLevelChanged -= HandleFloodLevelChange;
     }
 
-    private void HandleFloodLevelChange(float floodLevel, float waterLevel, float depthLevel)
+    private void HandleFloodLevelChange(float floodLevel, float safeLevel, float depthLevel)
     {
-        if (!isInitialized || !gameObject.activeInHierarchy) return;
+        if (!WorldGenerator.Main || !WorldGenerator.Main.IsInitialized || !gameObject.activeInHierarchy) return;
 
-        EvaluateFloodLevel(false, floodLevel, waterLevel, depthLevel);
+        elevation = WorldGenerator.Main.GetElevation(transform.position.x, transform.position.y);
+        EvaluateWaterLevel(false, floodLevel, safeLevel, depthLevel);
     }
 
-    public void SetFloodThreshhold(float value)
+    public void SetElevation(float elevation)
     {
-        elevation = value;
-
-        EvaluateFloodLevel(true, floodManager.CurrentFloodLevelValue, floodManager.CurrentSafeLevel, floodManager.CurrentDepthLevel);
-
-        isInitialized = true;
+        this.elevation = elevation;
+        EvaluateWaterLevel(true, FloodManager.Main.CurrentFloodLevelValue, FloodManager.Main.CurrentSafeLevel, FloodManager.Main.CurrentDepthLevel);
     }
 
-    private void EvaluateFloodLevel(bool instant, float floodLevel, float safeLevel, float depthLevel)
+    private void EvaluateWaterLevel(bool instant, float floodLevel, float safeLevel, float depthLevel)
     {
-        var flooded = elevation > safeLevel ? 0 : Mathf.Clamp01((safeLevel - elevation) / (safeLevel - depthLevel));
+        var waterLevel = elevation > safeLevel ? 0 : Mathf.Clamp01((safeLevel - elevation) / (safeLevel - depthLevel));
         var depth = Mathf.Clamp01((safeLevel - elevation) / (safeLevel - depthLevel));
 
         if (instant)
         {
-            SetFloodedMaterial(flooded, depth);
+            SetFloodMaterial(waterLevel, depth);
         }
         else
         {
-            StartCoroutine(FloodedCoroutine(previousFloodLevel, flooded, previousDepthLevel, depth, floodDuration));
+            StartCoroutine(FloodCoroutine(previousWaterLevel, waterLevel, previousDepth, depth, floodDuration));
         }
 
-        previousFloodLevel = flooded;
-        previousDepthLevel = depth;
+        previousWaterLevel = waterLevel;
+        previousDepth = depth;
     }
 
-    private IEnumerator FloodedCoroutine(float floodStart, float floatEnd, float depthStart, float depthEnd, float duration)
+    private IEnumerator FloodCoroutine(float waterLevelStart, float waterLevelEnd, float depthStart, float depthEnd, float duration)
     {
+        if (spriteRenderer.material != AssetManager.Main.WaterMaterial)
+            spriteRenderer.material = AssetManager.Main.WaterMaterial;
+
         float t = 0;
         while (t < 1)
         {
-            var flood = Mathf.Lerp(floodStart, floatEnd, t);
+            var waterLevel = Mathf.Lerp(waterLevelStart, waterLevelEnd, t);
             var depth = Mathf.Lerp(depthStart, depthEnd, t);
-            SetFloodedMaterial(flood, depth);
+            SetFloodMaterial(waterLevel, depth);
             t += Time.deltaTime / duration;
             yield return null;
         }
-        SetFloodedMaterial(floatEnd, depthEnd);
+        SetFloodMaterial(waterLevelEnd, depthEnd);
 
+        if (waterLevelEnd == 0 && spriteRenderer.material != defaultMaterial)
+            spriteRenderer.material = defaultMaterial;
     }
 
-    private void SetFloodedMaterial(float flooded, float depth)
+    private void SetFloodMaterial(float waterLevel, float depth)
     {
         foreach (var renderer in alphaRenderer)
-            renderer.color = new Color(1, 1, 1, 1 - flooded);
+            renderer.color = new Color(1, 1, 1, 1 - waterLevel);
 
         spriteRenderer.GetPropertyBlock(mpb);
-        mpb.SetFloat(FLOOD_ID, flooded);
-        mpb.SetFloat(DEPTH_ID, depth);
-        spriteRenderer.SetPropertyBlock(mpb);
+
+        mpb.SetFloat(SPRITE_HEIGHT_ID, spriteRenderer.sprite.rect.height);
+        mpb.SetFloat(WATER_DEPTH_ID, depth);
+        if (floodVertical)
+        {
+            mpb.SetFloat(WATER_LEVEL_Z_ID, waterLevel);
+        }
+        else
+        {
+            mpb.SetFloat(WATER_LEVEL_XY_ID, waterLevel);
+            mpb.SetFloat(WATER_LEVEL_Z_ID, 0);
+        }
+
+        if (waterLevel != 0)
+            spriteRenderer.SetPropertyBlock(mpb);
+        else
+            spriteRenderer.SetPropertyBlock(null);
     }
 
     [ContextMenu("Flood")]
     private void Flood()
     {
-        StartCoroutine(FloodedCoroutine(mpb.GetFloat(FLOOD_ID), 1, 0.5f, 0.5f, floodDuration));
+        StartCoroutine(FloodCoroutine(mpb.GetFloat(floodVertical ? WATER_LEVEL_Z_ID : WATER_LEVEL_XY_ID), 1, 0.5f, 0.5f, floodDuration));
     }
 
     [ContextMenu("Half Flood")]
     private void HalfFlood()
     {
-        StartCoroutine(FloodedCoroutine(mpb.GetFloat(FLOOD_ID), 0.5f, 0.5f, 0.5f, floodDuration));
+        StartCoroutine(FloodCoroutine(mpb.GetFloat(floodVertical ? WATER_LEVEL_Z_ID : WATER_LEVEL_XY_ID), 0.5f, 0.5f, 0.5f, floodDuration));
     }
 
     [ContextMenu("Dry")]
     private void Dry()
     {
-        StartCoroutine(FloodedCoroutine(mpb.GetFloat(FLOOD_ID), 0, 0.5f, 0.5f, floodDuration));
+        StartCoroutine(FloodCoroutine(mpb.GetFloat(floodVertical ? WATER_LEVEL_Z_ID : WATER_LEVEL_XY_ID), 0, 0.5f, 0.5f, floodDuration));
     }
 }
