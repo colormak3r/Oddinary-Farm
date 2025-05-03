@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 4111479899
+  GlobalObjectIdHash: 2978218675
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -68,13 +68,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6277954611948190113}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38e76e9766aa39a49896390835ae5ca9, type: 3}
+  m_Script: {fileID: 11500000, guid: e208afcc19545b1479f2e6211c47790f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  scenarioPreset: 0
+  currentScenario: 0
   cornFarmDemoPreset: {fileID: 0}
   midSizeFarmDemoPreset: {fileID: 11400000, guid: 0c9d18ab2afe89d4f91ee4f36163fd91, type: 2}
+  chickenFarmDemoPreset: {fileID: 11400000, guid: 2ade236206abd0a4191350db59650f67, type: 2}
   woodenFence: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
   cornSeed: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
 --- !u!114 &4705413433818748291
