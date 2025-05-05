@@ -17,6 +17,8 @@ public class PlantProperty : ScriptableObject, IEquatable<PlantProperty>
 {
     [Header("Plant Property")]
     [SerializeField]
+    private bool destroyOnHarvest;
+    [SerializeField]
     private SeedProperty seedProperty;
     [SerializeField]
     private FoodType foodType;
@@ -27,6 +29,7 @@ public class PlantProperty : ScriptableObject, IEquatable<PlantProperty>
     [SerializeField]
     private LootTable lootTable;
 
+    public bool DestroyOnHarvest => destroyOnHarvest;
     public SeedProperty SeedProperty => seedProperty;
     public FoodType FoodType => foodType;
     public FoodColor FoodColor => foodColor;

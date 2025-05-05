@@ -15,6 +15,7 @@ public class FarmPlot : NetworkBehaviour, IWaterable
     [Header("Debugs")]
     [SerializeField]
     private NetworkVariable<bool> IsWatered;
+    public bool IsWateredValue => IsWatered.Value;
     [SerializeField]
     private NetworkVariable<Vector2> Size;
 

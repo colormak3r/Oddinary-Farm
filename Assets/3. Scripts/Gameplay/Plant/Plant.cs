@@ -28,7 +28,6 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
 
     public bool IsHarvestable => Property.Value.Stages[CurrentStage.Value].isHarvestStage;
     public ItemProperty Seed => Property.Value.SeedProperty;
-
     public FoodColor FoodColor => Property.Value.FoodColor;
     public FoodType FoodType => Property.Value.FoodType;
     public Transform Transform => transform;
@@ -94,10 +93,16 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
 
     public void Initialize(ScriptableObject baseProperty)
     {
+        if (!IsServer)
+        {
+            Debug.LogError("Initialize call not on server", this);
+            return;
+        }
+
         var property = (PlantProperty)baseProperty;
         if (property == null)
         {
-            Debug.LogError("PlantProperty is null, cannot initialize Plant.");
+            Debug.LogError($"Cannot initialize Plant, baseProperty = {baseProperty}", this);
             return;
         }
 
@@ -109,10 +114,9 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         if (farmPlotHit != null)
         {
             farmPlot = farmPlotHit.GetComponent<FarmPlot>();
-            farmPlot.GetDriedOnServer();
+            if (farmPlot.IsWateredValue) GetWateredOnServer();
         }
     }
-
 
     public void GetWatered()
     {
@@ -122,15 +126,23 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
     [Rpc(SendTo.Server)]
     private void GetWateredRpc()
     {
+        GetWateredOnServer();
+    }
+
+    private void GetWateredOnServer()
+    {
         if (isWatered.Value) return;
         isWatered.Value = true;
 
+        StartGrowing();
+    }
+
+    private void StartGrowing()
+    {
         if (CurrentStage.Value < Property.Value.Stages.Length - 1)
         {
             StartCoroutine(GrowthCoroutine());
         }
-
-        entityStatus.GetHealed(1);
     }
 
     private IEnumerator GrowthCoroutine()
@@ -141,16 +153,18 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         if (CurrentStage.Value < Property.Value.Stages.Length - 1)
             CurrentStage.Value += stage.stageIncrement;
 
-        isWatered.Value = false;
+        // Heal plant when grown a stage
+        entityStatus.GetHealed(1);
 
-        if (WeatherManager.Main.IsRainning)
+        if (IsHarvestable)
         {
-            GetWateredRpc();
+            isWatered.Value = false;
+            farmPlot.GetDriedOnServer();
         }
         else
         {
-            if (!IsHarvestable)
-                farmPlot.GetDriedOnServer();
+            StartGrowing();
+            farmPlot.GetWatered();
         }
     }
 
@@ -165,7 +179,7 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         if (!IsHarvestable) return;
 
         lootGenerator.DropLootOnServer(harvester);
-        GetHarvestedInternal();
+        GetHarvestedOnServer();
     }
 
 
@@ -177,26 +191,36 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         }
         else
         {
-            GetHarvestedInternal();
+            GetHarvestedOnServer();
             return true;
         }
     }
 
-    private void GetHarvestedInternal()
+    private void GetHarvestedOnServer()
     {
         OnHarvested?.Invoke(this);
 
-        var stage = Property.Value.Stages[CurrentStage.Value];
-        CurrentStage.Value += stage.stageIncrement;
-
-        farmPlot.GetDriedOnServer();
-        isWatered.Value = false;
-        if (WeatherManager.Main.IsRainning)
+        if (Property.Value.DestroyOnHarvest)
         {
-            GetWateredRpc();
+            farmPlot.GetDriedOnServer();
+            Destroy(gameObject);
+        }
+        else
+        {
+            var stage = Property.Value.Stages[CurrentStage.Value];
+            CurrentStage.Value += stage.stageIncrement;
+
+            if (WeatherManager.Main.IsRainning)
+            {
+                GetWateredRpc();
+            }
+            else
+            {
+                farmPlot.GetDriedOnServer();
+                isWatered.Value = false;
+            }
         }
     }
-
 
     [ContextMenu("FullyGrow")]
     public void FullyGrown()
