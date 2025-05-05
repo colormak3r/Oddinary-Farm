@@ -38,6 +38,11 @@ public class Spectator : MonoBehaviour
         }
     }
 
+    public void SetCamera(Transform transform)
+    {
+        CinemachineManager.Main.CinemachineCamera.Follow = transform;
+    }
+
     public void SetPosition(Vector2 position)
     {
         transform.position = position;

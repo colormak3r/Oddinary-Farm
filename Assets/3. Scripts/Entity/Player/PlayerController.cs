@@ -255,7 +255,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         yield return new WaitUntil(() => GameManager.Main.IsInitialized);
 
         // Set camera
-        Spectator.Main.SetCamera(OwnerClientId);
+        Spectator.Main.SetCamera(transform);
 
         // Set control
         InputManager.Main.InputActions.Gameplay.SetCallbacks(this);

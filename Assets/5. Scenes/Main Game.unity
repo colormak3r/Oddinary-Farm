@@ -11030,7 +11030,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   RealMinutesPerInGameDay:
     m_InternalValue: 5
-  dayStartTime: 6
+  dayStartTime: 3
   nightStartTime: 20
   DayOffset:
     m_InternalValue: 1
