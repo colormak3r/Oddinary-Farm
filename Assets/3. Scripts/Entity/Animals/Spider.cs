@@ -1,6 +1,3 @@
-using ColorMak3r.Utility;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Spider : Animal
@@ -16,14 +13,13 @@ public class Spider : Animal
     private BehaviourState burrowingState;
     private BehaviourState roamingState;
     private BehaviourState moveTowardState;
+    private BehaviourState guardState;
 
     private BehaviourState chasingState;
     private BehaviourState attackPrimaryState;
 
     private BehaviourState[] idleStates;
     private BehaviourState[] activeStates;
-
-    private bool reachedOrigin = false;
 
     public override void OnNetworkSpawn()
     {
@@ -36,6 +32,7 @@ public class Spider : Animal
             burrowingState = new BurrowingState(this);
             roamingState = new RoamingState(this);
             moveTowardState = new MoveTowardState(this);
+            guardState = new GuardState(this);
 
             chasingState = new ChasingState(this);
             attackPrimaryState = new AttackPrimaryState(this);
@@ -61,21 +58,28 @@ public class Spider : Animal
             {
                 if (TimeManager.Main.IsDay)
                 {
-                    ChangeState(burrowingState);
+                    if (currentState != burrowingState)
+                        ChangeState(burrowingState);
                 }
                 else
                 {
-                    if (!reachedOrigin)
+                    if (MoveTowardStimulus.IsGuardMode)
                     {
-                        ChangeState(moveTowardState);
-                        if (((Vector2)transform.position - MoveTowardStimulus.TargetPosition).SqrMagnitude() < 25f)
-                        {
-                            reachedOrigin = true;
-                        }
+                        if (currentState != guardState)
+                            ChangeState(guardState);
                     }
                     else
                     {
-                        ChangeState(roamingState);
+                        if (!MoveTowardStimulus.ReachedTarget)
+                        {
+                            if (currentState != moveTowardState)
+                                ChangeState(moveTowardState);
+                        }
+                        else
+                        {
+                            if (currentState != roamingState)
+                                ChangeState(roamingState);
+                        }
                     }
                 }
             }

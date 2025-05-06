@@ -2746,11 +2746,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  pickupRadius: 6
-  pickupOffset: {x: 0, y: 0.75, z: 0}
-  itemLayer:
-    serializedVersion: 2
-    m_Bits: 64
   interactionRadius: 4
   interactionOffset: {x: 0, y: 0.75, z: 0}
   interactableLayer:
@@ -2961,7 +2956,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  canSpawnPet: 0
+  canSpawnPet: 1
   pets:
   - {fileID: 875170009560843256, guid: db68934e500d2cb489bcaecea9f0d8be, type: 3}
 --- !u!114 &4142363607695392232

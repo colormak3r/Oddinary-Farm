@@ -37,6 +37,8 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     private Coroutine preferCoroutine;
     private Coroutine ownershipCoroutine;
 
+    private int spawnTracker = 0;
+
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D itemRigidbody;
 
@@ -46,16 +48,24 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
         itemRigidbody = GetComponent<Rigidbody2D>();
     }
 
+
     public void NetworkSpawn()
     {
         ignorePicker = null;
         nextPickupTime = Time.time + pickupDelay;
         canBePickedup = true;
+        pickupPrefered = false;
+        spawnTracker++;
     }
 
     public void NetworkDespawn()
     {
-        if (IsServer) NetworkObject.ChangeOwnership(0);
+        if (IsServer)
+        {
+            NetworkObject.ChangeOwnership(0);
+            Owner.Value = default;
+        }
+
         StopAllCoroutines();
     }
 
@@ -90,6 +100,8 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
             if (Time.time > nextExitTime) yield break;
             yield return null;
         }
+
+        if (ownerNetObj == NetworkObject) Debug.LogError($"Ownership confirmation failed for {ownerNetObj.name} - object is self, spawned: {spawnTracker}", this);
 
         if (ownerId == ownerNetObj.OwnerClientId)
         {

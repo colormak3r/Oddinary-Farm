@@ -9,11 +9,10 @@ public class Mosk : Animal
     private BehaviourState thinkingState;
     private BehaviourState roamingState;
     private BehaviourState moveTowardState;
+    private BehaviourState guardState;
 
     private BehaviourState chasingState;
     private BehaviourState attackPrimaryState;
-
-    private bool reachedOrigin = false;
 
     public override void OnNetworkSpawn()
     {
@@ -25,6 +24,7 @@ public class Mosk : Animal
             thinkingState = new ThinkingState(this);
             roamingState = new RoamingState(this);
             moveTowardState = new MoveTowardState(this);
+            guardState = new GuardState(this);
 
             chasingState = new ChasingState(this);
             attackPrimaryState = new AttackPrimaryState(this);
@@ -41,18 +41,24 @@ public class Mosk : Animal
             }
             else
             {
-                if (!reachedOrigin)
+
+                if (MoveTowardStimulus.IsGuardMode)
                 {
-                    ChangeState(moveTowardState);
-                    if (((Vector2)transform.position - MoveTowardStimulus.TargetPosition).SqrMagnitude() < 25f)
-                    {
-                        reachedOrigin = true;
-                    }
+                    if (currentState != guardState)
+                        ChangeState(guardState);
                 }
                 else
                 {
-                    if (currentState != roamingState)
-                        ChangeState(roamingState);
+                    if (!MoveTowardStimulus.ReachedTarget)
+                    {
+                        if (currentState != moveTowardState)
+                            ChangeState(moveTowardState);
+                    }
+                    else
+                    {
+                        if (currentState != roamingState)
+                            ChangeState(roamingState);
+                    }
                 }
             }
         }

@@ -215,8 +215,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   raycastTarget: 1
-  detectRange: 15
-  escapeRange: 20
+  detectRange: 7
+  escapeRange: 10
   penaltyRange: 2
   activeTime: 2
   targetHostility: 0
@@ -245,7 +245,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0223d8d11493cd144b63daa29e164585, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGuardMode: 0
   targetPosition: {x: 0, y: 0}
+  guardRadius: 5
+  reachRadius: 5
+  reachedTarget: 0
 --- !u!1001 &5301140942624977600
 PrefabInstance:
   m_ObjectHideFlags: 0

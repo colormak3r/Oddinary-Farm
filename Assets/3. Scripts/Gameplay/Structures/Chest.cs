@@ -1,0 +1,81 @@
+using System;
+using Unity.Netcode;
+using UnityEngine;
+
+public enum ChestState
+{
+    Unopened,
+    Opened,
+    Empty
+}
+
+public class Chest : NetworkBehaviour, IInteractable
+{
+    [Header("Chest Settings")]
+    [SerializeField]
+    private Sprite unopenedSprite;
+    [SerializeField]
+    private Sprite openedSprite;
+    [SerializeField]
+    private Sprite emptySprite;
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
+
+    private NetworkVariable<ChestState> CurrentState = new NetworkVariable<ChestState>(global::ChestState.Unopened);
+    public ChestState CurrentStateValue => CurrentState.Value;
+
+    public override void OnNetworkSpawn()
+    {
+        CurrentState.OnValueChanged += OnChestStateChanged;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        CurrentState.OnValueChanged -= OnChestStateChanged;
+    }
+
+    private void OnChestStateChanged(ChestState previousValue, ChestState newValue)
+    {
+        switch (newValue)
+        {
+            case ChestState.Unopened:
+                spriteRenderer.sprite = unopenedSprite;
+                break;
+            case ChestState.Opened:
+                spriteRenderer.sprite = openedSprite;
+                break;
+            case ChestState.Empty:
+                spriteRenderer.sprite = emptySprite;
+                GetComponent<SelectorModifier>().SetCanBeSelected(false);
+                break;
+        }
+    }
+
+    public void Interact(Transform source)
+    {
+        if (CurrentStateValue == ChestState.Unopened)
+        {
+            UpdateStateRpc(ChestState.Opened);
+        }
+        else if (CurrentStateValue == ChestState.Opened)
+        {
+            Selector.Main?.Show(false);
+            UpdateStateRpc(ChestState.Empty, source.gameObject);
+        }
+        else if (CurrentStateValue == ChestState.Empty)
+        {
+            // Do nothing
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    private void UpdateStateRpc(ChestState newState, NetworkObjectReference sourceRef = default)
+    {
+        CurrentState.Value = newState;
+
+        if (newState == ChestState.Empty && sourceRef.TryGet(out NetworkObject sourceObject))
+        {
+            GetComponent<LootGenerator>()?.DropLootOnServer(sourceObject);
+        }
+    }
+}

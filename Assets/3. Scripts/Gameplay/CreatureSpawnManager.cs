@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static UnityEngine.Splines.SplineInstantiate;
 
 public class CreatureSpawnManager : NetworkBehaviour
@@ -82,8 +83,7 @@ public class CreatureSpawnManager : NetworkBehaviour
         {
             if (currentHour == wave.spawnHour)
             {
-                if (IsServer)
-                    StartCoroutine(SpawnWave(wave, Vector2.zero, currentSafeRadius, currentSpawnRadius));
+                SpawnWaveOnServer(wave, Vector2.zero, currentSafeRadius, currentSpawnRadius);
             }
             else if (currentHour == wave.spawnHour - 1 && wave.showWarning)
             {
@@ -92,22 +92,16 @@ public class CreatureSpawnManager : NetworkBehaviour
         }
     }
 
-    private IEnumerator SpawnWave(CreatureWave wave, Vector2 position, int safeRadius, int spawnRadius)
+    public void SpawnWaveOnServer(CreatureWave wave, Vector2 position, int safeRadius, int spawnRadius)
     {
-        spawnablePositions = new List<Vector2>();
-        for (int x = -spawnRadius; x < spawnRadius; x++)
-        {
-            for (int y = -spawnRadius; y < spawnRadius; y++)
-            {
-                if (Mathf.Abs(x) <= safeRadius && Mathf.Abs(y) <= safeRadius) continue;
-                var offsetPos = new Vector2(x, y) + position;
-                offsetPos = offsetPos.SnapToGrid();
-                if (Physics2D.OverlapPoint(offsetPos, spawnBlockLayer) == null)
-                {
-                    spawnablePositions.Add(offsetPos);
-                }
-            }
-        }
+        if (!IsServer) return;
+
+        StartCoroutine(SpawnWaveCoroutine(wave, position, safeRadius, spawnRadius));
+    }
+
+    private IEnumerator SpawnWaveCoroutine(CreatureWave wave, Vector2 position, int safeRadius, int spawnRadius)
+    {
+        spawnablePositions = GetSpawnPositions(position, safeRadius, spawnRadius);
 
         foreach (var spawn in wave.creatureSpawns)
         {
@@ -116,13 +110,49 @@ public class CreatureSpawnManager : NetworkBehaviour
         }
     }
 
-    private void SpawnCreature(CreatureSpawn spawn, List<Vector2> spawnablePositions)
+    public List<GameObject> SpawnWaveInstantlyOnServer(CreatureWave wave, Vector2 position, int safeRadius, int spawnRadius)
     {
+        if (!IsServer) return null;
+
+        spawnablePositions = GetSpawnPositions(position, safeRadius, spawnRadius);
+
+        var creatures = new List<GameObject>();
+        foreach (var spawn in wave.creatureSpawns)
+        {
+            creatures.AddRange(SpawnCreature(spawn, spawnablePositions));
+        }
+        return creatures;
+    }
+
+    private List<Vector2> GetSpawnPositions(Vector2 position, int safeRadius, int spawnRadius)
+    {
+        position = position.SnapToGrid();
+        var pos = new List<Vector2>();
+        for (int x = -spawnRadius; x < spawnRadius; x++)
+        {
+            for (int y = -spawnRadius; y < spawnRadius; y++)
+            {
+                if (safeRadius != 0 && Mathf.Abs(x) <= safeRadius && Mathf.Abs(y) <= safeRadius) continue;
+                var offsetPos = new Vector2(x, y) + position;
+                if (Physics2D.OverlapPoint(offsetPos, spawnBlockLayer) == null)
+                {
+                    pos.Add(offsetPos);
+                }
+            }
+        }
+        return pos;
+    }
+
+    private List<GameObject> SpawnCreature(CreatureSpawn spawn, List<Vector2> spawnablePositions)
+    {
+        List<GameObject> creatures = new List<GameObject>();
         for (int i = 0; i < spawn.spawnCount; i++)
         {
             var creature = Instantiate(spawn.creaturePrefab, spawnablePositions.GetRandomElement(), Quaternion.identity);
             creature.GetComponent<NetworkObject>().Spawn();
+            creatures.Add(creature);
         }
+        return creatures;
     }
 
     public void UpdateSafeRadius(int value)
@@ -152,9 +182,8 @@ public class CreatureSpawnManager : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void SpawnTestWaveRpc(Vector2 position, int safeRadius, int spawnRadius)
     {
-        StartCoroutine(SpawnWave(testCreatureWave, position, safeRadius, spawnRadius));
+        SpawnWaveOnServer(testCreatureWave, position, safeRadius, spawnRadius);
     }
-
 
     private void OnDrawGizmos()
     {
