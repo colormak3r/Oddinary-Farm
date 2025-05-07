@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63517db498b643c42b0decdd941ba821, type: 3}
   m_Name: Apple Property
   m_EditorClassIdentifier: 
+  destroyOnHarvest: 0
   seedProperty: {fileID: 11400000, guid: 4730fab78f887a545a3e7218b4a76356, type: 2}
-  foodType: 4
-  foodColor: 2
+  foodType: 16
+  foodColor: 4
   stages:
   - sprite: {fileID: -1708265602, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
     duration: 2

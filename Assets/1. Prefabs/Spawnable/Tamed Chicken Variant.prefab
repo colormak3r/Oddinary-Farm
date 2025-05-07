@@ -532,15 +532,17 @@ MonoBehaviour:
   hourTilDeath: 12
   foodDetectionRadius: 10
   foodConsumptionRadius: 0.5
-  foodType: 1
-  foodColor: 0
+  foodType: 2
+  foodColor: 1
   foodLayer:
     serializedVersion: 2
     m_Bits: 512
+  stuckDuration: 5
   showDebugs: 0
-  showGizmos: 0
+  showGizmos: 1
   isHungry: 0
   isDying: 0
+  targetFoodTransform: {fileID: 0}
 --- !u!4 &4644328530611537964 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4287736005901102148, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}

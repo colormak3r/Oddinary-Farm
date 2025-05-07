@@ -16,8 +16,10 @@ MonoBehaviour:
   saleMultiplier: 0.9
   penaltyMultiplier: 0.7
   itemProperties:
+  - {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+  - {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+  - {fileID: 11400000, guid: 63d7aa30540d8de4e82ee223d5f2ca92, type: 2}
+  - {fileID: 11400000, guid: 8ff583f245ec12d49a69b2b59128ef34, type: 2}
   - {fileID: 11400000, guid: 5652e2a6a33384749b44907c01239425, type: 2}
   - {fileID: 11400000, guid: 10226bcfc39c1f742bf1eb7e3d2b665a, type: 2}
-  - {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
-  - {fileID: 11400000, guid: 8ff583f245ec12d49a69b2b59128ef34, type: 2}
   - {fileID: 11400000, guid: d2b2a3a6be5afab4c9099f6bec976fc1, type: 2}

@@ -41,7 +41,8 @@ public class LightStructure : Structure
         }
         else
         {
-            SetLight(false);
+            if (!WeatherManager.Main.IsRainning)
+                SetLight(false);
         }
     }
 

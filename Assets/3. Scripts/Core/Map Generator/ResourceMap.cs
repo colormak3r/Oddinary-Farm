@@ -8,6 +8,8 @@ public class ResourceMap : PerlinNoiseGenerator
     [Header("Resource Settings")]
     [SerializeField]
     private int rarity = 4;
+    [SerializeField]
+    private int noResourceZone = 10;
 
     protected override void TransformMap(Vector2Int mapSize)
     {
@@ -35,7 +37,14 @@ public class ResourceMap : PerlinNoiseGenerator
 
                 if (rawMap[x, y] == maxValue)
                 {
-                    rawMap[x, y] = 1.0f;
+                    if (Mathf.Abs(x) < noResourceZone && Mathf.Abs(y) < noResourceZone)
+                    {
+                        rawMap[x, y] = 0.0f; // No resource zone
+                    }
+                    else
+                    {
+                        rawMap[x, y] = 1.0f;
+                    }
                 }
             }
         }

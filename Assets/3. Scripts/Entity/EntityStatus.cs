@@ -41,6 +41,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     public UnityEvent OnDeathOnServer;
 
     protected HealthBarUI healthBarUI;
+    public HealthBarUI HealthBarUI => healthBarUI;
     protected LootGenerator lootGenerator;
     protected AudioElement audioElement;
     protected Rigidbody2D rbody;

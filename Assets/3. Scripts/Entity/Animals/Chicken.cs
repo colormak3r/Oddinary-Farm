@@ -65,6 +65,7 @@ public class Chicken : Animal
                     {
                         var newState = idleStates[Random.Range(0, idleStates.Length)];
                         ChangeState(newState);
+                        nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
                     }
                 }
             }
@@ -75,6 +76,7 @@ public class Chicken : Animal
                 {
                     var newState = idleStates[Random.Range(0, idleStates.Length)];
                     ChangeState(newState);
+                    nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
                 }
             }
         }
@@ -87,6 +89,6 @@ public class Chicken : Animal
 
     protected override void OnStateChanged(BehaviourState oldState, BehaviourState newState)
     {
-        nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
+        nextIdleStateChange = 0;
     }
 }

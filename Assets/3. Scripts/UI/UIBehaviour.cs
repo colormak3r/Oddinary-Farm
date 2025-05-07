@@ -39,6 +39,9 @@ public class UIBehaviour : MonoBehaviour
     private CanvasRenderer[] dsffoRenderers;
     private CanvasRenderer[] ignoreRenderers;
 
+    private Coroutine showCoroutine;
+    private Coroutine hideCoroutine;
+
     [HideInInspector]
     public UnityEvent<bool> OnVisibilityChanged;
 
@@ -148,18 +151,20 @@ public class UIBehaviour : MonoBehaviour
 
     public void Show()
     {
-        if (IsShowing || isAnimating) return;
+        if (IsShowing) return;
 
         if (UIManager.Main != null) UIManager.Main.CurrentUIBehaviour = this;
 
-        StartCoroutine(ShowCoroutine());
+        if (hideCoroutine != null) StopCoroutine(hideCoroutine);
+        showCoroutine = StartCoroutine(ShowCoroutine());
     }
 
     public void Hide()
     {
-        if (!IsShowing || isAnimating) return;
+        if (!IsShowing) return;
 
-        StartCoroutine(HideCoroutine());
+        if(showCoroutine != null) StopCoroutine(showCoroutine);
+        hideCoroutine = StartCoroutine(HideCoroutine());
     }
 
     public void ShowNoFade()

@@ -103,6 +103,12 @@ public class HealthBarUI : MonoBehaviour
         renderer.size = newSize;
     }
 
+    public void FlashAutoHide()
+    {
+        if (colorCoroutine != null) StopCoroutine(colorCoroutine);
+        colorCoroutine = StartCoroutine(FlashingAutoHideCoroutine());
+    }
+
     private IEnumerator AutoHideCoroutine()
     {
         ResetColor();
@@ -122,12 +128,33 @@ public class HealthBarUI : MonoBehaviour
         StartCoroutine(backgroundRenderer.SpriteFadeCoroutine(a, 1, 0.5f));
         StartCoroutine(highlightRenderer.SpriteFadeCoroutine(a, 1, 0.5f));
         StartCoroutine(outlineRenderer.SpriteFadeCoroutine(a, 1, 0.5f));
+
         while (true)
         {
             displayRenderer.color = flashColor;
-
             yield return displayRenderer.SpriteColorCoroutine(flashColor, criticalColor, flashDuration);
         }
+    }
+
+    private IEnumerator FlashingAutoHideCoroutine()
+    {
+        ResetColor();
+        var a = backgroundRenderer.color.a;
+        StartCoroutine(backgroundRenderer.SpriteFadeCoroutine(a, 1, 0.5f));
+        StartCoroutine(highlightRenderer.SpriteFadeCoroutine(a, 1, 0.5f));
+        StartCoroutine(outlineRenderer.SpriteFadeCoroutine(a, 1, 0.5f));
+
+        var nextHideTime = Time.time + autoHideDuration;
+        while (Time.time < nextHideTime)
+        {
+            displayRenderer.color = flashColor;
+            yield return displayRenderer.SpriteColorCoroutine(flashColor, criticalColor, flashDuration);
+        }
+
+        StartCoroutine(displayRenderer.SpriteFadeCoroutine(1, 0, 0.5f));
+        StartCoroutine(backgroundRenderer.SpriteFadeCoroutine(1, 0, 0.5f));
+        StartCoroutine(highlightRenderer.SpriteFadeCoroutine(1, 0, 0.5f));
+        StartCoroutine(outlineRenderer.SpriteFadeCoroutine(1, 0, 0.5f));
     }
 
     private void ResetColor()

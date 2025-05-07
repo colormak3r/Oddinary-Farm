@@ -284,7 +284,24 @@ public class ItemSystem : NetworkBehaviour
                 RemoveSpawnerSpawn(structureHit.transform.position);
             }
 
-            structure.RemoveStructure();
+            if (structureHit.TryGetComponent(out EntityStatus entityStatus))
+            {
+                if (entityStatus.GetCurrentHealth() == entityStatus.MaxHealth)
+                {
+                    structure.RemoveStructure();
+                }
+                else
+                {
+                    entityStatus.HealthBarUI.FlashAutoHide();
+                    AudioManager.Main.PlaySoundEffect(SoundEffect.UIError);
+                }
+
+            }
+            else
+            {
+                structure.RemoveStructure();
+            }
+
             Previewer.Main.Show(false);
         }
     }
