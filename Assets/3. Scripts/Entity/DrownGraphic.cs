@@ -79,11 +79,6 @@ public class DrownGraphic : MonoBehaviour
         waterTransform.localPosition = new Vector2(0, maxWaterY);
     }
 
-    public void SetCanBeDrown(bool canBeDrown)
-    {
-        this.canBeDrown = canBeDrown;
-    }
-
     public void SetCanBeWet(bool canBeWet)
     {
         this.canBeWet = canBeWet;

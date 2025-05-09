@@ -2926,6 +2926,7 @@ MonoBehaviour:
   moveableController: {fileID: -7142879616327259524}
   entityMovement: {fileID: 3602106504410570466}
   drownController: {fileID: 4142363607695392232}
+  drownGraphic: {fileID: 9089012222026432931}
   spriteRenderer: {fileID: 5195975373052726653}
   IsControlled:
     m_InternalValue: 0

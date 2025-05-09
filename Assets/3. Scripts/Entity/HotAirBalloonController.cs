@@ -14,6 +14,8 @@ public class HotAirBalloonController : NetworkBehaviour
     [SerializeField]
     private DrownController drownController;
     [SerializeField]
+    private DrownGraphic drownGraphic;
+    [SerializeField]
     private SpriteRenderer spriteRenderer;
 
     [Header("Debugs")]
@@ -62,5 +64,6 @@ public class HotAirBalloonController : NetworkBehaviour
         entityMovement.SetCanBeKnockback(!isControlled);
         IsControlled.Value = isControlled;
         drownController.SetCanBeDrowned(!isControlled);
+        drownGraphic.SetCanBeWet(!isControlled);
     }
 }

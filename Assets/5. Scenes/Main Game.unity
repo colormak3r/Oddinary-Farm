@@ -11162,13 +11162,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   RealMinutesPerInGameDay:
-    m_InternalValue: 5
-  dayStartTime: 3
+    m_InternalValue: 4
+  dayStartTime: 6
   nightStartTime: 20
   DayOffset:
     m_InternalValue: 1
   HourOffset:
-    m_InternalValue: 7
+    m_InternalValue: 6
   MinuteOffset:
     m_InternalValue: 30
   timeText: {fileID: 670024580}

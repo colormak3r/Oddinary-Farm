@@ -51,7 +51,7 @@ public class GameManager : NetworkBehaviour
     {
         if (!canGameOver) return;
 
-        if (FloodManager.Main.CurrentDepthLevel > 1.0f)
+        if (FloodManager.Main.CurrentFloodLevelValue >= WorldGenerator.Main.HighestElevation)
         {
             var localPlayer = NetworkManager.Singleton.LocalClient.PlayerObject;
             var escaped = localPlayer.GetComponent<HotAirBalloonController>().IsControlledValue;
@@ -104,6 +104,7 @@ public class GameManager : NetworkBehaviour
     {
         if (gameOverCoroutine != null) return;
         isGameOver = true;
+        Debug.Log($"Game Over: {escaped}");
         GameOverUI.Main.SetGameoverText(escaped);
         gameOverCoroutine = StartCoroutine(GameOverCoroutine());
     }

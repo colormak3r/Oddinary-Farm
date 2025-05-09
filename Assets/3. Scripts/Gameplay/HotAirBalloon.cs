@@ -82,8 +82,6 @@ public class HotAirBalloon : Structure, IInteractable
             collider.enabled = false;
         }
 
-        GetComponent<DrownGraphic>().SetCanBeWet(false);
-
         // Move the hot air balloon
         if (IsOwner)
             GetComponent<EntityMovement>().SetDirection(Vector2.up);
