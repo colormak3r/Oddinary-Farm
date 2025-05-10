@@ -22,6 +22,9 @@ MonoBehaviour:
   range: 20
   primaryCdr: 0.25
   secondaryCdr: 0.25
+  itemContext: 'LMB: Shoot
+
+    X  : Drop'
   pickupSound: {fileID: 8300000, guid: 428102ee1ab4f6e4380eb9b37d3e9c20, type: 3}
   selectSound: {fileID: 8300000, guid: 428102ee1ab4f6e4380eb9b37d3e9c20, type: 3}
   primarySound: {fileID: 8300000, guid: 489c30a23d32c1747879bb76c84dbb82, type: 3}

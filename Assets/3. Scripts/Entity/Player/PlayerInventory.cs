@@ -84,6 +84,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     public Action<Item> OnCurrentItemChanged;
 
     private InventoryUI inventoryUI;
+    private ItemContextUI itemContextUI;
     private AudioElement audioElement;
     private RangeIndicator rangeIndicator;
 
@@ -96,6 +97,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             inventoryUI.Initialize(this);
             audioElement = GetComponent<AudioElement>();
             rangeIndicator = GetComponent<RangeIndicator>();
+
+            // Initialize context UI
+            itemContextUI = ItemContextUI.Main;
 
             //Add the hand to the inventory
             AddItem(handProperty, false);
@@ -151,7 +155,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     public bool AddItem(ItemProperty property, bool playSound = true)
     {
-        if(showDebug) Debug.Log($"Adding {property.Name} to inventory on client {OwnerClientId}");
+        if (showDebug) Debug.Log($"Adding {property.Name} to inventory on client {OwnerClientId}");
 
         if (property is CurrencyProperty)
         {
@@ -332,6 +336,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         // UI update
         inventoryUI.SelectSlot(index);
         rangeIndicator.Show(currentSlot.Property.Range);
+        itemContextUI.SetItemContext(currentSlot.Property.ItemContext);
     }
 
     public void SetControllable(bool value)

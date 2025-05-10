@@ -9,6 +9,8 @@ public class PlayerNameUI : UIBehaviour
     [SerializeField]
     private bool showPlayerName = true;
     [SerializeField]
+    private int maxLength = 12;
+    [SerializeField]
     private TMP_Text playerNameText;
     [SerializeField]
     private float showNameRange = 5f;
@@ -23,7 +25,7 @@ public class PlayerNameUI : UIBehaviour
 
     public void SetPlayerName(string playerName)
     {
-        playerNameText.text = playerName;
+        playerNameText.text = playerName.Length > maxLength ? playerName.Substring(0, maxLength) + (playerName.Length > maxLength ? "..." : "") : playerName;
         ShowPlayerName();
     }
 

@@ -1979,6 +1979,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   showPlayerName: 0
+  maxLength: 12
   playerNameText: {fileID: 8335167079609672860}
   showNameRange: 5
   scanInterval: 1
@@ -3315,7 +3316,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8923464463619703159
 RectTransform:
   m_ObjectHideFlags: 0
