@@ -19,6 +19,8 @@ public class ConnectionManager : MonoBehaviour
     public static string LOBBY_STATUS_KEY = "LOBBY_STATUS";
     public static string LOBBY_INGAME_VAL = "INGAME";
 
+    private UIBehaviour[] hidableUI;
+
     private void Awake()
     {
         if (Main == null)
@@ -97,7 +99,6 @@ public class ConnectionManager : MonoBehaviour
         yield return TransitionUI.Main.ShowCoroutine();
 
         networkManager.NetworkConfig.NetworkTransport = networkTransport;
-        facepunchTransport.enabled = networkTransport == facepunchTransport;
 
         if (SceneManager.GetActiveScene().name != SceneDirectory.MAIN_GAME)
         {
@@ -228,13 +229,7 @@ public class ConnectionManager : MonoBehaviour
             }
         }
 
-        float nextSkipTime = Time.time + 5f;
-        while (UIManager.Main.CurrentUIBehaviour == null && Time.time < nextSkipTime)
-        {
-            yield return null;
-        }
-
-        UIManager.Main.CurrentUIBehaviour?.Hide();
+        yield return UIManager.Main.HideUI(true, true);
         LobbyUI.Main.Client();
 
         yield return TransitionUI.Main.HideCoroutine();

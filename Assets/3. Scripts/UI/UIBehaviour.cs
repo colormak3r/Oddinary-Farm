@@ -153,8 +153,6 @@ public class UIBehaviour : MonoBehaviour
     {
         if (IsShowing) return;
 
-        if (UIManager.Main != null) UIManager.Main.CurrentUIBehaviour = this;
-
         if (hideCoroutine != null) StopCoroutine(hideCoroutine);
         showCoroutine = StartCoroutine(ShowCoroutine());
     }
@@ -163,7 +161,7 @@ public class UIBehaviour : MonoBehaviour
     {
         if (!IsShowing) return;
 
-        if(showCoroutine != null) StopCoroutine(showCoroutine);
+        if (showCoroutine != null) StopCoroutine(showCoroutine);
         hideCoroutine = StartCoroutine(HideCoroutine());
     }
 

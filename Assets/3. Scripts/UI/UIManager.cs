@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,13 +14,6 @@ public class UIManager : MonoBehaviour
     private bool isShowing = true;
     [SerializeField]
     private bool showDebugs = false;
-    [SerializeField]
-    private UIBehaviour currentUIBehavior;
-    public UIBehaviour CurrentUIBehaviour
-    {
-        get => currentUIBehavior;
-        set => currentUIBehavior = value;
-    }
 
     [SerializeField]
     private Dictionary<UIBehaviour, bool> sceneUIBehaviours = new Dictionary<UIBehaviour, bool>();
@@ -75,14 +69,20 @@ public class UIManager : MonoBehaviour
     [ContextMenu("Hide All UI")]
     public void HideUI()
     {
+        HideUI(false, false);
+    }
+
+    public IEnumerator HideUI(bool showCursor, bool showPlayerName)
+    {
         isShowing = false;
         var keys = new List<UIBehaviour>(sceneUIBehaviours.Keys);
+        var coroutines = new List<Coroutine>();
         for (int i = 0; i < keys.Count; i++)
         {
             var ui = keys[i];
             if (ui.IsShowing)
             {
-                ui.Hide();
+                coroutines.Add(StartCoroutine(ui.HideCoroutine()));
                 sceneUIBehaviours[ui] = true;
                 if (showDebugs) Debug.Log($"Hide UI: {ui.name}");
             }
@@ -91,19 +91,31 @@ public class UIManager : MonoBehaviour
                 sceneUIBehaviours[ui] = false;
             }
         }
-        Cursor.visible = false;
+
+        foreach (var coroutine in coroutines)
+        {
+            yield return coroutine;
+        }
+
+        Cursor.visible = showCursor;
 
         foreach (var obj in NetworkManager.Singleton.ConnectedClientsList)
         {
-            obj.PlayerObject.GetComponent<PlayerStatus>().PlayerNameUI.SetShowPlayerName(false);
+            obj.PlayerObject.GetComponent<PlayerStatus>().PlayerNameUI.SetShowPlayerName(showPlayerName);
         }
     }
 
     [ContextMenu("Show All UI")]
     public void ShowUI()
     {
+        ShowUI(true, true);
+    }
+
+    public IEnumerator ShowUI(bool showCursor, bool showPlayerName)
+    {
         isShowing = true;
         var keys = new List<UIBehaviour>(sceneUIBehaviours.Keys);
+        var coroutines = new List<Coroutine>();
         for (int i = 0; i < keys.Count; i++)
         {
             var ui = keys[i];
@@ -111,16 +123,22 @@ public class UIManager : MonoBehaviour
             {
                 if (ui.gameObject.activeInHierarchy)
                 {
-                    ui.Show();
+                    coroutines.Add(StartCoroutine(ui.ShowCoroutine()));
                     if (showDebugs) Debug.Log($"Show UI: {ui.name}");
                 }
             }
         }
-        Cursor.visible = true;
+
+        foreach (var coroutine in coroutines)
+        {
+            yield return coroutine;
+        }
+
+        Cursor.visible = showCursor;
 
         foreach (var obj in NetworkManager.Singleton.ConnectedClientsList)
         {
-            obj.PlayerObject.GetComponent<PlayerStatus>().PlayerNameUI.SetShowPlayerName(true);
+            obj.PlayerObject.GetComponent<PlayerStatus>().PlayerNameUI.SetShowPlayerName(showPlayerName);
         }
     }
 
