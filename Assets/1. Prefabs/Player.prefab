@@ -4542,10 +4542,10 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1139585764455789036}
   m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: -5
-  m_SortAtRoot: 0
+  m_SortingLayerID: 2112179759
+  m_SortingLayer: 2
+  m_SortingOrder: 0
+  m_SortAtRoot: 1
 --- !u!4 &5262566730151828812 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7475767512955159844, guid: 04cc541e52846394eb3ac2522b52ae17, type: 3}

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9dbb4dbd5f7c59843b8a49a93bebc5e9
+guid: 0007bd512cd1e884784762a2e55e8806
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5577602225117942880
-    second: ItemIcon2_0
+      213: 6602966838755796383
+    second: Cow_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,8 +49,8 @@ TextureImporter:
   spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 7
-  spritePivot: {x: 0.5, y: 0.5}
+  alignment: 9
+  spritePivot: {x: 0.5, y: 0.03125}
   spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ItemIcon2_0
+      name: Cow_0
       rect:
         serializedVersion: 2
-        x: 19
-        y: 19
-        width: 122
-        height: 122
+        x: 0
+        y: 0
+        width: 48
+        height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 064559e1caf976d40800000000000000
-      internalID: 5577602225117942880
+      spriteID: f9529b71b5372ab50800000000000000
+      internalID: 6602966838755796383
       vertices: []
       indices: 
       edges: []
@@ -126,7 +126,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
-    internalID: 0
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ItemIcon2_0: 5577602225117942880
+      Cow_0: 6602966838755796383
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
