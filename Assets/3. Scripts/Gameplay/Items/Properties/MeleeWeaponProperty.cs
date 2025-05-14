@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeWeaponProperty : ItemProperty
+[CreateAssetMenu(fileName = "MeleeWeapon Property", menuName = "Scriptable Objects/Item/Melee Weapon Property")]
+public class MeleeWeaponProperty : WeaponProperty
 {
     [Header("Melee Weapon Settings")]
     [SerializeField]

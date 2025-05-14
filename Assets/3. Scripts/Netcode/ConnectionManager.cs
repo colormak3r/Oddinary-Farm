@@ -16,6 +16,11 @@ public class ConnectionManager : MonoBehaviour
     public static string LOBBY_PASSWORD_KEY = "!E18@tfR!urQSsTxYmbM";
     public static string LOBBY_PASSWORD_VAL = "zYVMH1mhH41*%FQaFm41";
 
+    public static string LOBBY_STATUS_KEY = "LOBBY_STATUS";
+    public static string LOBBY_INGAME_VAL = "INGAME";
+
+    private UIBehaviour[] hidableUI;
+
     private void Awake()
     {
         if (Main == null)
@@ -90,10 +95,10 @@ public class ConnectionManager : MonoBehaviour
     private IEnumerator LaunchCoroutine(bool isHost, NetworkTransport networkTransport)
     {
         launched = true;
+        CurrentLobby?.SetData(LOBBY_STATUS_KEY, LOBBY_INGAME_VAL);
         yield return TransitionUI.Main.ShowCoroutine();
 
         networkManager.NetworkConfig.NetworkTransport = networkTransport;
-        facepunchTransport.enabled = networkTransport == facepunchTransport;
 
         if (SceneManager.GetActiveScene().name != SceneDirectory.MAIN_GAME)
         {
@@ -170,12 +175,12 @@ public class ConnectionManager : MonoBehaviour
         }
     }
 
-    private void SetLobby(Lobby lobby, SteamId id)
+    private void SetLobby(Lobby lobby)
     {
-        if (showDebugs) Debug.Log("Setting lobby " + lobby.Id + " with owner " + id + " as current lobby");
+        if (showDebugs) Debug.Log("Setting lobby " + lobby.Id + " with owner " + lobby.Owner.Id + " as current lobby");
 
         CurrentLobby = lobby;
-        facepunchTransport.targetSteamId = id;
+        facepunchTransport.targetSteamId = lobby.Owner.Id;
     }
 
     public void LeaveLobby()
@@ -188,21 +193,29 @@ public class ConnectionManager : MonoBehaviour
 
     #region Steam Callback
 
+    [ContextMenu("Test Game Lobby Join Requested")]
+    private void TestGameLobbyJoinRequested()
+    {
+        OnGameLobbyJoinRequested(new Lobby(), new SteamId());
+    }
+
     private void OnGameLobbyJoinRequested(Lobby lobby, SteamId id)
     {
         // On invite accepted
         if (showDebugs) Debug.Log("Joining lobby " + lobby.Id);
         if (showDebugs) Debug.Log("OnLobbyEntered Host: lobby = " + lobby.Id + ", id = " + lobby.Owner.Id);
 
-        SetLobby(lobby, id);
+        SetLobby(lobby);
         StartCoroutine(JoinLobbyFromInviteCoroutine());
     }
 
     private IEnumerator JoinLobbyFromInviteCoroutine()
     {
-        yield return TransitionUI.Main.ShowCoroutine();
+        if (showDebugs) Debug.Log("Joining lobby from invite");
+
         if (networkManager.IsServer || networkManager.IsClient)
         {
+            yield return TransitionUI.Main.ShowCoroutine();
             if (showDebugs) Debug.Log("Already in a game, disconnecting");
 
             CurrentLobby?.Leave();
@@ -216,21 +229,22 @@ public class ConnectionManager : MonoBehaviour
             }
         }
 
-        if (showDebugs) Debug.Log("Joining lobby from invite");
+        yield return UIManager.Main.HideUI(true, true);
+        LobbyUI.Main.Client();
 
-        StartGameMultiplayerOnlineClient();
+        yield return TransitionUI.Main.HideCoroutine();
     }
 
     private void OnLobbyGameCreated(Lobby lobby, uint arg2, ushort arg3, SteamId id)
     {
-        if (showDebugs) Debug.Log("Game created in lobby " + lobby.Id);
+        if (showDebugs) Debug.Log($"Game created in lobby {lobby.Id}, maxPlayer = {lobby.MaxMembers}");
 
-        SetLobby(lobby, id);
+        SetLobby(lobby);
     }
 
     private void OnLobbyEntered(Lobby lobby)
     {
-        if (showDebugs) Debug.Log("Entered lobby " + lobby.Id);
+        if (showDebugs) Debug.Log($"Entered lobby {lobby.Id}, maxPlayer = {lobby.MaxMembers}");
 
         if (lobby.MemberCount <= 0)
         {
@@ -239,7 +253,7 @@ public class ConnectionManager : MonoBehaviour
             return;
         }
 
-        SetLobby(lobby, lobby.Owner.Id);
+        SetLobby(lobby);
     }
 
     private void OnLobbyInvite(Friend friend, Lobby lobby)

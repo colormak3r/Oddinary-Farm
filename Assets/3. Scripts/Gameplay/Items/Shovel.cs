@@ -15,16 +15,16 @@ public class Shovel : Tool
         worldGenerator = WorldGenerator.Main;
     }
 
-    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
+    public override void Initialize(ItemProperty baseProperty)
     {
-        base.HandleOnPropertyChanged(previousValue, newValue);
-        shovelProperty = (ShovelProperty)newValue;
+        base.Initialize(baseProperty);
+        shovelProperty = baseProperty as ShovelProperty;
     }
 
     public override bool CanPrimaryAction(Vector2 position)
     {
         position = position.SnapToGrid();
-        if (!IsInRange(position)) return false;
+        if (!ItemSystem.IsInRange(position, shovelProperty.Range)) return false;
 
         var invalid = Physics2D.OverlapPoint(position, shovelProperty.UndiggableLayer);
         if (invalid)
@@ -45,7 +45,7 @@ public class Shovel : Tool
                 if (showDebug) Debug.Log($"Not Diggable at {position}, terrain unit is not accessible", hit?.gameObject);
                 return false;
             }
-            
+
         }
         else
         {

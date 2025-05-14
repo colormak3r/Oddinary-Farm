@@ -1,9 +1,9 @@
 using ColorMak3r.Utility;
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -18,7 +18,7 @@ public class Chunk
     public bool isRemoving;
 
     public List<GameObject> terrainUnits;
-    public List<GameObject> folliages;
+    public List<GameObject> foliages;
 
     public Chunk(Vector2 position, int size, Transform transform)
     {
@@ -32,8 +32,8 @@ public class Chunk
 
         terrainUnits = new List<GameObject>();
         terrainUnits.Capacity = size * size;
-        folliages = new List<GameObject>();
-        folliages.Capacity = size * size;
+        foliages = new List<GameObject>();
+        foliages.Capacity = size * size;
     }
 }
 
@@ -58,6 +58,20 @@ public class Offset2DArray<T> : IEnumerable<T>
     {
         get { return array[x + offsetX, y + offsetY]; }
         set { array[x + offsetX, y + offsetY] = value; }
+    }
+
+    public bool GetElementSafe(int x, int y, out T value)
+    {
+        if (x < minX || x > maxX || y < minY || y > maxY)
+        {
+            value = default;
+            return false;
+        }
+        else
+        {
+            value = this[x, y];
+            return true;
+        }
     }
 
     // Implementation of IEnumerable<T>
@@ -113,13 +127,17 @@ public class WorldGenerator : NetworkBehaviour
 
     [Header("Resource Settings")]
     [SerializeField]
+    private bool canSpawnResources = true;
+    [SerializeField]
     private GameObject[] resourcePrefabs;
     [SerializeField]
     private int countPerYield = 10;
 
     [Header("Folliage Settings")]
     [SerializeField]
-    private GameObject[] folliagePrefabs;
+    private bool canSpawnFoliage = true;
+    [SerializeField]
+    private GameObject[] foliagePrefabs;
 
     [Header("Map Components")]
     [SerializeField]
@@ -129,6 +147,10 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private MoistureMap moistureMap;
 
+    [Header("Map Components")]
+    [SerializeField]
+    private TMP_Text heightText;
+
     private Vector2Int halfMapSize;
     private Vector2Int paddingSize;
     private Vector2Int trueHalfMapSize;
@@ -136,13 +158,11 @@ public class WorldGenerator : NetworkBehaviour
     private int halfChunkSize;
 
     private Offset2DArray<TerrainUnitProperty> terrainMap;
-    private Sprite terrainMapSprite;
+    private Texture2D terrainMapTexture;
 
     private Offset2DArray<bool> folliageMap;
-    private NetworkVariable<HashSet<Vector2>> invalidFolliagePositionHashSet = new NetworkVariable<HashSet<Vector2>>(new HashSet<Vector2>());
+    private HashSet<Vector2> invalidFoliagePositionHashSet = new HashSet<Vector2>();
 
-
-    private Offset2DArray<Chunk> chunkMap;
     private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
 
     [Header("Debugs")]
@@ -154,12 +174,56 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private bool showStep;
 
+    public float HighestElevation => elevationMap.MaxValue;
+
     public IEnumerator Initialize()
     {
         yield return GenerateWorld();
+        FloodManager.Main.Initialize();
         yield return BuildWorld(Vector2.zero);
-
         isInitialized = true;
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        FloodManager.Main.OnFloodLevelChanged += HandleOnFloodLevelChanged;
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        FloodManager.Main.OnFloodLevelChanged -= HandleOnFloodLevelChanged;
+    }
+
+    Coroutine floodCoroutine;
+    private void HandleOnFloodLevelChanged(float floodLevel, float waterLevel, float depthLevel)
+    {
+        if (floodCoroutine != null) StopCoroutine(floodCoroutine);
+        floodCoroutine = StartCoroutine(FloodLevelChangeCoroutine(depthLevel));
+    }
+
+    private IEnumerator FloodLevelChangeCoroutine(float depthLevel)
+    {
+        yield return new WaitUntil(() => GameManager.Main.IsInitialized);
+        var map = elevationMap.RawMap;
+        var halfMapSize = mapSize / 2;
+        var invalidPosition = new List<Vector2>();
+
+        for (int i = map.minX; i < map.maxX; i++)
+        {
+            for (int j = map.minY; j < map.maxY; j++)
+            {
+                if (map[i, j] < depthLevel)
+                {
+                    terrainMapTexture.SetPixel(i + halfMapSize.x, j + halfMapSize.y, Color.blue);
+                    var position = new Vector2(i, j);
+                    InvalidateFolliageOnClient(position);
+                    RemoveFoliage(position);
+                }
+            }
+        }
+
+        terrainMapTexture.Apply();
+        UpdateMapTexture(terrainMapTexture);
     }
 
 
@@ -206,11 +270,17 @@ public class WorldGenerator : NetworkBehaviour
         }
 
         // Update MapUI
-        terrainMapSprite = Sprite.Create(elevationMap.MapTexture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
-        terrainMapSprite.texture.filterMode = FilterMode.Point;
-        MapUI.Main.UpdateElevationMap(terrainMapSprite);
+        terrainMapTexture = elevationMap.MapTexture;
+        UpdateMapTexture(terrainMapTexture);
 
         yield return null;
+    }
+
+    private void UpdateMapTexture(Texture2D texture)
+    {
+        var terrainMapSprite = Sprite.Create(texture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
+        terrainMapSprite.texture.filterMode = FilterMode.Point;
+        MapUI.Main.UpdateElevationMap(terrainMapSprite);
     }
 
     private TerrainUnitProperty GetDefaultProperty(float value)
@@ -234,6 +304,8 @@ public class WorldGenerator : NetworkBehaviour
     #region Resource Generation
     private IEnumerator GenerateResources()
     {
+        if (!canSpawnResources) yield break;
+
         var count = 0;
         for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x + 1; x++)
         {
@@ -246,7 +318,7 @@ public class WorldGenerator : NetworkBehaviour
                 }
                 else
                 {
-                    if (terrainMap[x, y] != voidUnitProperty && resourceMap.RawMap[x, y] >= 0.99f)
+                    if (terrainMap[x, y] != voidUnitProperty && resourceMap.RawMap[x, y] >= 0.99f && terrainMap[x, y].Elevation.min > FloodManager.Main.CurrentSafeLevel)
                     {
                         SpawnResource(x, y);
                         count++;
@@ -303,7 +375,8 @@ public class WorldGenerator : NetworkBehaviour
     public IEnumerator BuildWorld(Vector2 position)
     {
         MapUI.Main.UpdatePlayerPosition(position, trueMapSize);
-
+        var snappedPosition = position.SnapToGrid();
+        heightText.text = Mathf.Round((GetElevation(position.x, position.y, true) - FloodManager.Main.BaseFloodLevel) * 1000) + "ft";
         yield return BuildTerrain(position);
     }
 
@@ -331,7 +404,7 @@ public class WorldGenerator : NetworkBehaviour
 
     private IEnumerator BuildChunkGrid(Vector2 closetChunkPosition)
     {
-        var coroutines = new List<Coroutine>();
+        //var coroutines = new List<Coroutine>();
         for (int i = -(renderDistance + renderXOffset); i < renderDistance + 1 + renderXOffset; i++)
         {
             for (int j = -renderDistance + 1; j < renderDistance; j++)
@@ -340,15 +413,16 @@ public class WorldGenerator : NetworkBehaviour
 
                 if (!positionToChunk.ContainsKey(chunkPos))
                 {
-                    coroutines.Add(StartCoroutine(BuildChunk(chunkPos, chunkSize, positionToChunk)));
+                    //coroutines.Add(StartCoroutine());
+                    yield return BuildChunk(chunkPos, chunkSize, positionToChunk);
                 }
             }
         }
 
-        foreach (var coroutine in coroutines)
+        /*foreach (var coroutine in coroutines)
         {
             yield return coroutine;
-        }
+        }*/
     }
 
     private IEnumerator BuildChunk(Vector2 position, int chunkSize, Dictionary<Vector2, Chunk> positionToChunk)
@@ -367,12 +441,15 @@ public class WorldGenerator : NetworkBehaviour
             {
                 var terrainPos = new Vector2Int((int)position.x + i, (int)position.y + j);
                 var property = GetMappedProperty(terrainPos.x, terrainPos.y);
+                var terrainUnit = SpawnTerrainUnit(terrainPos, property);
+                chunk.terrainUnits.Add(terrainUnit);
 
-                chunk.terrainUnits.Add(SpawnTerrainUnit(terrainPos, property));
-                if (folliageMap[terrainPos.x, terrainPos.y] && !invalidFolliagePositionHashSet.Value.Contains(terrainPos))
-                    chunk.folliages.Add(SpawnFolliage(terrainPos, folliagePrefabs.GetRandomElement()));
-                //var canSpawnFolliage = !resourceGenerator.ResourcePositions.Contains(new Vector2Int((int)position.x, (int)position.y));
-                //SpawnTerrainUnit(terrainPos, chunk, property, !invalidFolliagePositionHashSet.Contains(terrainPos));
+                // Spawn Foliage
+                folliageMap.GetElementSafe(terrainPos.x, terrainPos.y, out var validFoliagePosition);
+                if (canSpawnFoliage && validFoliagePosition && !invalidFoliagePositionHashSet.Contains(terrainPos) && resourceMap.RawMap[terrainPos.x, terrainPos.y] < 0.99f)
+                    chunk.foliages.Add(SpawnFoliage(terrainPos, foliagePrefabs.GetRandomElement()));
+
+
                 if (showStep) yield return null;
             }
         }
@@ -381,15 +458,19 @@ public class WorldGenerator : NetworkBehaviour
         yield return null;
     }
 
+
     private IEnumerator RemoveExcessChunks(Vector2 closetChunkPosition)
     {
-        List<Vector2> positionsToRemove = new List<Vector2>();
+        /*List<Vector2> positionsToRemove = new List<Vector2>();
 
         // Determine the bounds of the loop
-        int minX = (int)closetChunkPosition.x - (renderDistance + renderXOffset) * chunkSize;
-        int maxX = (int)closetChunkPosition.x + (renderDistance + 1 + renderXOffset) * chunkSize;
-        int minY = (int)closetChunkPosition.y - renderDistance * chunkSize;
-        int maxY = (int)closetChunkPosition.y + renderDistance * chunkSize;
+        int rangeX = (renderDistance + renderXOffset) * chunkSize;
+        int rangeY = renderDistance * chunkSize;
+
+        int minX = (int)closetChunkPosition.x - rangeX;
+        int maxX = (int)closetChunkPosition.x + rangeX;
+        int minY = (int)closetChunkPosition.y - rangeY;
+        int maxY = (int)closetChunkPosition.y + rangeY;
 
         // Iterate over the dictionary to find chunks outside the bounds
         foreach (var entry in positionToChunk)
@@ -399,19 +480,17 @@ public class WorldGenerator : NetworkBehaviour
             {
                 positionsToRemove.Add(pos);
             }
-        }
+        }*/
+
+        List<Vector2> positionsToRemove = positionToChunk.Keys.Where(pos =>
+        Mathf.Abs(pos.x - closetChunkPosition.x) > (renderDistance + renderXOffset) * chunkSize ||
+        Mathf.Abs(pos.y - closetChunkPosition.y) > renderDistance * chunkSize).ToList();
 
         // Remove the identified chunks
-        var coroutines = new List<Coroutine>();
         foreach (var pos in positionsToRemove)
         {
             var chunk = positionToChunk[pos];
-            coroutines.Add(StartCoroutine(RemoveChunk(chunk)));
-        }
-
-        foreach (var coroutine in coroutines)
-        {
-            yield return coroutine;
+            yield return RemoveChunk(chunk);
         }
     }
 
@@ -424,7 +503,7 @@ public class WorldGenerator : NetworkBehaviour
         }
         chunk.terrainUnits.Clear();
 
-        foreach (var folliage in chunk.folliages)
+        foreach (var folliage in chunk.foliages)
         {
             LocalObjectPooling.Main.Despawn(folliage);
             if (showStep) yield return null;
@@ -441,15 +520,17 @@ public class WorldGenerator : NetworkBehaviour
         terrainObj.transform.position = position;
         terrainObj.transform.parent = transform;
         terrainObj.GetComponent<TerrainUnit>().Initialize(property);
+        terrainObj.GetComponent<FloodController>().SetElevation(GetElevation(position.x, position.y, true));
 
         return terrainObj;
     }
 
-    private GameObject SpawnFolliage(Vector2 position, GameObject prefab)
+    private GameObject SpawnFoliage(Vector2 position, GameObject prefab)
     {
         var folliageObj = LocalObjectPooling.Main.Spawn(prefab);
         folliageObj.transform.position = new Vector2(position.x, position.y - 0.5f);
         folliageObj.transform.parent = transform;
+        folliageObj.GetComponent<FloodController>().SetElevation(GetElevation(position.x, position.y, true));
 
         return folliageObj;
     }
@@ -457,6 +538,23 @@ public class WorldGenerator : NetworkBehaviour
     #endregion
 
     #region Utility
+    public float GetElevation(float x, float y, bool lerp = false)
+    {
+        var snappedPos = new Vector2Int(Mathf.RoundToInt(x), Mathf.RoundToInt(y));
+        elevationMap.RawMap.GetElementSafe(snappedPos.x, snappedPos.y, out var snappedElevation);
+        var elevation = snappedElevation;
+
+        if (lerp)
+        {
+            var offsetX = Mathf.RoundToInt(Mathf.Sign(transform.position.x - snappedPos.x));
+            var offsetY = Mathf.RoundToInt(Mathf.Sign(transform.position.y - snappedPos.y));
+            elevationMap.RawMap.GetElementSafe(snappedPos.x + offsetX, snappedPos.y + offsetY, out var offsetElevation);
+            elevation = Mathf.Lerp(snappedElevation, offsetElevation, 1 - Vector2.Distance(transform.position, snappedPos));
+        }
+
+        return elevation;
+    }
+
     public TerrainUnitProperty GetMappedProperty(int x, int y)
     {
         if (x < -halfMapSize.x || x >= halfMapSize.x || y < -halfMapSize.y || y >= halfMapSize.y)
@@ -470,9 +568,23 @@ public class WorldGenerator : NetworkBehaviour
         return terrainMap[x, y].Elevation.min == 0.55f; // Elevation of grass
     }
 
-    public void InvalidateFolliageOnServer(Vector2 position)
+    public void InvalidateFolliage(Vector2[] positions)
     {
-        invalidFolliagePositionHashSet.Value.Add(position);
+        InvalidateFolliageRpc(positions);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void InvalidateFolliageRpc(Vector2[] positions)
+    {
+        foreach (var position in positions)
+        {
+            InvalidateFolliageOnClient(position);
+        }
+    }
+
+    public void InvalidateFolliageOnClient(Vector2 position)
+    {
+        invalidFoliagePositionHashSet.Add(position);
     }
 
     public void RemoveFoliage(Vector2 position)
@@ -482,10 +594,10 @@ public class WorldGenerator : NetworkBehaviour
         {
             var chunk = positionToChunk[chunkPosition];
             position -= TransformUtility.HALF_UNIT_Y_V2;
-            var folliage = chunk.folliages.Find(f => (Vector2)f.transform.position == position);
+            var folliage = chunk.foliages.Find(f => (Vector2)f.transform.position == position);
             if (folliage != null)
             {
-                chunk.folliages.Remove(folliage);
+                chunk.foliages.Remove(folliage);
                 LocalObjectPooling.Main.Despawn(folliage);
             }
         }

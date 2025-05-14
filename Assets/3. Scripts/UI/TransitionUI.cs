@@ -26,8 +26,10 @@ public class TransitionUI : UIBehaviour
         DontDestroyOnLoad(transform.parent.gameObject);
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         if (revealOnStart)
         {
             StartCoroutine(RevealAfterStartCoroutine());

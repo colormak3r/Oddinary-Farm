@@ -6,7 +6,7 @@ public class EntityMovement : NetworkBehaviour
 {
     [Header("Settings")]
     [SerializeField]
-    private float moveSpeed = 5f;
+    private float moveSpeed = 2000f;
     [SerializeField]
     private float maxSpeed = 10f;
     [SerializeField]
@@ -15,6 +15,8 @@ public class EntityMovement : NetworkBehaviour
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs = false;
+    [SerializeField]
+    private float speedMultiplier = 1f;
     [SerializeField]
     private float velocity;
 
@@ -37,7 +39,7 @@ public class EntityMovement : NetworkBehaviour
         if (movementDirection != Vector2.zero)
         {
             var targetDirection = Vector2.Lerp(movementDirection, rbody.linearVelocity.normalized, smoothTime * Time.deltaTime);
-            rbody.AddForce(targetDirection * moveSpeed * Time.deltaTime);
+            rbody.AddForce(targetDirection * moveSpeed * speedMultiplier * Time.deltaTime);
         }
 
         velocity = rbody.linearVelocity.magnitude;
@@ -58,6 +60,21 @@ public class EntityMovement : NetworkBehaviour
         movementDirection = newMovementDirection.normalized;
     }
 
+    #region SetSpeedMultiplier
+    public void SetSpeedMultiplier(float speedMultiplier)
+    {
+        SetSpeedMultiplierRpc(speedMultiplier);
+    }
+
+    [Rpc(SendTo.Owner)]
+    private void SetSpeedMultiplierRpc(float speedMultiplier)
+    {
+        this.speedMultiplier = speedMultiplier;
+    }
+    #endregion
+
+    #region Knockback
+
     public void SetCanBeKnockback(bool value)
     {
         SetCanBeKnockBackRpc(value);
@@ -77,7 +94,9 @@ public class EntityMovement : NetworkBehaviour
             return;
         }
 
-        // TODO: client authoritative, server side prediction
+        KnockbackClientRpc(knockbackForce, source.position);
+
+        /*// TODO: client authoritative, server side prediction
         if (!clientNetworkTransform)
         {
             // Server authoritative movement
@@ -89,15 +108,15 @@ public class EntityMovement : NetworkBehaviour
             // Client authoritative movement
             if (showDebugs) Debug.Log(gameObject.name + " KnockbackClientRpc");
             KnockbackClientRpc(knockbackForce, source.position);
-        }
+        }*/
     }
 
-    [Rpc(SendTo.Server)]
+    /*[Rpc(SendTo.Server)]
     private void KnockbackServerRpc(float knockbackForce, Vector2 sourcePosition)
     {
         if (showDebugs) Debug.Log(gameObject.name + " KnockbackServerRpc recieved");
         KnockbackInternal(knockbackForce, sourcePosition);
-    }
+    }*/
 
     [Rpc(SendTo.Owner)]
     private void KnockbackClientRpc(float knockbackForce, Vector2 sourcePosition)
@@ -114,4 +133,6 @@ public class EntityMovement : NetworkBehaviour
         // Apply the force to the Rigidbody2D
         rbody.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
     }
+
+    #endregion
 }

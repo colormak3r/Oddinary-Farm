@@ -44,6 +44,18 @@ public class Texture2DDrawer : PropertyDrawer
             currentY += EditorGUIUtility.singleLineHeight + 5;
         }
 
+        // Add a button to generate the map
+        if (generator != null && property.name == "mapTexture")
+        {
+            Rect generateButtonRect = new Rect(position.x, currentY, position.width, EditorGUIUtility.singleLineHeight);
+            if (GUI.Button(generateButtonRect, "Randomize Map"))
+            {
+                generator.RandomizeMap();
+                generator.GeneratePreview();
+            }
+            currentY += EditorGUIUtility.singleLineHeight + 5;
+        }
+
         EditorGUI.EndProperty();
     }
 
@@ -63,6 +75,7 @@ public class Texture2DDrawer : PropertyDrawer
         MapGenerator generator = property.serializedObject.targetObject as MapGenerator;
         if (generator != null && property.name == "mapTexture")
         {
+            height += EditorGUIUtility.singleLineHeight + 5;
             height += EditorGUIUtility.singleLineHeight + 5;
         }
 

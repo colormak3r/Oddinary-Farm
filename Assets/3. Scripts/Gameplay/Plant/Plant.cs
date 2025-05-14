@@ -1,9 +1,10 @@
 using ColorMak3r.Utility;
+using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Plant : NetworkBehaviour, IWaterable
+public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
 {
     [Header("Settings")]
     [SerializeField]
@@ -18,6 +19,7 @@ public class Plant : NetworkBehaviour, IWaterable
     private NetworkVariable<bool> isWatered;
 
     private NetworkVariable<PlantProperty> Property = new NetworkVariable<PlantProperty>();
+    public PlantProperty PropertyValue => Property.Value;
 
     private SpriteRenderer spriteRenderer;
     private LootGenerator lootGenerator;
@@ -26,6 +28,12 @@ public class Plant : NetworkBehaviour, IWaterable
 
     public bool IsHarvestable => Property.Value.Stages[CurrentStage.Value].isHarvestStage;
     public ItemProperty Seed => Property.Value.SeedProperty;
+    public FoodColor FoodColor => Property.Value.FoodColor;
+    public FoodType FoodType => Property.Value.FoodType;
+    public Transform Transform => transform;
+    public bool CanBeConsumed => IsHarvestable;
+
+    public Action<Plant> OnHarvested;
 
     private void Awake()
     {
@@ -76,7 +84,6 @@ public class Plant : NetworkBehaviour, IWaterable
         GetWateredRpc();
     }
 
-
     [ContextMenu("Mock Property Change")]
     public void MockPropertyChange()
     {
@@ -84,8 +91,21 @@ public class Plant : NetworkBehaviour, IWaterable
         Property.Value = mockProperty;
     }
 
-    public void Initialize(PlantProperty property)
+    public void Initialize(ScriptableObject baseProperty)
     {
+        if (!IsServer)
+        {
+            Debug.LogError("Initialize call not on server", this);
+            return;
+        }
+
+        var property = (PlantProperty)baseProperty;
+        if (property == null)
+        {
+            Debug.LogError($"Cannot initialize Plant, baseProperty = {baseProperty}", this);
+            return;
+        }
+
         Property.Value = property;
         lootGenerator.Initialize(property.LootTable);
         CurrentStage.Value = 0;
@@ -94,7 +114,7 @@ public class Plant : NetworkBehaviour, IWaterable
         if (farmPlotHit != null)
         {
             farmPlot = farmPlotHit.GetComponent<FarmPlot>();
-            farmPlot.GetDriedOnServer();
+            if (farmPlot.IsWateredValue) GetWateredOnServer();
         }
     }
 
@@ -106,15 +126,23 @@ public class Plant : NetworkBehaviour, IWaterable
     [Rpc(SendTo.Server)]
     private void GetWateredRpc()
     {
+        GetWateredOnServer();
+    }
+
+    private void GetWateredOnServer()
+    {
         if (isWatered.Value) return;
         isWatered.Value = true;
 
+        StartGrowing();
+    }
+
+    private void StartGrowing()
+    {
         if (CurrentStage.Value < Property.Value.Stages.Length - 1)
         {
             StartCoroutine(GrowthCoroutine());
         }
-
-        entityStatus.GetHealed(1);
     }
 
     private IEnumerator GrowthCoroutine()
@@ -125,16 +153,18 @@ public class Plant : NetworkBehaviour, IWaterable
         if (CurrentStage.Value < Property.Value.Stages.Length - 1)
             CurrentStage.Value += stage.stageIncrement;
 
-        isWatered.Value = false;
+        // Heal plant when grown a stage
+        entityStatus.GetHealed(1);
 
-        if (WeatherManager.Main.IsRainning)
+        if (IsHarvestable)
         {
-            GetWateredRpc();
+            isWatered.Value = false;
+            farmPlot.GetDriedOnServer();
         }
         else
         {
-            if (!IsHarvestable)
-                farmPlot.GetDriedOnServer();
+            StartGrowing();
+            farmPlot.GetWatered();
         }
     }
 
@@ -149,15 +179,58 @@ public class Plant : NetworkBehaviour, IWaterable
         if (!IsHarvestable) return;
 
         lootGenerator.DropLootOnServer(harvester);
+        GetHarvestedOnServer();
+    }
 
-        var stage = Property.Value.Stages[CurrentStage.Value];
-        CurrentStage.Value += stage.stageIncrement;
 
-        farmPlot.GetDriedOnServer();
-        isWatered.Value = false;
-        if (WeatherManager.Main.IsRainning)
+    public bool Consume()
+    {
+        if (!IsHarvestable)
         {
-            GetWateredRpc();
+            return false;
         }
+        else
+        {
+            GetHarvestedOnServer();
+            return true;
+        }
+    }
+
+    private void GetHarvestedOnServer()
+    {
+        OnHarvested?.Invoke(this);
+
+        if (Property.Value.DestroyOnHarvest)
+        {
+            farmPlot.GetDriedOnServer();
+            Destroy(gameObject);
+        }
+        else
+        {
+            var stage = Property.Value.Stages[CurrentStage.Value];
+            CurrentStage.Value += stage.stageIncrement;
+
+            if (WeatherManager.Main.IsRainning)
+            {
+                GetWateredRpc();
+            }
+            else
+            {
+                farmPlot.GetDriedOnServer();
+                isWatered.Value = false;
+            }
+        }
+    }
+
+    [ContextMenu("FullyGrow")]
+    public void FullyGrown()
+    {
+        FullyGrownRpc();
+    }
+
+    [Rpc(SendTo.Server)]
+    private void FullyGrownRpc()
+    {
+        CurrentStage.Value = Property.Value.Stages.Length - 1;
     }
 }

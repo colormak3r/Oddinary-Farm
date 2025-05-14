@@ -7,7 +7,7 @@ public class StructureProperty : ScriptableObject
 {
     [Header("Structure Properties")]
     [SerializeField]
-    private StructureItemProperty structureItemProperty;
+    private BlueprintProperty blueprintProperty;
     [SerializeField]
     private Sprite sprite;
     [SerializeField]
@@ -15,7 +15,7 @@ public class StructureProperty : ScriptableObject
     [SerializeField]
     private Vector2 size = Vector2.one * 3;
 
-    public StructureItemProperty StructureItemProperty => structureItemProperty;
+    public BlueprintProperty BlueprintProperty => blueprintProperty;
     public Sprite Sprite => sprite;
     public Vector2 Offset => offset;
     public Vector2 Size => size;

@@ -3,8 +3,8 @@ using Steamworks;
 using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class PlayerStatus : EntityStatus
 {
@@ -22,11 +22,13 @@ public class PlayerStatus : EntityStatus
     public PlayerNameUI PlayerNameUI => playerNameUI;
 
     private IControllable[] controllables;
+    private NetworkTransform networkTransform;
 
     protected override void Awake()
     {
         base.Awake();
         controllables = GetComponentsInChildren<IControllable>();
+        networkTransform = GetComponent<NetworkTransform>();
     }
 
     public override void OnNetworkSpawn()
@@ -40,7 +42,8 @@ public class PlayerStatus : EntityStatus
 
         if (IsOwner)
         {
-            PlayerName.Value = SteamClient.Name;
+            if (SteamClient.IsValid)
+                PlayerName.Value = SteamClient.Name;
         }
     }
 
@@ -102,12 +105,18 @@ public class PlayerStatus : EntityStatus
         yield return audioCoroutine;
 
         // Disable all renderers
-        foreach (var renderer in renderers) renderer.enabled = false;
+        //foreach (var renderer in renderers) renderer.enabled = false;
         foreach (var light in lights) light.enabled = false;
 
         // Determain respawn position
         var respawnPos = respawnPoint != null ? respawnPoint.position : Vector3.zero;
         var deathPos = transform.position;
+
+        /*var int_respawnPos = ((Vector2)respawnPos).ToInt();
+        if (WorldGenerator.Main.GetElevation(int_respawnPos.x, int_respawnPos.y) < FloodManager.Main.CurrentFloodLevelValue)
+        {
+            yield break;
+        }*/
 
         // Black out and move player to respawn position
         if (IsOwner)
@@ -122,10 +131,12 @@ public class PlayerStatus : EntityStatus
         }
 
         // Wait until player is at respawn position
-        yield return new WaitUntil(() => transform.position == respawnPos);
+        if (IsOwner) networkTransform.Teleport(respawnPos, Quaternion.identity, Vector3.one);
+        yield return new WaitUntil(() => Vector3.Distance(transform.position, respawnPos) < 0.01f);
 
         foreach (var collider in colliders) collider.enabled = true;
-        foreach (var renderer in renderers) renderer.enabled = true;
+
+        //foreach (var renderer in renderers) renderer.enabled = true;
         foreach (var light in lights) light.enabled = true;
 
         if (IsOwner)

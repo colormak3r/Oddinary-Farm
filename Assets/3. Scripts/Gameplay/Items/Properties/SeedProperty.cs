@@ -39,4 +39,6 @@ public class SeedProperty : SpawnerProperty
     public AudioClip PlantHarvestSound => plantHarvestSound;
     public AudioClip PlantDestroySound => plantDestroySound;
     public AudioClip PlantGrowSound => plantGrowSound;
+
+    public override ScriptableObject InitScript => plantProperty;
 }

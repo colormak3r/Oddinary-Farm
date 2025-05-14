@@ -138,7 +138,7 @@ namespace ColorMak3r.Utility
 
         public static Vector2Int ToInt(this Vector2 vector)
         {
-            return new Vector2Int((int)vector.x, (int)vector.y);
+            return new Vector2Int(Mathf.RoundToInt(vector.x), Mathf.RoundToInt(vector.y));
         }
 
         public static float Snap(this float value, float size = 0.1f)
@@ -151,14 +151,25 @@ namespace ColorMak3r.Utility
             return new Vector3(vector.x + x, vector.y + y, vector.z + z);
         }
 
-        public static Vector2 RandomPointInRange(this Vector2 origin, float range)
+        public static Vector2 RandomPointInRange(float range)
         {
-            var randomPoint = new Vector2(
-                origin.x + Random.Range(-range, range),
-                origin.y + Random.Range(-range, range)
-            );
+            return new Vector2(Random.Range(-range, range), Random.Range(-range, range));
+        }
 
-            return randomPoint;
+        public static Vector2 RandomPointInRange(float minRadius, float maxRadius, float minAngle = 0f, float maxAngle = Mathf.PI * 2)
+        {
+            // Ensure valid radius
+            if (minRadius > maxRadius)
+            {
+                float temp = minRadius;
+                minRadius = maxRadius;
+                maxRadius = temp;
+            }
+
+            float angle = Random.Range(minAngle, maxAngle);
+            float radius = Mathf.Sqrt(Random.Range(minRadius * minRadius, maxRadius * maxRadius)); // uniform distribution
+
+            return new Vector2(radius * Mathf.Cos(angle), radius * Mathf.Sin(angle));
         }
 
         public static List<T> Shuffle<T>(this List<T> list)

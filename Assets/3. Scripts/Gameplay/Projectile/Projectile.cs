@@ -7,6 +7,8 @@ public class Projectile : MonoBehaviour
     [Header("Properties")]
     [SerializeField]
     private ProjectileProperty property;
+    [SerializeField]
+    private ParticleSystem vfxSystem;
 
     [Header("Debugs")]
     [SerializeField]
@@ -40,6 +42,10 @@ public class Projectile : MonoBehaviour
         this.isAuthoritative = isAuthoritative;
 
         spriteRenderer.sprite = property.Sprite;
+        if (property.PlayVfx)
+        {
+            vfxSystem.Play();
+        }
         //animator.runtimeAnimatorController = property.Animator.runtimeAnimatorController;
 
         despawnCoroutine = StartCoroutine(DespawnCoroutine());
@@ -56,13 +62,13 @@ public class Projectile : MonoBehaviour
     {
         if (!isInitialized || owner == null) return;
 
-        if (showDebugs) Debug.Log(collider.name);
+        if (showDebugs) Debug.Log(collider.transform.root.name);
 
-        if (collider.TryGetComponent<IDamageable>(out var damageable))
+        if (collider.transform.root.TryGetComponent<IDamageable>(out var damageable))
         {
             if (isAuthoritative)
             {
-                var success = damageable.GetDamaged(property.Damage, property.DamageType, property.Hostility, owner);
+                var success = damageable.TakeDamage(property.Damage, property.DamageType, property.Hostility, owner);
                 if (success)
                 {
                     if (despawnCoroutine != null) StopCoroutine(despawnCoroutine);
@@ -75,7 +81,7 @@ public class Projectile : MonoBehaviour
             }
             else
             {
-                var success = damageable.GetDamaged(0, property.DamageType, property.Hostility, owner);
+                var success = damageable.TakeDamage(0, property.DamageType, property.Hostility, owner);
                 if (success)
                 {
                     if (despawnCoroutine != null) StopCoroutine(despawnCoroutine);

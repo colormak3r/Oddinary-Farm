@@ -7,7 +7,7 @@ public class RoamingState : BehaviourState
 {
     public RoamingState(Animal animal) : base(animal)
     {
-        
+
     }
 
     public override void EnterState()
@@ -18,9 +18,22 @@ public class RoamingState : BehaviourState
         animal.OnDestinationReached.AddListener(HandleOnDestinationReached);
     }
 
+    const float StallDelay = 0.1f;
+    private float stallStart = -1f;
     public override void ExecuteState()
     {
-        base.ExecuteState();         
+        var velocity = animal.Rbody.linearVelocity;
+
+        if ((velocity.x == 0 || velocity.y == 0) && stallStart < 0f)
+            stallStart = Time.time;
+        else if (velocity.x != 0 && velocity.y != 0 && stallStart >= 0f)
+            stallStart = -1f;
+
+        if (stallStart >= 0f && Time.time - stallStart > StallDelay)
+        {
+            animal.MoveTo(animal.GetRandomPointInRange());
+            stallStart = -1f;
+        }
     }
 
     public override void ExitState()

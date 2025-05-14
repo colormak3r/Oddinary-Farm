@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80b0131eb3fe6f747a53ba2a86b88824, type: 3}
   m_Name: Corn Seed Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: 1930067145, guid: 0cefbb5fdff3c5740b36113fa3e01276, type: 3}
+  iconSprite: {fileID: -1283989761, guid: 0cefbb5fdff3c5740b36113fa3e01276, type: 3}
+  objectSprite: {fileID: 0}
   prefab: {fileID: 1611100485505535926, guid: 603ad64deda69cf40b31d89d37650b63, type: 3}
   isConsummable: 1
   maxStack: 20
@@ -21,6 +22,7 @@ MonoBehaviour:
   range: 10
   primaryCdr: 0.25
   secondaryCdr: 0.25
+  itemContext: "LMB: Place\r\r\nX  : Drop"
   pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
   selectSound: {fileID: 0}
   primarySound: {fileID: 0}
@@ -42,6 +44,7 @@ MonoBehaviour:
   previewInvalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}
   prefabToSpawn: {fileID: 4773706747441023441, guid: 6e849e9e46e06ad449bd7c16c7acfa40, type: 3}
   spawnOffset: {x: 0, y: 0}
+  clearFoliage: 0
   plantProperty: {fileID: 11400000, guid: 743c4c7c6fd2e1947a4f7f305d909e77, type: 2}
   farmPlotLayer:
     serializedVersion: 2

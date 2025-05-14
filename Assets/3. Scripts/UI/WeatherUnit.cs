@@ -15,7 +15,8 @@ public class WeatherUnit : MonoBehaviour
     {
         timeText.text = time;
         weatherText.text = weather;
-        StartCoroutine(DisplayCoroutine(startPos, endPos, duration));
+        if (gameObject.activeInHierarchy)
+            StartCoroutine(DisplayCoroutine(startPos, endPos, duration));
     }
 
     private IEnumerator DisplayCoroutine(Vector2 startPos, Vector2 endPos, float duration)

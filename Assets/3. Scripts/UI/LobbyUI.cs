@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Netcode.Transports.Facepunch;
 using Steamworks;
 using Steamworks.Data;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -45,13 +41,21 @@ public class LobbyUI : UIBehaviour
     [SerializeField]
     private TMP_Text lobbyInstructionText;
     [SerializeField]
-    private TMP_Text startButtonText;
+    private GameObject copyButton;
     [SerializeField]
-    private TMP_Text inviteButtonText;
+    private TMP_Text copyButtonText;
     [SerializeField]
-    private Button startButton;
+    private GameObject pasteButton;
     [SerializeField]
-    private Button inviteButton;
+    private TMP_Text pasteButtonText;
+    [SerializeField]
+    private Button startGameButton;
+    [SerializeField]
+    private Button joinGameButton;
+    [SerializeField]
+    private Button inviteFriendButton;
+    [SerializeField]
+    private Button joinRoomButton;
 
     [Header("Debugs")]
     [SerializeField]
@@ -59,8 +63,10 @@ public class LobbyUI : UIBehaviour
     [SerializeField]
     private LobbyMode lobbyMode;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         SteamMatchmaking.OnLobbyCreated += OnLobbyCreated;
         SteamMatchmaking.OnLobbyEntered += OnLobbyEntered;
 
@@ -68,8 +74,10 @@ public class LobbyUI : UIBehaviour
         SteamMatchmaking.OnLobbyMemberLeave += OnLobbyMemberLeave;
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         SteamMatchmaking.OnLobbyCreated -= OnLobbyCreated;
         SteamMatchmaking.OnLobbyEntered -= OnLobbyEntered;
 
@@ -77,8 +85,7 @@ public class LobbyUI : UIBehaviour
         SteamMatchmaking.OnLobbyMemberLeave -= OnLobbyMemberLeave;
     }
 
-    #region Steam Callbacks
-
+    #region Initialization
     public void Host()
     {
         lobbyMode = LobbyMode.Host;
@@ -91,10 +98,14 @@ public class LobbyUI : UIBehaviour
 
         lobbyPlayerText.text = "Waiting for player...";
 
-        startButton.gameObject.SetActive(true);
-
-        inviteButton.interactable = false;
-        inviteButtonText.text = "Creating Room";
+        startGameButton.gameObject.SetActive(true);
+        joinGameButton.gameObject.SetActive(false);
+        inviteFriendButton.gameObject.SetActive(true);
+        joinRoomButton.gameObject.SetActive(false);
+        copyButton.SetActive(true);
+        copyButtonText.text = "Copy";
+        pasteButton.SetActive(false);
+        pasteButtonText.text = "Paste";
 
         ConnectionManager.Main.CreateLobby();
 
@@ -105,6 +116,7 @@ public class LobbyUI : UIBehaviour
     {
         lobbyMode = LobbyMode.Client;
         lobbyIdInputField.readOnly = false;
+
         lobbyIdInputField.text = "";
 
         lobbyInstructionText.text = "Enter Lobby ID or join a friend from steam overlay.";
@@ -113,40 +125,60 @@ public class LobbyUI : UIBehaviour
 
         lobbyPlayerText.text = "Waiting for player...";
 
-        startButton.gameObject.SetActive(false);
+        startGameButton.gameObject.SetActive(false);
+        joinGameButton.gameObject.SetActive(false);
+        joinRoomButton.gameObject.SetActive(true);
+        inviteFriendButton.gameObject.SetActive(false);
+        copyButton.SetActive(false);
+        copyButtonText.text = "Copy";
+        pasteButton.SetActive(true);
+        pasteButtonText.text = "Paste";
 
-        inviteButton.interactable = true;
-        inviteButtonText.text = "Join";
-
-        Show();
-    }
-
-    public void InviteButtonClicked()
-    {
-        if (lobbyMode == LobbyMode.Host)
+        if (ConnectionManager.Main.CurrentLobby.HasValue)
         {
-            SteamFriends.OpenOverlay("friends");
+            ConnectionManager.Main.JoinLobby(ConnectionManager.Main.CurrentLobby.Value.Id);
         }
         else
         {
-            if (!ConnectionManager.Main.CurrentLobby.HasValue && lobbyIdInputField.text != "")
-            {
-                ConnectionManager.Main.JoinLobby(ulong.Parse(lobbyIdInputField.text));
-            }
-            else
-            {
-                SteamFriends.OpenOverlay("friends");
-            }
+            lobbyIdInputField.text = "";
+        }
+
+        Show();
+    }
+    #endregion
+
+    #region Button Hooks
+    public void InviteButtonClicked()
+    {
+        SteamFriends.OpenGameInviteOverlay(ConnectionManager.Main.CurrentLobby.Value.Id);
+    }
+
+    public void JoinRoomButtonClicked()
+    {
+        if (!ConnectionManager.Main.CurrentLobby.HasValue && lobbyIdInputField.text != "")
+        {
+            ConnectionManager.Main.JoinLobby(ulong.Parse(lobbyIdInputField.text));
+        }
+        else
+        {
+            SteamFriends.OpenOverlay("friends");
         }
     }
 
-    public void StarButtonClicked()
+    public void StartGameButtonClicked()
     {
         if (!ConnectionManager.Main.CurrentLobby.HasValue) return;
 
-        if (lobbyMode == LobbyMode.Host)
+        ConnectionManager.Main.StartGameMultiplayerOnlineHost();
+    }
+
+    public void JoinGameButtonClicked()
+    {
+        if (!ConnectionManager.Main.CurrentLobby.HasValue) return;
+
+        if (ConnectionManager.Main.CurrentLobby?.GetData(ConnectionManager.LOBBY_STATUS_KEY) != ConnectionManager.LOBBY_INGAME_VAL)
         {
-            ConnectionManager.Main.StartGameMultiplayerOnlineHost();
+            lobbyInstructionText.text = "Host has not started the game. Please try again later!";
         }
         else
         {
@@ -154,6 +186,20 @@ public class LobbyUI : UIBehaviour
         }
     }
 
+    public void CopyButtonClicked()
+    {
+        GUIUtility.systemCopyBuffer = lobbyIdInputField.text;
+        copyButtonText.text = "Copied!";
+    }
+
+    public void PasteButtonClicked()
+    {
+        lobbyIdInputField.text = GUIUtility.systemCopyBuffer;
+        pasteButtonText.text = "Pasted!";
+    }
+    #endregion
+
+    #region Steam Callbacks 
     private void OnLobbyCreated(Result result, Lobby lobby)
     {
         if (result != Result.OK)
@@ -178,51 +224,63 @@ public class LobbyUI : UIBehaviour
     {
         if (showDebugs) Debug.Log("Entered lobby " + lobby.Id);
 
-        if (lobby.MemberCount == 0)
+        if (lobby.MemberCount == 0 || lobby.Id.Value == 0)
         {
+            if (showDebugs) Debug.LogError($"Invalid lobby ID: {lobby.Id}, playerCount = {lobby.MemberCount}");
             lobbyInstructionText.text = "Invalid Lobby ID. Try again!";
         }
         else
         {
-            var builder = $"Player Count = {lobby.MemberCount}/100" +
-                $"\n\nPlayer List:\n";
-            foreach (var member in lobby.Members)
-            {
-                builder += "> " + member.Name + "\n";
-            }
-            lobbyPlayerText.text = builder;
-
-            lobbyInstructionText.text = "Enter Lobby ID or join a friend from steam overlay.";
+            RefreshPlayerList(lobby);
+            lobbyIdInputField.text = lobby.Id.ToString();
 
             if (lobbyMode == LobbyMode.Host)
             {
-                startButtonText.text = "Start";
+                lobbyInstructionText.text = "Invite more friends or click Start to launch the game!";
             }
             else
             {
-                startButtonText.text = "Join";
+                joinRoomButton.gameObject.SetActive(false);
+                inviteFriendButton.gameObject.SetActive(true);
+                pasteButton.SetActive(false);
+                copyButton.SetActive(true);
+                joinGameButton.gameObject.SetActive(true);
+                lobbyInstructionText.text = "Invite more friends or click Join to launch the game!";
             }
-            startButton.gameObject.SetActive(true);
-
-            inviteButton.interactable = true;
-            inviteButtonText.text = "Invite";
         }
     }
 
     private void OnLobbyMemberLeave(Lobby lobby, Friend friend)
     {
         lobbyInfoText.text += $"\nPlayer {friend.Name} left the lobby";
+
+        RefreshPlayerList(lobby);
     }
 
     private void OnLobbyMemberJoined(Lobby lobby, Friend friend)
     {
         lobbyInfoText.text += $"\nPlayer {friend.Name} joined the lobby";
+
+        RefreshPlayerList(lobby);
+    }
+
+    #endregion
+
+    #region Utility
+    private void RefreshPlayerList(Lobby lobby)
+    {
+        var builder = $"Player Count = {lobby.MemberCount}/{lobby.MaxMembers}" +
+               $"\n\nPlayer List:\n";
+        foreach (var member in lobby.Members)
+        {
+            builder += "> " + member.Name + "\n";
+        }
+        lobbyPlayerText.text = builder;
     }
 
     public void LeaveLobby()
     {
         ConnectionManager.Main.LeaveLobby();
     }
-
     #endregion
 }

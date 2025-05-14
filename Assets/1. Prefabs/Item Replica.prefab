@@ -183,12 +183,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3536331440226196720}
-  - component: {fileID: 4144789532550474485}
   - component: {fileID: 1745390494722101591}
-  - component: {fileID: 7304923991498461258}
-  - component: {fileID: 1701917104167263387}
-  - component: {fileID: 3497622455922979039}
+  - component: {fileID: -1350741837255328079}
+  - component: {fileID: -4209537825161131759}
+  - component: {fileID: 4144789532550474485}
   - component: {fileID: 4138184307597425321}
+  - component: {fileID: 1701917104167263387}
+  - component: {fileID: 8183907551932009680}
   m_Layer: 6
   m_Name: Item Replica
   m_TagString: Untagged
@@ -212,18 +213,6 @@ Transform:
   - {fileID: 6014172631999743253}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &4144789532550474485
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5937313573806529732}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_SortAtRoot: 0
 --- !u!114 &1745390494722101591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,7 +238,7 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &7304923991498461258
+--- !u!114 &-1350741837255328079
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -258,12 +247,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 5937313573806529732}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 966dd1f28bdde1f4e9ce5b053083fed7, type: 3}
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkTransformExpanded: 0
-  AuthorityMode: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 1
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
@@ -285,7 +284,7 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &1701917104167263387
+--- !u!114 &-4209537825161131759
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -294,67 +293,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 5937313573806529732}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75e8375cbb81e674da771db34b72288f, type: 3}
+  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  mockProperty: {fileID: 0}
-  pickupSpeed: 20
-  pickupDuration: 5
-  pickupRecovery: 1
-  targetOffset: {x: 0, y: 0.25, z: 0}
-  showDebugs: 0
-  Property:
-    m_InternalValue: {fileID: 0}
-  ignorePicker: {fileID: 0}
-  CanBePickup:
-    m_InternalValue: 0
---- !u!61 &3497622455922979039
-BoxCollider2D:
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 0
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
+--- !u!210 &4144789532550474485
+SortingGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5937313573806529732}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 1}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.5, y: 0.5}
-  m_EdgeRadius: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
 --- !u!50 &4138184307597425321
 Rigidbody2D:
   serializedVersion: 5
@@ -382,6 +340,43 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &1701917104167263387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5937313573806529732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75e8375cbb81e674da771db34b72288f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  mockProperty: {fileID: 0}
+  pickupRadius: 5
+  pickupSpeed: 20
+  pickupTimeout: 3
+  pickupRecovery: 1
+  pickupDelay: 1
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 2147483648
+  showDebugs: 0
+--- !u!114 &8183907551932009680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5937313573806529732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b098e30c67767d4448652f72a5a6858f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  guid: 8d37d673-68a0-4b14-a28f-b13693ebd770
 --- !u!1 &7489898004194296467
 GameObject:
   m_ObjectHideFlags: 0

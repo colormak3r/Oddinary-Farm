@@ -7,6 +7,20 @@ using UnityEngine;
 
 public class AnimalManager : NetworkBehaviour
 {
+    public static AnimalManager Main { get; private set; }
+
+    private void Awake()
+    {
+        if (Main == null)
+        {
+            Main = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     [Header("Monster Settings")]
     [SerializeField]
     private bool canSpawn = false;
@@ -25,13 +39,15 @@ public class AnimalManager : NetworkBehaviour
     [SerializeField]
     private int spawnPerWaveIncrement = 5;
     [SerializeField]
+    private int rangedPerSpawn = 10;
+    [SerializeField]
     private int bossPerSpawn = 10;
     [SerializeField]
     private Vector2 spawnCoordinate = new Vector2(0, 0);
     [SerializeField]
-    private int spawnRadius = 20;
+    private int baseSpawnRadius = 10;
     [SerializeField]
-    private int spawnBlockRadius = 10;
+    private int baseSafeRadius = 10;
     [SerializeField]
     private float spawnCooldown = 0.2f;
     [SerializeField]
@@ -39,13 +55,21 @@ public class AnimalManager : NetworkBehaviour
     [SerializeField]
     private GameObject monsterPrefab;
     [SerializeField]
+    private GameObject rangedPrefab;
+    [SerializeField]
     private GameObject monsterBossPrefab;
 
     [Header("Debugs")]
     [SerializeField]
+    private bool showGizmos;
+    [SerializeField]
     private int currentSpawnPerWave = 0;
     [SerializeField]
     private int currentTotalWave = 0;
+    [SerializeField]
+    private int currentSafeRadius = 0;
+    [SerializeField]
+    private int currentSpawnRadius = 0;
 
     public override void OnNetworkSpawn()
     {
@@ -53,8 +77,10 @@ public class AnimalManager : NetworkBehaviour
         {
             currentSpawnPerWave = spawnPerWaveBase;
             currentTotalWave = waveTotalBase;
+            currentSafeRadius = baseSafeRadius;
+            currentSpawnRadius = currentSafeRadius + baseSpawnRadius;
             TimeManager.Main.OnHourChanged.AddListener(OnHourChanged);
-            StartCoroutine(SpawnMonsterWaves());
+            if (canSpawn) StartCoroutine(SpawnMonsterWaves());
         }
     }
 
@@ -70,7 +96,7 @@ public class AnimalManager : NetworkBehaviour
     {
         if (hour == spawnHour)
         {
-            if (canSpawn && TimeManager.Main.CurrentDay >= startDay)
+            if (canSpawn && TimeManager.Main.CurrentDate >= startDay)
             {
                 StartCoroutine(SpawnMonsterWaves());
                 currentTotalWave += waveTotalIncrement;
@@ -91,16 +117,16 @@ public class AnimalManager : NetworkBehaviour
         }
     }
 
+    private List<Vector2> spawnablePositions;
     private IEnumerator SpawnMonsterCoroutine()
     {
         // Get all spawnable positions
-        var spawnablePositions = new List<Vector2>();
-        spawnablePositions.Capacity = spawnRadius * spawnRadius * 4;
-        for (int x = -spawnRadius; x < spawnRadius; x++)
+        spawnablePositions = new List<Vector2>();
+        for (int x = -currentSpawnRadius; x < currentSpawnRadius; x++)
         {
-            for (int y = -spawnRadius; y < spawnRadius; y++)
+            for (int y = -currentSpawnRadius; y < currentSpawnRadius; y++)
             {
-                if (Mathf.Abs(x) > spawnBlockRadius || Mathf.Abs(y) > spawnBlockRadius) continue;
+                if (Mathf.Abs(x) <= currentSafeRadius && Mathf.Abs(y) <= currentSafeRadius) continue;
                 var position = new Vector2(spawnCoordinate.x + x, spawnCoordinate.y + y);
                 position = position.SnapToGrid();
                 if (Physics2D.OverlapPoint(position, spawnBlocker) == null)
@@ -120,6 +146,16 @@ public class AnimalManager : NetworkBehaviour
             var monster = Instantiate(monsterPrefab, randomPosition, Quaternion.identity);
             monster.GetComponent<NetworkObject>().Spawn();
 
+            // Spawn ranged monsters
+            if (i > 0 && i % rangedPerSpawn == 0)
+            {
+                randomIndex = UnityEngine.Random.Range(0, spawnablePositions.Count);
+                randomPosition = spawnablePositions[randomIndex];
+
+                var rangedMonster = Instantiate(rangedPrefab, randomPosition, Quaternion.identity);
+                rangedMonster.GetComponent<NetworkObject>().Spawn();
+            }
+
             // Spawn boss
             if (i > 0 && i % bossPerSpawn == 0)
             {
@@ -131,6 +167,29 @@ public class AnimalManager : NetworkBehaviour
             }
 
             yield return new WaitForSeconds(spawnCooldown);
+        }
+    }
+
+    public void UpdateSafeRadius(int value)
+    {
+        if (value < currentSafeRadius) return;
+
+        currentSafeRadius = value;
+        currentSpawnRadius = value + baseSpawnRadius;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!showGizmos) return;
+        // Get all spawnable positions
+
+        if (spawnablePositions != null && spawnablePositions.Count > 0)
+        {
+            Gizmos.color = Color.red;
+            foreach (var position in spawnablePositions)
+            {
+                Gizmos.DrawSphere(position, 0.1f);
+            }
         }
     }
 }

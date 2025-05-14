@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeatherUI : MonoBehaviour
+public class WeatherUI : UIBehaviour
 {
-    [Header("Settings")]
+    [Header("Weather UI Settings")]
     [SerializeField]
     private WeatherUnit weatherUnitPrefab;
     [SerializeField]

@@ -6,7 +6,9 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
 {
     [Header("Item Settings")]
     [SerializeField]
-    private Sprite sprite;
+    private Sprite iconSprite;
+    [SerializeField]
+    private Sprite objectSprite;
     [SerializeField]
     private GameObject prefab;
     [SerializeField]
@@ -26,6 +28,11 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     [SerializeField]
     private float secondaryCdr = 0.25f;
 
+    [Header("Item Context")]
+    [TextArea(3, 10)]
+    [SerializeField]
+    private string itemContext = "LMB: Place\r\nRMB: Remove\r\nX  : Drop";
+
     [Header("Item Audio")]
     [SerializeField]
     private AudioClip pickupSound;
@@ -39,7 +46,8 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     private AudioClip alternativeSound;
 
     public string Name => name.Replace(" Property", "");
-    public Sprite Sprite => sprite;
+    public Sprite IconSprite => iconSprite;
+    public Sprite ObjectSprite => objectSprite == null ? iconSprite : objectSprite;
     public GameObject Prefab => prefab;
     public bool IsConsummable => isConsummable;
     public uint MaxStack => maxStack;
@@ -49,6 +57,7 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     public float PrimaryCdr => primaryCdr;
     public float SecondaryCdr => secondaryCdr;
 
+    public string ItemContext => Name + "\n" + itemContext;
 
     public AudioClip PickupSound => pickupSound;
     public AudioClip SelectSound => selectSound;

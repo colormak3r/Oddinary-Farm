@@ -12,15 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d102d6fc7069c4c8dea1bfbea0948c, type: 3}
   m_Name: Snail Hand Property
   m_EditorClassIdentifier: 
-  sprite: {fileID: 0}
+  iconSprite: {fileID: 0}
+  objectSprite: {fileID: 0}
   prefab: {fileID: 278873172899980473, guid: 6c458cf87ac56e34f932ddc4d95aa583, type: 3}
   isConsummable: 0
   maxStack: 1
+  isSellable: 0
+  price: 1
+  range: 1
   primaryCdr: 0.25
   secondaryCdr: 0.25
-  range: 1
-  price: 1
   pickupSound: {fileID: 0}
+  selectSound: {fileID: 0}
   primarySound: {fileID: 0}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}

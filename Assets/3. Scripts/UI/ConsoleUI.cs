@@ -1,15 +1,27 @@
 using ColorMak3r.Utility;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Input;
 using TMPro;
 using Unity.Multiplayer.Tools.NetStatsMonitor;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+
+public class ConsoleCommand 
+{ 
+    private string command;
+    private string[] args;
+    private string description;
+
+    public ConsoleCommand(string command, string[] args, string description = "")
+    {
+        this.command = command;
+        this.args = args;
+        this.description = description;
+    }
+}
 
 public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 {
@@ -19,10 +31,6 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     private static string LOG_TO_FILE = "LogToFile";
 
     [Header("Settings")]
-    [SerializeField]
-    private string version = "v0.1";
-    [SerializeField]
-    private string versionNumber = ".01";
     [SerializeField]
     private int maxChar = 100000;
     [SerializeField]
@@ -77,8 +85,10 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         logToFile = PlayerPrefs.GetInt(LOG_TO_FILE, 1) == 1;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         InputManager.Main.InputActions.Console.SetCallbacks(this);
 
         inputField.text = "";
@@ -87,6 +97,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
         UnfocusOnInputField();
     }
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -184,7 +195,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
             // Format the DateTime as MMDDYY-HHMMSS
             string t = now.ToString("MMddyy-HHmmss");
             string r = UnityEngine.Random.Range(1000, 9999).ToString();
-            filename = d + "/log-" + t + "-" + r + "-" + version + versionNumber + ".txt";
+            filename = d + "/log-" + t + "-" + r + "-" + VersionUtility.VERSION + ".txt";
         }
 
         try
@@ -208,29 +219,46 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "LogToFile",
     "Spawn",
     "PrintItemIdList",
-    "PrintSpawnableIdList"};
+    "PrintSpawnableIdList",
+    "Spectate",
+    "ShowUI",
+    "SpawnTestWave",
+    "CanSpawn",
+    "SetMinutesPerDay",
+    "SetTimeOffset",
+    "Window",
+    "StartNormalFlood",
+    "StartInstantFlood",
+    "SetCanFlood",
+    "SetFlood",
+    "Scenario"};
 
     private string[] commandHelps =
     {"Help",
-    "ShowStackTrace [bool]",
+    "ShowStackTrace[bool]",
     "ShowNetStat [bool]",
     "LogToFile [bool]",
-    "Spawn [id] [x] [y] [count]",
+    "Spawn [id] [x=0] [y=0] [count=1]",
     "PrintItemIdList",
-    "PrintSpawnableIdList"};
+    "PrintSpawnableIdList",
+    "Spectate [id] [x] [y]",
+    "ShowUI [bool]",
+    "SpawnTestWave [x=0] [y=0] [safeRadius=5] [spawnRadius=10]",
+    "CanSpawn [bool]",
+    "SetMinutesPerDay [realMinutePerDay]",
+    "SetTimeOffset [day] [hour] [minute]",
+    "Window [fullwin, fullscreen, windowed, fullHD, 2k, 4k, size] [WxH] [fullscreen]",
+    "StartNormalFlood",
+    "StartInstantFlood",
+    "SetCanFlood [bool]",
+    "SetFlood [0~1]",
+    "Scenario [name]"};
 
     private void ParseCommand(string input)
     {
         input = input.ToLower();
         var args = input.Split(" ");
         var command = args[0];
-
-        // Set default value for 1-argument commands
-        var defaultBool = true;
-        if (args.Length == 2)
-        {
-            defaultBool = ParseBool(args[1]);
-        }
 
         // Clear the input field
         Debug.Log(">> " + input);
@@ -241,39 +269,213 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         {
             if (command == commands[0].ToLower())
             {
+                // Help
                 string builder = "";
                 foreach (var cc in commandHelps) builder += "\n>> " + cc;
                 Debug.Log($"List of commands:{builder}");
             }
             else if (command == commands[1].ToLower())
             {
+                // ShowStackTrace [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
                 showStackTrace = defaultBool;
                 PlayerPrefs.SetInt(SHOW_STACK_TRACE, showStackTrace ? 1 : 0);
             }
             else if (command == commands[2].ToLower())
             {
+                // ShowNetStat [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
                 NetworkManager.Singleton.gameObject.GetComponent<RuntimeNetStatsMonitor>().Visible = defaultBool;
             }
             else if (command == commands[3].ToLower())
             {
+                // LogToFile [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
                 logToFile = defaultBool;
                 PlayerPrefs.SetInt(LOG_TO_FILE, logToFile ? 1 : 0);
             }
             else if (command == commands[4].ToLower())
             {
+                // Spawn [id] [x=0] [y=0] [count=1]
                 if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
 
-                AssetManager.Main.SpawnByID(int.Parse(args[1]), new Vector2(float.Parse(args[2]), float.Parse(args[3])), int.Parse(args[4]), true);
+                var x = args.Length > 2 ? float.Parse(args[2]) : 0f;
+                var y = args.Length > 3 ? float.Parse(args[3]) : 0f;
+                var count = args.Length > 4 ? int.Parse(args[4]) : 1;
+
+                AssetManager.Main.SpawnByID(int.Parse(args[1]), new Vector2(x, y), count, true);
             }
             else if (command == commands[5].ToLower())
             {
+                // PrintItemIdList
                 if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
                 AssetManager.Main.PrintItemIDs();
             }
             else if (command == commands[6].ToLower())
             {
+                // PrintSpawnableIdList
                 if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
                 AssetManager.Main.PrintSpawnableIDs();
+            }
+            else if (command == commands[7].ToLower())
+            {
+                ulong id = args.Length > 1 ? ulong.Parse(args[1]) : 999;
+                var owner = (NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsHost) ? NetworkManager.Singleton.LocalClient.PlayerObject.transform.position : Vector3.zero;
+                var x = args.Length > 2 ? float.Parse(args[2]) : owner.x;
+                var y = args.Length > 3 ? float.Parse(args[3]) : owner.y;
+
+                if (Spectator.Main == null) throw new Exception("Spectator not found. Has the game started yet?");
+                Spectator.Main.SetCamera(id);
+                Spectator.Main.SetPosition(new Vector2(x, y));
+            }
+            else if (command == commands[8].ToLower())
+            {
+                // ShowUI [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
+                if (defaultBool)
+                    UIManager.Main.ShowUI();
+                else
+                    UIManager.Main.HideUI();
+            }
+            else if (command == commands[9].ToLower())
+            {
+                // SpawnTestWave [x=0] [y=0] [safeRadius=5] [spawnRadius=10]
+                var x = args.Length > 1 ? float.Parse(args[1]) : 0f;
+                var y = args.Length > 2 ? float.Parse(args[2]) : 0f;
+                var safeRadius = args.Length > 3 ? int.Parse(args[3]) : 5;
+                var spawnRadius = args.Length > 4 ? int.Parse(args[4]) : 10;
+
+                if (CreatureSpawnManager.Main == null) throw new Exception("CreatureSpawnManager not found. Has the game started yet?");
+                CreatureSpawnManager.Main.SpawnTestWave(new Vector2(x, y), safeRadius, spawnRadius);
+            }
+            else if (command == commands[10].ToLower())
+            {
+                // CanSpawn [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
+                if (CreatureSpawnManager.Main == null) throw new Exception("CreatureSpawnManager not found. Has the game started yet?");
+                CreatureSpawnManager.Main.SetCanSpawn(defaultBool);
+            }
+            else if (command == commands[11].ToLower())
+            {
+                // SetMinutesPerDay [realMinutePerDay]
+                var realMinutesPerDay = args.Length > 1 ? float.Parse(args[1]) : 5f;
+
+                if (TimeManager.Main == null) throw new Exception("TimeManager not found. Has the game started yet?");
+                TimeManager.Main.SetRealMinutesPerDay(realMinutesPerDay);
+            }
+            else if (command == commands[12].ToLower())
+            {
+                // SetTimeOffset [day] [hour] [minute]
+                var day = args.Length > 1 ? int.Parse(args[1]) : 1;
+                var hour = args.Length > 2 ? int.Parse(args[2]) : 7;
+                var minute = args.Length > 3 ? int.Parse(args[3]) : 30;
+
+                if (TimeManager.Main == null) throw new Exception("TimeManager not found. Has the game started yet?");
+                TimeManager.Main.SetTimeOffset(day, hour, minute);
+            }
+            else if (command == commands[13].ToLower())
+            {
+                // Window [fullwin, fullscreen, windowed, fullHD, 2k, 4k, size] [WxH] [fullscreen]
+                var fullscreen = args.Length > 3 ? ParseBool(args[3]) : false;
+                switch (args[1])
+                {
+                    case "fullwin":
+                        Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
+                        break;
+                    case "fullscreen":
+                        Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+                        break;
+                    case "windowed":
+                        Screen.SetResolution(480, 270, FullScreenMode.Windowed);
+                        break;
+                    case "fullhd":
+                        fullscreen = args.Length > 2 ? ParseBool(args[2]) : false;
+                        Screen.SetResolution(1920, 1080, fullscreen);
+                        break;
+                    case "2k":
+                        fullscreen = args.Length > 2 ? ParseBool(args[2]) : false;
+                        Screen.SetResolution(2560, 1440, fullscreen);
+                        break;
+                    case "4k":
+                        fullscreen = args.Length > 2 ? ParseBool(args[2]) : false;
+                        Screen.SetResolution(3840, 2160, fullscreen);
+                        break;
+                    case "size":
+                        var size = args[2].Split("x");
+                        if (size.Length == 2)
+                        {
+                            int width = int.Parse(size[0]);
+                            int height = int.Parse(size[1]);
+                            Screen.SetResolution(width, height, fullscreen);
+                        }
+                        else
+                        {
+                            throw new ArgumentException(UNKNOWN_ARGUMENT + $" '{args[2]}'");
+                        }
+                        break;
+                    default:
+                        throw new ArgumentException(UNKNOWN_ARGUMENT + $" '{args[1]}'");
+                }
+            }
+            else if (command == commands[14].ToLower())
+            {
+                // StartNormalFlood
+                if (FloodManager.Main == null) throw new Exception("FloodManager not found. Has the game started yet?");
+                FloodManager.Main.StartNormalFlood();
+
+            }
+            else if (command == commands[15].ToLower())
+            {
+                // StartInstantFlood
+                if (FloodManager.Main == null) throw new Exception("FloodManager not found. Has the game started yet?");
+                FloodManager.Main.StartInstantFlood();
+
+            }
+            else if (command == commands[16].ToLower())
+            {
+                // SetCanFlood [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
+                if (FloodManager.Main == null) throw new Exception("FloodManager not found. Has the game started yet?");
+                FloodManager.Main.SetCanFlood(defaultBool);
+            }
+            else if (command == commands[17].ToLower())
+            {
+                // SetFlood [0~1]
+                var floodLevel = args.Length > 1 ? float.Parse(args[1]) : 0f;
+                if (FloodManager.Main == null) throw new Exception("FloodManager not found. Has the game started yet?");
+                FloodManager.Main.SetFloodLevel(floodLevel);
+            }
+            else if (command == commands[18].ToLower())
+            {
+                // Scenario [name]
+                if (ScenarioManager.Main == null) throw new Exception("Fatal Error: ScenarioManager not found.");
+                if (args.Length > 1)
+                {
+                    if (args[1].Contains("none"))
+                    {
+                        ScenarioManager.Main.SetScenario(ScenarioPreset.None);
+                    }
+                    else if (args[1].Contains("corn"))
+                    {
+                        ScenarioManager.Main.SetScenario(ScenarioPreset.CornFarmDemo);
+                    }
+                    else if (args[1].Contains("mid"))
+                    {
+                        ScenarioManager.Main.SetScenario(ScenarioPreset.MidSizeFarmDemo);
+                    }
+                    else if (args[1].Contains("chicken"))
+                    {
+                        ScenarioManager.Main.SetScenario(ScenarioPreset.ChickenFarmDemo);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(UNKNOWN_ARGUMENT + $" '{args[1]}'");
+                    }
+                }
+                else
+                {
+                    ScenarioManager.Main.SetScenario(ScenarioPreset.None);
+                }
             }
             else
             {
@@ -284,7 +486,12 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         catch (IndexOutOfRangeException i)
         {
             OutputNextFrame(input);
-            Debug.Log("Incorrect number of arguments: " + i.Message);
+            string argsOut = "";
+            foreach (var arg in args)
+            {
+                argsOut += arg + " ";
+            }
+            Debug.Log($"Incorrect number of arguments:\n- Args.Lengths = {args.Length}\n- Args: {argsOut}\n- {i.Message}");
         }
         catch (Exception e)
         {

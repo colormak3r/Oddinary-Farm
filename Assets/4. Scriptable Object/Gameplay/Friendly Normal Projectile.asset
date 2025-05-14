@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Friendly Normal Projectile
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 04bf79effb8084349b31c5d946ff32b1, type: 3}
-  animatorController: {fileID: 0}
+  animator: {fileID: 0}
   speed: 50
   damage: 1
   lifeTime: 1
+  playVfx: 0
   damageType: 1
   hostility: 0

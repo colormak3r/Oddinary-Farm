@@ -1,16 +1,6 @@
-using System;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
-using Random = UnityEngine.Random;
-
-public enum ActiveTime
-{
-    Neutral,
-    Day,
-    Night
-}
 
 
 public class TargetDetector : NetworkBehaviour
@@ -24,9 +14,9 @@ public class TargetDetector : NetworkBehaviour
     private float escapeRange = 7f;
     [Tooltip("Detector get penaly range outsize of active time")]
     [SerializeField]
-    private ActiveTime activeTime;
-    [SerializeField]
     private float penaltyRange = 2f;
+    [SerializeField]
+    private ActiveTime activeTime = ActiveTime.Neutral;
     [SerializeField]
     private Hostility targetHostility;
     [SerializeField]
@@ -48,6 +38,7 @@ public class TargetDetector : NetworkBehaviour
     public UnityEvent<Transform> OnTargetEscaped;
 
     private DistanceComparer distanceComparer;
+    private EntityStatus entityStatus;
 
     public Transform CurrentTarget => currentTarget;
     public float DistanceToTarget
@@ -62,6 +53,7 @@ public class TargetDetector : NetworkBehaviour
     private void Start()
     {
         distanceComparer = new DistanceComparer(transform, Vector2.zero);
+        entityStatus = GetComponent<EntityStatus>();
     }
 
     public override void OnNetworkSpawn()
@@ -69,7 +61,7 @@ public class TargetDetector : NetworkBehaviour
         if (IsServer)
         {
             TimeManager.Main.OnDayStart.AddListener(HandleOnDayStart);
-            TimeManager.Main.OnDayStart.AddListener(HandleOnNightStart);
+            TimeManager.Main.OnNightStart.AddListener(HandleOnNightStart);
         }
     }
 
@@ -78,7 +70,7 @@ public class TargetDetector : NetworkBehaviour
         if (IsServer)
         {
             TimeManager.Main.OnDayStart.RemoveListener(HandleOnDayStart);
-            TimeManager.Main.OnDayStart.RemoveListener(HandleOnNightStart);
+            TimeManager.Main.OnNightStart.RemoveListener(HandleOnNightStart);
         }
     }
 
@@ -104,9 +96,10 @@ public class TargetDetector : NetworkBehaviour
         if (currentTarget == null)
         {
             currentTarget = ScanForTarget(transform.position, out var targetStatus);
-            if (currentTarget != null)
+            if (currentTarget != null && targetStatus != null)
             {
                 targetStatus.OnDeathOnServer.AddListener(HandleOnTargetDie);
+                OnPostTargetDetected(targetStatus);
 
                 if (showDebugs) Debug.Log("New target detected: " + currentTarget);
                 OnTargetDetected?.Invoke(currentTarget);
@@ -126,6 +119,7 @@ public class TargetDetector : NetworkBehaviour
     {
         targetStatus = null;
         var range = detectRange;
+
         if (activeTime == ActiveTime.Day && TimeManager.Main.IsNight || activeTime == ActiveTime.Night && TimeManager.Main.IsDay)
             range = penaltyRange;
 
@@ -141,11 +135,19 @@ public class TargetDetector : NetworkBehaviour
                     // Raycast to check for more desireable prey in line of sight
                     if (raycastTarget)
                     {
-                        var hit = Physics2D.Raycast(transform.position, candidate.position - transform.position, detectRange, targetMask);
-
-                        if (hit.transform == candidate) return candidate;
-                        if (hit.transform != null && ValidateValidTarget(candidate, out targetStatus))
-                            candidate = hit.transform;
+                        var raycastHits = Physics2D.RaycastAll(transform.position, candidate.position - transform.position, detectRange, targetMask);
+                        foreach (var raycastHit in raycastHits)
+                        {
+                            if (raycastHit.transform == transform) continue;
+                            if (raycastHit.transform == candidate)
+                            {
+                                return candidate;
+                            }
+                            if (raycastHit.transform != null && ValidateValidTarget(raycastHit.transform, out targetStatus))
+                            {
+                                return raycastHit.transform;
+                            }
+                        }
                     }
                     else
                     {
@@ -163,13 +165,37 @@ public class TargetDetector : NetworkBehaviour
 
     protected virtual bool ValidateValidTarget(Transform target, out EntityStatus targetStatus)
     {
+        if (target == transform)
+        {
+            targetStatus = null;
+            return false;
+        }
+
         targetStatus = target.GetComponent<EntityStatus>();
-        return targetStatus != null && targetStatus.Hostility == targetHostility;
+        return targetStatus != null && targetHostility == targetStatus.Hostility;
+    }
+
+    protected virtual void OnPostTargetDetected(EntityStatus targetStatus)
+    {
+
     }
 
     private void HandleOnTargetDie()
     {
-        if (showDebugs) Debug.Log($"{currentTarget} died");
+        if (currentTarget != null)
+            DeselectTarget($"{currentTarget} died");
+    }
+
+    protected void DeselectTarget(string reason)
+    {
+        if (currentTarget != null)
+        {
+            var status = currentTarget.GetComponent<EntityStatus>();
+            if (status != null)
+                status.OnDeathOnServer.RemoveListener(HandleOnTargetDie);
+        }
+
+        if (showDebugs) Debug.Log($"Deselecting target: {reason}");
         currentTarget = null;
     }
 
@@ -180,6 +206,7 @@ public class TargetDetector : NetworkBehaviour
         if (TimeManager.Main == null || !TimeManager.Main.IsInitialized) return;
 
         var detectRange = this.detectRange;
+
         if (activeTime == ActiveTime.Day && TimeManager.Main.IsNight || activeTime == ActiveTime.Night && TimeManager.Main.IsDay)
             detectRange = 2;
 

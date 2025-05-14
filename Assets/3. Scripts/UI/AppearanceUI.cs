@@ -47,7 +47,22 @@ public class AppearanceUI : UIBehaviour
     [SerializeField]
     private Transform contentTransform;
     [SerializeField]
-    private Image background;
+    private Image faceImage;
+    [SerializeField]
+    private Image headImage;
+    [SerializeField]
+    private Image hatImage;
+    [SerializeField]
+    private Image torsoImage;
+    [SerializeField]
+    private Image leftArmImage;
+    [SerializeField]
+    private Image rightArmImage;
+    [SerializeField]
+    private Image leftLegImage;
+    [SerializeField]
+    private Image rightLegImage;
+
 
     [Header("Debugs")]
     [SerializeField]
@@ -64,32 +79,10 @@ public class AppearanceUI : UIBehaviour
     public Hat CurrentHat => currentHat;
     public Outfit CurrentOutfit => currentOutfit;
 
-    protected override void OnEnable()
+    protected override void Start()
     {
-        base.OnEnable();
+        base.Start();
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.buildIndex == 0)
-        {
-            background.enabled = false;
-        }
-        else
-        {
-            background.enabled = true;
-        }
-    }
-
-    private void Start()
-    {
         currentFace = defaultFace;
         currentHead = defaultHead;
         currentHat = defaultHat;
@@ -176,24 +169,44 @@ public class AppearanceUI : UIBehaviour
     private void SetFace(Face face)
     {
         currentFace = face;
+        faceImage.sprite = face.DisplaySprite;
+
         if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateFace(face);
     }
 
     private void SetHead(Head head)
     {
         currentHead = head;
+        headImage.sprite = head.DisplaySprite;
+
         if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateHead(head);
     }
 
     private void SetHat(Hat hat)
     {
         currentHat = hat;
+        if (hat.name == "No Hat")
+        {
+            hatImage.enabled = false;
+        }
+        else
+        {
+            hatImage.enabled = true;
+            hatImage.sprite = hat.DisplaySprite;
+        }
+
         if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateHat(hat);
     }
 
     private void SetOutfit(Outfit outfit)
     {
         currentOutfit = outfit;
+        torsoImage.sprite = outfit.TorsoSprite;
+        leftArmImage.sprite = outfit.LeftArmSprite;
+        rightArmImage.sprite = outfit.RightArmSprite;
+        leftLegImage.sprite = outfit.LeftLegSprite;
+        rightLegImage.sprite = outfit.RightLegSprite;
+
         if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateOutfit(outfit);
     }
 }

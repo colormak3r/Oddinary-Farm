@@ -8,14 +8,6 @@ using UnityEngine;
 
 public class PlayerInteraction : NetworkBehaviour, IControllable
 {
-    [Header("Pickup Settings")]
-    [SerializeField]
-    private float pickupRadius = 6f;
-    [SerializeField]
-    private Vector3 pickupOffset = new Vector3(0, 0.75f);
-    [SerializeField]
-    private LayerMask itemLayer;
-
     [Header("Interaction Settings")]
     [SerializeField]
     private float interactionRadius = 2f;
@@ -46,31 +38,12 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
         if (!isControllable) return;
 
         // Run on the server only
-        ScanItemPickupOnServer();
+        // ScanItemPickupOnServer();
     }
 
     public void Interact()
     {
         currentInteractable?.Interact(transform);
-    }
-
-    private void ScanItemPickupOnServer()
-    {
-        if (!IsServer) return;
-
-        var hits = Physics2D.OverlapCircleAll(transform.position + pickupOffset, pickupRadius, itemLayer);
-        if (hits.Length > 0)
-        {
-            foreach (var hit in hits)
-            {
-                if (hit.TryGetComponent(out ItemReplica itemReplica))
-                {
-                    if (!itemReplica.CanBePickupValue) continue;
-
-                    itemReplica.Pickup(transform);
-                }
-            }
-        }
     }
 
     [SerializeField]
@@ -132,10 +105,6 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
         if (!showGizmos) return;
 
         Gizmos.color = Color.blue;
-        var pickupPos = transform.position + pickupOffset;
-        Gizmos.DrawWireSphere(pickupPos, pickupRadius);
-        Handles.Label(pickupPos.Add(pickupRadius), "Pickup\nRadius");
-
         var interactionPos = transform.position + interactionOffset;
         Gizmos.DrawWireSphere(interactionPos, interactionRadius);
         Handles.Label(interactionPos.Add(interactionRadius), "Interaction\nRadius");

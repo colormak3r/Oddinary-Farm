@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63517db498b643c42b0decdd941ba821, type: 3}
   m_Name: Corn Property
   m_EditorClassIdentifier: 
+  destroyOnHarvest: 0
   seedProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+  foodType: 2
+  foodColor: 8
   stages:
   - sprite: {fileID: 957528551, guid: ee8bed38253bd894fb3b26dea873b3b8, type: 3}
     duration: 1

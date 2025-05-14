@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4832175426095241245
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7832411632063004109, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2602807263
+      objectReference: {fileID: 0}
+    - target: {fileID: 7832411632063004109, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 1432730164
+      objectReference: {fileID: 0}
+    - target: {fileID: 8327819289072149800, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_Name
+      value: Stone Node Variant Variant 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8601433663545698842, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 2007986136508003152, guid: d67a48071c622a44fad6667a0966fcdd, type: 3}
+    - target: {fileID: 8878622740349291200, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878622740349291200, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878622740349291200, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878622740349291200, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878622740349291200, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878622740349291200, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878622740349291200, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878622740349291200, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878622740349291200, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878622740349291200, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}

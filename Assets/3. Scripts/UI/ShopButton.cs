@@ -24,7 +24,7 @@ public class ShopButton : MonoBehaviour
     {
         this.itemProperty = itemProperty;
 
-        displayImage.sprite = itemProperty.Sprite;
+        displayImage.sprite = itemProperty.IconSprite;
         nameText.text = itemProperty.Name;
         var value = (uint)Mathf.Max(Mathf.CeilToInt(itemProperty.Price * multiplier), 1);
         priceText.text = (shopMode == ShopMode.Buy ? "<color=#a53030>" : " <color=#75a743>")

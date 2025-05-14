@@ -1,0 +1,507 @@
+fileFormatVersion: 2
+guid: dc9a4e0d884560645a5d5db9fcb244fd
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8481392060098996671
+    second: RealSymbol_0
+  - first:
+      213: -8109225998214842726
+    second: RealSymbol_1
+  - first:
+      213: 479932906314778149
+    second: RealSymbol_2
+  - first:
+      213: 6889418612325543429
+    second: RealSymbol_3
+  - first:
+      213: -4727398731568813723
+    second: RealSymbol_4
+  - first:
+      213: -6024488613837326706
+    second: RealSymbol_5
+  - first:
+      213: 7853613403594520953
+    second: RealSymbol_6
+  - first:
+      213: 6583548046614177853
+    second: RealSymbol_7
+  - first:
+      213: 8959930986975894414
+    second: RealSymbol_8
+  - first:
+      213: -7681987035318944464
+    second: RealSymbol_9
+  - first:
+      213: -2084753577157713480
+    second: RealSymbol_10
+  - first:
+      213: -3102485903295225300
+    second: RealSymbol_11
+  - first:
+      213: 1858848850080644730
+    second: RealSymbol_12
+  - first:
+      213: 8374893720472180106
+    second: RealSymbol_13
+  - first:
+      213: -882985080913058520
+    second: RealSymbol_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 7
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: RealSymbol_0
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 4589
+        width: 142
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb9e40f6425f3b570800000000000000
+      internalID: 8481392060098996671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_1
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 4279
+        width: 142
+        height: 82
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a96ba0d4bed367f80800000000000000
+      internalID: -8109225998214842726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_2
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 3929
+        width: 132
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 526c9ec7f6019a600800000000000000
+      internalID: 479932906314778149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_3
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 3619
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50ee0a8e9b12c9f50800000000000000
+      internalID: 6889418612325543429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_4
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 3289
+        width: 142
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 569653586e7e46eb0800000000000000
+      internalID: -4727398731568813723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_5
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 2989
+        width: 122
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8637da5687b46ca0800000000000000
+      internalID: -6024488613837326706
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_6
+      rect:
+        serializedVersion: 2
+        x: 129
+        y: 2649
+        width: 72
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9797f74c7c3adfc60800000000000000
+      internalID: 7853613403594520953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_7
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 2359
+        width: 142
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d38a72831167d5b50800000000000000
+      internalID: 6583548046614177853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_8
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 2029
+        width: 112
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8b96bac2c1185c70800000000000000
+      internalID: 8959930986975894414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_9
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 1699
+        width: 132
+        height: 132
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03d78a60e79146590800000000000000
+      internalID: -7681987035318944464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_10
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 1409
+        width: 142
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b12a45caa77113e0800000000000000
+      internalID: -2084753577157713480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_11
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 1059
+        width: 112
+        height: 112
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c226e653281c1f4d0800000000000000
+      internalID: -3102485903295225300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_12
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 759
+        width: 162
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7e33383e25fbc910800000000000000
+      internalID: 1858848850080644730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_13
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 409
+        width: 112
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a85d4687779993470800000000000000
+      internalID: 8374893720472180106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RealSymbol_14
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 99
+        width: 162
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82525364fb10fb3f0800000000000000
+      internalID: -882985080913058520
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      RealSymbol_0: 8481392060098996671
+      RealSymbol_1: -8109225998214842726
+      RealSymbol_10: -2084753577157713480
+      RealSymbol_11: -3102485903295225300
+      RealSymbol_12: 1858848850080644730
+      RealSymbol_13: 8374893720472180106
+      RealSymbol_14: -882985080913058520
+      RealSymbol_2: 479932906314778149
+      RealSymbol_3: 6889418612325543429
+      RealSymbol_4: -4727398731568813723
+      RealSymbol_5: -6024488613837326706
+      RealSymbol_6: 7853613403594520953
+      RealSymbol_7: 6583548046614177853
+      RealSymbol_8: 8959930986975894414
+      RealSymbol_9: -7681987035318944464
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

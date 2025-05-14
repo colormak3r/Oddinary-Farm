@@ -1,6 +1,4 @@
 using ColorMak3r.Utility;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -24,32 +22,6 @@ public class AudioUI : UIBehaviour
     private Slider sfxSlider;
     [SerializeField]
     private Slider abmSlider;
-    [SerializeField]
-    private Image background;
-
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.buildIndex == 0)
-        {
-            background.enabled = false;
-        }
-        else
-        {
-            background.enabled = true;
-        }
-    }
 
     public void Initialize()
     {

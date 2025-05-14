@@ -1,11 +1,10 @@
 using ColorMak3r.Utility;
-
-using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UIElements;
 
 public class EntityStatus : NetworkBehaviour, IDamageable
 {
@@ -42,6 +41,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     public UnityEvent OnDeathOnServer;
 
     protected HealthBarUI healthBarUI;
+    public HealthBarUI HealthBarUI => healthBarUI;
     protected LootGenerator lootGenerator;
     protected AudioElement audioElement;
     protected Rigidbody2D rbody;
@@ -134,19 +134,19 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     }
     #endregion
 
-    #region Get Damaged
+    #region Take Damaged
 
-    [ContextMenu("Get Damaged")]
-    private void GetDamaged()
+    [ContextMenu("Take Damaged")]
+    private void TakeDamage()
     {
-        GetDamaged(1, DamageType.Slash, Hostility.Neutral, null);
+        TakeDamage(1, DamageType.Slash, Hostility.Neutral, null);
     }
 
-    public bool GetDamaged(uint damage, DamageType type, Hostility hostility, Transform attacker)
+    public bool TakeDamage(uint damage, DamageType type, Hostility hostility, Transform attacker)
     {
         if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {hostility}");
 
-        if (Hostility == hostility) return false;
+        if (Hostility == hostility && hostility != Hostility.Neutral) return false;
 
         if (!IsSpawned) return false;
 
@@ -155,20 +155,19 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (Time.time < nextDamagable) return false;
         nextDamagable = Time.time + iframeDuration;
 
-
-        GetDamagedRpc(damage, type, attacker?.gameObject);
+        TakeDamageRpc(damage, type, attacker?.gameObject);
 
         return true;
     }
 
     [Rpc(SendTo.Everyone)]
-    private void GetDamagedRpc(uint damage, DamageType type, NetworkObjectReference attackerRef)
+    private void TakeDamageRpc(uint damage, DamageType type, NetworkObjectReference attackerRef)
     {
         if (CurrentHealthValue > damage)
         {
             if (healthBarUI && damage > 0)
                 healthBarUI.SetValue(CurrentHealthValue - damage, maxHealth);
-            
+
 
             // Damaged sound
             if (audioElement)
@@ -197,7 +196,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
                 // TODO: Create virtual method that check for loot drop condition
                 // TODO: Pass attacker as prefer picker to loot generator
-                if (lootGenerator != null)
+                if (lootGenerator != null && type != DamageType.Water)
                 {
                     if (TryGetComponent(out Plant plant))
                     {
@@ -321,9 +320,32 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     #endregion
 
     #region Utility
-
     public uint GetCurrentHealth() => CurrentHealthValue;
     public Hostility GetHostility() => Hostility;
 
+    private void OnValidate()
+    {
+        // Check how many bits are set
+        int bitsSet = CountSetBits((int)hostility);
+
+        if (bitsSet > 1)
+        {
+            Debug.LogWarning("Only one Hostility value can be selected at a time. Defaulting to first selected.");
+            // Keep the least significant bit only
+            int firstBit = (int)hostility & -(int)hostility;
+            hostility = (Hostility)firstBit;
+        }
+    }
+
+    private int CountSetBits(int value)
+    {
+        int count = 0;
+        while (value != 0)
+        {
+            count += value & 1;
+            value >>= 1;
+        }
+        return count;
+    }
     #endregion
 }

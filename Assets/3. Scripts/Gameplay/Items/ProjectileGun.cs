@@ -7,6 +7,6 @@ public class ProjectileGun : RangedWeapon
     override public void OnPrimaryAction(Vector2 position)
     {
         base.OnPrimaryAction(position);
-        ShootProjectiles(position);
+        ItemSystem.ShootProjectiles(position, rangedWeaponProperty);
     }
 }

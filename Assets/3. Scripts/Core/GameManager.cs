@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,11 +13,18 @@ public class GameManager : NetworkBehaviour
     [SerializeField]
     private GameObject playerPrefab;
 
+    [Header("Gameover Settings")]
+    [SerializeField]
+    private bool canGameOver = true;
+
     [Header("Debugs")]
     [SerializeField]
     private bool isInitialized;
     [SerializeField]
     private bool isInitializing;
+    [SerializeField]
+    private bool isGameOver;
+    public bool IsGameOver => isGameOver;
 
     public bool IsInitialized => isInitialized;
 
@@ -30,8 +38,26 @@ public class GameManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
+        TimeManager.Main.OnHourChanged.AddListener(OnHourChanged);
         Initialize();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        TimeManager.Main.OnHourChanged.RemoveListener(OnHourChanged);
+    }
+
+    private void OnHourChanged(int currentHour)
+    {
+        if (!canGameOver) return;
+
+        if (FloodManager.Main.CurrentFloodLevelValue >= WorldGenerator.Main.HighestElevation)
+        {
+            var localPlayer = NetworkManager.Singleton.LocalClient.PlayerObject;
+            var escaped = localPlayer.GetComponent<HotAirBalloonController>().IsControlledValue;
+            localPlayer.GetComponent<ControllableController>().SetControl(false);
+            GameOver(escaped);
+        }
     }
 
     private void Initialize()
@@ -45,6 +71,7 @@ public class GameManager : NetworkBehaviour
         isInitializing = true;
 
         yield return WorldGenerator.Main.Initialize();
+        if (IsServer) yield return ScenarioManager.Main.RunTestPresetCoroutine();
         yield return TransitionUI.Main.HideCoroutine();
 
         if (TimeManager.Main.IsDay)
@@ -69,4 +96,27 @@ public class GameManager : NetworkBehaviour
 
         ConnectionManager.Main.Disconnect(false);
     }
+
+    #region Game Over
+
+    private Coroutine gameOverCoroutine;
+    public void GameOver(bool escaped)
+    {
+        if (gameOverCoroutine != null) return;
+        isGameOver = true;
+        Debug.Log($"Game Over: {escaped}");
+        GameOverUI.Main.SetGameoverText(escaped);
+        gameOverCoroutine = StartCoroutine(GameOverCoroutine());
+    }
+
+    public IEnumerator GameOverCoroutine()
+    {
+        yield return OptionsUI.Main.HideCoroutine();
+        yield return GameOverUI.Main.ShowCoroutine();
+        yield return new WaitForSeconds(5f);
+        yield return TransitionUI.Main.ShowCoroutine();
+        StartCoroutine(ReturnToMainMenuCoroutine());
+    }
+
+    #endregion
 }

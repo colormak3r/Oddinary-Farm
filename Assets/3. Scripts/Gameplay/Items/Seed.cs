@@ -1,23 +1,19 @@
 using ColorMak3r.Utility;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
-using Unity.Properties;
 using UnityEngine;
 
 public class Seed : Spawner
 {
     private SeedProperty seedProperty;
 
-    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
+    public override void Initialize(ItemProperty baseProperty)
     {
-        base.HandleOnPropertyChanged(previousValue, newValue);
-        seedProperty = (SeedProperty)newValue;
+        base.Initialize(baseProperty);
+        seedProperty = (SeedProperty)baseProperty;
     }
 
     public override bool CanPrimaryAction(Vector2 position)
     {
-        if (!IsInRange(position)) return false;
+        if (!ItemSystem.IsInRange(position, seedProperty.Range)) return false;
 
         position = position.SnapToGrid();
         var farmPlotHits = Physics2D.OverlapPointAll(position, seedProperty.FarmPlotLayer);
@@ -26,7 +22,7 @@ public class Seed : Spawner
             var plantHits = Physics2D.OverlapPointAll(position, seedProperty.PlantLayer);
             if (plantHits.Length > 0)
             {
-                if(showDebug) Debug.Log($"A plant already exist at {position}");
+                if (showDebug) Debug.Log($"A plant already exist at {position}");
                 return false;
             }
             else
@@ -40,12 +36,5 @@ public class Seed : Spawner
             if (showDebug) Debug.Log($"Need Farm Plot, use the Hoe to create Farm Plot at {position}");
             return false;
         }
-    }
-
-    protected override void OnSpawn(GameObject gameObject)
-    {
-        base.OnSpawn(gameObject);
-        var plant = gameObject.GetComponent<Plant>();
-        plant.Initialize(seedProperty.PlantProperty);
     }
 }

@@ -10,8 +10,11 @@ public class Selector : MonoBehaviour
     private bool showInEditor;
     [SerializeField]
     private Vector2 defaultSize = new Vector2(3, 3);
+    [SerializeField]
+    private SpriteRenderer borderRenderer;
+    [SerializeField]
+    private SpriteRenderer buttonRenderer;
 
-    private SpriteRenderer spriteRenderer;
     private bool testMode;
 
     private void Awake()
@@ -24,14 +27,12 @@ public class Selector : MonoBehaviour
 
     private void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.enabled = false;
+        Show(false);
     }
 
     private void Update()
     {
-        if (!testMode && !Application.isPlaying)
-            spriteRenderer.enabled = showInEditor;
+        if (!testMode && !Application.isPlaying) Show(showInEditor);
     }
 
     [ContextMenu("Reset")]
@@ -39,7 +40,7 @@ public class Selector : MonoBehaviour
     {
         testMode = false;
         transform.position = Vector2.zero;
-        spriteRenderer.size = defaultSize;
+        borderRenderer.size = defaultSize;
     }
 
     public void Test(Vector2 position, Vector2 size)
@@ -51,17 +52,19 @@ public class Selector : MonoBehaviour
     public void MoveTo(Vector2 position, bool show = true)
     {
         transform.position = position;
-        spriteRenderer.enabled = show;
+        Show(show);
     }
 
     public void Show(bool show)
     {
-        spriteRenderer.enabled = show;
+        borderRenderer.enabled = show;
+        buttonRenderer.enabled = show;
     }
 
     public void SetSelectorSize(Vector2 size)
     {
-        spriteRenderer.size = size;
+        borderRenderer.size = size;
+        buttonRenderer.transform.localEulerAngles = new Vector3(0, 2 + (size.y - 3) * 0.5f, 0);
     }
 
     public void Select(Vector2 position, Vector2 size)
@@ -74,7 +77,7 @@ public class Selector : MonoBehaviour
     {
         if (gameObject.TryGetComponent(out SelectorModifier modifier))
         {
-            Select(modifier.Position, modifier.Size);
+            if (modifier.CanBeSelected) Select(modifier.Position, modifier.Size);
         }
         else
         {

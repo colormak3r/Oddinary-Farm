@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14ee197070563344db18af2810a2479c, type: 3}
+  m_Name: Chihuahua MeleeWeapon Property
+  m_EditorClassIdentifier: 
+  iconSprite: {fileID: 0}
+  objectSprite: {fileID: 0}
+  prefab: {fileID: 7801270977288863951, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
+  isConsummable: 0
+  maxStack: 1
+  isSellable: 0
+  price: 1
+  range: 1
+  primaryCdr: 0.5
+  secondaryCdr: 0.25
+  pickupSound: {fileID: 0}
+  selectSound: {fileID: 0}
+  primarySound: {fileID: 0}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}
+  radius: 0.5
+  damage: 1
+  damageType: 1
+  hostility: 0
+  knockbackForce: 100
+  damageableLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  canHarvest: 0

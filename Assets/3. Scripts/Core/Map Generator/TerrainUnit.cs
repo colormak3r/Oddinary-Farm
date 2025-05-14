@@ -6,7 +6,7 @@ using UnityEngine;
 using static UnityEngine.Rendering.VolumeComponent;
 using Random = UnityEngine.Random;
 
-public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
+public class TerrainUnit : MonoBehaviour, ILocalObjectPoolBehaviour
 {
     private static Vector2[] SCAN_POSITION = new Vector2[]
     {
@@ -34,8 +34,6 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
     [SerializeField]
     private Sprite[] outlineSprites;
     [SerializeField]
-    private SpriteRenderer folliageRenderer;
-    [SerializeField]
     private SpriteRenderer outlineRenderer;
     [SerializeField]
     private SpriteRenderer spillOverRenderer;
@@ -43,8 +41,6 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
     private SpriteRenderer overlayRenderer;
     [SerializeField]
     private SpriteRenderer baseRenderer;
-    [SerializeField]
-    private SpriteRenderer underlayRenderer;
 
     [Header("Debugs")]
     [SerializeField]
@@ -67,13 +63,6 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
     {
         initCount++;
         this.property = property;
-
-        // Folliage
-        var folliage = property.FolliageSprite;
-        if (canSpawnFolliage && folliage != null && property.FolliageChance > Random.value)
-            folliageRenderer.sprite = folliage;
-        else
-            folliageRenderer.sprite = null;
 
         // Overlay
         overlayRenderer.sprite = property.OverlayChance > Random.value ? property.OverlaySprite : null;
@@ -143,7 +132,7 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolingBehaviour
         }
 
         // Block movement if not accessible
-        movementBlocker.enabled = !property.IsAccessible;
+        //movementBlocker.enabled = !property.IsAccessible;
     }
 
     private void RenderOutline(bool[] unmatchedNeighbor)

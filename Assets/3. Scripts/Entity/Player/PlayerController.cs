@@ -1,14 +1,11 @@
 using ColorMak3r.Utility;
-using System;
 using System.Collections;
+using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
-using UnityEngine.UIElements;
-using static UnityEngine.Rendering.DebugUI;
 
 public enum AnimationMode
 {
@@ -17,7 +14,7 @@ public enum AnimationMode
     Alternative
 }
 
-public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayActions, IControllable
+public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayActions, IControllable, IMoveable
 {
     private static Vector3 LEFT_DIRECTION = new Vector3(-1, 1, 1);
     private static Vector3 RIGHT_DIRECTION = new Vector3(1, 1, 1);
@@ -28,8 +25,17 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private Transform graphicTransform;
     [SerializeField]
     private Transform muzzleTransform;
+
     [SerializeField]
     private bool spriteFacingRight;
+
+    [Header("Controller Settings")]
+    [SerializeField]
+    private GameObject cursor;
+    [SerializeField]
+    private float sensitivity = 10f;
+    [SerializeField]
+    private float smoothing = 10f;
 
     [Header("Graphic Settings")]
     [SerializeField]
@@ -40,18 +46,24 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private SpriteRenderer itemRotationRenderer;
     [SerializeField]
     private GameObject armRotation;
+    [SerializeField]
+    private RenderTexture renderTexture;
 
     [Header("Debug")]
     [SerializeField]
     private bool showDebugs;
     [SerializeField]
     private bool showGizmos;
-
-    private bool isControllable = true;
-    private Vector2 lookPosition;
     [SerializeField]
-    private Vector2 playerPosition_cached = Vector2.one;
-    private Vector2 mousePosition;
+    private bool isController;
+    [SerializeField]
+    private Vector2 lookPosition;
+    public static Vector2 LookPosition { get; private set; }
+
+    [SerializeField]
+    private Vector2 screenMousePos;
+    [SerializeField]
+    private Vector2 controllerDirection;
 
     private float nextPrimary;
     private float nextSecondary;
@@ -59,9 +71,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private EntityMovement movement;
     private PlayerInventory inventory;
     private PlayerInteraction interaction;
-
     private Previewer previewer;
-
+    private Rigidbody2D rbody;
     private Animator animator;
     private NetworkAnimator networkAnimator;
     private PlayerAnimationController animationController;
@@ -71,13 +82,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
-    public static Vector2 LookPosition { get; private set; }
-
     public static Transform MuzzleTransform;
 
     private bool rotateArm = false;
+    private bool isPointerOverUI;
 
     private Item currentItem;
+    private Camera mainCamera;
+    private GameplayRenderer gameplayRenderer;
 
     private void Awake()
     {
@@ -85,44 +97,56 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         inventory = GetComponent<PlayerInventory>();
         interaction = GetComponent<PlayerInteraction>();
         animator = GetComponentInChildren<Animator>();
-        networkAnimator = GetComponent<NetworkAnimator>();
+        rbody = GetComponent<Rigidbody2D>();
         animationController = GetComponentInChildren<PlayerAnimationController>();
+        mainCamera = Camera.main;
+        gameplayRenderer = GameplayRenderer.Main;
     }
 
     private void OnEnable()
     {
-        inventory.OnCurrentItemChanged += HandleCurrentItemPropertyChanged;
+        inventory.OnCurrentItemPropertyChanged += HandleCurrentItemPropertyChanged;
+        inventory.OnCurrentItemChanged += HandleCurrentItemChanged;
     }
 
     private void OnDisable()
     {
-        inventory.OnCurrentItemChanged -= HandleCurrentItemPropertyChanged;
+        inventory.OnCurrentItemPropertyChanged -= HandleCurrentItemPropertyChanged;
+        inventory.OnCurrentItemChanged -= HandleCurrentItemChanged;
+
 
         if (isOwner)
         {
-            Camera.main.transform.parent = null;
             InputManager.Main.InputActions.Gameplay.SetCallbacks(null);
         }
     }
 
-    private void HandleCurrentItemPropertyChanged(Item item)
-    {
-        currentItem = item;
+    private void HandleCurrentItemChanged(Item item) => currentItem = item;
 
+    private void HandleCurrentItemPropertyChanged(ItemProperty itemProperty)
+    {
         if (isOwner) Preview(lookPosition);
 
-        rotateArm = item is RangedWeapon;
+        if (itemProperty == null)
+        {
+            armRotation.SetActive(false);
+            arm.SetActive(true);
+            itemRenderer.sprite = null;
+            return;
+        }
+
+        rotateArm = itemProperty is RangedWeaponProperty;
         if (rotateArm)
         {
             armRotation.SetActive(true);
             arm.SetActive(false);
-            itemRotationRenderer.sprite = item.PropertyValue.Sprite;
+            itemRotationRenderer.sprite = itemProperty.ObjectSprite;
         }
         else
         {
             armRotation.SetActive(false);
             arm.SetActive(true);
-            itemRenderer.sprite = item.PropertyValue.Sprite;
+            itemRenderer.sprite = itemProperty.ObjectSprite;
         }
     }
 
@@ -134,6 +158,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         Initialize();
         HandleOnIsFacingRightChanged(false, IsFacingRight.Value);
     }
+
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
@@ -156,14 +181,62 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (!GameManager.Main.IsInitialized) return;
 
-        if (playerPosition_cached != (Vector2)transform.position)
+        // WorldGenerator.BuildWorld has been moved to WorldRenderer
+        // This is so the spectator can also make use of the world generator
+
+        isPointerOverUI = EventSystem.current.IsPointerOverGameObject();
+
+        // Set cursor position
+        if (!isController)
         {
-            playerPosition_cached = transform.position;
-            StartCoroutine(WorldGenerator.Main.BuildWorld(transform.position));
+            var rawImageRectTransform = gameplayRenderer.RawImage.rectTransform;
+            // Convert mouse position to local position within RawImage
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rawImageRectTransform,
+                screenMousePos,
+                gameplayRenderer.UICamera,
+                out var localMousePos);
+
+            // Normalize local coordinates (0-1)
+            Rect rect = rawImageRectTransform.rect;
+            float normalizedX = (localMousePos.x - rect.x) / rect.width;
+            float normalizedY = (localMousePos.y - rect.y) / rect.height;
+
+            // Convert normalized coordinates to RenderTexture coordinates
+            var renderTexPos = new Vector3(
+                normalizedX * renderTexture.width,
+                normalizedY * renderTexture.height,
+                mainCamera.nearClipPlane);
+
+            lookPosition = mainCamera.ScreenToWorldPoint(renderTexPos);
+        }
+        else
+        {
+            float camHeight = 2f * mainCamera.orthographicSize;
+            float camWidth = camHeight * mainCamera.aspect;
+
+            Vector3 camCenter = mainCamera.transform.position;
+
+            float left = camCenter.x - camWidth / 2f;
+            float right = camCenter.x + camWidth / 2f;
+            float bottom = camCenter.y - camHeight / 2f;
+            float top = camCenter.y + camHeight / 2f;
+
+            // Move cursor
+            Vector3 targetPos = cursor.transform.position + (Vector3)(controllerDirection.normalized * sensitivity);
+            cursor.transform.position = Vector3.Lerp(cursor.transform.position, targetPos, smoothing * Time.deltaTime);
+
+            // Clamp position
+            Vector2 clampedPos = cursor.transform.position;
+            clampedPos.x = Mathf.Clamp(clampedPos.x, left, right);
+            clampedPos.y = Mathf.Clamp(clampedPos.y, bottom, top);
+            cursor.transform.position = (Vector3)clampedPos;
+
+            lookPosition = cursor.transform.position;
         }
 
-        lookPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         LookPosition = lookPosition;
+
         IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;
 
         if (rotateArm) RotateArm(lookPosition);
@@ -179,14 +252,10 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private IEnumerator InitializeCoroutine()
     {
-        // Set camera
-        Camera.main.transform.parent = transform;
-        Camera.main.transform.localPosition = Camera.main.transform.position;
-
-        CharacterCamera.Main.transform.parent = transform;
-        CharacterCamera.Main.transform.localPosition = CharacterCamera.Main.transform.position;
-
         yield return new WaitUntil(() => GameManager.Main.IsInitialized);
+
+        // Set camera
+        Spectator.Main.SetCamera(transform);
 
         // Set control
         InputManager.Main.InputActions.Gameplay.SetCallbacks(this);
@@ -205,7 +274,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (!isControllable) return;
+        if (!isControllable || !isMoveable) return;
 
         var direction = context.ReadValue<Vector2>().normalized;
         movement.SetDirection(direction);
@@ -217,8 +286,11 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (!isControllable) return;
 
         if (Camera.main == null) return;
+        isController = false;
+        cursor.SetActive(false);
+        Cursor.visible = true;
 
-        mousePosition = context.ReadValue<Vector2>();
+        screenMousePos = context.ReadValue<Vector2>();
     }
 
     public void OnLookDirection(InputAction.CallbackContext context)
@@ -226,8 +298,11 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (!isControllable) return;
 
         if (Camera.main == null) return;
+        isController = true;
+        cursor.SetActive(true);
+        Cursor.visible = false;
 
-        CursorUI.Main.MoveCursor(context.ReadValue<Vector2>().normalized);
+        controllerDirection = context.ReadValue<Vector2>();
     }
 
     private void RotateArm(Vector2 lookPosition)
@@ -331,6 +406,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
     }
 
+    public void OnToggleUI(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            UIManager.Main.ToggleUI();
+        }
+    }
+
     #region Player Action
 
     private Vector2? primaryPosition;
@@ -341,13 +424,16 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private bool firstCallIgnored;
     public void OnPrimary(InputAction.CallbackContext context)
     {
-        if (!isControllable) return;
+        if (!isControllable || isPointerOverUI) return;
 
         if (context.performed)
         {
-            isPrimaryCoroutineRunning = true;
-            firstCallIgnored = false;
-            primaryCoroutine = StartCoroutine(PrimaryActionCoroutine());
+            if (!isPrimaryCoroutineRunning)
+            {
+                isPrimaryCoroutineRunning = true;
+                firstCallIgnored = false;
+                primaryCoroutine = StartCoroutine(PrimaryActionCoroutine());
+            }
         }
         else if (context.canceled)
         {
@@ -370,12 +456,12 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         {
             if (currentItem != null && Time.time > nextPrimary)
             {
-                var itemProperty = currentItem.PropertyValue;
+                var itemProperty = currentItem.BaseProperty;
                 nextPrimary = Time.time + itemProperty.PrimaryCdr;
 
                 if (currentItem is RangedWeapon)
                 {
-                    networkAnimator.SetTrigger("Shoot");
+                    SetTriggerRpc("Shoot");
                     currentItem.OnPrimaryAction(lookPosition);
                     SyncArmRotationRpc(lookPosition);
                 }
@@ -385,7 +471,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
                     {
                         primaryPosition = lookPosition;
                         animationController.ChopAnimationMode = AnimationMode.Primary;
-                        networkAnimator.SetTrigger("Chop");
+                        SetTriggerRpc("Chop");
                     }
                     else
                     {
@@ -404,13 +490,19 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         RotateArm(lookPosition);
     }
 
+    [Rpc(SendTo.Everyone)]
+    private void SetTriggerRpc(FixedString32Bytes animation)
+    {
+        animator.SetTrigger(animation.ToString());
+    }
+
     public void Chop(AnimationMode mode)
     {
         if (!IsOwner) return;
 
         if (!isPrimaryCoroutineRunning && firstCallIgnored) return;
 
-        var itemProperty = currentItem.PropertyValue;
+        var itemProperty = currentItem.BaseProperty;
         switch (mode)
         {
             case AnimationMode.Primary:
@@ -544,6 +636,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     #endregion
 
+    private bool isControllable = true;
     public void SetControllable(bool value)
     {
         isControllable = value;
@@ -552,6 +645,20 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         {
             movement.SetDirection(Vector2.zero);
             animator.SetBool("IsMoving", false);
+            rbody.linearVelocity = Vector2.zero;
+            OnPrimaryCancelled();
+        }
+    }
+
+    private bool isMoveable = true;
+    public void SetMoveable(bool value)
+    {
+        isMoveable = value;
+        if (!isMoveable)
+        {
+            movement.SetDirection(Vector2.zero);
+            animator.SetBool("IsMoving", false);
+            rbody.linearVelocity = Vector2.zero;
             OnPrimaryCancelled();
         }
     }

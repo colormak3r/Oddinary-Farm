@@ -5,7 +5,8 @@ public enum DamageType
 {
     Blunt,
     Pierce,
-    Slash
+    Slash,
+    Water,
 }
 
 [System.Serializable]
@@ -13,7 +14,7 @@ public enum Hostility
 {
     Friendly,
     Neutral,
-    Enemy,
+    Hostile,
 }
 
 
@@ -21,5 +22,5 @@ public interface IDamageable
 {
     public uint GetCurrentHealth();
     public Hostility GetHostility();
-    public bool GetDamaged(uint damage, DamageType type, Hostility hostility, Transform attacker);
+    public bool TakeDamage(uint damage, DamageType type, Hostility hostility, Transform attacker);
 }

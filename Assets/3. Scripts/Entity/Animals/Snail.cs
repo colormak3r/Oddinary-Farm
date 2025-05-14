@@ -10,10 +10,6 @@ public class Snail : Animal
     private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
     private float nextIdleStateChange;
 
-    /*private static int STATE_COUNT = 3;
-    private float[] selectedCounts = new float[STATE_COUNT];
-    private float[] adjustedWeights = new float[STATE_COUNT];*/
-
     private BehaviourState thinkingState;
     private BehaviourState nibblingState;
     private BehaviourState roamingState;
@@ -27,18 +23,21 @@ public class Snail : Animal
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+
         if (IsServer)
-            Item.PropertyValue = handProperty;
+        {
+            CurrentItem.Initialize(handProperty);
 
-        thinkingState = new ThinkingState(this);
-        nibblingState = new NibblingState(this);
-        roamingState = new RoamingState(this);
+            thinkingState = new ThinkingState(this);
+            nibblingState = new NibblingState(this);
+            roamingState = new RoamingState(this);
 
-        chasingState = new ChasingState(this);
-        attackPrimaryState = new AttackPrimaryState(this);
+            chasingState = new ChasingState(this);
+            attackPrimaryState = new AttackPrimaryState(this);
 
-        idleStates = new BehaviourState[] { thinkingState, nibblingState, roamingState };
-        activeStates = new BehaviourState[] { chasingState, attackPrimaryState };
+            idleStates = new BehaviourState[] { thinkingState, nibblingState, roamingState };
+            activeStates = new BehaviourState[] { chasingState, attackPrimaryState };
+        }
     }
 
     protected override void HandleTransitions()

@@ -30,14 +30,12 @@ public class LocalObjectPooling : MonoBehaviour
         if (pool.childCount == 0)
         {
             var newObj = Instantiate(prefab, pool);
-            newObj.GetComponent<LocalObjectController>().LocalDespawn();
-            newObj.SetActive(false);
+            newObj.GetComponent<LocalObjectController>().LocalDespawn(true);
         }
 
         var obj = pool.GetChild(0).gameObject;
-        obj.GetComponent<LocalObjectController>().LocalSpawn(pool);
+        obj.GetComponent<LocalObjectController>().LocalSpawn(pool, false);
         obj.transform.SetParent(null);
-        obj.SetActive(true);
         return obj;
     }
 
@@ -49,9 +47,8 @@ public class LocalObjectPooling : MonoBehaviour
             return;
         }
 
-        controller.LocalDespawn();
+        controller.LocalDespawn(false);
         obj.transform.SetParent(controller?.Pool);
-        obj.SetActive(false);
     }
 
     private Transform GetPool(string poolGuid)

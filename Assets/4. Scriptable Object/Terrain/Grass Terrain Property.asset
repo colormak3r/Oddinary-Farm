@@ -23,13 +23,29 @@ MonoBehaviour:
   folliageSprite:
   - {fileID: 1913753943, guid: 4eed87844f6b4cb4999dd860b5814bc8, type: 3}
   - {fileID: -638667126, guid: 4eed87844f6b4cb4999dd860b5814bc8, type: 3}
-  overlayChance: 0.3
+  overlayChance: 0.5
   overlaySprite:
   - {fileID: -195600167, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   - {fileID: -1242867259, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   - {fileID: 452024279, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   - {fileID: -955997953, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   - {fileID: -1017474284, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: 1004080422816570566, guid: 29d9142acf5d8f6429123b9a15dbf74c, type: 3}
+  - {fileID: 7878350701369403010, guid: 29d9142acf5d8f6429123b9a15dbf74c, type: 3}
+  - {fileID: -3308264893413586710, guid: 29d9142acf5d8f6429123b9a15dbf74c, type: 3}
+  - {fileID: 3084633136092836068, guid: 29d9142acf5d8f6429123b9a15dbf74c, type: 3}
+  - {fileID: -385744577406533623, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
+  - {fileID: -7578728654279578301, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
+  - {fileID: 4039921843909368678, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
+  - {fileID: -2692177557340580562, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
+  - {fileID: -7815812544622478228, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
+  - {fileID: -807010756172847261, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
+  - {fileID: -1491122720304989420, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
+  - {fileID: -7883742321797794808, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
+  - {fileID: -4466505561904582168, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
+  - {fileID: 9189744330189052959, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
+  - {fileID: -2114031190601681668, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
+  - {fileID: 7561526583089643947, guid: 276abe3141de56e489e3a9cfd3292f74, type: 3}
   baseSprite:
   - {fileID: 1356425900, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   underlaySprite: []

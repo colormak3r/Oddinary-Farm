@@ -11,6 +11,14 @@ public class SerializationInitializer : MonoBehaviour
         UserNetworkVariableSerialization<ItemProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<ItemProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
 
+        UserNetworkVariableSerialization<SpawnerProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<SpawnerProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
+        UserNetworkVariableSerialization<SpawnerProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
+        UserNetworkVariableSerialization<RangedWeaponProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<RangedWeaponProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
+        UserNetworkVariableSerialization<RangedWeaponProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
         UserNetworkVariableSerialization<PlantProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<PlantProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<PlantProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
@@ -22,6 +30,10 @@ public class SerializationInitializer : MonoBehaviour
         UserNetworkVariableSerialization<StructureProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<StructureProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<StructureProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
+        UserNetworkVariableSerialization<ConsummableProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
+        UserNetworkVariableSerialization<ConsummableProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<ConsummableProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
 
         UserNetworkVariableSerialization<Face>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<Face>.ReadValue = SerializationExtensions.ReadValueSafe;

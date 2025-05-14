@@ -1,0 +1,654 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21169d3da4f6e5e42b73ed03f366f42e, type: 3}
+  m_Name: MidSizeFarm AssetSpawnPreset
+  m_EditorClassIdentifier: 
+  PrefabPositions:
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -6, y: 6}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -7, y: 6}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -7, y: 5}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -6, y: 5}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -5, y: 5}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -4, y: 1}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -5, y: 1}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -6, y: 1}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -7, y: 1}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -7, y: 0}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -6, y: 0}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -5, y: 0}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -4, y: 0}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -4, y: -1}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -5, y: -1}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -6, y: -1}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: -7, y: -1}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: 12, y: 3}
+  - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
+    Position: {x: 12, y: -1}
+  SpawnerPositions:
+  - SpawnerProperty: {fileID: 11400000, guid: 2810a9b24fd3a7d43915c25690fa6ab6, type: 2}
+    Position: {x: 3, y: 5.5}
+    Offset: {x: 0, y: -1.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 7ff36c4f461a9e74383fb79e175e7668, type: 2}
+    Position: {x: 6, y: 1.5}
+    Offset: {x: 0, y: -1.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 12, y: 4}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 11, y: 4}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 11, y: 3}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 11, y: 2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 12, y: 2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 13, y: 2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 13, y: 3}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 13, y: 4}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -5, y: 2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -6, y: 2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -7, y: 2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -8, y: 2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -8, y: 1}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -8, y: 0}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -8, y: -1}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -8, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -7, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -6, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -5, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -4, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -3, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -4, y: 2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -3, y: 2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -3, y: 1}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -3, y: -1}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 4eb942db31b1eb44daf110782f45f750, type: 2}
+    Position: {x: 6, y: 5.5}
+    Offset: {x: 0, y: -1.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 21a6eec7aadd95b4c9b5231e46b0b1e8, type: 2}
+    Position: {x: 3, y: -2.5}
+    Offset: {x: 0, y: -1.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 5ab8ad29cacfa1e4e9b28e46964c96f2, type: 2}
+    Position: {x: 6, y: -2.5}
+    Offset: {x: 0, y: -1.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 11, y: 0}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 12, y: 0}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 13, y: 0}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 13, y: -1}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 13, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 11, y: -1}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 11, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: 12, y: -2}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 4730fab78f887a545a3e7218b4a76356, type: 2}
+    Position: {x: 12, y: 3}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 4730fab78f887a545a3e7218b4a76356, type: 2}
+    Position: {x: 12, y: -1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+    Position: {x: -7, y: 1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+    Position: {x: -6, y: 1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+    Position: {x: -4, y: 1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+    Position: {x: -5, y: 0}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+    Position: {x: -6, y: 0}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+    Position: {x: -7, y: 0}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+    Position: {x: -7, y: -1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+    Position: {x: -5, y: -1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
+    Position: {x: -4, y: -1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -8, y: 4}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -8, y: 5}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -8, y: 6}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -7, y: 4}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -6, y: 4}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -5, y: 4}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -4, y: 4}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 8ff583f245ec12d49a69b2b59128ef34, type: 2}
+    Position: {x: -5, y: 6}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -8, y: 7}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -7, y: 7}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -6, y: 7}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -5, y: 7}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -4, y: 7}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -4, y: 6}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
+    Position: {x: -4, y: 5}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 2, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 3, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 4, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 6, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 5, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -1, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -3, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -2, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -5, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -4, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -6, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -7, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -9, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -8, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -10, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -11, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: -7}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: -6}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: -5}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: -4}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: 2}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: 1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: 0}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: -1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: -2}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: -3}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: 6}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: 7}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: 5}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -13, y: 5}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -15, y: 5}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -14, y: 5}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -13, y: 2}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -14, y: 2}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -15, y: 2}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -15, y: 1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -15, y: 0}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -15, y: -1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -14, y: -1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -13, y: -1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: 8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: 9}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -15, y: 6}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -15, y: 8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -15, y: 7}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -13, y: 8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -14, y: 8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: 10}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -12, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -8, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -9, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -11, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -10, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -7, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -6, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -5, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -3, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -4, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -2, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -1, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 0, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 1, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 2, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 3, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 4, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -1, y: -9}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -4, y: -9}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -4, y: -10}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -4, y: -11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -3, y: -11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -2, y: -11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -1, y: -11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: -1, y: -10}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 2, y: -9}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 2, y: -10}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 2, y: -11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 3, y: -11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 4, y: -11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 5, y: -9}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 5, y: -10}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 5, y: -11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 7, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 8, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 9, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 10, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 11, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 12, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 13, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 14, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 15, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 16, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: -8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: -2}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: -3}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: -4}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: -5}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: -6}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: -7}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: -1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 0}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 1}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 2}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 3}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 5652e2a6a33384749b44907c01239425, type: 2}
+    Position: {x: 3.5, y: -9.5}
+    Offset: {x: 0, y: -0.25}
+  - SpawnerProperty: {fileID: 11400000, guid: 5652e2a6a33384749b44907c01239425, type: 2}
+    Position: {x: -13.5, y: 0.5}
+    Offset: {x: 0, y: -0.25}
+  - SpawnerProperty: {fileID: 11400000, guid: 5652e2a6a33384749b44907c01239425, type: 2}
+    Position: {x: -13.5, y: 6.5}
+    Offset: {x: 0, y: -0.25}
+  - SpawnerProperty: {fileID: 11400000, guid: 5652e2a6a33384749b44907c01239425, type: 2}
+    Position: {x: -2.5, y: -9.5}
+    Offset: {x: 0, y: -0.25}
+  - SpawnerProperty: {fileID: 11400000, guid: 5652e2a6a33384749b44907c01239425, type: 2}
+    Position: {x: -2.5, y: -9.5}
+    Offset: {x: 0, y: -0.25}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 4}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 5}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 6}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 7}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 8}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 10}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 17, y: 9}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 16, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 15, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 14, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 13, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 12, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 11, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 10, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 9, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 5, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 6, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 7, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 0ab14d8674945ac49936e4eecb9b6812, type: 2}
+    Position: {x: 8, y: 11}
+    Offset: {x: 0, y: 0}
+  - SpawnerProperty: {fileID: 11400000, guid: 63d7aa30540d8de4e82ee223d5f2ca92, type: 2}
+    Position: {x: -11, y: -7}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 63d7aa30540d8de4e82ee223d5f2ca92, type: 2}
+    Position: {x: 16, y: -7}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 63d7aa30540d8de4e82ee223d5f2ca92, type: 2}
+    Position: {x: 16, y: 10}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 63d7aa30540d8de4e82ee223d5f2ca92, type: 2}
+    Position: {x: -11, y: 10}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 63d7aa30540d8de4e82ee223d5f2ca92, type: 2}
+    Position: {x: -3, y: 7}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 63d7aa30540d8de4e82ee223d5f2ca92, type: 2}
+    Position: {x: -3, y: -3}
+    Offset: {x: 0, y: -0.5}
+  - SpawnerProperty: {fileID: 11400000, guid: 63d7aa30540d8de4e82ee223d5f2ca92, type: 2}
+    Position: {x: 10, y: 2}
+    Offset: {x: 0, y: -0.5}

@@ -85,12 +85,12 @@ public class ShopUI : UIBehaviour
         }
 
         var index = 0;
-        foreach (var entry in playerInventory.Inventory)
+        foreach (var slot in playerInventory.Inventory)
         {
-            if (!entry.IsStackEmpty && entry.Property.IsSellable)
+            if (!slot.IsEmpty && slot.Property.IsSellable)
             {
                 var shopButton = Instantiate(shopButtonPrefab, contentContainer);
-                shopButton.GetComponent<ShopButton>().SetShopEntry(entry.Property, this, shopMode, shopInventory.PenaltyMultiplier, index, entry.Count);
+                shopButton.GetComponent<ShopButton>().SetShopEntry(slot.Property, this, shopMode, shopInventory.PenaltyMultiplier, index, slot.Count);
             }
             index++;
         }
@@ -112,14 +112,16 @@ public class ShopUI : UIBehaviour
 
         InventoryUI.Main.CloseInventory();
 
-        if (shopMode == ShopMode.Buy)
+        // Always default to buy mode
+        ShopModeBuy();
+        /*if (shopMode == ShopMode.Buy)
         {
             ShopModeBuy();
         }
         else
         {
             ShopModeSell();
-        }
+        }*/
 
         StartCoroutine(ShowCoroutine());
     }
@@ -159,7 +161,7 @@ public class ShopUI : UIBehaviour
             else
             {
                 playerInventory.ConsumeCoinsOnClient(itemProperty.Price);
-                if (!playerInventory.AddItemOnClient(itemProperty))
+                if (!playerInventory.AddItem(itemProperty))
                 {
                     AssetManager.Main.SpawnItem(itemProperty, shopTransform.transform.position - new Vector3(0, 1), default, default, 0.5f, false);
                 }
@@ -175,7 +177,7 @@ public class ShopUI : UIBehaviour
 
             button.UpdateEntry(playerInventory.Inventory[index].Count);
 
-            if (playerInventory.Inventory[index].IsStackEmpty)
+            if (playerInventory.Inventory[index].IsEmpty)
                 button.Remove();
         }
     }

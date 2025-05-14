@@ -7,10 +7,10 @@ public class Hoe : Tool
 {
     private HoeProperty hoeProperty;
 
-    protected override void HandleOnPropertyChanged(ItemProperty previousValue, ItemProperty newValue)
+    public override void Initialize(ItemProperty baseProperty)
     {
-        base.HandleOnPropertyChanged(previousValue, newValue);
-        hoeProperty = (HoeProperty)newValue;
+        base.Initialize(baseProperty);
+        hoeProperty = (HoeProperty)baseProperty;
     }
 
     public override bool CanPrimaryAction(Vector2 position)
@@ -18,14 +18,14 @@ public class Hoe : Tool
         position = position.SnapToGrid();
 
         // Check if the action is in range
-        if (!IsInRange(position))
+        if (!ItemSystem.IsInRange(position, hoeProperty.Range))
         {
             if (showDebug) Debug.Log($"Cannot hoe primary at {position}, out of range");
             return false;
         }
 
         // Check if there is any invalid object in the area
-        var invalid = OverlapArea(hoeProperty.Size, position, hoeProperty.InvalidLayers);
+        var invalid = ItemSystem.OverlapArea(hoeProperty.Size, position, hoeProperty.InvalidLayers);
         if (invalid)
         {
             if (showDebug) Debug.Log($"Cannot hoe at {position}, {invalid.name} is blocking", invalid);
@@ -33,7 +33,7 @@ public class Hoe : Tool
         }
 
         // Check if the terrain is accessible
-        var terrainHits = OverlapAreaAll(hoeProperty.Size, position, hoeProperty.TerrainLayer);
+        var terrainHits = ItemSystem.OverlapAreaAll(hoeProperty.Size, position, hoeProperty.TerrainLayer);
         foreach (var terrainHit in terrainHits)
         {
             if (terrainHit && terrainHit.TryGetComponent<TerrainUnit>(out var terrain))
@@ -53,23 +53,15 @@ public class Hoe : Tool
     {
         position = position.SnapToGrid();
         base.OnPrimaryAction(position);
-        HoePrimaryRpc(position);
 
-        // Run on both client and server
-        ClearFoliage(position);
-    }
-
-    [Rpc(SendTo.Server)]
-    private void HoePrimaryRpc(Vector2 position)
-    {
-        GameObject go = Instantiate(AssetManager.Main.FarmPlotPrefab, position - TransformUtility.HALF_UNIT_Y_V2, Quaternion.identity);
-        go.GetComponent<NetworkObject>().Spawn();
+        ItemSystem.SpawnFarmPlot(position);
+        ItemSystem.ClearFoliage(position);
     }
 
     public override bool CanSecondaryAction(Vector2 position)
     {
         position = position.SnapToGrid();
-        if (!IsInRange(position))
+        if (!ItemSystem.IsInRange(position, hoeProperty.Range))
         {
             if (showDebug) Debug.Log($"Cannot hoe secondary at {position}, out of range");
             return false;
@@ -92,10 +84,11 @@ public class Hoe : Tool
     {
         position = position.SnapToGrid();
         base.OnSecondaryAction(position);
-        HoeSecondaryRpc(position);
+        ItemSystem.RemoveFarmPlot(position);
+        ItemSystem.RemovePlant(position, transform.root.gameObject);
     }
 
-    [Rpc(SendTo.Server)]
+    /*[Rpc(SendTo.Server)]
     private void HoeSecondaryRpc(Vector2 position)
     {
         var plantCollider = Physics2D.OverlapPoint(position, hoeProperty.PlantLayer);
@@ -129,7 +122,7 @@ public class Hoe : Tool
                 Destroy(farmPlotCollider.gameObject);
             }
         }
-    }
+    }*/
 
     public override void OnAlternativeAction(Vector2 position)
     {

@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6192771472422555605}
+  - component: {fileID: 6948069122231606565}
   - component: {fileID: 9159464650693773075}
   m_Layer: 0
   m_Name: Graphic
@@ -32,6 +33,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8621750548790731105}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &6948069122231606565
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336516039845827979}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 1
 --- !u!212 &9159464650693773075
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -55,7 +68,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 1ea7b98f1bc748b4d8bba8ec4b7b39df, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -183,7 +196,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8621750548790731105}
-  - component: {fileID: 888831618389870335}
   - component: {fileID: 920368688514997986}
   - component: {fileID: 522058045809341280}
   - component: {fileID: 85431059599336174}
@@ -192,6 +204,8 @@ GameObject:
   - component: {fileID: 2716061224191504710}
   - component: {fileID: -6155909306260649949}
   - component: {fileID: 6584886272789103332}
+  - component: {fileID: 2381061234703857880}
+  - component: {fileID: 2269034370699265688}
   m_Layer: 9
   m_Name: Plant
   m_TagString: Untagged
@@ -217,18 +231,6 @@ Transform:
   - {fileID: 3613605280266936849}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &888831618389870335
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4773706747441023441}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_SortAtRoot: 0
 --- !u!114 &920368688514997986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +270,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
   AuthorityMode: 0
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
@@ -507,6 +519,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundEffects: []
+--- !u!114 &2381061234703857880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4773706747441023441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb3a73215c6ef244bb1c51d2ce68c82f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  drownTickRate: 1
+  CanBeDrowned:
+    m_InternalValue: 1
+--- !u!114 &2269034370699265688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4773706747441023441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aff06d0f8f7ee0042893d97459f9c972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alwaysFlood: 0
+  floodVertical: 1
+  floodDuration: 3
+  spriteRenderer: {fileID: 9159464650693773075}
+  alphaRenderer: []
+  isInitialized: 0
+  elevation: 0
+  previousWaterLevel: 0
+  previousDepth: 0
 --- !u!1001 &771624051194356418
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -518,6 +567,10 @@ PrefabInstance:
     - target: {fileID: 2407096252746344836, guid: 04cc541e52846394eb3ac2522b52ae17, type: 3}
       propertyPath: m_Name
       value: Health Bar
+      objectReference: {fileID: 0}
+    - target: {fileID: 2407096252746344836, guid: 04cc541e52846394eb3ac2522b52ae17, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7475767512955159844, guid: 04cc541e52846394eb3ac2522b52ae17, type: 3}
       propertyPath: m_LocalPosition.x

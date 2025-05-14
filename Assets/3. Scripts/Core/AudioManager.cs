@@ -114,11 +114,11 @@ public class AudioManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        bgmAudioSource.volume = PlayerPrefs.GetFloat(BGM_VOLUME_VALUE_STRING, 0.5f);
+        bgmAudioSource.volume = PlayerPrefs.GetFloat(BGM_VOLUME_VALUE_STRING, 0.1f);
         if (showDebugs) Debug.Log("BGM Volume: " + bgmAudioSource.volume);
-        sfxAudioSource.volume = PlayerPrefs.GetFloat(SFX_VOLUME_VALUE_STRING, 0.5f);
+        sfxAudioSource.volume = PlayerPrefs.GetFloat(SFX_VOLUME_VALUE_STRING, 0.1f);
         if (showDebugs) Debug.Log("SFX Volume: " + sfxAudioSource.volume);
-        abmAudioSource.volume = PlayerPrefs.GetFloat(ABM_VOLUME_VALUE_STRING, 0.5f);
+        abmAudioSource.volume = PlayerPrefs.GetFloat(ABM_VOLUME_VALUE_STRING, 0.1f);
         if (showDebugs) Debug.Log("ABM Volume: " + abmAudioSource.volume);
 
         DontDestroyOnLoad(gameObject);

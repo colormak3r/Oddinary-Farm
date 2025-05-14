@@ -3,6 +3,9 @@ using UnityEngine;
 using ColorMak3r.Utility;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using static UnityEngine.Rendering.GPUSort;
 
 public class UIBehaviour : MonoBehaviour
 {
@@ -19,6 +22,12 @@ public class UIBehaviour : MonoBehaviour
     [SerializeField]
     protected GameObject[] ignoreObjects;
 
+    [Header("Persistence UI Settings")]
+    [SerializeField]
+    private bool excludeFromUIManager = false;
+    [SerializeField]
+    private Image background;
+
     [Header("UI Behaviour Debugs")]
     [SerializeField]
     private bool isShowing;
@@ -30,8 +39,27 @@ public class UIBehaviour : MonoBehaviour
     private CanvasRenderer[] dsffoRenderers;
     private CanvasRenderer[] ignoreRenderers;
 
+    private Coroutine showCoroutine;
+    private Coroutine hideCoroutine;
+
     [HideInInspector]
     public UnityEvent<bool> OnVisibilityChanged;
+
+    protected virtual void Start()
+    {
+        if (this == null) return;
+
+        if (!excludeFromUIManager)
+            UIManager.Main.RegisterUI(this);
+    }
+
+    protected virtual void OnDestroy()
+    {
+        if (this == null) return;
+
+        if (!excludeFromUIManager)
+            UIManager.Main.UnregisterUI(this);
+    }
 
     protected virtual void OnEnable()
     {
@@ -65,11 +93,29 @@ public class UIBehaviour : MonoBehaviour
         this.ignoreRenderers = ignoreRenderers.ToArray();
     }
 
+    public virtual void OnSceneChanged(Scene scene)
+    {
+        // Disable background in the main menu if it exist
+        if (background)
+        {
+            background.enabled = SceneManager.GetActiveScene().buildIndex != 0;
+            // Debug.Log($"{name} background.enabled: {background.enabled}");
+        }
+    }
+
     public IEnumerator ShowCoroutine(bool fade = true)
     {
         if (isShowing) yield break;
 
         if (delayShow) yield return new WaitForSeconds(fadeDuration);
+
+        if (dsffoRenderers != null && dsffoRenderers.Length > 0)
+        {
+            foreach (var dsffoRenderer in dsffoRenderers)
+            {
+                dsffoRenderer.SetAlpha(0);
+            }
+        }
 
         isShowing = true;
 
@@ -105,16 +151,18 @@ public class UIBehaviour : MonoBehaviour
 
     public void Show()
     {
-        if (IsShowing || isAnimating) return;
+        if (IsShowing) return;
 
-        StartCoroutine(ShowCoroutine());
+        if (hideCoroutine != null) StopCoroutine(hideCoroutine);
+        showCoroutine = StartCoroutine(ShowCoroutine());
     }
 
     public void Hide()
     {
-        if (!IsShowing || isAnimating) return;
+        if (!IsShowing) return;
 
-        StartCoroutine(HideCoroutine());
+        if (showCoroutine != null) StopCoroutine(showCoroutine);
+        hideCoroutine = StartCoroutine(HideCoroutine());
     }
 
     public void ShowNoFade()

@@ -1,13 +1,10 @@
-using ColorMak3r.Utility;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Spider : Animal
 {
     [Header("Spider Settings")]
     [SerializeField]
-    private AxeProperty axeProperty;
+    private WeaponProperty weaponProperty;
     [SerializeField]
     private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
     private float nextIdleStateChange;
@@ -15,6 +12,8 @@ public class Spider : Animal
     private BehaviourState thinkingState;
     private BehaviourState burrowingState;
     private BehaviourState roamingState;
+    private BehaviourState moveTowardState;
+    private BehaviourState guardState;
 
     private BehaviourState chasingState;
     private BehaviourState attackPrimaryState;
@@ -27,18 +26,20 @@ public class Spider : Animal
         base.OnNetworkSpawn();
         if (IsServer)
         {
-            Item.PropertyValue = axeProperty;
+            CurrentItem.Initialize(weaponProperty);
 
             thinkingState = new ThinkingState(this);
             burrowingState = new BurrowingState(this);
             roamingState = new RoamingState(this);
+            moveTowardState = new MoveTowardState(this);
+            guardState = new GuardState(this);
 
             chasingState = new ChasingState(this);
             attackPrimaryState = new AttackPrimaryState(this);
 
             idleStates = new BehaviourState[] { thinkingState, burrowingState, roamingState };
             activeStates = new BehaviourState[] { chasingState, attackPrimaryState };
-        }        
+        }
     }
 
     protected override void HandleTransitions()
@@ -57,11 +58,29 @@ public class Spider : Animal
             {
                 if (TimeManager.Main.IsDay)
                 {
-                    ChangeState(burrowingState);
+                    if (currentState != burrowingState)
+                        ChangeState(burrowingState);
                 }
                 else
                 {
-                    ChangeState(roamingState);
+                    if (MoveTowardStimulus.IsGuardMode)
+                    {
+                        if (currentState != guardState)
+                            ChangeState(guardState);
+                    }
+                    else
+                    {
+                        if (!MoveTowardStimulus.ReachedTarget)
+                        {
+                            if (currentState != moveTowardState)
+                                ChangeState(moveTowardState);
+                        }
+                        else
+                        {
+                            if (currentState != roamingState)
+                                ChangeState(roamingState);
+                        }
+                    }
                 }
             }
         }
@@ -69,7 +88,7 @@ public class Spider : Animal
         {
             nextIdleStateChange = 0;
 
-            if (TargetDetector.DistanceToTarget > axeProperty.Range)
+            if (TargetDetector.DistanceToTarget > weaponProperty.Range)
             {
                 if (currentState != chasingState) ChangeState(chasingState);
             }

@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e84fa230aa18ab449a5f359e550e2296, type: 3}
   m_Name: Tool Shop Inventory
   m_EditorClassIdentifier: 
-  shopName: Hopper's Tool
+  shopName: Hopper Hardware
   saleMultiplier: 0.9
   penaltyMultiplier: 0.7
   itemProperties:
+  - {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
+  - {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
+  - {fileID: 11400000, guid: 17cd4711bcc2ce542a3f7398cbd92307, type: 2}
+  - {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
   - {fileID: 11400000, guid: 451f0ecb909c3f54d89bb0dbc9960fd6, type: 2}

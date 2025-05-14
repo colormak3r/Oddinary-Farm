@@ -42,6 +42,7 @@ public class UpgradeUI : UIBehaviour
         this.inventory = inventory;
         this.upgradeStages = upgradeStages;
         this.upgradeCallback = upgradeCallback;
+        this.currentStage = currentStage;
 
         UpdateStage(this.upgradeStages, currentStage);
         Show();

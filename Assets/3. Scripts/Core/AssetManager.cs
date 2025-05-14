@@ -7,7 +7,6 @@ using System.Text;
 using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 [Serializable]
@@ -76,6 +75,11 @@ public class AssetManager : NetworkBehaviour
     [SerializeField]
     private GameObject projectilePrefab;
     public GameObject ProjectilePrefab => projectilePrefab;
+
+    [Header("Common Material")]
+    [SerializeField]
+    private Material waterMaterial;
+    public Material WaterMaterial => waterMaterial;
 
     [Header("Scriptable Object Assets")]
     [SerializeField]
@@ -248,22 +252,21 @@ public class AssetManager : NetworkBehaviour
 
         if (preferRef.TryGet(out var preferNetObj))
         {
-            itemReplica.PickupItemOnServer(preferNetObj);
+            itemReplica.PreferPickerOnServer(preferNetObj.transform);
         }
-        else if (ignoreRef.TryGet(out var ignore))
+        else if (ignoreRef.TryGet(out var ignoreNetObj))
         {
-            itemReplica.IgnorePickerOnServer(ignore.transform);
+            itemReplica.IgnorePickerOnServer(ignoreNetObj.transform);
         }
     }
 
     public ItemReplica SpawnItemOnServer(ItemProperty itemProperty, Vector2 position, float randomRange = 2f, bool randomForce = true)
     {
         var randomPos = randomRange * (Vector2)Random.onUnitSphere;
-        position = position == default ? transform.position + (Vector3)randomPos : position + randomPos;
-        GameObject gameObject = Instantiate(itemReplicaPrefab, position, Quaternion.identity);
-        gameObject.GetComponent<NetworkObject>().Spawn();
-
-        var itemReplica = gameObject.GetComponent<ItemReplica>();
+        //position = position == default ? transform.position + (Vector3)randomPos : position + randomPos;
+        position += randomPos;
+        var itemReplicaObj = NetworkObjectPool.Main.Spawn(itemReplicaPrefab, position);
+        var itemReplica = itemReplicaObj.GetComponent<ItemReplica>();
         itemReplica.SetProperty(itemProperty);
 
         return itemReplica;
@@ -332,17 +335,36 @@ public class AssetManager : NetworkBehaviour
             return;
         }
 
-        StartCoroutine(SpawnPrefabCoroutine(prefab, position, spawnCount, randomRange, spawnDelay));
+        var positionOffset = position + MiscUtility.RandomPointInRange(randomRange);
+        if (spawnCount == 1)
+        {
+            SpawnPrefabOnServer(prefab, positionOffset);
+        }
+        else if (spawnCount > 1)
+        {
+            StartCoroutine(SpawnPrefabCoroutine(prefab, positionOffset, spawnCount, spawnDelay));
+        }
+        else
+        {
+            Debug.LogError("Invalid spawn count: " + spawnCount);
+            return;
+        }
     }
 
-    private IEnumerator SpawnPrefabCoroutine(GameObject prefab, Vector2 position, int spawnCount, float randomRange, float spawnDelay)
+    private IEnumerator SpawnPrefabCoroutine(GameObject prefab, Vector2 position, int spawnCount, float spawnDelay)
     {
         for (int i = 0; i < spawnCount; i++)
         {
-            GameObject go = Instantiate(prefab, position.RandomPointInRange(randomRange), Quaternion.identity); // Use the selected prefab
-            go.GetComponent<NetworkObject>().Spawn();
+            SpawnPrefabOnServer(prefab, position);
             yield return new WaitForSeconds(spawnDelay);
         }
+    }
+
+    public void SpawnPrefabOnServer(GameObject prefab, Vector2 position)
+    {
+        if (!IsServer) return;
+        GameObject go = Instantiate(prefab, position, Quaternion.identity);
+        go.GetComponent<NetworkObject>().Spawn();
     }
 
     #endregion

@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e84fa230aa18ab449a5f359e550e2296, type: 3}
   m_Name: Weapon Shop Inventory
   m_EditorClassIdentifier: 
-  shopName: Marckus's Weapon
+  shopName: '!!! BOOM !!! '
   saleMultiplier: 0.9
   penaltyMultiplier: 0.7
   itemProperties:
+  - {fileID: 11400000, guid: b48705ea45197984890949b39fbc67f0, type: 2}
   - {fileID: 11400000, guid: 12c97f6d640590f41acf4e752260d02f, type: 2}
+  - {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
   - {fileID: 11400000, guid: acf5787fae590e74ca10497b40091a27, type: 2}
   - {fileID: 11400000, guid: 082775721ddde0e4eb730a842401d7a5, type: 2}

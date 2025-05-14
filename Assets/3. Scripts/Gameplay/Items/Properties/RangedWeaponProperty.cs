@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RangedWeaponProperty : ItemProperty
+public class RangedWeaponProperty : WeaponProperty
 {
     [SerializeField]
     private ProjectileProperty projectileProperty;
@@ -11,10 +11,10 @@ public class RangedWeaponProperty : ItemProperty
     [SerializeField]
     private float projectileSpread = 30;
     [SerializeField]
-    private bool isDeterninedSpread;
+    private bool spreadEvenly;
 
     public ProjectileProperty ProjectileProperty => projectileProperty;
     public int ProjectileCount => projectileCount;
     public float ProjectileSpread => projectileSpread;
-    public bool IsDeterninedSpread => isDeterninedSpread;
+    public bool SpreadEvenly => spreadEvenly;
 }

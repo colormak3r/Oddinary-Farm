@@ -7,6 +7,10 @@ public class PlayerNameUI : UIBehaviour
 {
     [Header("Settings")]
     [SerializeField]
+    private bool showPlayerName = true;
+    [SerializeField]
+    private int maxLength = 12;
+    [SerializeField]
     private TMP_Text playerNameText;
     [SerializeField]
     private float showNameRange = 5f;
@@ -21,12 +25,19 @@ public class PlayerNameUI : UIBehaviour
 
     public void SetPlayerName(string playerName)
     {
-        playerNameText.text = playerName;
+        playerNameText.text = playerName.Length > maxLength ? playerName.Substring(0, maxLength) + (playerName.Length > maxLength ? "..." : "") : playerName;
         ShowPlayerName();
+    }
+
+    public void SetShowPlayerName(bool showPlayerName)
+    {
+        this.showPlayerName = showPlayerName;
     }
 
     public void ShowPlayerName()
     {
+        if (!showPlayerName) return;
+
         if (autoHideCoroutine != null) StopCoroutine(autoHideCoroutine);
         autoHideCoroutine = StartCoroutine(AutoHideCoroutine());
     }
@@ -40,6 +51,8 @@ public class PlayerNameUI : UIBehaviour
 
     private void Update()
     {
+        if (!showPlayerName) return;
+
         if (Time.time < nextScan) return;
         nextScan = Time.time + scanInterval;
 
@@ -47,7 +60,7 @@ public class PlayerNameUI : UIBehaviour
 
         var nearbyPlayers = Physics2D.OverlapCircleAll(transform.position, showNameRange, playerLayer);
         foreach (var player in nearbyPlayers)
-        { 
+        {
             if (player.TryGetComponent(out PlayerStatus status))
             {
                 if (!displayedPlayerNames.Contains(status.PlayerNameValue))
