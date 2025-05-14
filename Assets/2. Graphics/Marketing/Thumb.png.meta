@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: cce3ec9038d58334d8c6f3bdea385bf8
+guid: 8cf98d0fb866efa46925f7607292b655
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5268123740053146949
-    second: New-Title-Animation_Truncate-25-Trans_0
+      213: -4879764660031096316
+    second: Thumb_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: New-Title-Animation_Truncate-25-Trans_0
+      name: Thumb_0
       rect:
         serializedVersion: 2
-        x: 74
-        y: 74
-        width: 812
-        height: 122
+        x: 0
+        y: 0
+        width: 2560
+        height: 1440
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: bb27451ce5dd3e6b0800000000000000
-      internalID: -5268123740053146949
+      spriteID: 40a775355e7974cb0800000000000000
+      internalID: -4879764660031096316
       vertices: []
       indices: 
       edges: []
@@ -134,8 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      New-Title-Animation_Truncate-25-Trans_0: -5268123740053146949
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

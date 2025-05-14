@@ -9,6 +9,20 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
+public class ConsoleCommand 
+{ 
+    private string command;
+    private string[] args;
+    private string description;
+
+    public ConsoleCommand(string command, string[] args, string description = "")
+    {
+        this.command = command;
+        this.args = args;
+        this.description = description;
+    }
+}
+
 public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 {
     public static ConsoleUI Main;
