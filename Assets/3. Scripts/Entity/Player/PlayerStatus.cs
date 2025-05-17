@@ -1,5 +1,6 @@
-using ColorMak3r.Utility;
-using Steamworks;
+using ColorMak3r.Utility;       // Custom Library 
+using Steamworks;               // Steamworks API
+
 using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
@@ -12,17 +13,25 @@ public class PlayerStatus : EntityStatus
     [SerializeField]
     private Transform respawnPoint;
     [SerializeField]
-    private Collider2D playerHitbox;
+    private Collider2D playerHitbox;        // Capsule collider with isTrigger is hitbox
     [SerializeField]
     private PlayerNameUI playerNameUI;
 
+    // Netowrk variable (value(Empty String), readpermission(Everyone), writepermission (Owner))
     private NetworkVariable<FixedString128Bytes> PlayerName = new NetworkVariable<FixedString128Bytes>(default, default, NetworkVariableWritePermission.Owner);
 
-    public string PlayerNameValue => PlayerName.Value.ToString();
-    public PlayerNameUI PlayerNameUI => playerNameUI;
+    // NOTE: Consider this if you ever want to write 
+    //public string PlayerNameValue
+    //{
+    //    get => PlayerName.Value.ToString();
+    //    set => PlayerName.Value = new FixedString128Bytes(value);
+    //}
 
-    private IControllable[] controllables;
-    private NetworkTransform networkTransform;
+    public string PlayerNameValue => PlayerName.Value.ToString();
+    public PlayerNameUI PlayerNameUI => playerNameUI;       // NOTE: you can use get and set with Serializefield by using the 'field' keyword -> [field: SerializeField] public PlayerNameUI PlayerNameUI { get; private set; };
+
+    private IControllable[] controllables;              // List of objects that are able to be controlled by the player
+    private NetworkTransform networkTransform;          
 
     protected override void Awake()
     {
@@ -31,28 +40,34 @@ public class PlayerStatus : EntityStatus
         networkTransform = GetComponent<NetworkTransform>();
     }
 
+    // Subscribe to events and init player's name
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
 
+        // Name the game object based on who's the client and the host
         gameObject.name = NetworkObject.OwnerClientId == 0 ? "Host" : $"Client {NetworkObject.OwnerClientId}";
 
+        // Update the player's name in UI
         HandlePlayerNameChange(default, PlayerName.Value);
-        PlayerName.OnValueChanged += HandlePlayerNameChange;
+        PlayerName.OnValueChanged += HandlePlayerNameChange;        // Subscribe to UI event
 
         if (IsOwner)
         {
+            // Get steam name and set to in-game name
             if (SteamClient.IsValid)
                 PlayerName.Value = SteamClient.Name;
         }
     }
 
+    // Unsubscribe from events
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
         PlayerName.OnValueChanged -= HandlePlayerNameChange;
     }
 
+    // NOTE: Possibly rename this method for clarity "UpdatePlayerNameUI"
     private void HandlePlayerNameChange(FixedString128Bytes previousValue, FixedString128Bytes newValue)
     {
         playerNameUI.SetPlayerName(newValue.ToString());
@@ -64,6 +79,7 @@ public class PlayerStatus : EntityStatus
         playerHitbox.enabled = false;
     }
 
+    // Update player health bar UI on respawn
     protected override void OnEntityRespawnOnClient()
     {
         healthBarUI.SetValue(CurrentHealthValue, MaxHealth);
@@ -73,12 +89,15 @@ public class PlayerStatus : EntityStatus
     {
         Coroutine audioCoroutine = null;
         Coroutine effectCoroutine = null;
+
+        // Play Audio
         if (audioElement)
         {
             audioElement.PlayOneShot(deathSound);
             audioCoroutine = StartCoroutine(MiscUtility.WaitCoroutine(deathSound.length));
         }
 
+        // Play VFX
         if (deathEffectPrefab != null)
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
 
@@ -86,7 +105,7 @@ public class PlayerStatus : EntityStatus
         rbody.linearVelocity = Vector2.zero;
         foreach (var collider in colliders) collider.enabled = false;
 
-        if (IsOwner)
+        if (IsOwner)        // Owner client procedure
         {
             // Detach camera to prevent it being shrink
             Camera.main.transform.parent = null;
@@ -101,8 +120,8 @@ public class PlayerStatus : EntityStatus
             effectCoroutine = StartCoroutine(transform.PopCoroutine(1, 0, 0.25f));
         }
 
-        yield return effectCoroutine;
-        yield return audioCoroutine;
+        yield return effectCoroutine;       // Finish Effect
+        yield return audioCoroutine;        // Finish Audio
 
         // Disable all renderers
         //foreach (var renderer in renderers) renderer.enabled = false;
@@ -139,11 +158,13 @@ public class PlayerStatus : EntityStatus
         //foreach (var renderer in renderers) renderer.enabled = true;
         foreach (var light in lights) light.enabled = true;
 
+        // Handle Setup and Respawn
         if (IsOwner)
         {
             // Transform pop in
             yield return transform.PopCoroutine(0, 1, 0.5f);
 
+            // Move camera to player
             Camera.main.transform.parent = transform;
             Camera.main.transform.localPosition = new Vector3(0, 0, -10);
 

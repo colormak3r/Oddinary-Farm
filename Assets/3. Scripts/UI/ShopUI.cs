@@ -13,6 +13,7 @@ public enum ShopMode
 
 public class ShopUI : UIBehaviour
 {
+    // Singletons are classified as "Main"
     public static ShopUI Main;
 
     private void Awake()

@@ -68,6 +68,7 @@ public class HealthBarUI : MonoBehaviour
         sizeCoroutine = StartCoroutine(ShrinkCoroutine(displayRenderer, newSize, shrinkDuration));
         highlightRenderer.color = highlightColor;
 
+        // Change color based on health value
         if (ratio > 0.66f)
         {
             displayRenderer.color = fullColor;

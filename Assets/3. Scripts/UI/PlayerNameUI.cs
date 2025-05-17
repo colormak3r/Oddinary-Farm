@@ -56,6 +56,7 @@ public class PlayerNameUI : UIBehaviour
         if (Time.time < nextScan) return;
         nextScan = Time.time + scanInterval;
 
+        // Display player names that are local
         HashSet<string> currentNearbyPlayers = new HashSet<string>();
 
         var nearbyPlayers = Physics2D.OverlapCircleAll(transform.position, showNameRange, playerLayer);

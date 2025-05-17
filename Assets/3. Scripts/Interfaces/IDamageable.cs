@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[System.Serializable]
+[System.Serializable]       // Serializable in the insprctor as long as the object inherits the interface
 public enum DamageType
 {
     Blunt,
@@ -9,7 +9,7 @@ public enum DamageType
     Water,
 }
 
-[System.Serializable]
+[System.Serializable]       // Serializable in the insprctor as long as the object inherits the interface
 public enum Hostility
 {
     Friendly,
@@ -17,7 +17,7 @@ public enum Hostility
     Hostile,
 }
 
-
+// Every damagable entity must include this interface
 public interface IDamageable
 {
     public uint GetCurrentHealth();

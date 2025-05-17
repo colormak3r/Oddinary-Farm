@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Unity.Netcode.Components;
 using UnityEngine;
 
-[DisallowMultipleComponent]
+// Derrived from a Unity.Netcode class NetworkAnimator
+[DisallowMultipleComponent]     // Component cannot be added twice as a component of the same game object
 public class ClientNetworkAnimator : NetworkAnimator
 {
     /// <summary>
@@ -11,7 +12,7 @@ public class ClientNetworkAnimator : NetworkAnimator
     /// This imposes state to the server. This is putting trust on your clients. 
     /// Make sure no security-sensitive features use this transform.
     /// </summary>
-    protected override bool OnIsServerAuthoritative()
+    protected override bool OnIsServerAuthoritative()       // Never allow authority over client animator
     {
         return false;
     }

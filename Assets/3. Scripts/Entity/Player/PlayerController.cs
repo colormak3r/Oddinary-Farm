@@ -89,7 +89,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private Item currentItem;
     private Camera mainCamera;
-    private GameplayRenderer gameplayRenderer;
+    private GameplayRenderer gameplayRenderer;      // Reference to GameplayRenderer Singleton
 
     private void Awake()
     {
@@ -103,19 +103,18 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         gameplayRenderer = GameplayRenderer.Main;
     }
 
-    private void OnEnable()
+    private void OnEnable()     // Subscribe to inventory events
     {
         inventory.OnCurrentItemPropertyChanged += HandleCurrentItemPropertyChanged;
         inventory.OnCurrentItemChanged += HandleCurrentItemChanged;
     }
 
-    private void OnDisable()
+    private void OnDisable()        // Unsubscribe from inventory events
     {
         inventory.OnCurrentItemPropertyChanged -= HandleCurrentItemPropertyChanged;
         inventory.OnCurrentItemChanged -= HandleCurrentItemChanged;
 
-
-        if (isOwner)
+        if (isOwner)        // Unsubscribe from input actions
         {
             InputManager.Main.InputActions.Gameplay.SetCallbacks(null);
         }
@@ -127,6 +126,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     {
         if (isOwner) Preview(lookPosition);
 
+        // The player is holding no item
         if (itemProperty == null)
         {
             armRotation.SetActive(false);
@@ -135,6 +135,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             return;
         }
 
+        // Set arm rotation
         rotateArm = itemProperty is RangedWeaponProperty;
         if (rotateArm)
         {
@@ -165,6 +166,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         IsFacingRight.OnValueChanged -= HandleOnIsFacingRightChanged;
     }
 
+    // Flip graphic scale to simulate facing in different directions
     private void HandleOnIsFacingRightChanged(bool previous, bool current)
     {
         var isFacingRight = current;
@@ -184,7 +186,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         // WorldGenerator.BuildWorld has been moved to WorldRenderer
         // This is so the spectator can also make use of the world generator
 
-        isPointerOverUI = EventSystem.current.IsPointerOverGameObject();
+        isPointerOverUI = EventSystem.current.IsPointerOverGameObject();        // QUESTION: Does this mean mouse over player?
 
         // Set cursor position
         if (!isController)
@@ -217,16 +219,16 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
             Vector3 camCenter = mainCamera.transform.position;
 
-            float left = camCenter.x - camWidth / 2f;
-            float right = camCenter.x + camWidth / 2f;
-            float bottom = camCenter.y - camHeight / 2f;
-            float top = camCenter.y + camHeight / 2f;
+            float left = camCenter.x - camWidth / 2f;       // Left bound of camera
+            float right = camCenter.x + camWidth / 2f;      // Right bound of camera
+            float bottom = camCenter.y - camHeight / 2f;    // Bot bound of camera
+            float top = camCenter.y + camHeight / 2f;       // Top bound of camera
 
             // Move cursor
             Vector3 targetPos = cursor.transform.position + (Vector3)(controllerDirection.normalized * sensitivity);
             cursor.transform.position = Vector3.Lerp(cursor.transform.position, targetPos, smoothing * Time.deltaTime);
 
-            // Clamp position
+            // Clamp position; Bound the cursor
             Vector2 clampedPos = cursor.transform.position;
             clampedPos.x = Mathf.Clamp(clampedPos.x, left, right);
             clampedPos.y = Mathf.Clamp(clampedPos.y, bottom, top);
@@ -237,7 +239,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         LookPosition = lookPosition;
 
-        IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;
+        IsFacingRight.Value = (lookPosition - (Vector2)transform.position).x > 0;       // Player visual look at cursor 
 
         if (rotateArm) RotateArm(lookPosition);
 
@@ -252,7 +254,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private IEnumerator InitializeCoroutine()
     {
-        yield return new WaitUntil(() => GameManager.Main.IsInitialized);
+        yield return new WaitUntil(() => GameManager.Main.IsInitialized);       // Wait to init game manager before player
 
         // Set camera
         Spectator.Main.SetCamera(transform);
@@ -287,7 +289,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (Camera.main == null) return;
         isController = false;
-        cursor.SetActive(false);
+        cursor.SetActive(false);        // QUESTION: Why is this here?
         Cursor.visible = true;
 
         screenMousePos = context.ReadValue<Vector2>();
@@ -299,7 +301,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (Camera.main == null) return;
         isController = true;
-        cursor.SetActive(true);
+        cursor.SetActive(true);        // QUESTION: Why is this here?
         Cursor.visible = false;
 
         controllerDirection = context.ReadValue<Vector2>();
@@ -312,7 +314,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         armRotation.transform.localScale = IsFacingRight.Value ? Vector3.one : VECTOR_ONE_FLIP_XY;
     }
 
-    private void Preview(Vector2 position)
+    private void Preview(Vector2 position)      // QUESTION: Want to know more about this previewer later
     {
         if (currentItem != null)
             currentItem.OnPreview(position, previewer);
@@ -326,16 +328,17 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (context.performed)
         {
-            inventory.DropItem(inventory.CurrentHotbarIndex);
+            inventory.DropItem(inventory.CurrentHotbarIndex);       // Drop currrent item held
         }
     }
+
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
 
         if (context.performed)
         {
-            interaction.Interact();
+            interaction.Interact();     // Interact
         }
     }
 
@@ -345,7 +348,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (context.performed)
         {
-            MapUI.Main.ToggleShow();
+            MapUI.Main.ToggleShow();        // Show map
         }
     }
 
@@ -428,7 +431,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (context.performed)
         {
-            if (!isPrimaryCoroutineRunning)
+            if (!isPrimaryCoroutineRunning)         // One primary action at a time
             {
                 isPrimaryCoroutineRunning = true;
                 firstCallIgnored = false;
@@ -484,14 +487,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
     }
 
-    [Rpc(SendTo.NotMe)]
+    [Rpc(SendTo.NotMe)]         // Sync action to clients but do not repeat to owner
     private void SyncArmRotationRpc(Vector2 lookPosition)
     {
         RotateArm(lookPosition);
     }
 
     [Rpc(SendTo.Everyone)]
-    private void SetTriggerRpc(FixedString32Bytes animation)
+    private void SetTriggerRpc(FixedString32Bytes animation)        // Trigger animation on every client
     {
         animator.SetTrigger(animation.ToString());
     }
@@ -563,11 +566,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             }
         }
     }
-
     #endregion
 
     #region Hotbar
-
     public void OnHotbar(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
@@ -612,7 +613,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
     }
 
-    private void ChangeHotbarIndex(int value)
+    private void ChangeHotbarIndex(int value)       // Wrapper for inventory hotbar function
     {
         // Play sound effect
         AudioManager.Main.PlaySoundEffect(SoundEffect.UIHover);
@@ -633,7 +634,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         // Hotbar index change locally, stored in PlayerInventory
         inventory.ChangeHotBarIndex(value);
     }
-
     #endregion
 
     private bool isControllable = true;

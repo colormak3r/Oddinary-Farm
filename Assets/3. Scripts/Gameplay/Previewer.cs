@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[ExecuteAlways]
+[ExecuteAlways]     // Execute in editor and game 
 public class Previewer : MonoBehaviour
 {
     public static Previewer Main;

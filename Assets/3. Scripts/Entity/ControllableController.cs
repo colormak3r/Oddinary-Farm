@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ControllableController : NetworkBehaviour
 {
-    private IControllable[] controllables;
+    private IControllable[] controllables;      // List of objects that are able to be controlled
 
+    // UI toggles
     private bool isShopUIVisible;
     private bool isOptionsUIVisible;
     private bool isAudioUIVisible;
@@ -15,13 +16,19 @@ public class ControllableController : NetworkBehaviour
 
     private void Awake()
     {
+        // Find every child object that is a controllable object
         controllables = GetComponentsInChildren<IControllable>();
     }
 
     public override void OnNetworkSpawn()
     {
+        // NOTE: Consider using early return for better readability
+        // if (!IsOwner)
+        //    return;
+        
         if (IsOwner)
         {
+            // Subscribe to events on spawn
             ShopUI.Main.OnVisibilityChanged.AddListener(OnShopUIVisibilityChanged);
             OptionsUI.Main.OnVisibilityChanged.AddListener(OnOptionsUIVisibilityChanged);
             AudioUI.Main.OnVisibilityChanged.AddListener(OnAudioUIVisibilityChanged);
@@ -35,6 +42,7 @@ public class ControllableController : NetworkBehaviour
     {
         if (IsOwner)
         {
+            // Unsubscribe to events on despawn
             ShopUI.Main.OnVisibilityChanged.RemoveListener(OnShopUIVisibilityChanged);
             OptionsUI.Main.OnVisibilityChanged.RemoveListener(OnOptionsUIVisibilityChanged);
             AudioUI.Main.OnVisibilityChanged.RemoveListener(OnAudioUIVisibilityChanged);
@@ -43,6 +51,7 @@ public class ControllableController : NetworkBehaviour
         }
     }
 
+    // Set UI Visiblility
     private void OnShopUIVisibilityChanged(bool isShowing)
     {
         isShopUIVisible = isShowing;
@@ -75,6 +84,7 @@ public class ControllableController : NetworkBehaviour
 
     private void Evaluate()
     {
+        // Only allow control if ALL listed UI panels are not visable
         bool controllable = !isShopUIVisible && !isOptionsUIVisible
             && !isAudioUIVisible && !isAppearanceUIVisible && !isUpgradeUIVisible;
 
@@ -84,6 +94,7 @@ public class ControllableController : NetworkBehaviour
         }
     }
 
+    // Toggle Control of all UI elements at once
     public void SetControl(bool value)
     {
         foreach (var controllable in controllables)

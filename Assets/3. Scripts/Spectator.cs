@@ -22,7 +22,7 @@ public class Spectator : MonoBehaviour
         var connectedClients = NetworkManager.Singleton.ConnectedClientsList;
         if (id > (ulong)connectedClients.Count)
         {
-            CinemachineManager.Main.CinemachineCamera.Follow = transform;
+            CinemachineManager.Main.CinemachineCamera.Follow = transform;       // Follow object
         }
         else
         {

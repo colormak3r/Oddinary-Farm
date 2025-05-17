@@ -84,6 +84,7 @@ public class InputManager : MonoBehaviour
         currentActionMap.Enable();
     }
 
+    // NOTE: if you ever need to store a history of maps for whatever reason you could use a stack or pushdown automata
     public void SwitchToPreviousMap()
     {
         if (previousActionMap != null)
@@ -98,6 +99,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    // Switch Input Action Map
     private InputActionMap GetActionMap(InputMap map)
     {
         currentInputMap = map;

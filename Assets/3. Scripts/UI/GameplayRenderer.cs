@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class GameplayRenderer : MonoBehaviour
 {
-    public static GameplayRenderer Main { get; private set; }
+    public static GameplayRenderer Main { get; private set; }       // Singleton Instance
 
     [SerializeField]
     private RawImage rawImage;

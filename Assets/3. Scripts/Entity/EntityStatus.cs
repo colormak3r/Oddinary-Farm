@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
+// Common status effects and behaviors for entities
 public class EntityStatus : NetworkBehaviour, IDamageable
 {
     [Header("Entity Settings")]
@@ -32,7 +33,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     [Header("Debugs")]
     [SerializeField]
-    private bool showDebugs;
+    private bool showDebugs;        // NOTE: consider renaming to "showLogs" or "debugLogs" for clarity
     [SerializeField]
     private NetworkVariable<uint> CurrentHealth = new NetworkVariable<uint>();
     public uint CurrentHealthValue => CurrentHealth.Value;
@@ -43,7 +44,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     protected HealthBarUI healthBarUI;
     public HealthBarUI HealthBarUI => healthBarUI;
     protected LootGenerator lootGenerator;
-    protected AudioElement audioElement;
+    protected AudioElement audioElement;        // Custom AudioSource Wrapper
     protected Rigidbody2D rbody;
 
     protected Collider2D[] colliders;
@@ -66,6 +67,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     public override void OnNetworkSpawn()
     {
+        // Init. Health
         HandleCurrentHealthChange(0, CurrentHealthValue);
 
         if (IsServer)
@@ -88,11 +90,12 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void HandleCurrentHealthChange(uint previousValue, uint newValue)
     {
-
+        // QUESTION: Why is this here if there is no code inside the method
     }
 
     #region Heal
 
+    // Heal the player through context menu
     [ContextMenu("Get Healed")]
     private void GetHealed()
     {
@@ -101,8 +104,12 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     public bool GetHealed(uint healAmount)
     {
-        if (showDebugs) Debug.Log($"GetHealed: HealAmount = {healAmount}");
-        if (!IsSpawned) return false;
+        if (showDebugs) 
+            Debug.Log($"GetHealed: HealAmount = {healAmount}");
+
+        if (!IsSpawned)       // NOTE: Move this early return above the last statement; makes more sense 
+            return false;
+
         if (CurrentHealthValue < maxHealth)
         {
             GetHealedRpc(healAmount);
@@ -114,17 +121,18 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         }
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Everyone)]      // Executed on all clients
     private void GetHealedRpc(uint healAmount)
     {
         var newHealthValue = CurrentHealthValue + healAmount;
-        if (newHealthValue > maxHealth)
+
+        if (newHealthValue > maxHealth)     // Don't heal over max hp
         {
             if (showDebugs) Debug.Log($"GetHealedRpc: NewHealthValue = {newHealthValue} > MaxHealth = {maxHealth}");
             newHealthValue = maxHealth;
         }
 
-        if (IsServer)
+        if (IsServer)       // Set new health on server
         {
             if (showDebugs) Debug.Log($"GetHealedRpc: NewHealthValue = {newHealthValue}");
             CurrentHealth.Value = newHealthValue;
@@ -135,10 +143,11 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     #endregion
 
     #region Take Damaged
-
+    // Deal damage to the player though the context menu
     [ContextMenu("Take Damaged")]
     private void TakeDamage()
     {
+        // TakeDamage(value, type, whosImmune, attackerTransform)
         TakeDamage(1, DamageType.Slash, Hostility.Neutral, null);
     }
 
@@ -146,28 +155,27 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     {
         if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {hostility}");
 
-        if (Hostility == hostility && hostility != Hostility.Neutral) return false;
+        if (Hostility == hostility && hostility != Hostility.Neutral) return false;     // Do not take damage
 
-        if (!IsSpawned) return false;
+        if (!IsSpawned) return false;     // Do not take damage
 
-        if (isInvincible) return false;
+        if (isInvincible) return false;     // Do not take damage
 
-        if (Time.time < nextDamagable) return false;
+        if (Time.time < nextDamagable) return false;         // If invulnerable return
         nextDamagable = Time.time + iframeDuration;
 
-        TakeDamageRpc(damage, type, attacker?.gameObject);
+        TakeDamageRpc(damage, type, attacker?.gameObject);      // Take damage
 
         return true;
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Everyone)]      // Executed on all clients
     private void TakeDamageRpc(uint damage, DamageType type, NetworkObjectReference attackerRef)
     {
         if (CurrentHealthValue > damage)
         {
             if (healthBarUI && damage > 0)
                 healthBarUI.SetValue(CurrentHealthValue - damage, maxHealth);
-
 
             // Damaged sound
             if (audioElement)
@@ -220,7 +228,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     #endregion
 
     #region On Damaged
-
     protected virtual void OnEntityDamagedOnClient()
     {
 
@@ -250,12 +257,14 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         Coroutine audioCoroutine = null;
         Coroutine effectCoroutine = null;
 
+        // Play Audio
         if (audioElement)
         {
-            audioElement.PlayOneShot(deathSound);
-            audioCoroutine = StartCoroutine(MiscUtility.WaitCoroutine(deathSound.length));
+            audioElement.PlayOneShot(deathSound);        // Custom AudioSource Wrapper
+            audioCoroutine = StartCoroutine(MiscUtility.WaitCoroutine(deathSound.length));      // Wait full length of clip
         }
 
+        // Play VFX
         if (deathEffectPrefab != null)
             Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
 
@@ -265,12 +274,11 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
         effectCoroutine = StartCoroutine(transform.PopCoroutine(1, 0, 0.25f));
 
-        yield return effectCoroutine;
-        yield return audioCoroutine;
+        yield return effectCoroutine;       // Finish Effect
+        yield return audioCoroutine;        // Finish Audio
 
         Destroy(gameObject);
     }
-
     #endregion
 
     #region On Spawn
@@ -294,10 +302,10 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         RespawnRpc();
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Everyone)]      // Executed on all clients
     private void RespawnRpc()
     {
-        if (IsServer)
+        if (IsServer)       // If server respawn player
         {
             isInvincible = false;
             CurrentHealth.Value = maxHealth;
@@ -323,29 +331,43 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     public uint GetCurrentHealth() => CurrentHealthValue;
     public Hostility GetHostility() => Hostility;
 
-    private void OnValidate()
+    // NOTE: Unreleated, but looking into what this function does I found this cool way of specifying enums
+    /*       that makes enums into actual bitmasks, allowing you to select more than one in the inspector
+    [System.Flags]
+    public enum Hostility
     {
-        // Check how many bits are set
-        int bitsSet = CountSetBits((int)hostility);
-
-        if (bitsSet > 1)
-        {
-            Debug.LogWarning("Only one Hostility value can be selected at a time. Defaulting to first selected.");
-            // Keep the least significant bit only
-            int firstBit = (int)hostility & -(int)hostility;
-            hostility = (Hostility)firstBit;
-        }
+        None     = 0,      // 0 = 0b000
+        Neutral  = 1 << 0, // 1 = 0b001
+        Friendly = 1 << 1, // 2 = 0b010
+        Hostile  = 1 << 2  // 4 = 0b100
     }
+    */
 
-    private int CountSetBits(int value)
+    // Bitmask Validation; Makes sure two hostilities are never enabled at once
+    private void OnValidate()       // Script Loaded or changed in the inspector; after values change
+{
+    // Check how many bits are set
+    int bitsSet = CountSetBits((int)hostility);
+
+    if (bitsSet > 1)
     {
-        int count = 0;
-        while (value != 0)
-        {
-            count += value & 1;
-            value >>= 1;
-        }
-        return count;
+        Debug.LogWarning("Only one Hostility value can be selected at a time. Defaulting to first selected.");
+
+        // Isolate least significant bit
+        int firstBit = (int)hostility & -(int)hostility;
+        hostility = (Hostility)firstBit;
     }
-    #endregion
+}
+
+private int CountSetBits(int value)
+{
+    int count = 0;
+    while (value != 0)
+    {
+        count += value & 1;
+        value >>= 1;
+    }
+    return count;
+}
+#endregion
 }
