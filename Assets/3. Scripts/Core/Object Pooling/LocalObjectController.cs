@@ -130,7 +130,7 @@ public class LocalObjectController : MonoBehaviour
         if (gameObject.activeInHierarchy == false) Debug.Log("Object is already inactive.", gameObject);
         gameObject.SetActive(true);
 
-        if (instant)
+        if (instant || forcedInstant)
         {
             foreach (var localObjectPoolingBehaviour in behaviours)
             {

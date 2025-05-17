@@ -28,14 +28,6 @@ public abstract class Animal : NetworkBehaviour
     [SerializeField]
     private float roamRadius = 5f;
 
-    [Header("Capture Settings")]
-    [SerializeField]
-    private bool isCaptureable = true;
-    public bool IsCaptureable => isCaptureable && captureItemProperty != null;
-    [SerializeField]
-    private ItemProperty captureItemProperty;
-    public ItemProperty CaptureItemProperty => captureItemProperty;
-
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
     private Animator animator;
@@ -153,6 +145,8 @@ public abstract class Animal : NetworkBehaviour
 
     }
 
+    #region Movement
+
     public void MoveTo(Vector2 position, float precision = 0.1f)
     {
         if (moveCoroutine != null) StopMovement();
@@ -217,22 +211,14 @@ public abstract class Animal : NetworkBehaviour
         return (Vector2)transform.position + offset;
     }
 
-    public void Capture()
-    {
-        CaptureRpc();
-    }
-
-    [Rpc(SendTo.Server)]
-    private void CaptureRpc()
-    {
-        AssetManager.Main.SpawnItem(captureItemProperty, transform.position);
-        Destroy(gameObject);
-    }
-
     public void SetFacing(bool isFacingRight)
     {
         IsFacingRight.Value = isFacingRight;
     }
+
+    #endregion
+
+    #region Utility
 
     private void OnDrawGizmos()
     {
@@ -252,4 +238,6 @@ public abstract class Animal : NetworkBehaviour
             }
         }
     }
+
+    #endregion
 }

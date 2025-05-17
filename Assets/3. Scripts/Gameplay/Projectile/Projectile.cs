@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,21 +13,20 @@ public class Projectile : MonoBehaviour
 
     [Header("Debugs")]
     [SerializeField]
-    private bool showDebugs;
+    protected bool showDebugs { get; private set; }
+    protected Transform owner { get; private set; }
+    protected bool isInitialized { get; private set; }
+    protected bool isAuthoritative { get; private set; }
 
-    private Transform owner;
     private Coroutine despawnCoroutine;
-
-    private bool isInitialized;
-    private bool isAuthoritative;
-
     private SpriteRenderer spriteRenderer;
-    //private Animator animator;
+
+    public Action<Projectile, Transform> OnHitTarget;
+    public Action<Projectile> OnDespawned;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        //animator = GetComponent<Animator>();
     }
 
     [ContextMenu("Mock Initialize")]
@@ -42,11 +42,7 @@ public class Projectile : MonoBehaviour
         this.isAuthoritative = isAuthoritative;
 
         spriteRenderer.sprite = property.Sprite;
-        if (property.PlayVfx)
-        {
-            vfxSystem.Play();
-        }
-        //animator.runtimeAnimatorController = property.Animator.runtimeAnimatorController;
+        if (property.PlayVfx) vfxSystem.Play();
 
         despawnCoroutine = StartCoroutine(DespawnCoroutine());
         isInitialized = true;
@@ -58,7 +54,7 @@ public class Projectile : MonoBehaviour
         Despawn();
     }
 
-    private void OnTriggerEnter2D(Collider2D collider)
+    protected virtual void OnTriggerEnter2D(Collider2D collider)
     {
         if (!isInitialized || owner == null) return;
 
@@ -68,11 +64,12 @@ public class Projectile : MonoBehaviour
         {
             if (isAuthoritative)
             {
+                // Only apply damage if the projectile is authoritative
                 var success = damageable.TakeDamage(property.Damage, property.DamageType, property.Hostility, owner);
                 if (success)
                 {
                     if (despawnCoroutine != null) StopCoroutine(despawnCoroutine);
-                    Despawn();
+                    HitDespawn(collider.transform.root);
                 }
                 else
                 {
@@ -81,11 +78,13 @@ public class Projectile : MonoBehaviour
             }
             else
             {
+                // The projectile is not authoritative, so we don't apply damage
+                // Still check if the target is damageable so we can despawn the projectile on non authoritative hits
                 var success = damageable.TakeDamage(0, property.DamageType, property.Hostility, owner);
                 if (success)
                 {
                     if (despawnCoroutine != null) StopCoroutine(despawnCoroutine);
-                    Despawn();
+                    HitDespawn(collider.transform.root);
                 }
                 else
                 {
@@ -96,10 +95,19 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    private void Despawn()
+    protected void HitDespawn(Transform target)
     {
         LocalObjectPooling.Main.Despawn(gameObject);
         isInitialized = false;
+        OnHitTarget?.Invoke(this, target);
+        OnHitTarget = null;
+    }
+
+    protected void Despawn()
+    {
+        LocalObjectPooling.Main.Despawn(gameObject);
+        isInitialized = false;
+        OnDespawned?.Invoke(this);
     }
 
     private void FixedUpdate()

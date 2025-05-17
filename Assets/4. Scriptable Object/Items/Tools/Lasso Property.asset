@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08b74069e75b05c488cd021a6e33e0be, type: 3}
+  m_Name: Lasso Property
+  m_EditorClassIdentifier: 
+  iconSprite: {fileID: 21300000, guid: e9de2a483e8b85948ba1e18da24f419e, type: 3}
+  objectSprite: {fileID: 21300000, guid: e9de2a483e8b85948ba1e18da24f419e, type: 3}
+  prefab: {fileID: 914262670958350908, guid: c9ca22db2464f8841a1b0ebbf4f84a74, type: 3}
+  isConsummable: 0
+  maxStack: 1
+  isSellable: 1
+  price: 200
+  range: 5
+  primaryCdr: 0.25
+  secondaryCdr: 0.25
+  itemContext: 'LMB: Throw
+
+    RMB: Cancel
+
+    X  : Drop'
+  pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
+  selectSound: {fileID: 0}
+  primarySound: {fileID: 0}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}

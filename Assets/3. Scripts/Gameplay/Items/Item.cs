@@ -93,6 +93,18 @@ public class Item : MonoBehaviour
     }
     #endregion
 
+    #region Select On Client
+    public virtual void OnItemSelectedOnClient()
+    {
+
+    }
+
+    public virtual void OnItemDeselectedOnClient()
+    {
+
+    }
+    #endregion
+
     #region Utility
     public void SetGizmosVisibility(bool value)
     {

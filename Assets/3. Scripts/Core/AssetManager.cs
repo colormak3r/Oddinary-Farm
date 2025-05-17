@@ -75,6 +75,9 @@ public class AssetManager : NetworkBehaviour
     [SerializeField]
     private GameObject projectilePrefab;
     public GameObject ProjectilePrefab => projectilePrefab;
+    [SerializeField]
+    private GameObject lassoProjectilePrefab;
+    public GameObject LassoProjectilePrefab => lassoProjectilePrefab;
 
     [Header("Common Material")]
     [SerializeField]

@@ -36,9 +36,12 @@ public class ItemSystem : NetworkBehaviour
     private Vector2 ObjectPosition => (Vector2)transform.position + offset;
 
     private EntityStatus entityStatus;
+    private LassoController lassoController;
+
     private void Awake()
     {
         entityStatus = GetComponent<EntityStatus>();
+        lassoController = GetComponent<LassoController>();
     }
 
     #region Utility
@@ -347,9 +350,9 @@ public class ItemSystem : NetworkBehaviour
         var hits = Physics2D.RaycastAll(ObjectPosition, direction, range, LayerManager.Main.AnimalLayer);
         foreach (var hit in hits)
         {
-            if (hit.collider.TryGetComponent(out Animal animal) && animal.IsCaptureable)
+            if (hit.collider.TryGetComponent(out CaptureController captureController) && captureController.IsCaptureable)
             {
-                animal.Capture();
+                captureController.Capture(CaptureType.Net);
             }
         }
     }
@@ -368,6 +371,20 @@ public class ItemSystem : NetworkBehaviour
         uint healAmount = Convert.ToUInt32(consummableProperty.HealAmount);
         entityStatus.GetHealed(healAmount);
     }
+    #endregion
+
+    #region Lasso
+
+    public void ThrowLasso(Vector2 position)
+    {
+        lassoController.ThrowLasso(position);
+    }
+
+    public void CancelLasso()
+    {
+        lassoController.CancelLasso();
+    }
+
     #endregion
 
     #region Asset Spawn Preset

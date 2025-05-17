@@ -3696,7 +3696,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  canSpawn: 1
+  canSpawn: 0
   spawnDelay: 0.2
   creatureSpawnSetting: {fileID: 11400000, guid: 550caa2b6ba08f24b82ceee2fd4bf3d8, type: 2}
   baseSpawnRadius: 10
@@ -13096,6 +13096,7 @@ MonoBehaviour:
   farmPlotPrefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
   itemReplicaPrefab: {fileID: 5937313573806529732, guid: 259003fb8e1dfcb40856b505877aed0f, type: 3}
   projectilePrefab: {fileID: 8772308463145437618, guid: 0eeb78fc65475de48a41e01c3667e072, type: 3}
+  lassoProjectilePrefab: {fileID: 3721977142635466479, guid: 13d388f3aad715d418c72a13ac7aa220, type: 3}
   waterMaterial: {fileID: 2100000, guid: 9409c18c87099014f9e69b5e44cca0a8, type: 2}
   scriptableObjectList:
   - {fileID: 11400000, guid: 3210dfa4ec9a54443990f30091b22ea8, type: 2}
@@ -17559,7 +17560,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d911fce547ec5df4c8967959a22cdaac, type: 2}
   voidUnitProperty: {fileID: 11400000, guid: cdfb8f13db1fb6341aff37d65cae2cc5, type: 2}
   terrainUnitPrefab: {fileID: 1734130187429010102, guid: 5bf6f8e869ce4e5459f9ed6887636bc8, type: 3}
-  canSpawnResources: 1
+  canSpawnResources: 0
   resourcePrefabs:
   - {fileID: 8327819289072149800, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
   - {fileID: 3502971993623231797, guid: 6698e3cbc71aa6543a988b5190c9f365, type: 3}
@@ -28029,96 +28030,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 353218142}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &2048977702
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2679340783153636200, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2679340783153636200, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2679340783153636200, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2679340783153636200, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2679340783153636200, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2679340783153636200, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2679340783153636200, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2679340783153636200, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2679340783153636200, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2679340783153636200, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2790046230100366767, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 464241329
-      objectReference: {fileID: 0}
-    - target: {fileID: 7571332001665397746, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      propertyPath: m_Name
-      value: Cow Variant
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7571332001665397746, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2048977704}
-  m_SourcePrefab: {fileID: 100100000, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
---- !u!1 &2048977703 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7571332001665397746, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
-  m_PrefabInstance: {fileID: 2048977702}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2048977704
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2048977703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86973486dbc6fb540838ed2cd12c9a00, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detectRange: 7
-  escapeRange: 9
-  penaltyRange: 2
-  activeTime: 0
-  threatLayer:
-    serializedVersion: 2
-    m_Bits: 2147485696
-  showDebugs: 0
-  ignoreThreat: 0
 --- !u!1 &2069899501
 GameObject:
   m_ObjectHideFlags: 0
@@ -28804,6 +28715,10 @@ PrefabInstance:
       propertyPath: currentScenario
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4811648832319133184, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
+      propertyPath: cornFarmDemoPreset
+      value: 
+      objectReference: {fileID: 11400000, guid: cda550f3e26fbeb4b81dd144dcc68d69, type: 2}
     - target: {fileID: 6277954611948190113, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: m_Name
       value: Scenario Manager
@@ -29102,4 +29017,3 @@ SceneRoots:
   - {fileID: 98597106}
   - {fileID: 149046297}
   - {fileID: 1268255962}
-  - {fileID: 2048977702}
