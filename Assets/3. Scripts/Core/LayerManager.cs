@@ -1,7 +1,11 @@
 using UnityEngine;
 
+/// <summary>
+/// Top level reference for all LayerMask layers
+/// </summary>
 public class LayerManager : MonoBehaviour
 {
+    // Singleton
     public static LayerManager Main { get; private set; }
     private void Awake()
     {

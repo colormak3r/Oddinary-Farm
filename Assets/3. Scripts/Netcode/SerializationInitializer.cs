@@ -7,6 +7,7 @@ public class SerializationInitializer : MonoBehaviour
 {
     private void Awake()
     {
+        // Item Properties
         UserNetworkVariableSerialization<ItemProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<ItemProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<ItemProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
@@ -35,6 +36,7 @@ public class SerializationInitializer : MonoBehaviour
         UserNetworkVariableSerialization<ConsummableProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<ConsummableProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
 
+        // Player Customization
         UserNetworkVariableSerialization<Face>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<Face>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<Face>.DuplicateValue = SerializationExtensions.DuplicateValue;

@@ -8,7 +8,7 @@ using static UnityEngine.Rendering.DebugUI;
 public class ItemStack
 {
     public ItemProperty Property;
-    public uint Count;
+    public uint Count;                  // QUESTION: I understand why count would never be negative but is there an advantage to unsigned int here?
     public bool IsStackFull => Count >= Property.MaxStack;
     public bool IsStackEmpty => Property == null || Count <= 0;
 
@@ -18,6 +18,7 @@ public class ItemStack
         Count = count;
     }
 
+    // NOTE: Consider calling this method "ClearStack" as the 'empty' keyword usually refers to a boolean expression
     public void EmptyStack()
     {
         Property = null;
@@ -28,8 +29,8 @@ public class ItemStack
 [System.Serializable]
 public struct InventorySlot
 {
-    public Item Item;
-    public uint Count;
+    public Item Item;       // Item in slot
+    public uint Count;      // Item count
 
     public ItemProperty Property => Item?.BaseProperty;
     public bool IsFull => Item != null && Count >= Item.BaseProperty.MaxStack;
@@ -51,13 +52,13 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     [Header("Inventory Settings")]
     [SerializeField]
-    private HandProperty handProperty;
+    private HandProperty handProperty;      // Unarmed item
     [SerializeField]
     private Transform inventoryTransform;
     [SerializeField]
     private uint startingCoins = 10;
     [SerializeField]
-    private ItemStack[] defaultInventory;
+    private ItemStack[] defaultInventory;       // Items in inventory by default
 
     [Header("Debugs")]
     [SerializeField]
@@ -65,16 +66,16 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     [SerializeField]
     private bool isControllable = true;
     [SerializeField]
-    private InventorySlot[] inventory = new InventorySlot[MAX_INVENTORY_SLOTS];
+    private InventorySlot[] inventory = new InventorySlot[MAX_INVENTORY_SLOTS];     // Inventory slots
     public InventorySlot[] Inventory => inventory;
 
-
+    // NOTE: Guessing this is the player's coin balance? Consider renaiming to "CoinWallet"
     private NetworkVariable<ulong> Wallet = new NetworkVariable<ulong>(0, default, NetworkVariableWritePermission.Owner);
     public ulong WalletValue => Wallet.Value;
     [HideInInspector]
-    public UnityEvent<ulong> OnCoinsValueChanged;
+    public UnityEvent<ulong> OnCoinsValueChanged;       // NOTE: Consider renaming to "OnBalanceChanged"; this implies that the coin's base value is being changed which is confusing
 
-    private int currentHotbarIndex;
+    private int currentHotbarIndex;     // Item currently selected in hotbar
     public int CurrentHotbarIndex => currentHotbarIndex;
 
 
@@ -99,7 +100,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             rangeIndicator = GetComponent<RangeIndicator>();
 
             // Initialize context UI
-            itemContextUI = ItemContextUI.Main;
+            itemContextUI = ItemContextUI.Main;     // QUESTION: What is the context UI?
 
             //Add the hand to the inventory
             AddItem(handProperty, false);
@@ -125,10 +126,12 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     public override void OnNetworkDespawn()
     {
+        // Unsubscribe from events
         //CurrentItem.OnValueChanged -= HandleCurrentItemChanged;
         Wallet.OnValueChanged -= HandleCoinValueChanged;
         CurrentItemProperty.OnValueChanged -= HandleCurrentItemChanged;
 
+        // QUESTION: Want to hear more about what this is doing
         if (IsServer)
         {
             // Clean up when a client despawns
@@ -157,7 +160,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     {
         if (showDebug) Debug.Log($"Adding {property.Name} to inventory on client {OwnerClientId}");
 
-        if (property is CurrencyProperty)
+        if (property is CurrencyProperty)       // If item is currency
         {
             var currency = property as CurrencyProperty;
             var value = currency.Value;
@@ -167,7 +170,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
             return true;
         }
-        else if (property.MaxStack > 1 && FindPartialSlot(property, out var partialIndex))
+        else if (property.MaxStack > 1 && FindPartialSlot(property, out var partialIndex))      // Search for a partially filled slot for the item
         {
             inventory[partialIndex].Count++;
 
@@ -182,7 +185,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
             return true;
         }
-        else if (FindEmptySlot(out var emptyIndex))
+        else if (FindEmptySlot(out var emptyIndex))     // Find a new empty slot for the item
         {
             // Create and initialize the item
             var obj = Instantiate(property.Prefab, inventoryTransform);
@@ -234,11 +237,15 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     {
         if (inventory[index].IsEmpty) return;
 
+        // remove item from inventory
         var property = inventory[index].Property;
         ConsumeItemOnClient(index);
+
+        // Spawn item in world
         AssetManager.Main.SpawnItem(property, transform.position, default, gameObject);
     }
 
+    // Move items around in inventory
     public void SwapItem(int index1, int index2)
     {
         var temp = inventory[index1];

@@ -1,21 +1,24 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Scriptable Object that holds a bunch of common data about an item
+/// </summary>
 [CreateAssetMenu(fileName = " Property", menuName = "Scriptable Objects/Item/Item(Test Only)")]
 public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
 {
     [Header("Item Settings")]
     [SerializeField]
-    private Sprite iconSprite;
+    private Sprite iconSprite;      // Sprite for UI
     [SerializeField]
-    private Sprite objectSprite;
+    private Sprite objectSprite;        // Sprite for world
     [SerializeField]
     private GameObject prefab;
     [SerializeField]
     private bool isConsummable;
     [SerializeField]
     private uint maxStack = 20;
-    [Space]
+    [Space]                         // Adds a vertical space in the inspector
     [SerializeField]
     private bool isSellable = true;
     [SerializeField]
@@ -29,7 +32,7 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     private float secondaryCdr = 0.25f;
 
     [Header("Item Context")]
-    [TextArea(3, 10)]
+    [TextArea(3, 10)]       // Limit's string text to a range
     [SerializeField]
     private string itemContext = "LMB: Place\r\nRMB: Remove\r\nX  : Drop";
 
@@ -45,6 +48,7 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     [SerializeField]
     private AudioClip alternativeSound;
 
+    // Public Getters
     public string Name => name.Replace(" Property", "");
     public Sprite IconSprite => iconSprite;
     public Sprite ObjectSprite => objectSprite == null ? iconSprite : objectSprite;
@@ -68,12 +72,14 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
 
     public bool IsStackable => maxStack > 1;
 
-    public bool Equals(ItemProperty other)
+    public bool Equals(ItemProperty other)      // Returns true if the object is the same one in question; For instance ID
     {
         return other == this;
     }
 
-    private void OnValidate()
+    // QUESTION: What does this do exactly? What's it's purpose?
+    // Safety method, All non-consumable items can only stack once
+    private void OnValidate()       // When the item is changed in the inspector
     {
         if (!IsConsummable)
         {

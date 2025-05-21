@@ -13,8 +13,8 @@ public class Item : MonoBehaviour
     private ItemProperty baseProperty;
     public ItemProperty BaseProperty => baseProperty;
 
-    public ItemSystem ItemSystem { get; private set; }
-    public AudioElement AudioElement { get; private set; }
+    public ItemSystem ItemSystem { get; private set; }      // Item System Reference
+    public AudioElement AudioElement { get; private set; }  // Audio Element Reference
     public LayerManager LayerManager { get; private set; }
 
     public virtual void Initialize(ItemProperty baseProperty)
@@ -29,13 +29,12 @@ public class Item : MonoBehaviour
         this.baseProperty = baseProperty;
     }
 
-    public virtual void OnPreview(Vector2 position, Previewer previewer)
+    public virtual void OnPreview(Vector2 position, Previewer previewer)        // Show dotted line thingy for placement
     {
         previewer.Show(false);
     }
 
     #region Primary Action
-
     public virtual bool CanPrimaryAction(Vector2 position)
     {
         return true;
@@ -46,7 +45,7 @@ public class Item : MonoBehaviour
         if (baseProperty.PrimarySound) PlayPrimarySoundRpc();
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Everyone)]      // Play sound on every client
     private void PlayPrimarySoundRpc()
     {
         if (AudioElement == null) return;
@@ -67,7 +66,7 @@ public class Item : MonoBehaviour
         if (baseProperty.SecondarySound) PlaySecondarySoundRpc();
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Everyone)]      // Play sound on every client
     private void PlaySecondarySoundRpc()
     {
         AudioElement.PlayOneShot(baseProperty.SecondarySound);

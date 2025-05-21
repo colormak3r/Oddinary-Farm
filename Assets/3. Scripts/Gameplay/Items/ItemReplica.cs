@@ -2,13 +2,13 @@ using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using Random = UnityEngine.Random;  // Use Unity Engine's Random not System.Collection's Random
 
 public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
 {
     [Header("Settings")]
     [SerializeField]
-    private ItemProperty mockProperty;
+    private ItemProperty mockProperty;      // QUESTION: Why mock again?
     [SerializeField]
     private float pickupRadius = 5f;
     [SerializeField]
@@ -25,7 +25,8 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs;
-    private NetworkVariable<ItemProperty> Property = new NetworkVariable<ItemProperty>();
+
+    private NetworkVariable<ItemProperty> Property = new NetworkVariable<ItemProperty>();       // Networked item data
     private NetworkVariable<NetworkObjectReference> Owner = new NetworkVariable<NetworkObjectReference>();
     private Transform ignorePicker;
     private float nextPickupTime = 0f;
@@ -49,21 +50,21 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     }
 
 
-    public void NetworkSpawn()
+    public void NetworkSpawn()      // Item spawned in world
     {
         ignorePicker = null;
         nextPickupTime = Time.time + pickupDelay;
         canBePickedup = true;
         pickupPrefered = false;
-        spawnTracker++;
+        spawnTracker++;                 // QUESTION: Is this for object pooling?
     }
 
-    public void NetworkDespawn()
+    public void NetworkDespawn()        // Item despawned
     {
         if (IsServer)
         {
-            NetworkObject.ChangeOwnership(0);
-            Owner.Value = default;
+            NetworkObject.ChangeOwnership(0);       // Assign ownership to host
+            Owner.Value = default;          // No player owner assigned
         }
 
         StopAllCoroutines();
@@ -80,12 +81,15 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
         Property.OnValueChanged -= HandlePropertyChanged;
     }
 
+    // NOTE: Consider changing args to "prevOwner" and "newOwner"; it is a bit confusing at first glance
     protected override void OnOwnershipChanged(ulong previous, ulong current)
     {
-        if (!IsOwner) return;
+        if (!IsOwner) return;       // If client is already owner then no need to transfer ownership
         if (showDebugs) Debug.Log($"Ownership changed from {previous} to {current}", this);
 
-        if (ownershipCoroutine != null) StopCoroutine(ownershipCoroutine);
+        if (ownershipCoroutine != null) 
+            StopCoroutine(ownershipCoroutine);
+
         ownershipCoroutine = StartCoroutine(OwnershipConfirmationCoroutine(current));
     }
 
@@ -95,21 +99,25 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
         var nextExitTime = Time.time + pickupTimeout;
 
         NetworkObject ownerNetObj;
-        while (!Owner.Value.TryGet(out ownerNetObj))
+        while (!Owner.Value.TryGet(out ownerNetObj))        // Stop coroutine if running for too long
         {
-            if (Time.time > nextExitTime) yield break;
+            if (Time.time > nextExitTime)       // If timeout -> break loop
+                yield break;
+
             yield return null;
         }
 
         if (ownerNetObj == NetworkObject) Debug.LogError($"Ownership confirmation failed for {ownerNetObj.name} - object is self, spawned: {spawnTracker}", this);
 
-        if (ownerId == ownerNetObj.OwnerClientId)
+        if (ownerId == ownerNetObj.OwnerClientId)       // Ownership confirmed
         {
             if (showDebugs) Debug.Log($"Ownership confirmed for {ownerNetObj.name}", this);
-            if (pickupCoroutine != null) StopCoroutine(pickupCoroutine);
+            if (pickupCoroutine != null) 
+                StopCoroutine(pickupCoroutine);
+
             pickupCoroutine = StartCoroutine(PickupCoroutine(ownerNetObj.transform, pickupTimeout));
         }
-        else
+        else                        // Timeout error
         {
             if (Time.time > nextExitTime && ownerId != 0)
             {
@@ -134,7 +142,7 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     public void SetProperty(ItemProperty property)
     {
         Property.Value = property;
-        AddRandomForceRpcRpc();
+        AddRandomForceRpcRpc();     // QUESTION: Why add force here?
     }
 
     private void Update()
@@ -143,7 +151,10 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
         {
             nextScanTime = Time.time + 0.1f;
             var player = ScanForPlayer();
-            if (player != null) PickupOnServer(player.transform);
+
+            // If player in vacinity then start pickup coroutine
+            if (player != null) 
+                PickupOnServer(player.transform);
         }
     }
 
@@ -181,16 +192,18 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
         canBePickedup = false;
     }
 
+    // NOTE: Consider naming the first arg. "ownerTranform" or "playerTransform"; it is a bit confusing at first glance
+    // NOTE: Consider naming the second arg. "timeout" or "timeoutDuration"; it is a bit confusing at first glance
     private IEnumerator PickupCoroutine(Transform picker, float duration)
     {
         if (showDebugs) Debug.Log($"Picked up by {picker}", picker);
 
         var pickerPos = picker.position;
         var endTime = Time.time + duration;
-        var sqrDistance = (transform.position - pickerPos).sqrMagnitude;
-        while (sqrDistance > 0.01f)
+        var sqrDistance = (transform.position - pickerPos).sqrMagnitude;        // Squared distance for perfomant computation
+        while (sqrDistance > 0.01f)     // Suck into player
         {
-            if (Time.time > endTime) yield break;
+            if (Time.time > endTime) yield break;       // Timed out
 
             var direction = (pickerPos - transform.position).normalized;
             itemRigidbody.linearVelocity = direction * pickupSpeed;
@@ -201,6 +214,7 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
             yield return new WaitForFixedUpdate();
         }
 
+        // Store in inventory
         var inventory = picker.GetComponent<PlayerInventory>();
         if (inventory.AddItem(Property.Value))
         {
@@ -213,7 +227,7 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    private void FailToPickupRpc()
+    private void FailToPickupRpc()      // Reset ownership to server if pickup failed
     {
         if (Owner.Value.TryGet(out var ownerNetObj))
         {
@@ -226,28 +240,36 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
         nextPickupTime = Time.time + pickupRecovery;
     }
 
+    // NOTE: Consider naming the arg. "ignoredOwnerTranform"; it is a bit confusing at first glance
     public void IgnorePickerOnServer(Transform ignore)
     {
         ignorePicker = ignore;
-        if (ignoreCoroutine != null) StopCoroutine(ignoreCoroutine);
+        if (ignoreCoroutine != null) 
+            StopCoroutine(ignoreCoroutine);
+
         ignoreCoroutine = StartCoroutine(IgnorePickerCoroutine());
     }
 
-    private IEnumerator IgnorePickerCoroutine()
+    private IEnumerator IgnorePickerCoroutine()     // Delay before retrying pickup
     {
         yield return new WaitForSeconds(pickupRecovery);
         ignorePicker = null;
     }
 
+    // Return closest player object that falls within the pickup radius
     private GameObject ScanForPlayer()
     {
-        var hits = Physics2D.OverlapCircleAll(transform.position, pickupRadius, playerLayer);
-        if (hits.Length == 0) return null;
-        float closetDistance = float.MaxValue;
+        var hits = Physics2D.OverlapCircleAll(transform.position, pickupRadius, playerLayer);       // Player in radius
+        if (hits.Length == 0) // No players found in area 
+            return null;
+
+        // Find the closest player and 
+        float closetDistance = float.MaxValue;      // QUESTION: Why not use Mathf.Infinity?
         int closestIndex = -1;
         for (int i = 0; i < hits.Length; i++)
         {
-            if (hits[i].transform == ignorePicker) continue;
+            if (hits[i].transform == ignorePicker)  // If player marked as ignore
+                continue;
 
             var distance = Vector2.Distance(hits[i].transform.position, transform.position);
             if (distance < closetDistance)
@@ -257,12 +279,14 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
             }
         }
 
-        if (closestIndex == -1) return null;
+        if (closestIndex == -1) 
+            return null;
+
         return hits[closestIndex].gameObject;
     }
 
     [Rpc(SendTo.Server)]
-    private void DespawnRpc()
+    private void DespawnRpc()       // Remove item from item pool
     {
         NetworkObjectPool.Main.Despawn(gameObject);
     }
