@@ -151,7 +151,7 @@ namespace ColorMak3r.Utility
             return new Vector3(vector.x + x, vector.y + y, vector.z + z);
         }
 
-        public static Vector2 RandomPointInRange(float range)
+        public static Vector2 RandomPointInRange(float range)       // Finds a random point in a square range
         {
             return new Vector2(Random.Range(-range, range), Random.Range(-range, range));
         }

@@ -57,6 +57,7 @@ public class AssetManager : NetworkBehaviour
         //PopulateCurrencyDictionary();
     }
 
+    // File paths to assets
     [Header("Settings")]
     [SerializeField]
     private string assetPath;
@@ -67,13 +68,13 @@ public class AssetManager : NetworkBehaviour
 
     [Header("Common Assets")]
     [SerializeField]
-    private GameObject farmPlotPrefab;
+    private GameObject farmPlotPrefab;      // Game object for cultivated ground
     public GameObject FarmPlotPrefab => farmPlotPrefab;
     [SerializeField]
-    private GameObject itemReplicaPrefab;
+    private GameObject itemReplicaPrefab;       // Base item prefab
     public GameObject ItemReplicaPrefab => itemReplicaPrefab;
     [SerializeField]
-    private GameObject projectilePrefab;
+    private GameObject projectilePrefab;        // Base projectile prefab
     public GameObject ProjectilePrefab => projectilePrefab;
 
     [Header("Common Material")]
@@ -104,6 +105,7 @@ public class AssetManager : NetworkBehaviour
         itemIds.Clear();
         spawnableIds.Clear();
 
+        // Load scriptable assets from folder
         var assets = LoadAllScriptableObjectsInFolder<ScriptableObject>(assetPath);
         string assetNames = "Fetched assets:";
         foreach (var asset in assets)
@@ -113,6 +115,7 @@ public class AssetManager : NetworkBehaviour
         }
         if (showDebugs) Debug.Log(assetNames);
 
+        // Load item assets from folder
         var items = LoadAllScriptableObjectsInFolder<ItemProperty>(itemPath);
         string itemNames = "Fetched items:";
         foreach (var item in items)
@@ -122,6 +125,7 @@ public class AssetManager : NetworkBehaviour
         }
         if (showDebugs) Debug.Log(itemNames);
 
+        // Load prefabs from folder
         var prefabs = LoadAllPrefabsInFolder(spawnablePath);
         string prefabNames = "Fetched prefabs:";
         foreach (var prefab in prefabs)
@@ -138,14 +142,14 @@ public class AssetManager : NetworkBehaviour
     public static T[] LoadAllScriptableObjectsInFolder<T>(string folderPath) where T : ScriptableObject
     {
         // Find all asset GUIDs in the specified folder
-        string[] guids = AssetDatabase.FindAssets("t:ScriptableObject", new[] { folderPath });
+        string[] guids = AssetDatabase.FindAssets("t:ScriptableObject", new[] { folderPath });      // Find all assets of type Scriptable object
 
         // Convert GUIDs to asset paths
         string[] assetPaths = guids.Select(guid => AssetDatabase.GUIDToAssetPath(guid)).ToArray();
 
         // Load all assets and filter them by type
         T[] scriptableObjects = assetPaths
-            .Select(path => AssetDatabase.LoadAssetAtPath<T>(path))
+            .Select(path => AssetDatabase.LoadAssetAtPath<T>(path))     // Load scriptables from file path
             .Where(asset => asset != null)
             .ToArray();
 
@@ -155,7 +159,7 @@ public class AssetManager : NetworkBehaviour
     public List<GameObject> LoadAllPrefabsInFolder(string folderPath)
     {
         // Find all asset GUIDs that are prefabs in the specified directory and subdirectories
-        string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { folderPath });
+        string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { folderPath });        // new[] is an explicit shorthand for an array
 
         List<GameObject> prefabs = new List<GameObject>();
 
@@ -165,7 +169,7 @@ public class AssetManager : NetworkBehaviour
             string assetPath = AssetDatabase.GUIDToAssetPath(guid);
 
             // Load the asset as a GameObject (prefab)
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);       // Load prefabs from file path
 
             prefabs.Add(prefab);
         }
@@ -182,7 +186,7 @@ public class AssetManager : NetworkBehaviour
         foreach (var asset in scriptableObjectList)
         {
             nameToScriptableObject[asset.name] = asset;
-            builder.Append($"\n{asset.name}");
+            builder.Append($"\n{asset.name}");              // QUESTION: Is this builder just for debug?
         }
         if (showDebugs) Debug.Log(builder);
     }
@@ -265,19 +269,19 @@ public class AssetManager : NetworkBehaviour
         var randomPos = randomRange * (Vector2)Random.onUnitSphere;
         //position = position == default ? transform.position + (Vector3)randomPos : position + randomPos;
         position += randomPos;
-        var itemReplicaObj = NetworkObjectPool.Main.Spawn(itemReplicaPrefab, position);
+        var itemReplicaObj = NetworkObjectPool.Main.Spawn(itemReplicaPrefab, position);     // Spawn item replica
         var itemReplica = itemReplicaObj.GetComponent<ItemReplica>();
-        itemReplica.SetProperty(itemProperty);
+        itemReplica.SetProperty(itemProperty);                                  // Turn item replica into an actual item
 
         return itemReplica;
     }
 
     public void SpawnByID(int id, Vector2 position, int count = 1, bool log = false, float randomRange = 2f, bool randomForce = true)
     {
-        if (id < SPAWNABLE_ID_OFFSET)
+        if (id < SPAWNABLE_ID_OFFSET)       // QUESTION: Why is this offset needed?
         {
             ItemProperty property = null;
-            for (int i = 0; i < itemIds.Count; i++)
+            for (int i = 0; i < itemIds.Count; i++)     // Find item property
             {
                 if (itemIds[i].id == id)
                 {
@@ -290,7 +294,7 @@ public class AssetManager : NetworkBehaviour
             {
                 for (int i = 0; i < count; i++)
                 {
-                    SpawnItem(property, position, default, default, randomRange, randomForce);
+                    SpawnItem(property, position, default, default, randomRange, randomForce);      // Spawn replica with property
                 }
                 if (log) Debug.Log("Spawned " + count + " " + property.Name + " around " + position);
             }
@@ -299,7 +303,7 @@ public class AssetManager : NetworkBehaviour
                 Debug.LogError("Item ID not found: " + id);
             }
         }
-        else if (id < 30000)
+        else if (id < 30000)        // QUESTION: What is this for? Are prefabs over 30,000?
         {
             SpawnPrefab(id, position, count, randomRange);
 
@@ -320,7 +324,7 @@ public class AssetManager : NetworkBehaviour
     private void SpawnPrefabRpc(int id, Vector2 position, int spawnCount, float randomRange, float spawnDelay)
     {
         GameObject prefab = null;
-        for (int i = 0; i < spawnableIds.Count; i++)
+        for (int i = 0; i < spawnableIds.Count; i++)        // Find prefab
         {
             if (spawnableIds[i].id == id)
             {
@@ -335,12 +339,12 @@ public class AssetManager : NetworkBehaviour
             return;
         }
 
-        var positionOffset = position + MiscUtility.RandomPointInRange(randomRange);
-        if (spawnCount == 1)
+        var positionOffset = position + MiscUtility.RandomPointInRange(randomRange);        // Spawn in random position in a range
+        if (spawnCount == 1)        // If only 1 object -> spawn immediately
         {
             SpawnPrefabOnServer(prefab, positionOffset);
         }
-        else if (spawnCount > 1)
+        else if (spawnCount > 1)    // If >1 object -> spawn in intervals
         {
             StartCoroutine(SpawnPrefabCoroutine(prefab, positionOffset, spawnCount, spawnDelay));
         }
@@ -362,7 +366,9 @@ public class AssetManager : NetworkBehaviour
 
     public void SpawnPrefabOnServer(GameObject prefab, Vector2 position)
     {
-        if (!IsServer) return;
+        if (!IsServer) 
+            return;
+
         GameObject go = Instantiate(prefab, position, Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
     }
