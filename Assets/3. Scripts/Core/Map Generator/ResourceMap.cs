@@ -1,24 +1,27 @@
-
 using System.IO.Ports;
 using UnityEngine;
+
+// Allows you to use static members of a class without prefixing them with the class name
 using static UnityEngine.Rendering.PostProcessing.HistogramMonitor;
 
 public class ResourceMap : PerlinNoiseGenerator
 {
     [Header("Resource Settings")]
     [SerializeField]
-    private int rarity = 4;
+    private int rarity = 4;     // defines the density of loot spawns
     [SerializeField]
-    private int noResourceZone = 10;
+    private int noResourceZone = 10;        // Amount of tiles to exclude from loot; player start area
 
     protected override void TransformMap(Vector2Int mapSize)
     {
         var halfMapSize = mapSize / 2;
-        for (int x = -halfMapSize.x; x < halfMapSize.x; x++)
+        for (int x = -halfMapSize.x; x < halfMapSize.x; x++)        // Loop over each pixel on the map/grid
         {
             for (int y = -halfMapSize.y; y < halfMapSize.y; y++)
             {
                 float maxValue = 0;
+
+                // Find local maximum value of map
                 // there are more efficient algorithms than this
                 for (int xx = -rarity; xx <= rarity; xx++)
                 {
@@ -30,7 +33,8 @@ public class ResourceMap : PerlinNoiseGenerator
                         if (-halfMapSize.x <= xn && xn < halfMapSize.x && -halfMapSize.y <= yn && yn < halfMapSize.y)
                         {
                             float e = rawMap[xn, yn];
-                            if (e > maxValue) { maxValue = e; }
+                            if (e > maxValue)
+                                maxValue = e;
                         }
                     }
                 }

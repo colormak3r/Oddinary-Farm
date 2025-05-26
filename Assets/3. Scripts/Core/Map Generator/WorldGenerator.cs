@@ -17,8 +17,8 @@ public class Chunk
     public bool isBuilding;
     public bool isRemoving;
 
-    public List<GameObject> terrainUnits;
-    public List<GameObject> foliages;
+    public List<GameObject> terrainUnits;       // Holds terrain tiles
+    public List<GameObject> foliages;       // Holds grass/bush/weed sprites
 
     public Chunk(Vector2 position, int size, Transform transform)
     {
@@ -31,7 +31,7 @@ public class Chunk
         isRemoving = false;
 
         terrainUnits = new List<GameObject>();
-        terrainUnits.Capacity = size * size;
+        terrainUnits.Capacity = size * size;        // Square size
         foliages = new List<GameObject>();
         foliages.Capacity = size * size;
     }
@@ -39,12 +39,12 @@ public class Chunk
 
 public class Offset2DArray<T> : IEnumerable<T>
 {
-    private T[,] array;
+    private T[,] array;                 // 2D Array
     private int offsetX, offsetY;
-    public int minX => -offsetX;
-    public int maxX => array.GetLength(0) - offsetX - 1;
-    public int minY => -offsetY;
-    public int maxY => array.GetLength(1) - offsetY - 1;
+    public int minX => -offsetX;        // min x position
+    public int maxX => array.GetLength(0) - offsetX - 1;    // max x position
+    public int minY => -offsetY;        // min y position
+    public int maxY => array.GetLength(1) - offsetY - 1;    // max y position
 
     // minX, maxX, minY, maxY define the logical index bounds.
     public Offset2DArray(int minX, int maxX, int minY, int maxY)
@@ -54,12 +54,13 @@ public class Offset2DArray<T> : IEnumerable<T>
         array = new T[maxX - minX + 1, maxY - minY + 1];
     }
 
-    public T this[int x, int y]
+    public T this[int x, int y]     // Overloaded array access operator
     {
         get { return array[x + offsetX, y + offsetY]; }
         set { array[x + offsetX, y + offsetY] = value; }
     }
 
+    // access an element safely without an out of range exception
     public bool GetElementSafe(int x, int y, out T value)
     {
         if (x < minX || x > maxX || y < minY || y > maxY)
@@ -75,7 +76,7 @@ public class Offset2DArray<T> : IEnumerable<T>
     }
 
     // Implementation of IEnumerable<T>
-    public IEnumerator<T> GetEnumerator()
+    public IEnumerator<T> GetEnumerator()       // This data structure can be iterated with a foreach loop
     {
         for (int i = 0; i < array.GetLength(0); i++)
         {
@@ -95,7 +96,7 @@ public class Offset2DArray<T> : IEnumerable<T>
 
 public class WorldGenerator : NetworkBehaviour
 {
-    public static WorldGenerator Main;
+    public static WorldGenerator Main;      // Singleton
 
     private void Awake()
     {
@@ -107,21 +108,21 @@ public class WorldGenerator : NetworkBehaviour
 
     [Header("Map Settings")]
     [SerializeField]
-    private Vector2Int mapSize = new Vector2Int(500, 500);
+    private Vector2Int mapSize = new Vector2Int(500, 500);      // Max tiles in a map
     [SerializeField]
-    private int chunkSize = 5;
+    private int chunkSize = 5;      // Max tiles in a chunk
     [SerializeField]
     private int paddingChunkCount = 2;
     [SerializeField]
-    private int renderDistance = 3;
+    private int renderDistance = 3;     // QUESTION: Max amount of chunks that can be rendered?
     [SerializeField]
     private int renderXOffset = 4;
 
     [Header("Terrain Settings")]
     [SerializeField]
-    private TerrainUnitProperty[] terrainUnitProperties;
+    private TerrainUnitProperty[] terrainUnitProperties;        // Different types of terrain properties
     [SerializeField]
-    private TerrainUnitProperty voidUnitProperty;
+    private TerrainUnitProperty voidUnitProperty;       // Base terrain property when no other could be found
     [SerializeField]
     private GameObject terrainUnitPrefab;
 
@@ -129,7 +130,7 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private bool canSpawnResources = true;
     [SerializeField]
-    private GameObject[] resourcePrefabs;
+    private GameObject[] resourcePrefabs;       // Items and treasure found throughout the island
     [SerializeField]
     private int countPerYield = 10;
 
@@ -149,7 +150,7 @@ public class WorldGenerator : NetworkBehaviour
 
     [Header("Map Components")]
     [SerializeField]
-    private TMP_Text heightText;
+    private TMP_Text heightText;        // Elevation text
 
     private Vector2Int halfMapSize;
     private Vector2Int paddingSize;
@@ -157,7 +158,7 @@ public class WorldGenerator : NetworkBehaviour
     private Vector2Int trueMapSize;
     private int halfChunkSize;
 
-    private Offset2DArray<TerrainUnitProperty> terrainMap;
+    private Offset2DArray<TerrainUnitProperty> terrainMap;      // Grid
     private Texture2D terrainMapTexture;
 
     private Offset2DArray<bool> folliageMap;
@@ -176,7 +177,7 @@ public class WorldGenerator : NetworkBehaviour
 
     public float HighestElevation => elevationMap.MaxValue;
 
-    public IEnumerator Initialize()
+    public IEnumerator Initialize()         // Asynchronus generation
     {
         yield return GenerateWorld();
         FloodManager.Main.Initialize();
@@ -232,15 +233,15 @@ public class WorldGenerator : NetworkBehaviour
     {
         // Calculate the half map size and padding size
         halfMapSize = mapSize / 2;
-        paddingSize = Vector2Int.one * paddingChunkCount * chunkSize;
+        paddingSize = Vector2Int.one * paddingChunkCount * chunkSize;       // padding tiles
         trueHalfMapSize = halfMapSize + paddingSize;
         trueMapSize = trueHalfMapSize * 2;
         halfChunkSize = chunkSize / 2;
 
-        // Initialize the maps
-        elevationMap.GenerateMap(mapSize);
-        resourceMap.GenerateMap(mapSize);
-        moistureMap.GenerateMap(mapSize);
+        // Initialize noise maps
+        elevationMap.GenerateMap(mapSize);      // Island height map
+        resourceMap.GenerateMap(mapSize);       // Generate fractal noise for loot map
+        moistureMap.GenerateMap(mapSize);       // Moisture Map
 
         yield return GenerateTerrain();
         if (IsHost)

@@ -10,7 +10,7 @@ public class TerrainUnitProperty : ScriptableObject
     [SerializeField]
     private Color mapColor;
     [SerializeField]
-    private MinMaxFloat elevation;
+    private MinMaxFloat elevation;      // QUESTION: How did you make this; at least the custom editor in the inspector?
     [SerializeField]
     private bool isAccessible = true;
     [SerializeField]
