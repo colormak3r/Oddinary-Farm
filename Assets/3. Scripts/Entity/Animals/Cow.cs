@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 public class Cow : Animal
 {
-    [Header("Cow Settings")]
+    [Header("Cow Settings")] 
     [SerializeField]
     private bool isTamed;
     [SerializeField]

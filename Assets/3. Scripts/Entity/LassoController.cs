@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -41,10 +42,14 @@ public class LassoController : NetworkBehaviour
     [Header("Lasso Settings")]
     [SerializeField]
     private bool showDebugs = false;
+    [SerializeField]
+    private bool isRecovering = false;
+    public bool IsRecovering => isRecovering;
 
     private CaptureController currentCaptureController;
     private LassoProjectile currentLassoProjectile;
     private EntityMovement entityMovement;
+    private Coroutine lassoRecoveryCoroutine;
 
     private void Awake()
     {
@@ -237,12 +242,21 @@ public class LassoController : NetworkBehaviour
         if (distance < captureDistance)
         {
             currentCaptureController.CaptureLassoSuccess();
+            if (lassoRecoveryCoroutine != null) StopCoroutine(lassoRecoveryCoroutine);
+            lassoRecoveryCoroutine = StartCoroutine(LassoRecoveryCoroutine());
             CancelLasso();
         }
         else
         {
             currentCaptureController.EntityMovement.KnockbackDirection(pullForce, (transform.position - targetPos).normalized);
         }
+    }
+
+    private IEnumerator LassoRecoveryCoroutine()
+    {
+        isRecovering = true;
+        yield return new WaitForSeconds(1f);
+        isRecovering = false;
     }
 
     #endregion

@@ -55,8 +55,6 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     [SerializeField]
     private Transform inventoryTransform;
     [SerializeField]
-    private uint startingCoins = 10;
-    [SerializeField]
     private ItemStack[] defaultInventory;
 
     [Header("Debugs")]
@@ -68,9 +66,6 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     private InventorySlot[] inventory = new InventorySlot[MAX_INVENTORY_SLOTS];
     public InventorySlot[] Inventory => inventory;
 
-
-    private NetworkVariable<ulong> Wallet = new NetworkVariable<ulong>(0, default, NetworkVariableWritePermission.Owner);
-    public ulong WalletValue => Wallet.Value;
     [HideInInspector]
     public UnityEvent<ulong> OnCoinsValueChanged;
 
@@ -113,20 +108,13 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
             // Set the current item to the Hand
             ChangeHotBarIndex(0);
-
-            // Update the wallet
-            AddCoinsOnClient(startingCoins);
         }
 
-        //CurrentItem.OnValueChanged += HandleCurrentItemChanged;
-        Wallet.OnValueChanged += HandleCoinValueChanged;
         CurrentItemProperty.OnValueChanged += HandleCurrentItemChanged;
     }
 
     public override void OnNetworkDespawn()
     {
-        //CurrentItem.OnValueChanged -= HandleCurrentItemChanged;
-        Wallet.OnValueChanged -= HandleCoinValueChanged;
         CurrentItemProperty.OnValueChanged -= HandleCurrentItemChanged;
 
         if (IsServer)
@@ -146,11 +134,6 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     private void HandleCurrentItemChanged(ItemProperty previousValue, ItemProperty newValue)
     {
         OnCurrentItemPropertyChanged?.Invoke(newValue);
-    }
-
-    private void HandleCoinValueChanged(ulong previousValue, ulong newValue)
-    {
-        OnCoinsValueChanged?.Invoke(newValue);
     }
 
     public bool AddItem(ItemProperty property, bool playSound = true)
@@ -295,22 +278,22 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     #region Currency
     public void AddCoinsOnClient(uint value)
     {
-        Wallet.Value += value;
-        inventoryUI.UpdateWallet(Wallet.Value);
-        if (showDebug) Debug.Log($"Added {value} coins to inventory. Total coins = {Wallet.Value}");
+        WalletManager.Main.AddToWallet(value);
+        OnCoinsValueChanged?.Invoke(WalletManager.Main.LocalWallet);
+        if (showDebug) Debug.Log($"Added {value} coins to inventory. Total coins = {WalletManager.Main.LocalWallet}");
     }
 
-    public void ConsumeCoinsOnClient(ulong value)
+    public void ConsumeCoinsOnClient(uint value)
     {
-        if (value > Wallet.Value)
+        if (value > WalletManager.Main.LocalWallet)
         {
-            if (showDebug) Debug.Log($"Not enough coins to consume {value}. Total coins = {Wallet.Value}");
+            if (showDebug) Debug.Log($"Not enough coins to consume {value}. Total coins = {WalletManager.Main.LocalWallet}");
             return;
         }
 
-        Wallet.Value -= value;
-        inventoryUI.UpdateWallet(Wallet.Value);
-        if (showDebug) Debug.Log($"Consumed {value} coins from inventory. Total coins = {Wallet.Value}");
+        WalletManager.Main.RemoveFromWallet(value);
+        OnCoinsValueChanged?.Invoke(WalletManager.Main.LocalWallet);
+        if (showDebug) Debug.Log($"Consumed {value} coins from inventory. Total coins = {WalletManager.Main.LocalWallet}");
     }
     #endregion
 

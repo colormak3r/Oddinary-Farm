@@ -377,6 +377,8 @@ public class ItemSystem : NetworkBehaviour
 
     public void LassoPrimary(Vector2 position)
     {
+        if (lassoController.IsRecovering) return;
+
         if (lassoController.CurrentStateValue == LassoState.Capturing)
         {
             lassoController.LassoPull();

@@ -56,12 +56,12 @@ public class UpgradeUI : UIBehaviour
 
         var cost = currentStages.GetStage(currentStage + 1).cost;
         costText.text = cost.ToString();
-        upgradeButton.interactable = inventory.WalletValue > cost;
+        upgradeButton.interactable = WalletManager.Main.LocalWallet > cost;
     }
 
     public void OnUpgradeButtonClicked()
     {
-        inventory.ConsumeCoinsOnClient(upgradeStages.GetStage(currentStage + 1).cost);
+        inventory.ConsumeCoinsOnClient((uint)upgradeStages.GetStage(currentStage + 1).cost);
         currentStage++;
         if (currentStage < upgradeStages.GetStageCount() - 1)
             UpdateStage(upgradeStages, currentStage);

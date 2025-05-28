@@ -545,7 +545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 882980703
+      value: 3709529679
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -575,6 +575,10 @@ PrefabInstance:
       propertyPath: maxHealth
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6444526639934246005, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: lootTable
+      value: 
+      objectReference: {fileID: 11400000, guid: e8ddc21777f834d478e44a9fe79d5171, type: 2}
     - target: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Name
       value: Wild Cow Variant
@@ -585,11 +589,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8870924125776796283, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Radius
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8870924125776796283, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Offset.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1713903147799318877, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
@@ -711,6 +715,4 @@ MonoBehaviour:
   captureItemProperty: {fileID: 11400000, guid: 1bdc0cb15924225479aeea64a6c41d7b, type: 2}
   lassoPoint: {fileID: 246607998878683492}
   lassoedRenderer: {fileID: 2185344480939948199}
-  pullTime:
-    min: 5
-    max: 7
+  showDebugs: 0

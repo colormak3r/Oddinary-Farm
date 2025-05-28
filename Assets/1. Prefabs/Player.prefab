@@ -2777,7 +2777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 415020733
+  GlobalObjectIdHash: 569683485
   InScenePlacedSourceGlobalObjectIdHash: 569683485
   DeferredDespawnTick: 0
   Ownership: 1
@@ -3036,7 +3036,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   handProperty: {fileID: 11400000, guid: a5595435a42e4a241be7720456806282, type: 2}
   inventoryTransform: {fileID: 8285960112913659381}
-  startingCoins: 10
   defaultInventory:
   - Property: {fileID: 11400000, guid: b48705ea45197984890949b39fbc67f0, type: 2}
     Count: 1
@@ -3045,8 +3044,6 @@ MonoBehaviour:
   - Property: {fileID: 11400000, guid: 2724622c2adbcac45889b46fbb4c871b, type: 2}
     Count: 4
   - Property: {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
-    Count: 1
-  - Property: {fileID: 11400000, guid: 620e17e93689e024aae505237d752525, type: 2}
     Count: 1
   showDebug: 0
   isControllable: 1
@@ -3432,12 +3429,13 @@ MonoBehaviour:
   lassoExtra: {fileID: 8022643172315787028}
   muzzleTransform: {fileID: 940778661305221230}
   projectileProperty: {fileID: 11400000, guid: 9598b31121239b4419ce327bad69bcae, type: 2}
-  pullForce: 20
-  captureDistance: 4.5
+  pullForce: 30
+  captureDistance: 3
   speedMultiplier: 0.4
   currentLassoState:
     m_InternalValue: 0
   showDebugs: 0
+  isRecovering: 0
 --- !u!114 &1154542970121647842
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -155,7 +155,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (Time.time < nextDamagable) return false;
         nextDamagable = Time.time + iframeDuration;
 
-        TakeDamageRpc(damage, type, attacker?.gameObject);
+        TakeDamageRpc(damage, type, attacker.gameObject);
 
         return true;
     }

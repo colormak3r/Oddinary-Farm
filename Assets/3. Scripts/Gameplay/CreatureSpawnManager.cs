@@ -102,10 +102,11 @@ public class CreatureSpawnManager : NetworkBehaviour
     private IEnumerator SpawnWaveCoroutine(CreatureWave wave, Vector2 position, int safeRadius, int spawnRadius)
     {
         spawnablePositions = GetSpawnPositions(position, safeRadius, spawnRadius);
+        var multiplier = NetworkManager.Singleton.ConnectedClients.Count;
 
         foreach (var spawn in wave.creatureSpawns)
         {
-            SpawnCreature(spawn, spawnablePositions);
+            SpawnCreature(spawn, spawnablePositions, multiplier);
             yield return new WaitForSeconds(spawnDelay); // Optional delay between spawns
         }
     }
@@ -115,11 +116,12 @@ public class CreatureSpawnManager : NetworkBehaviour
         if (!IsServer) return null;
 
         spawnablePositions = GetSpawnPositions(position, safeRadius, spawnRadius);
+        var multiplier = NetworkManager.Singleton.ConnectedClients.Count;
 
         var creatures = new List<GameObject>();
         foreach (var spawn in wave.creatureSpawns)
         {
-            creatures.AddRange(SpawnCreature(spawn, spawnablePositions));
+            creatures.AddRange(SpawnCreature(spawn, spawnablePositions, multiplier));
         }
         return creatures;
     }
@@ -143,10 +145,11 @@ public class CreatureSpawnManager : NetworkBehaviour
         return pos;
     }
 
-    private List<GameObject> SpawnCreature(CreatureSpawn spawn, List<Vector2> spawnablePositions)
+    private List<GameObject> SpawnCreature(CreatureSpawn spawn, List<Vector2> spawnablePositions, int multiplier)
     {
         List<GameObject> creatures = new List<GameObject>();
-        for (int i = 0; i < spawn.spawnCount; i++)
+        var scaledCount = spawn.spawnCount * multiplier;
+        for (int i = 0; i < scaledCount; i++)
         {
             var creature = Instantiate(spawn.creaturePrefab, spawnablePositions.GetRandomElement(), Quaternion.identity);
             creature.GetComponent<NetworkObject>().Spawn();

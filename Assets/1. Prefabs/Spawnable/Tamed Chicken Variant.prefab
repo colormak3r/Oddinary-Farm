@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4058234367665695159, guid: cfc2e2de3c4d5c94c91db01b760ef2a3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2.25
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4058234367665695159, guid: cfc2e2de3c4d5c94c91db01b760ef2a3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -170,6 +170,10 @@ PrefabInstance:
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 510595880
       objectReference: {fileID: 0}
+    - target: {fileID: 3376117821225039048, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3587442703509697360, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Controller
       value: 
@@ -255,8 +259,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86973486dbc6fb540838ed2cd12c9a00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectRange: 7
-  escapeRange: 9
+  detectRange: 5
+  escapeRange: 7
   penaltyRange: 2
   activeTime: 0
   threatLayer:
