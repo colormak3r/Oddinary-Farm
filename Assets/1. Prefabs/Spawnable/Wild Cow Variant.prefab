@@ -545,7 +545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 4041514923
+      value: 882980703
       objectReference: {fileID: 0}
     - target: {fileID: 2471980583601986671, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -684,8 +684,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86973486dbc6fb540838ed2cd12c9a00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectRange: 7
-  escapeRange: 9
+  detectRange: 13
+  escapeRange: 15
   penaltyRange: 2
   activeTime: 0
   threatLayer:
@@ -711,3 +711,6 @@ MonoBehaviour:
   captureItemProperty: {fileID: 11400000, guid: 1bdc0cb15924225479aeea64a6c41d7b, type: 2}
   lassoPoint: {fileID: 246607998878683492}
   lassoedRenderer: {fileID: 2185344480939948199}
+  pullTime:
+    min: 5
+    max: 7

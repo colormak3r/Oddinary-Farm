@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Turret StructureProperty
   m_EditorClassIdentifier: 
   blueprintProperty: {fileID: 11400000, guid: 5652e2a6a33384749b44907c01239425, type: 2}
-  sprite: {fileID: -247063809, guid: ba651257e46b53e4f8163e3f3eee1635, type: 3}
+  sprite: {fileID: -1917951666, guid: ba651257e46b53e4f8163e3f3eee1635, type: 3}
   offset: {x: 0, y: 0.5}
   size: {x: 2, y: 2}

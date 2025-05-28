@@ -123,88 +123,9 @@ public class SpriteBlender : MonoBehaviour
         if (movementBlocker && spriteRenderer.sprite)
         {
             if (showDebugs) Debug.Log("Reshaping collider", this);
-            List<Vector2> physicsShape = new List<Vector2>();
-            spriteRenderer.sprite.GetPhysicsShape(0, physicsShape);
-            movementBlocker.SetPath(0, physicsShape);
+            ReshapeCollider();
         }
     }
-
-
-    /*public void Blend(bool reblendNeighbor = false)
-    {
-        IBool[] neighbors = new IBool[9];
-        SpriteBlender[] neigborBlenders = new SpriteBlender[9];
-        if (showGizmos) scannedPosition.Clear();
-        position = (Vector2)transform.position + offset;
-
-        for (int i = 0; i < SCAN_POSITION.Length; i++)
-        {
-            if (i == 4) continue;
-
-            if (showGizmos) scannedPosition.Add(position + SCAN_POSITION[i]);
-
-            var hit = Physics2D.OverlapPoint(position + SCAN_POSITION[i], blendLayer);
-            if (hit)
-            {
-                var neighbor = hit.GetComponentInChildren<SpriteBlender>();
-                if (neighbor != null)
-                {
-                    if (neighbor.Rules == rules)
-                    {
-                        neigborBlenders[i] = neighbor;
-                        neighbors[i] = IBool.Yes;
-                    }
-                    else
-                    {
-                        neighbors[i] = IBool.No;
-                    }
-                }
-                else
-                {
-                    neighbors[i] = IBool.No;
-                }
-            }
-            else
-            {
-                {
-                    neighbors[i] = IBool.No;
-                }
-            }
-        }
-
-        if (showDebugs)
-        {
-            var builder = position + "\nNeighbor Actual:\n";
-            for (int i = 0; i < neighbors.Length; i++)
-            {
-                builder += neighbors[i].ToSymbol(true) + " ";
-                if (i == 2 || i == 5) builder += "\n";
-            }
-            Debug.Log(builder);
-        }
-
-        // Match and set the new sprite
-        spriteRenderer.sprite = rules.GetMatchingSprite(neighbors);
-
-        if (spriteRenderer.sprite == null)
-        {
-            if (showDebugs) Debug.Log("Cannot find matching sprite", this);
-        }
-        else if (reblendNeighbor)
-        {
-            if (showDebugs) Debug.Log("Reblending neighbors", this);
-            StartCoroutine(DelayBlendNeighbor(neigborBlenders));
-        }
-
-        if (movementBlocker)
-        {
-            if (showDebugs) Debug.Log("Reshaping collider", this);
-            // Reshape the collider
-            List<Vector2> physicsShape = new List<Vector2>();
-            spriteRenderer.sprite.GetPhysicsShape(0, physicsShape);
-            movementBlocker.SetPath(0, physicsShape);
-        }
-    }*/
 
     private IEnumerator DelayBlendNeighbor(SpriteBlender[] neigborBlenders)
     {
@@ -232,6 +153,14 @@ public class SpriteBlender : MonoBehaviour
                 if (neighbor != null && neighbor.Rules == rules) neighbor.Blend();
             }
         }
+    }
+
+    [ContextMenu("Reshape Collider")]
+    private void ReshapeCollider()
+    {
+        List<Vector2> physicsShape = new List<Vector2>();
+        spriteRenderer.sprite.GetPhysicsShape(0, physicsShape);
+        movementBlocker.SetPath(0, physicsShape);
     }
 
     private void OnDrawGizmos()

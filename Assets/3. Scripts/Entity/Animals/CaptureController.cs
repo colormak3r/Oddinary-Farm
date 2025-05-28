@@ -26,8 +26,21 @@ public class CaptureController : NetworkBehaviour
     [SerializeField]
     private SpriteRenderer lassoedRenderer;
 
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showDebugs = false;
+
+
     private NetworkVariable<bool> IsLassoed = new NetworkVariable<bool>(false);
     public bool IsLassoedValue => IsLassoed.Value;
+
+    private EntityMovement entityMovement;
+    public EntityMovement EntityMovement => entityMovement;
+
+    private void Awake()
+    {
+        entityMovement = GetComponent<EntityMovement>();
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -55,6 +68,12 @@ public class CaptureController : NetworkBehaviour
         if (captureItemProperty == null)
         {
             Debug.LogError("Capture item property is not set.");
+            return;
+        }
+
+        if (type != captureType)
+        {
+            if (showDebugs) Debug.Log("Wrong capture type");
             return;
         }
 
@@ -96,5 +115,17 @@ public class CaptureController : NetworkBehaviour
     private void LassoCancelRpc()
     {
         IsLassoed.Value = false;
+    }
+
+    public void CaptureLassoSuccess()
+    {
+        CaptureLassoSuccessRpc();
+    }
+
+    [Rpc(SendTo.Server)]
+    private void CaptureLassoSuccessRpc()
+    {
+        AssetManager.Main.SpawnItem(captureItemProperty, transform.position);
+        Destroy(gameObject);
     }
 }

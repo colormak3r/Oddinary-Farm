@@ -76,6 +76,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tamed Cow Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 7602564661626077392, guid: 6353b51593917c243bd9bf79b3b6ac0b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9891956f066c6c44c89631bea62f4d23, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

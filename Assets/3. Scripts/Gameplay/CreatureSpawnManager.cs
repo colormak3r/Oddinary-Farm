@@ -77,7 +77,7 @@ public class CreatureSpawnManager : NetworkBehaviour
 
         var currentDay = timeManager.CurrentDate;
         var currentDaySetting = creatureSpawnSetting.creatureDays[creatureSpawnSetting.creatureDays.Length - 1];
-        if (currentDay < creatureSpawnSetting.creatureDays.Length) currentDaySetting = creatureSpawnSetting.creatureDays[currentDay];
+        if (currentDay < creatureSpawnSetting.creatureDays.Length) currentDaySetting = creatureSpawnSetting.creatureDays[currentDay - 1];
 
         foreach (var wave in currentDaySetting.creatureWaves)
         {

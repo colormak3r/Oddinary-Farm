@@ -13,12 +13,12 @@ public class Lasso : Item
     public override void OnPrimaryAction(Vector2 position)
     {
         base.OnPrimaryAction(position);
-        ItemSystem.ThrowLasso(position);
+        ItemSystem.LassoPrimary(position);
     }
 
     public override void OnSecondaryAction(Vector2 position)
     {
         base.OnSecondaryAction(position);
-        ItemSystem.CancelLasso();
+        ItemSystem.LassoSecondary();
     }
 }

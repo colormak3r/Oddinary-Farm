@@ -15,10 +15,20 @@ public class LassoProjectile : Projectile
 
         if (collider.transform.root.TryGetComponent<CaptureController>(out var captureController))
         {
-            if (isAuthoritative)
+            if (!captureController.IsLassoedValue)
             {
-                HitDespawn(collider.transform.root);
-                owner.GetComponent<LassoController>().SetCaptureController(captureController);
+                if (isAuthoritative)
+                {
+                    HitDespawn(collider.transform.root);
+                }
+                else
+                {
+                    Despawn();
+                }
+            }
+            else
+            {
+                if (showDebugs) Debug.Log("Already lassoed");
             }
         }
     }

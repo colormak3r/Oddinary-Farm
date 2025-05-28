@@ -110,6 +110,11 @@ public class Projectile : MonoBehaviour
         OnDespawned?.Invoke(this);
     }
 
+    public void DespawnOnClient()
+    {
+        Despawn();
+    }
+
     private void FixedUpdate()
     {
         if (!isInitialized) return;

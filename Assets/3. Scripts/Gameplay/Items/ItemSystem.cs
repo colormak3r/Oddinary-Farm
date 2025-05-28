@@ -111,7 +111,7 @@ public class ItemSystem : NetworkBehaviour
 
                         if (collider.TryGetComponent<EntityMovement>(out var movement))
                         {
-                            movement.Knockback(meleeWeaponProperty.KnockbackForce, transform);
+                            movement.Knockback(meleeWeaponProperty.KnockbackForce, transform.position);
                         }
                     }
                 }
@@ -375,12 +375,20 @@ public class ItemSystem : NetworkBehaviour
 
     #region Lasso
 
-    public void ThrowLasso(Vector2 position)
+    public void LassoPrimary(Vector2 position)
     {
-        lassoController.ThrowLasso(position);
+        if (lassoController.CurrentStateValue == LassoState.Capturing)
+        {
+            lassoController.LassoPull();
+        }
+        else
+        {
+            lassoController.ThrowLasso(position);
+        }
+
     }
 
-    public void CancelLasso()
+    public void LassoSecondary()
     {
         lassoController.CancelLasso();
     }

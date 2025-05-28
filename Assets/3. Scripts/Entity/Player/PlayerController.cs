@@ -636,9 +636,10 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private void ChangeHotbarIndex(int value)
     {
+        // Prevent changing hotbar index when lasso is thrown
         if (currentItem is Lasso)
         {
-            if (lassoController.CurrentStateValue == LassoState.Thrown)
+            if (lassoController.CurrentStateValue == LassoState.Thrown || lassoController.CurrentStateValue == LassoState.Capturing)
                 return;
             else
                 lassoController.SetLassoState(LassoState.Hidden);

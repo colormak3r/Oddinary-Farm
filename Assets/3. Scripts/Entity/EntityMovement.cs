@@ -86,7 +86,7 @@ public class EntityMovement : NetworkBehaviour
         CanBeKnockback.Value = value;
     }
 
-    public void Knockback(float knockbackForce, Transform source)
+    public void Knockback(float force, Vector2 sourcePosition)
     {
         if (!CanBeKnockback.Value)
         {
@@ -94,44 +94,30 @@ public class EntityMovement : NetworkBehaviour
             return;
         }
 
-        KnockbackClientRpc(knockbackForce, source.position);
-
-        /*// TODO: client authoritative, server side prediction
-        if (!clientNetworkTransform)
-        {
-            // Server authoritative movement
-            if (showDebugs) Debug.Log(gameObject.name + " KnockbackServerRpc");
-            KnockbackServerRpc(knockbackForce, source.position);
-        }
-        else
-        {
-            // Client authoritative movement
-            if (showDebugs) Debug.Log(gameObject.name + " KnockbackClientRpc");
-            KnockbackClientRpc(knockbackForce, source.position);
-        }*/
+        KnockbackClientRpc(force, ((Vector2)transform.position - sourcePosition).normalized);
     }
 
-    /*[Rpc(SendTo.Server)]
-    private void KnockbackServerRpc(float knockbackForce, Vector2 sourcePosition)
+    public void KnockbackDirection(float force, Vector2 direction)
     {
-        if (showDebugs) Debug.Log(gameObject.name + " KnockbackServerRpc recieved");
-        KnockbackInternal(knockbackForce, sourcePosition);
-    }*/
+        if (!CanBeKnockback.Value)
+        {
+            if (showDebugs) Debug.Log(gameObject.name + " Can't be knockbacked");
+            return;
+        }
+
+        KnockbackClientRpc(force, direction);
+    }
 
     [Rpc(SendTo.Owner)]
-    private void KnockbackClientRpc(float knockbackForce, Vector2 sourcePosition)
+    private void KnockbackClientRpc(float force, Vector2 direction)
     {
         if (showDebugs) Debug.Log(gameObject.name + " KnockbackClientRpc recieved");
-        KnockbackInternal(knockbackForce, sourcePosition);
+        KnockbackInternal(force, direction);
     }
 
-    private void KnockbackInternal(float knockbackForce, Vector2 sourcePosition)
+    private void KnockbackInternal(float force, Vector2 direction)
     {
-        // Calculate the knockback direction as a normalized 2D vector
-        Vector2 knockbackDirection = ((Vector2)transform.position - sourcePosition).normalized;
-
-        // Apply the force to the Rigidbody2D
-        rbody.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+        rbody.AddForce(direction * force, ForceMode2D.Impulse);
     }
 
     #endregion

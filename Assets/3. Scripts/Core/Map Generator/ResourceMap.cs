@@ -1,7 +1,5 @@
-
-using System.IO.Ports;
 using UnityEngine;
-using static UnityEngine.Rendering.PostProcessing.HistogramMonitor;
+
 
 public class ResourceMap : PerlinNoiseGenerator
 {

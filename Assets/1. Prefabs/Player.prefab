@@ -2777,7 +2777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3575154349
+  GlobalObjectIdHash: 415020733
   InScenePlacedSourceGlobalObjectIdHash: 569683485
   DeferredDespawnTick: 0
   Ownership: 1
@@ -3432,8 +3432,12 @@ MonoBehaviour:
   lassoExtra: {fileID: 8022643172315787028}
   muzzleTransform: {fileID: 940778661305221230}
   projectileProperty: {fileID: 11400000, guid: 9598b31121239b4419ce327bad69bcae, type: 2}
+  pullForce: 20
+  captureDistance: 4.5
+  speedMultiplier: 0.4
   currentLassoState:
     m_InternalValue: 0
+  showDebugs: 0
 --- !u!114 &1154542970121647842
 MonoBehaviour:
   m_ObjectHideFlags: 0

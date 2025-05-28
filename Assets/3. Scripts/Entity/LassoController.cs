@@ -8,6 +8,7 @@ public enum LassoState
     Hidden,
     Visible,
     Thrown,
+    Capturing,
 }
 
 
@@ -26,12 +27,29 @@ public class LassoController : NetworkBehaviour
     private Transform muzzleTransform;
     [SerializeField]
     private ProjectileProperty projectileProperty;
+    [SerializeField]
+    private float pullForce = 20f;
+    [SerializeField]
+    private float captureDistance = 2f;
+    [SerializeField]
+    private float speedMultiplier = 0.4f;
 
     [SerializeField]
     private NetworkVariable<LassoState> currentLassoState = new NetworkVariable<LassoState>(LassoState.Hidden, default, NetworkVariableWritePermission.Owner);
     public LassoState CurrentStateValue => currentLassoState.Value;
 
-    private CaptureController captureController;
+    [Header("Lasso Settings")]
+    [SerializeField]
+    private bool showDebugs = false;
+
+    private CaptureController currentCaptureController;
+    private LassoProjectile currentLassoProjectile;
+    private EntityMovement entityMovement;
+
+    private void Awake()
+    {
+        entityMovement = GetComponent<EntityMovement>();
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -49,6 +67,7 @@ public class LassoController : NetworkBehaviour
         switch (newValue)
         {
             case LassoState.Hidden:
+                if (showDebugs) Debug.Log("Lasso is hidden");
                 handLassoRenderer.SetRenderLine(false);
                 lineLassoRenderer.SetRenderLine(false);
                 lineLassoRenderer.SetTarget(null);
@@ -56,6 +75,7 @@ public class LassoController : NetworkBehaviour
                 lassoExtra.SetActive(false);
                 break;
             case LassoState.Visible:
+                if (showDebugs) Debug.Log("Lasso is visible");
                 handLassoRenderer.SetRenderLine(true);
                 lineLassoRenderer.SetRenderLine(false);
                 lineLassoRenderer.SetTarget(null);
@@ -63,8 +83,15 @@ public class LassoController : NetworkBehaviour
                 lassoExtra.SetActive(true);
                 break;
             case LassoState.Thrown:
+                if (showDebugs) Debug.Log("Lasso is thrown");
                 handLassoRenderer.SetRenderLine(true);
-                lineLassoRenderer.SetRenderLine(false);
+                lassoHoop.SetActive(false);
+                lassoExtra.SetActive(true);
+                break;
+            case LassoState.Capturing:
+                if (showDebugs) Debug.Log("Lasso is capturing");
+                handLassoRenderer.SetRenderLine(true);
+                lineLassoRenderer.SetRenderLine(true);
                 lassoHoop.SetActive(false);
                 lassoExtra.SetActive(true);
                 break;
@@ -78,6 +105,8 @@ public class LassoController : NetworkBehaviour
             currentLassoState.Value = newState;
         }
     }
+
+    #region Lasso Throw
 
     public void ThrowLasso(Vector2 position)
     {
@@ -95,16 +124,22 @@ public class LassoController : NetworkBehaviour
         var projectile = LocalObjectPooling.Main.Spawn(AssetManager.Main.LassoProjectilePrefab);
         projectile.transform.position = muzzleTransform.position;
         projectile.transform.rotation = rotation;
-        var lassoProjectile = projectile.GetComponent<LassoProjectile>();
-        lassoProjectile.Initialize(transform, projectileProperty, IsOwner);
-        lassoProjectile.OnDespawned += OnLassoDespawned;
-        if (IsOwner) lassoProjectile.OnHitTarget += OnLassoHitTarget;
-        lineLassoRenderer.SetTarget(lassoProjectile.LassoPoint);
+        currentLassoProjectile = projectile.GetComponent<LassoProjectile>();
+        currentLassoProjectile.Initialize(transform, projectileProperty, IsOwner);
+        currentLassoProjectile.OnDespawned += OnLassoDespawned;
+        if (IsOwner) currentLassoProjectile.OnHitTarget += OnLassoHitTarget;
+        lineLassoRenderer.SetTarget(currentLassoProjectile.LassoPoint);
         lineLassoRenderer.SetRenderLine(true);
     }
 
+    #endregion
+
+    #region Lasso Callback
+
     private void OnLassoDespawned(Projectile projectile)
     {
+        //if (currentLassoState.Value == LassoState.Thrown) return;
+
         lineLassoRenderer.SetTarget(null);
         lineLassoRenderer.SetRenderLine(false);
         projectile.OnDespawned -= OnLassoDespawned;
@@ -113,6 +148,8 @@ public class LassoController : NetworkBehaviour
             currentLassoState.Value = LassoState.Visible;
             projectile.OnHitTarget -= OnLassoHitTarget;
         }
+
+        currentLassoProjectile = null;
     }
 
     private void OnLassoHitTarget(Projectile projectile, Transform target)
@@ -122,8 +159,11 @@ public class LassoController : NetworkBehaviour
         {
             projectile.OnHitTarget -= OnLassoHitTarget;
         }
+
+        currentLassoProjectile = null;
     }
 
+    #endregion
 
     [Rpc(SendTo.Everyone)]
     private void LinkLassoRpc(NetworkObjectReference targetObject)
@@ -134,26 +174,85 @@ public class LassoController : NetworkBehaviour
             {
                 lineLassoRenderer.SetTarget(captureController.LassoPoint);
                 lineLassoRenderer.SetRenderLine(true);
-                if (IsOwner) captureController.Capture(CaptureType.Lasso);
+
+                if (IsOwner)
+                {
+                    currentLassoState.Value = LassoState.Capturing;
+                    currentCaptureController = captureController;
+                    currentCaptureController.Capture(CaptureType.Lasso);
+                    entityMovement.SetSpeedMultiplier(speedMultiplier);
+                }
+
+                TryDespawnProjectile();
+            }
+            else
+            {
+                Debug.LogError($"{target.name} does not have a CaptureController component", target);
             }
         }
         else
         {
-            Debug.LogError("Target object not found");
+            Debug.LogError($"Target object not found");
         }
     }
 
-    public void SetCaptureController(CaptureController captureController)
-    {
-        this.captureController = captureController;
-    }
+    #region Lasso Cancel
 
     public void CancelLasso()
     {
         if (currentLassoState.Value == LassoState.Thrown)
         {
             currentLassoState.Value = LassoState.Visible;
-            captureController?.CancelLasso();
+            currentCaptureController?.CancelLasso();
+        }
+        else if (currentLassoState.Value == LassoState.Capturing)
+        {
+            currentLassoState.Value = LassoState.Visible;
+            currentCaptureController?.CancelLasso();
+            entityMovement.SetSpeedMultiplier(1f);
+        }
+
+        CancelLassoRpc();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void CancelLassoRpc()
+    {
+        TryDespawnProjectile();
+    }
+
+    #endregion
+
+    #region Lasso Action
+
+    public void LassoPull()
+    {
+        if (currentLassoState.Value != LassoState.Capturing || currentCaptureController == null)
+        {
+            Debug.LogError("State failure", this);
+        }
+
+        var targetPos = currentCaptureController.transform.position;
+        var distance = Vector3.Distance(targetPos, transform.position);
+        if (distance < captureDistance)
+        {
+            currentCaptureController.CaptureLassoSuccess();
+            CancelLasso();
+        }
+        else
+        {
+            currentCaptureController.EntityMovement.KnockbackDirection(pullForce, (transform.position - targetPos).normalized);
+        }
+    }
+
+    #endregion
+
+    private void TryDespawnProjectile()
+    {
+        if (currentLassoProjectile && currentLassoProjectile.gameObject.activeInHierarchy)
+        {
+            currentLassoProjectile.DespawnOnClient();
+            currentLassoProjectile = null;
         }
     }
 }

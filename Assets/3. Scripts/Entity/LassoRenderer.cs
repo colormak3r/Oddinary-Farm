@@ -25,16 +25,6 @@ public class LassoRenderer : MonoBehaviour
     public void SetTarget(Transform target)
     {
         targetTransform = target;
-        /*if (target == null)
-        {
-            lineRenderer.positionCount = 0;
-        }
-        else
-        {
-            lineRenderer.positionCount = 2;
-            lineRenderer.SetPosition(0, startTransform.position);
-            lineRenderer.SetPosition(1, target.position);
-        }*/
     }
 
     // Credit:
