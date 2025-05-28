@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   05/16/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using ColorMak3r.Utility;
 using System.Collections;
 using Unity.Collections;
@@ -39,15 +46,19 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     [Header("Graphic Settings")]
     [SerializeField]
-    private SpriteRenderer itemRenderer;
+    private RenderTexture renderTexture;
     [SerializeField]
-    private GameObject arm;
+    private SpriteRenderer rightItemRenderer;
+    [SerializeField]
+    private SpriteRenderer leftItemRenderer;
+
+    [Header("Rotation Settings")]
     [SerializeField]
     private SpriteRenderer itemRotationRenderer;
     [SerializeField]
-    private GameObject armRotation;
+    private GameObject arm;
     [SerializeField]
-    private RenderTexture renderTexture;
+    private GameObject armRotation;
 
     [Header("Debug")]
     [SerializeField]
@@ -76,6 +87,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private Animator animator;
     private NetworkAnimator networkAnimator;
     private PlayerAnimationController animationController;
+    private LassoController lassoController;
 
     private bool isOwner;
     private bool isInitialized;
@@ -99,6 +111,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         animator = GetComponentInChildren<Animator>();
         rbody = GetComponent<Rigidbody2D>();
         animationController = GetComponentInChildren<PlayerAnimationController>();
+        lassoController = GetComponentInChildren<LassoController>();
+
         mainCamera = Camera.main;
         gameplayRenderer = GameplayRenderer.Main;
     }
@@ -114,42 +128,11 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         inventory.OnCurrentItemPropertyChanged -= HandleCurrentItemPropertyChanged;
         inventory.OnCurrentItemChanged -= HandleCurrentItemChanged;
 
-
         if (isOwner)
         {
             InputManager.Main.InputActions.Gameplay.SetCallbacks(null);
         }
     }
-
-    private void HandleCurrentItemChanged(Item item) => currentItem = item;
-
-    private void HandleCurrentItemPropertyChanged(ItemProperty itemProperty)
-    {
-        if (isOwner) Preview(lookPosition);
-
-        if (itemProperty == null)
-        {
-            armRotation.SetActive(false);
-            arm.SetActive(true);
-            itemRenderer.sprite = null;
-            return;
-        }
-
-        rotateArm = itemProperty is RangedWeaponProperty;
-        if (rotateArm)
-        {
-            armRotation.SetActive(true);
-            arm.SetActive(false);
-            itemRotationRenderer.sprite = itemProperty.ObjectSprite;
-        }
-        else
-        {
-            armRotation.SetActive(false);
-            arm.SetActive(true);
-            itemRenderer.sprite = itemProperty.ObjectSprite;
-        }
-    }
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -163,15 +146,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     {
         base.OnNetworkDespawn();
         IsFacingRight.OnValueChanged -= HandleOnIsFacingRightChanged;
-    }
-
-    private void HandleOnIsFacingRightChanged(bool previous, bool current)
-    {
-        var isFacingRight = current;
-        if (isFacingRight)
-            graphicTransform.localScale = spriteFacingRight ? RIGHT_DIRECTION : LEFT_DIRECTION;
-        else
-            graphicTransform.localScale = spriteFacingRight ? LEFT_DIRECTION : RIGHT_DIRECTION;
     }
 
     private void Update()
@@ -244,6 +218,62 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         Preview(lookPosition);
     }
 
+    #region NetworkVariable Callback
+
+    private void HandleCurrentItemChanged(Item item) => currentItem = item;
+
+    private void HandleCurrentItemPropertyChanged(ItemProperty itemProperty)
+    {
+        if (isOwner) Preview(lookPosition);
+
+        if (itemProperty == null)
+        {
+            armRotation.SetActive(false);
+            arm.SetActive(true);
+            rightItemRenderer.sprite = null;
+            return;
+        }
+
+        rotateArm = itemProperty is RangedWeaponProperty;
+        if (rotateArm)
+        {
+            // The player is holding a ranged weapon
+            armRotation.SetActive(true);
+            arm.SetActive(false);
+            itemRotationRenderer.sprite = itemProperty.ObjectSprite;
+        }
+        else
+        {
+            // The player is holding anything else
+            armRotation.SetActive(false);
+            arm.SetActive(true);
+            rightItemRenderer.sprite = itemProperty.ObjectSprite;
+
+            if (itemProperty is LassoProperty)
+            {
+                rightItemRenderer.sprite = null;
+                lassoController.SetLassoState(LassoState.Visible);
+            }
+            else
+            {
+                lassoController.SetLassoState(LassoState.Hidden);
+            }
+        }
+    }
+
+    private void HandleOnIsFacingRightChanged(bool previous, bool current)
+    {
+        var isFacingRight = current;
+        if (isFacingRight)
+            graphicTransform.localScale = spriteFacingRight ? RIGHT_DIRECTION : LEFT_DIRECTION;
+        else
+            graphicTransform.localScale = spriteFacingRight ? LEFT_DIRECTION : RIGHT_DIRECTION;
+    }
+
+    #endregion
+
+    #region Initialization
+
     private void Initialize()
     {
         if (!IsOwner) return;
@@ -271,6 +301,10 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         isInitialized = true;
     }
+
+    #endregion
+
+    #region Input Callbacks
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -305,21 +339,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         controllerDirection = context.ReadValue<Vector2>();
     }
 
-    private void RotateArm(Vector2 lookPosition)
-    {
-        var direction = (lookPosition - (Vector2)armRotation.transform.position).normalized;
-        armRotation.transform.rotation = Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, 90) * direction);
-        armRotation.transform.localScale = IsFacingRight.Value ? Vector3.one : VECTOR_ONE_FLIP_XY;
-    }
-
-    private void Preview(Vector2 position)
-    {
-        if (currentItem != null)
-            currentItem.OnPreview(position, previewer);
-        else
-            previewer.Show(false);
-    }
-
     public void OnDrop(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
@@ -329,6 +348,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             inventory.DropItem(inventory.CurrentHotbarIndex);
         }
     }
+
     public void OnInteract(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
@@ -413,6 +433,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             UIManager.Main.ToggleUI();
         }
     }
+
+    #endregion
 
     #region Player Action
 
@@ -614,6 +636,15 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private void ChangeHotbarIndex(int value)
     {
+        // Prevent changing hotbar index when lasso is thrown
+        if (currentItem is Lasso)
+        {
+            if (lassoController.CurrentStateValue == LassoState.Thrown || lassoController.CurrentStateValue == LassoState.Capturing)
+                return;
+            else
+                lassoController.SetLassoState(LassoState.Hidden);
+        }
+
         // Play sound effect
         AudioManager.Main.PlaySoundEffect(SoundEffect.UIHover);
 
@@ -635,6 +666,22 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     }
 
     #endregion
+
+    #region Utility
+    private void RotateArm(Vector2 lookPosition)
+    {
+        var direction = (lookPosition - (Vector2)armRotation.transform.position).normalized;
+        armRotation.transform.rotation = Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, 90) * direction);
+        armRotation.transform.localScale = IsFacingRight.Value ? Vector3.one : VECTOR_ONE_FLIP_XY;
+    }
+
+    private void Preview(Vector2 position)
+    {
+        if (currentItem != null)
+            currentItem.OnPreview(position, previewer);
+        else
+            previewer.Show(false);
+    }
 
     private bool isControllable = true;
     public void SetControllable(bool value)
@@ -670,4 +717,5 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(PlayerController.LookPosition.SnapToGrid(), Vector3.one);
     }
+    #endregion
 }

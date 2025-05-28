@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class MapGenerator : NetworkBehaviour
 {
-    private static Vector2Int MOCK_MAP_SIZE = new Vector2Int(200, 200);
+    private static Vector2Int MOCK_MAP_SIZE = new Vector2Int(400, 400);
 
     [Header("Map Generator Preview")]
     [SerializeField]

@@ -11,11 +11,6 @@ public class RangedWeapon : Item
         rangedWeaponProperty = (RangedWeaponProperty)baseProperty;
     }
 
-    public override void OnPrimaryAction(Vector2 position)
-    {
-        base.OnPrimaryAction(position);
-    }
-
     private void OnDrawGizmos()
     {
         if (!showGizmos || rangedWeaponProperty == null) return;

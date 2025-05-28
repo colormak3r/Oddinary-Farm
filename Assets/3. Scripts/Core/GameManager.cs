@@ -11,7 +11,7 @@ public class GameManager : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField]
-    private GameObject playerPrefab;
+    private bool transitionOnStart = true;
 
     [Header("Gameover Settings")]
     [SerializeField]
@@ -70,9 +70,15 @@ public class GameManager : NetworkBehaviour
         if (isInitializing || isInitialized) yield break;
         isInitializing = true;
 
+        if (transitionOnStart)
+            TransitionUI.Main.ShowNoFade();
+        else
+            TransitionUI.Main.HideNoFade();
+
         yield return WorldGenerator.Main.Initialize();
         if (IsServer) yield return ScenarioManager.Main.RunTestPresetCoroutine();
-        yield return TransitionUI.Main.HideCoroutine();
+
+        if (TransitionUI.Main.IsShowing) yield return TransitionUI.Main.HideCoroutine();
 
         if (TimeManager.Main.IsDay)
             AudioManager.Main.PlayAmbientSound(AmbientTrack.Day);

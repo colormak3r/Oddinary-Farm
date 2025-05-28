@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class RunawayState : BehaviourState
 {
+
     public RunawayState(Animal animal) : base(animal)
     {
 
