@@ -116,7 +116,7 @@ public class CreatureSpawnManager : NetworkBehaviour
         if (!IsServer) return null;
 
         spawnablePositions = GetSpawnPositions(position, safeRadius, spawnRadius);
-        var multiplier = NetworkManager.Singleton.ConnectedClients.Count;
+        var multiplier = 1;
 
         var creatures = new List<GameObject>();
         foreach (var spawn in wave.creatureSpawns)
