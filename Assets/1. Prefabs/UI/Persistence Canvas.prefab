@@ -895,6 +895,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a15012b07d5f9ef419683141c30ad97f, type: 2}
   - {fileID: 11400000, guid: 34b73b1c280a0aa4ba681ab14e33202a, type: 2}
   - {fileID: 11400000, guid: f3a52ce604b5c674eb33a381ba02d1b1, type: 2}
+  - {fileID: 11400000, guid: e9471c95a68f5ea429bb7130d58babd5, type: 2}
+  - {fileID: 11400000, guid: 8ff1dd5b9ed5aa94fb17bdbee6c4971d, type: 2}
   heads:
   - {fileID: 11400000, guid: 6c6aaf6a9ee09dc4398a35909d632710, type: 2}
   - {fileID: 11400000, guid: 2fe4f01e2dfa533429a5bf20acf0ee98, type: 2}
@@ -907,6 +909,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c16113a3f6e6a314ca6011992706591b, type: 2}
   - {fileID: 11400000, guid: 6a0c033b7be46d9428db361e49e580ad, type: 2}
   - {fileID: 11400000, guid: f065e7f01af8b2c4cadbb0c32e7b4a29, type: 2}
+  - {fileID: 11400000, guid: 85deeba0674ae734c8e43c8322e33ddd, type: 2}
+  - {fileID: 11400000, guid: 5c200ff8070c32449b95fdcf967f846c, type: 2}
   hats:
   - {fileID: 11400000, guid: 899f2151539b0164ebde313c06f6e76a, type: 2}
   - {fileID: 11400000, guid: c8b8b3134abe78f4e8eab6506551385b, type: 2}
@@ -920,6 +924,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f51bd85efef9a30409a38bbbf2f26b19, type: 2}
   - {fileID: 11400000, guid: cf29f88087499374391d96f99319dc97, type: 2}
   - {fileID: 11400000, guid: 4e87e7b0cc750664c9804dd9593b3e72, type: 2}
+  - {fileID: 11400000, guid: e05d00f580138f54e879bc8ab6d91c41, type: 2}
+  - {fileID: 11400000, guid: a67c692e12957d34d84390768fe721fe, type: 2}
   outfits:
   - {fileID: 11400000, guid: 50d7676770147df48b6513b259fceff8, type: 2}
   - {fileID: 11400000, guid: 0520c16496e225649b529dba548919ff, type: 2}
@@ -932,6 +938,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4cc7972c198ff85439b346dbaeca9f82, type: 2}
   - {fileID: 11400000, guid: 28a713613dd9a28419f24ddc4a6af0de, type: 2}
   - {fileID: 11400000, guid: 1172306b56736c74b842a402abc37852, type: 2}
+  - {fileID: 11400000, guid: b0480d000c0f6a945b21021ea580d5db, type: 2}
+  - {fileID: 11400000, guid: 69e3bc4bdca4a1d45b1c527a1b39d426, type: 2}
   defaultFace: {fileID: 11400000, guid: 6ae4dd0f48d4abb4c83c3823a99d4dbe, type: 2}
   defaultHead: {fileID: 11400000, guid: 3223df66a5b99c842b40aa1de3fad31d, type: 2}
   defaultHat: {fileID: 11400000, guid: 899f2151539b0164ebde313c06f6e76a, type: 2}
@@ -8279,7 +8287,7 @@ MonoBehaviour:
   delayShowFadeFirstObjects:
   - {fileID: 2544226400747503105}
   ignoreObjects: []
-  excludeFromUIManager: 0
+  excludeFromUIManager: 1
   background: {fileID: 0}
   isShowing: 0
   isAnimating: 0

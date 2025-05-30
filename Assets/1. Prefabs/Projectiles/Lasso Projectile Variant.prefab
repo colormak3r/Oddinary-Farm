@@ -99,6 +99,10 @@ PrefabInstance:
       propertyPath: property
       value: 
       objectReference: {fileID: 11400000, guid: 9598b31121239b4419ce327bad69bcae, type: 2}
+    - target: {fileID: 1200939611090280904, guid: 0eeb78fc65475de48a41e01c3667e072, type: 3}
+      propertyPath: guid
+      value: edba1178-118c-4edc-9c94-470360d6f509
+      objectReference: {fileID: 0}
     - target: {fileID: 3456194993785413915, guid: 0eeb78fc65475de48a41e01c3667e072, type: 3}
       propertyPath: m_Radius
       value: 0.75
@@ -191,6 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   property: {fileID: 0}
   vfxSystem: {fileID: 2269485918109528766}
+  <showDebugs>k__BackingField: 0
   lassoPoint: {fileID: 7606861766681002399}
 --- !u!4 &8748324765309397714 stripped
 Transform:

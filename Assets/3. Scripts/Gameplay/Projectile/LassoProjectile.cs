@@ -31,5 +31,9 @@ public class LassoProjectile : Projectile
                 if (showDebugs) Debug.Log("Already lassoed");
             }
         }
+        else
+        {
+            if (showDebugs) Debug.Log("No CaptureController found on " + collider.transform.root.name + ".Keep Moving.");
+        }
     }
 }

@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour
     private ParticleSystem vfxSystem;
 
     [Header("Debugs")]
-    [SerializeField]
+    [field: SerializeField]
     protected bool showDebugs { get; private set; }
     protected Transform owner { get; private set; }
     protected bool isInitialized { get; private set; }

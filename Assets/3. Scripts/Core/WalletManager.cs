@@ -1,8 +1,6 @@
 using System;
-using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
-
 public class WalletManager : NetworkBehaviour
 {
     public static WalletManager Main;
@@ -23,6 +21,8 @@ public class WalletManager : NetworkBehaviour
     [Header("Wallet Settings")]
     [SerializeField]
     private ulong initialGlobalWallet = 10;
+    [SerializeField]
+    private float flushInterval = 0.1f;
 
     [Header("Debugs")]
     [SerializeField]
@@ -30,6 +30,9 @@ public class WalletManager : NetworkBehaviour
     [SerializeField]
     private ulong localSpending = 0;
     public ulong LocalWallet => currentGlobalWallet.Value - localSpending;
+    [SerializeField]
+    private uint pendingAdd = 0;
+    private float nextFlushTime = 0f;
 
     public override void OnNetworkSpawn()
     {
@@ -52,10 +55,24 @@ public class WalletManager : NetworkBehaviour
         InventoryUI.Main.UpdateWallet(newValue - localSpending);
     }
 
-
     public void AddToWallet(uint amount)
     {
-        AddToWalletRpc(amount);
+        pendingAdd += amount;
+        nextFlushTime = Time.time + flushInterval;
+    }
+
+    private void Update()
+    {
+        if (Time.time >= nextFlushTime) FlushPendingAdd();
+    }
+
+    private void FlushPendingAdd()
+    {
+        if (pendingAdd == 0) return;
+
+        AddToWalletRpc(pendingAdd);
+        pendingAdd = 0;
+        nextFlushTime = Time.time + flushInterval;
     }
 
     [Rpc(SendTo.Server)]
