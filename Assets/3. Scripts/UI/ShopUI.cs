@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -60,6 +61,7 @@ public class ShopUI : UIBehaviour
         shopMode = ShopMode.Buy;
         buyImage.sprite = selectedSprite;
         sellImage.sprite = unselectedSprite;
+        var playerCount = NetworkManager.Singleton.ConnectedClients.Count;
 
         foreach (Transform child in contentContainer)
         {
@@ -69,7 +71,7 @@ public class ShopUI : UIBehaviour
         foreach (var entry in shopInventory.ItemProperties)
         {
             var shopButton = Instantiate(shopButtonPrefab, contentContainer);
-            shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, 1f, 0, 0);
+            shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, playerCount, 0, 0);
         }
     }
 
@@ -78,6 +80,7 @@ public class ShopUI : UIBehaviour
         shopMode = ShopMode.Sell;
         buyImage.sprite = unselectedSprite;
         sellImage.sprite = selectedSprite;
+        var playerCount = NetworkManager.Singleton.ConnectedClients.Count;
 
         foreach (Transform child in contentContainer)
         {
@@ -90,7 +93,7 @@ public class ShopUI : UIBehaviour
             if (!slot.IsEmpty && slot.Property.IsSellable)
             {
                 var shopButton = Instantiate(shopButtonPrefab, contentContainer);
-                shopButton.GetComponent<ShopButton>().SetShopEntry(slot.Property, this, shopMode, shopInventory.PenaltyMultiplier, index, slot.Count);
+                shopButton.GetComponent<ShopButton>().SetShopEntry(slot.Property, this, shopMode, playerCount * shopInventory.PenaltyMultiplier, index, slot.Count);
             }
             index++;
         }
@@ -107,7 +110,8 @@ public class ShopUI : UIBehaviour
         this.shopTransform = shopTransform;
 
         this.playerInventory = playerInventory;
-        HandleCoinValueChanged(playerInventory.WalletValue);
+
+        HandleCoinValueChanged(WalletManager.Main.LocalWallet);
         playerInventory.OnCoinsValueChanged.AddListener(HandleCoinValueChanged);
 
         InventoryUI.Main.CloseInventory();
@@ -151,28 +155,29 @@ public class ShopUI : UIBehaviour
 
     public void HandleOnButtonClick(ItemProperty itemProperty, ShopButton button, int index)
     {
+        var playerCount = (uint)NetworkManager.Singleton.ConnectedClients.Count;
+        var price = itemProperty.Price * playerCount;
         if (shopMode == ShopMode.Buy)
         {
-            var price = itemProperty.Price;
-            if (playerInventory.WalletValue < price)
+            if (WalletManager.Main.LocalWallet < price)
             {
                 if (showDebug) Debug.Log($"Cannot afford {itemProperty.Name}");
             }
             else
             {
-                playerInventory.ConsumeCoinsOnClient(itemProperty.Price);
+                playerInventory.ConsumeCoinsOnClient(price);
                 if (!playerInventory.AddItem(itemProperty))
                 {
                     AssetManager.Main.SpawnItem(itemProperty, shopTransform.transform.position - new Vector3(0, 1), default, default, 0.5f, false);
                 }
 
-                if (showDebug) Debug.Log($"Bought 1x{itemProperty.Name} for {itemProperty.Price}");
+                if (showDebug) Debug.Log($"Bought 1x{itemProperty.Name} for {price}");
             }
         }
         else
         {
             playerInventory.ConsumeItemOnClient(index);
-            var value = (uint)Mathf.CeilToInt((float)itemProperty.Price * shopInventory.PenaltyMultiplier);
+            var value = (uint)Mathf.CeilToInt(price * shopInventory.PenaltyMultiplier);
             playerInventory.AddCoinsOnClient(value);
 
             button.UpdateEntry(playerInventory.Inventory[index].Count);

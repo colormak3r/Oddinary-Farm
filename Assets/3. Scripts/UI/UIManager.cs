@@ -14,9 +14,10 @@ public class UIManager : MonoBehaviour
     private bool isShowing = true;
     [SerializeField]
     private bool showDebugs = false;
-
     [SerializeField]
     private Dictionary<UIBehaviour, bool> sceneUIBehaviours = new Dictionary<UIBehaviour, bool>();
+    [SerializeField]
+    private List<UIBehaviour> sceneUIList = new List<UIBehaviour>();
 
     private void Awake()
     {
@@ -53,6 +54,7 @@ public class UIManager : MonoBehaviour
     public void RegisterUI(UIBehaviour behaviour)
     {
         sceneUIBehaviours.Add(behaviour, behaviour.IsShowing);
+        sceneUIList.Add(behaviour);
         behaviour.OnSceneChanged(SceneManager.GetActiveScene());
         if (showDebugs) Debug.Log($"Register UI: {behaviour.name}, isShowing: {behaviour.IsShowing}");
     }
@@ -61,6 +63,7 @@ public class UIManager : MonoBehaviour
     {
         if (sceneUIBehaviours.ContainsKey(behaviour))
         {
+            sceneUIList.Remove(behaviour);
             sceneUIBehaviours.Remove(behaviour);
             if (showDebugs) Debug.Log($"Unregister UI: {behaviour.name}");
         }
@@ -69,7 +72,7 @@ public class UIManager : MonoBehaviour
     [ContextMenu("Hide All UI")]
     public void HideUI()
     {
-        HideUI(false, false);
+        StartCoroutine(HideUI(false, false));
     }
 
     public IEnumerator HideUI(bool showCursor, bool showPlayerName)
@@ -108,7 +111,7 @@ public class UIManager : MonoBehaviour
     [ContextMenu("Show All UI")]
     public void ShowUI()
     {
-        ShowUI(true, true);
+        StartCoroutine(ShowUI(true, true));
     }
 
     public IEnumerator ShowUI(bool showCursor, bool showPlayerName)

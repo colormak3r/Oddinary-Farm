@@ -552,7 +552,6 @@ MonoBehaviour:
   floodDuration: 3
   spriteRenderer: {fileID: 9159464650693773075}
   alphaRenderer: []
-  isInitialized: 0
   elevation: 0
   previousWaterLevel: 0
   previousDepth: 0

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -12,7 +13,7 @@ public class Projectile : MonoBehaviour
     private ParticleSystem vfxSystem;
 
     [Header("Debugs")]
-    [SerializeField]
+    [field: SerializeField]
     protected bool showDebugs { get; private set; }
     protected Transform owner { get; private set; }
     protected bool isInitialized { get; private set; }
@@ -59,6 +60,15 @@ public class Projectile : MonoBehaviour
         if (!isInitialized || owner == null) return;
 
         if (showDebugs) Debug.Log(collider.transform.root.name);
+
+        if (collider.transform.root.TryGetComponent<NetworkBehaviour>(out var networkBehaviour))
+        {
+            if (!networkBehaviour.IsSpawned)
+            {
+                // If the target is not spawned, we do not hit it
+                return;
+            }
+        }
 
         if (collider.transform.root.TryGetComponent<IDamageable>(out var damageable))
         {

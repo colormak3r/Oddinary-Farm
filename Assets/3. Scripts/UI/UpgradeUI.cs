@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -54,14 +55,16 @@ public class UpgradeUI : UIBehaviour
         nextStageImage.sprite = currentStages.GetStage(currentStage + 1).sprite;
         promptText.text = currentStages.GetStage(currentStage + 1).prompt;
 
-        var cost = currentStages.GetStage(currentStage + 1).cost;
+        var multiplier = (ulong)NetworkManager.Singleton.ConnectedClients.Count;
+        var cost = currentStages.GetStage(currentStage + 1).cost * multiplier;
         costText.text = cost.ToString();
-        upgradeButton.interactable = inventory.WalletValue > cost;
+        upgradeButton.interactable = WalletManager.Main.LocalWallet > cost;
     }
 
     public void OnUpgradeButtonClicked()
     {
-        inventory.ConsumeCoinsOnClient(upgradeStages.GetStage(currentStage + 1).cost);
+        var price = (uint)upgradeStages.GetStage(currentStage + 1).cost * (uint)NetworkManager.Singleton.ConnectedClients.Count;
+        inventory.ConsumeCoinsOnClient(price);
         currentStage++;
         if (currentStage < upgradeStages.GetStageCount() - 1)
             UpdateStage(upgradeStages, currentStage);

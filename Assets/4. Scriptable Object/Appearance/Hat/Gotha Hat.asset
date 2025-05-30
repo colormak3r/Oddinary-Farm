@@ -9,12 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae510f77fbe60324cbaae35dc50522c5, type: 3}
-  m_Name: Chicken LootTable
+  m_Script: {fileID: 11500000, guid: 271843c45096f3e4a9b382fc1baf905b, type: 3}
+  m_Name: Gotha Hat
   m_EditorClassIdentifier: 
-  Table:
-  - item: {fileID: 11400000, guid: 76d2c63355af9a245b265f0bf2a6667c, type: 2}
-    probability: 1
-    minMaxCount:
-      min: 10
-      max: 10
+  displaySprite: {fileID: 754112407040291206, guid: 82ea19f6cfa71294d8c888ad0bd0959a, type: 3}
