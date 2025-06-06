@@ -51,6 +51,7 @@ public class HotAirBalloonController : NetworkBehaviour
 
     }
 
+    // Toggle control over player
     [Rpc(SendTo.Owner)]
     private void SetControlRpc(bool isControlled)
     {

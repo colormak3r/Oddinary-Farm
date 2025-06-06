@@ -1,6 +1,10 @@
 using UnityEngine;
 
-[ExecuteAlways]
+/// <summary>
+/// This script modifies the selectors values to properly fit the game object it
+/// represents.
+/// </summary>
+[ExecuteAlways]     // Run the script's logic in play mode and edit mode
 public class SelectorModifier : MonoBehaviour
 {
     [Header("Settings")]
