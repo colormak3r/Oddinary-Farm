@@ -243,30 +243,29 @@ public class WorldGenerator : NetworkBehaviour
         resourceMap.GenerateMap(mapSize);       // Generate fractal noise for loot map
         moistureMap.GenerateMap(mapSize);       // Moisture Map
 
-        yield return GenerateTerrain();
+        yield return GenerateTerrain();         // Terrain generated on all clients
         if (IsHost)
         {
-            yield return GenerateResources();
+            yield return GenerateResources();       // Server/Host is responsible for spawning resources
         }
-        yield return GenerateFolliage();
+        yield return GenerateFolliage();        // Folliage generated on all clients
     }
     #endregion
 
     #region Terrain Generation
     private IEnumerator GenerateTerrain()
     {
-        // Generate the terrain map        
+        // Generate the terrain map
         terrainMap = new Offset2DArray<TerrainUnitProperty>(-trueHalfMapSize.x, trueHalfMapSize.x, -trueHalfMapSize.y, trueHalfMapSize.y);
 
         for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x + 1; x++)
         {
-            for (int y = -trueHalfMapSize.y; y < trueHalfMapSize.y + 1; y++)
+            for (int y = -trueHalfMapSize.y; y < trueHalfMapSize.y + 1; y++)        // Iterate through entire map
             {
                 if (x < -halfMapSize.x || x >= halfMapSize.x || y < -halfMapSize.y || y >= halfMapSize.y)
-
-                    terrainMap[x, y] = voidUnitProperty;
+                    terrainMap[x, y] = voidUnitProperty;    // Outside half of map has the void terrain
                 else
-                    terrainMap[x, y] = GetDefaultProperty(elevationMap.RawMap[x, y]);
+                    terrainMap[x, y] = GetDefaultProperty(elevationMap.RawMap[x, y]);       // Other half has actual terrain
             }
         }
 
@@ -277,13 +276,14 @@ public class WorldGenerator : NetworkBehaviour
         yield return null;
     }
 
-    private void UpdateMapTexture(Texture2D texture)
+    private void UpdateMapTexture(Texture2D texture)        // Assign texture to terrain
     {
         var terrainMapSprite = Sprite.Create(texture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
         terrainMapSprite.texture.filterMode = FilterMode.Point;
         MapUI.Main.UpdateElevationMap(terrainMapSprite);
     }
 
+    // Find the terrain with elevation value
     private TerrainUnitProperty GetDefaultProperty(float value)
     {
         TerrainUnitProperty candidate = null;
@@ -292,7 +292,7 @@ public class WorldGenerator : NetworkBehaviour
             if (property.Match(value)) candidate = property;
         }
 
-        if (candidate == null)
+        if (candidate == null)      // If no candidate was found default to first property
         {
             candidate = terrainUnitProperties[0];
             Debug.LogError($"Cannot match property noise = {value}");
@@ -305,25 +305,27 @@ public class WorldGenerator : NetworkBehaviour
     #region Resource Generation
     private IEnumerator GenerateResources()
     {
-        if (!canSpawnResources) yield break;
+        if (!canSpawnResources)
+            yield break;
 
         var count = 0;
         for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x + 1; x++)
         {
             for (int y = -trueHalfMapSize.y; y < trueHalfMapSize.y + 1; y++)
             {
-                if (x < -halfMapSize.x || x >= halfMapSize.x || y < -halfMapSize.y || y >= halfMapSize.y)
+                if (x < -halfMapSize.x || x >= halfMapSize.x || y < -halfMapSize.y || y >= halfMapSize.y)       // Ignore half the map
                 {
                     // Do nothing
                     // Padding area
                 }
                 else
                 {
+                    // Find terrain maxima and spawn resource, make sure terrain is not submerged in water try spawning a resource
                     if (terrainMap[x, y] != voidUnitProperty && resourceMap.RawMap[x, y] >= 0.99f && terrainMap[x, y].Elevation.min > FloodManager.Main.CurrentSafeLevel)
                     {
                         SpawnResource(x, y);
                         count++;
-                        if (count % countPerYield == 0)
+                        if (count % countPerYield == 0)     // QUESTION: What does this do?
                         {
                             yield return null;
                         }
@@ -335,6 +337,8 @@ public class WorldGenerator : NetworkBehaviour
 
     private void SpawnResource(int x, int y)
     {
+        // NOTE: If you ever need to apply different rarities to each type of resource lmk I have a pretty good algo for that in my other game
+        // Get a random resource from list, spawn slightly above tile
         var res = Instantiate(resourcePrefabs.GetRandomElement(), new Vector3(x, y - 0.5f, 0), Quaternion.identity, transform);
         var resNetObject = res.GetComponent<NetworkObject>();
         resNetObject.Spawn();
@@ -606,7 +610,7 @@ public class WorldGenerator : NetworkBehaviour
 
     #endregion
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR        // QUESTION: What does this do to the gizmos?
     private void OnDrawGizmos()
     {
         if (!showGizmos) return;

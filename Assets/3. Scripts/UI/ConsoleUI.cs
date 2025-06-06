@@ -9,7 +9,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConsoleCommand 
+public class ConsoleCommand             // Data structure for a command
 { 
     private string command;
     private string[] args;
@@ -25,14 +25,14 @@ public class ConsoleCommand
 
 public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 {
-    public static ConsoleUI Main;
+    public static ConsoleUI Main;       // Singleton
 
     private static string SHOW_STACK_TRACE = "ShowStackTrace";
     private static string LOG_TO_FILE = "LogToFile";
 
     [Header("Settings")]
     [SerializeField]
-    private int maxChar = 100000;
+    private int maxChar = 100000;       // Max Characters for input
     [SerializeField]
     private bool showStackTrace = false;
     [SerializeField]
@@ -70,7 +70,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
     private void Awake()
     {
-        if (Main == null)
+        if (Main == null)       // Handle singleton
         {
             Main = this;
         }
@@ -89,6 +89,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     {
         base.Start();
 
+        // Input for opening/closing/submitting, and scrolling through the consol
         InputManager.Main.InputActions.Console.SetCallbacks(this);
 
         inputField.text = "";
@@ -102,6 +103,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     {
         base.OnEnable();
 
+        // Subscribe to events
         inputField.onValueChanged.AddListener(OnInputValueChanged);
         inputField.onValidateInput += ValidateInput;
         Application.logMessageReceived += HandleLogMessageReceived;
@@ -109,6 +111,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
     private void OnDisable()
     {
+        // Unsubscribe from events
         inputField.onValueChanged.RemoveListener(OnInputValueChanged);
         inputField.onValidateInput -= ValidateInput;
         Application.logMessageReceived -= HandleLogMessageReceived;
@@ -120,13 +123,17 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
 
         SetLogText(log);
 
-        if (logToFile) LogToFile(log);
+        if (logToFile)
+            LogToFile(log);
     }
 
     private string BuildLogString(string condition, string stackTrace, LogType type)
     {
+        // Build output string in HTML format
         StringBuilder sb = new StringBuilder();
 
+        // HTML formats the output in TMP
+        // Time color
         sb.Append("<color=#")
           .Append(ColorUtility.ToHtmlStringRGB(timeTagColor))
           .Append(">[")
@@ -150,12 +157,14 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                 break;
         }
 
+        // Attribute Color
         sb.Append("<color=#")
           .Append(ColorUtility.ToHtmlStringRGB(typeColor))
           .Append(">[")
           .Append(type.ToString())
           .Append("]\n</color>");
 
+        // Condition Color
         sb.Append("<color=#")
           .Append(ColorUtility.ToHtmlStringRGB(conditionColor))
           .Append(">")
@@ -184,12 +193,14 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         ScrollToBottom();
     }
 
+    // Output console logs
     private void LogToFile(string newLog)
     {
+        // Create file name
         if (filename == "")
         {
             string d = System.Environment.GetFolderPath(
-               System.Environment.SpecialFolder.Desktop) + "/ODD_LOGS";
+               System.Environment.SpecialFolder.Desktop) + "/ODD_LOGS";     // Set destination for logs as desktop
             System.IO.Directory.CreateDirectory(d);
             DateTime now = DateTime.Now;
             // Format the DateTime as MMDDYY-HHMMSS
@@ -198,8 +209,10 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
             filename = d + "/log-" + t + "-" + r + "-" + VersionUtility.VERSION + ".txt";
         }
 
+
         try
         {
+            // Strip HTML Tags
             string pattern = "<.*?>";
             string resultString = Regex.Replace(newLog, pattern, "");
             System.IO.File.AppendAllText(filename, resultString + "\n");
@@ -210,6 +223,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         }
     }
 
+    // List of commands
     private const string UNKNOWN_COMMAND = "Unknown command";
     private const string UNKNOWN_ARGUMENT = "Unknown argument";
     private string[] commands =
@@ -254,11 +268,12 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "SetFlood [0~1]",
     "Scenario [name]"};
 
+    // Take apart a string and perform a command
     private void ParseCommand(string input)
     {
-        input = input.ToLower();
-        var args = input.Split(" ");
-        var command = args[0];
+        input = input.ToLower();            // Turn input into lowercase
+        var args = input.Split(" ");        // Grab segments between spaces
+        var command = args[0];              // First segment is the command
 
         // Clear the input field
         Debug.Log(">> " + input);
@@ -299,11 +314,11 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                 // Spawn [id] [x=0] [y=0] [count=1]
                 if (AssetManager.Main == null) throw new Exception("AssetManager not found. Has the game started yet?");
 
-                var x = args.Length > 2 ? float.Parse(args[2]) : 0f;
-                var y = args.Length > 3 ? float.Parse(args[3]) : 0f;
-                var count = args.Length > 4 ? int.Parse(args[4]) : 1;
+                var x = args.Length > 2 ? float.Parse(args[2]) : 0f;        // x position
+                var y = args.Length > 3 ? float.Parse(args[3]) : 0f;        // y position
+                var count = args.Length > 4 ? int.Parse(args[4]) : 1;       // amount
 
-                AssetManager.Main.SpawnByID(int.Parse(args[1]), new Vector2(x, y), count, true);
+                AssetManager.Main.SpawnByID(int.Parse(args[1]), new Vector2(x, y), count, true);        // Spawn through asset manager
             }
             else if (command == commands[5].ToLower())
             {
@@ -500,9 +515,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         }
     }
 
-
-    #region  Input Actions
-
+    #region Input Actions
+    // Close Console on Input
     public void OnCloseConsole(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         if (context.performed && !IsAnimating)
@@ -513,6 +527,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         }
     }
 
+    // Submit request on input
     public void OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         if (context.performed && IsShowing)
@@ -525,6 +540,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         }
     }
 
+    // Auto complete command on input
     public void OnAutoComplete(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
         if (context.performed && IsShowing)
@@ -540,16 +556,17 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
             ScrollToBottom(true);
         }
     }
-
     #endregion
 
     #region UI features
-
     private void OnInputValueChanged(string text)
     {
+        // NOTE: Suggestion for clarity; it was a bit hard to read at first
+        // suggestionText.text = (text == "") ? "" : SuggestCommand(text);
         suggestionText.text = text == "" ? "" : SuggestCommand(text);
     }
 
+    // QUESTION: What does this do exactly?
     private char ValidateInput(string text, int charIndex, char addedChar)
     {
         // Prevent backtick
@@ -621,11 +638,9 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         InputManager.Main.SwitchToPreviousMap();
         Hide();
     }
-
     #endregion
 
     #region Utility
-
     private string AutoCompleteCommand(string input)
     {
         foreach (string command in commands)
@@ -667,6 +682,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         return ""; // Return empty string if no match is found
     }
 
+    // Parser for boolean values entered into command line
     private bool ParseBool(string arg)
     {
         switch (arg)
@@ -685,7 +701,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     private void HandleTabPress()
     {
         var command = AutoCompleteCommand(inputField.text);
-        if (command != "") OutputNextFrame(command);
+        if (command != "") 
+            OutputNextFrame(command);
     }
 
     private void OutputNextFrame(string text)
@@ -718,6 +735,5 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
         // Deselect the input field
         inputField.DeactivateInputField();
     }
-
     #endregion
 }

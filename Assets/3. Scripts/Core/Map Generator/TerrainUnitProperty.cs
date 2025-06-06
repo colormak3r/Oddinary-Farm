@@ -52,6 +52,7 @@ public class TerrainUnitProperty : ScriptableObject
     public bool DrawOutline => drawOutline;
     public Color OutlineColor => outlineColor;
 
+    // Compare elevation
     public bool Match(float elevation)
     {
         return elevation >= this.elevation.min && elevation <= this.elevation.max;

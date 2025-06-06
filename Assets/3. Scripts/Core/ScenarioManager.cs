@@ -9,7 +9,9 @@ public enum ScenarioPreset
     MidSizeFarmDemo,
     ChickenFarmDemo,
 }
-
+/// <summary>
+/// This class is used for demoing certain scenario's for easy testing and bug catching
+/// </summary>
 public class ScenarioManager : NetworkBehaviour
 {
     public static ScenarioManager Main { get; private set; }
@@ -37,7 +39,7 @@ public class ScenarioManager : NetworkBehaviour
 
     private void Awake()
     {
-        if (Main == null)
+        if (Main == null)       // Handle singleton
         {
             Main = this;
         }
@@ -47,7 +49,7 @@ public class ScenarioManager : NetworkBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
-        itemSystem = GetComponent<ItemSystem>();
+        itemSystem = GetComponent<ItemSystem>();        // Reference to item system
     }
 
     public override void OnNetworkSpawn()

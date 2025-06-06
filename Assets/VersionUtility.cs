@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Constant variables to contain project version; edited by the programmer
 public static class VersionUtility
 {
     public static int MAJOR_VERSION = 0;
