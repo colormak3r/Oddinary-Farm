@@ -119,6 +119,8 @@ public class UIBehaviour : MonoBehaviour
 
         isShowing = true;
 
+        OnVisibilityChanged?.Invoke(isShowing);
+
         container.SetActive(true);
 
         isAnimating = true;
@@ -127,8 +129,6 @@ public class UIBehaviour : MonoBehaviour
         if (dsffoRenderers != null && dsffoRenderers.Length > 0)
             yield return dsffoRenderers.UIFadeCoroutine(0, 1, fade ? fadeDuration : 0);
         isAnimating = false;
-
-        OnVisibilityChanged?.Invoke(isShowing);
     }
 
     public IEnumerator HideCoroutine(bool fade = true)
