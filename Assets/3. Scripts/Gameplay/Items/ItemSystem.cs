@@ -1,9 +1,7 @@
 using ColorMak3r.Utility;
-using NUnit.Framework;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Security.Principal;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
@@ -18,6 +16,8 @@ public class ItemSystem : NetworkBehaviour
     private Transform muzzleTransform;
     [SerializeField]
     private GameObject muzzleFlash;
+    [SerializeField]
+    private Transform recoilTransform;
 
     [Header("Asset Spawn Preset")]
     [SerializeField]
@@ -36,12 +36,18 @@ public class ItemSystem : NetworkBehaviour
     private Vector2 ObjectPosition => (Vector2)transform.position + offset;
 
     private EntityStatus entityStatus;
+    private Animator animator;
     private LassoController lassoController;
+
+    private Vector2 recoilDefaultPosition;
 
     private void Awake()
     {
         entityStatus = GetComponent<EntityStatus>();
         lassoController = GetComponent<LassoController>();
+        animator = GetComponent<Animator>();
+
+        if (recoilTransform) recoilDefaultPosition = recoilTransform.localPosition;
     }
 
     #region Utility
@@ -397,6 +403,50 @@ public class ItemSystem : NetworkBehaviour
 
     #endregion
 
+    #region Laser Gun
+
+    public void ShootLaser(Vector2 position, LaserWeaponProperty property, float duration)
+    {
+        ShootLaserRpc(muzzleTransform.position, position, property, duration);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void ShootLaserRpc(Vector2 startPosition, Vector2 targetPosition, LaserWeaponProperty property, float duration)
+    {
+        var laserBeam = LocalObjectPooling.Main.Spawn(AssetManager.Main.LaserBeamPrefab);
+
+        // Set the width scale with duration
+        var width = Mathf.Min(property.Width, Mathf.Max(0.25f, (duration / property.MaxDuration) * property.Width));
+
+        laserBeam.GetComponent<LaserBeam>().SetLaserBeam(startPosition, targetPosition, property.Range, width, duration);
+
+        if (IsOwner)
+        {
+            StartCoroutine(ShootLaserCoroutine(startPosition, targetPosition, property, duration));
+        }
+    }
+
+    private IEnumerator ShootLaserCoroutine(Vector2 startPosition, Vector2 targetPosition, LaserWeaponProperty property, float duration)
+    {
+        var startTime = Time.time;
+        var endTime = startTime + duration;
+        while (Time.time < endTime)
+        {
+            var raycasts = Physics2D.CircleCastAll(startPosition, property.Radius, (targetPosition - startPosition).normalized, property.Range, LayerManager.Main.DamageableLayer);
+            foreach (var hit in raycasts)
+            {
+                if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
+                {
+                    damageable.TakeDamage(property.Damage, DamageType.Laser, property.Hostility, transform.root);
+                }
+            }
+
+            yield return new WaitForSeconds(property.Frequency);
+        }
+    }
+
+    #endregion
+
     #region Asset Spawn Preset
 
     private void RecordPrefabSpawn(GameObject prefab, Vector2 position)
@@ -468,6 +518,63 @@ public class ItemSystem : NetworkBehaviour
         assetSpawnPreset.SpawnerPositions.RemoveAt(candidate);
         EditorUtility.SetDirty(assetSpawnPreset);
 #endif
+    }
+
+    #endregion
+
+    #region Animation
+
+    public void SetTrigger(string animation)
+    {
+        SetTriggerRpc(new FixedString32Bytes(animation));
+    }
+
+    private Coroutine chargeCoroutine;
+
+    [Rpc(SendTo.Everyone)]
+    private void SetTriggerRpc(FixedString32Bytes animation)
+    {
+        var animationStr = animation.ToString();
+
+        if (recoilTransform)
+        {
+            if (animationStr == "Charge Start")
+            {
+                chargeCoroutine = StartCoroutine(ChargeCoroutine());
+            }
+            else if (animationStr == "Charge End")
+            {
+                if (chargeCoroutine != null) StopCoroutine(chargeCoroutine);
+                recoilTransform.localPosition = recoilDefaultPosition;
+            }
+        }
+        else
+        {
+            animator.SetTrigger(animationStr);
+        }
+    }
+
+    private IEnumerator ChargeCoroutine()
+    {
+        float duration = 3f; // 3 second ramp-up time
+        float elapsed = 0f;
+
+        while (true)
+        {
+            // Calculate the ramp-up multiplier (0 to 1 over 1 second)
+            float rampUp = Mathf.Clamp01(elapsed / duration);
+
+            // Apply the multiplier to the random offset
+            float offsetX = Random.Range(-0.125f, 0.125f) * rampUp;
+            float offsetY = Random.Range(-0.125f, 0.125f) * rampUp;
+
+            recoilTransform.localPosition = recoilDefaultPosition + new Vector2(offsetX, offsetY);
+
+            // Advance time
+            elapsed += Time.deltaTime;
+
+            yield return null;
+        }
     }
 
     #endregion

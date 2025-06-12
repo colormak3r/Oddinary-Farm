@@ -541,7 +541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 321630059
+  GlobalObjectIdHash: 569683485
   InScenePlacedSourceGlobalObjectIdHash: 569683485
   DeferredDespawnTick: 0
   Ownership: 1
@@ -891,6 +891,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0.75}
   muzzleTransform: {fileID: 8182768967083580640}
   muzzleFlash: {fileID: 4585333161443060368}
+  recoilTransform: {fileID: 4283651500916100449}
   recordPlantSpawns: 0
   recordFarmPlotSpawns: 0
   recordStructureSpawns: 0
@@ -1120,7 +1121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  canSpawnPet: 1
+  canSpawnPet: 0
   pets:
   - {fileID: 875170009560843256, guid: db68934e500d2cb489bcaecea9f0d8be, type: 3}
 --- !u!114 &4142363607695392232
@@ -1737,6 +1738,11 @@ SpriteRenderer:
 --- !u!1 &3748809675314519824 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6834157049255979800, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+  m_PrefabInstance: {fileID: 7697143422033409032}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4283651500916100449 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5882591104022706537, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
   m_PrefabInstance: {fileID: 7697143422033409032}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &4585333161443060368 stripped

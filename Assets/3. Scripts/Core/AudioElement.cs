@@ -35,11 +35,21 @@ public class AudioElement : MonoBehaviour
         audioSource.volume = volume;
     }
 
-    public void PlayOneShot(AudioClip clip)
+    public void PlayOneShot(AudioClip clip, bool randomPitch = true)
     {
         if (clip != null)
         {
-            audioSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+            if (randomPitch) audioSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
+    public void PlayOneShot(AudioClip clip, float pitch)
+    {
+
+        if (clip != null)
+        {
+            audioSource.pitch = pitch;
             audioSource.PlayOneShot(clip);
         }
     }

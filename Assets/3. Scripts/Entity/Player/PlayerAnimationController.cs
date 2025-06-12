@@ -31,7 +31,7 @@ public class PlayerAnimationController : AnimationBehaviour
 
     public void Chop()
     {
-        if (playerController) playerController.Chop(ChopAnimationMode);
+        //if (playerController) playerController.Chop(ChopAnimationMode);
     }
 
     [ContextMenu("Play Animation")]

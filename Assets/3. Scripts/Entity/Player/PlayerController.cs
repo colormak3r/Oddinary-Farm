@@ -76,16 +76,12 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     [SerializeField]
     private Vector2 controllerDirection;
 
-    private float nextPrimary;
-    private float nextSecondary;
-
     private EntityMovement movement;
     private PlayerInventory inventory;
     private PlayerInteraction interaction;
     private Previewer previewer;
     private Rigidbody2D rbody;
     private Animator animator;
-    private NetworkAnimator networkAnimator;
     private PlayerAnimationController animationController;
     private LassoController lassoController;
 
@@ -234,7 +230,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             return;
         }
 
-        rotateArm = itemProperty is RangedWeaponProperty;
+        rotateArm = itemProperty is RangedWeaponProperty || itemProperty is LaserWeaponProperty;
         if (rotateArm)
         {
             // The player is holding a ranged weapon
@@ -438,7 +434,144 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     #region Player Action
 
-    private Vector2? primaryPosition;
+    private Coroutine primaryCoroutine;
+    private bool isPrimaryCoroutineRunning = false;
+    private bool firstPrimaryTriggered = false; // Use for charge weapons to prevent multiple triggers at once
+    private float nextPrimary = 0f;
+    private float primaryStarted;
+    private Vector2 invalidPosition_cached;
+
+    public void OnPrimary(InputAction.CallbackContext context)
+    {
+        if (!isControllable || isPointerOverUI || currentItem == null) return;
+
+        if (context.started)
+        {
+            OnPrimaryStarted();
+        }
+        else if (context.canceled)
+        {
+            OnPrimaryCanceled();
+        }
+    }
+
+    private void OnPrimaryStarted()
+    {
+        if (isPrimaryCoroutineRunning) return;
+
+        primaryStarted = Time.time;
+        isPrimaryCoroutineRunning = true;
+        primaryCoroutine = StartCoroutine(PrimaryCoroutine());
+    }
+
+    private void OnPrimaryCanceled()
+    {
+        if (primaryCoroutine == null) return;
+
+        if (currentItem is LaserWeapon laserWeapon)
+        {
+            if (Time.time - primaryStarted > laserWeapon.BaseProperty.PrimaryCdr)
+            {
+                SetTriggerRpc("Shoot");
+                SyncArmRotationRpc(lookPosition);
+            }
+        }
+
+        isPrimaryCoroutineRunning = false;
+        firstPrimaryTriggered = false; // Reset for next charge action
+        StopCoroutine(primaryCoroutine);
+        currentItem.OnPrimaryCancel(lookPosition);
+    }
+
+    private IEnumerator PrimaryCoroutine()
+    {
+        while (isPrimaryCoroutineRunning)
+        {
+            if (Time.time >= nextPrimary)
+            {
+                var itemProperty = currentItem.BaseProperty;
+                nextPrimary = Time.time + itemProperty.PrimaryCdr;
+
+                if (currentItem is RangedWeapon)
+                {
+                    SetTriggerRpc("Shoot");
+                    currentItem.OnPrimaryAction(lookPosition);
+                    SyncArmRotationRpc(lookPosition);
+                }
+                else if (currentItem is LaserWeapon laserWeapon)
+                {
+                    // Prevent multiple triggers at once
+                    // Need to be one if level down to prevent fallthrough to default case
+                    if (!firstPrimaryTriggered)
+                    {
+                        firstPrimaryTriggered = true;
+
+                        // SetTriggerRpc("Shoot"); Start Charge animation
+                        currentItem.OnPrimaryAction(lookPosition);
+                        SyncArmRotationRpc(lookPosition);
+                    }
+                }
+                else
+                {
+                    // Default case
+                    if (currentItem.CanPrimaryAction(lookPosition))
+                    {
+                        // Animation
+                        SetTriggerRpc("Chop");
+
+                        // Action
+                        currentItem.OnPrimaryAction(lookPosition);
+
+                        // Inventory
+                        if (itemProperty.IsConsummable)
+                        {
+                            inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex);
+                        }
+                    }
+                    else
+                    {
+                        // If the position is invalid, play error sound only once
+                        // Temporarily disabled for feedback purposes
+                        /*if (invalidPosition_cached != lookPosition)
+                        {
+                            invalidPosition_cached = lookPosition;
+                            AudioManager.Main.PlaySoundEffect(SoundEffect.UIError);
+                        }*/
+                    }
+                }
+            }
+
+            yield return null;
+        }
+    }
+
+    public void OnSecondary(InputAction.CallbackContext context)
+    {
+        if (!isControllable || isPointerOverUI || currentItem == null) return;
+
+        if (context.performed) currentItem.OnSecondaryAction(lookPosition);
+    }
+
+    public void OnAlternative(InputAction.CallbackContext context)
+    {
+        if (!isControllable || isPointerOverUI || currentItem == null) return;
+
+        if (context.performed) currentItem.OnAlternativeAction(lookPosition);
+    }
+
+    [Rpc(SendTo.NotMe)]
+    private void SyncArmRotationRpc(Vector2 lookPosition)
+    {
+        RotateArm(lookPosition);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void SetTriggerRpc(FixedString32Bytes animation)
+    {
+        animator.SetTrigger(animation.ToString());
+    }
+
+    /*private Vector2? primaryPosition;
     private Vector2? secondaryPosition;
 
     private Coroutine primaryCoroutine;
@@ -459,18 +592,22 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
         else if (context.canceled)
         {
-            OnPrimaryCancelled();
+            OnPrimaryCanceled();
         }
     }
 
-    private void OnPrimaryCancelled()
+    private void OnPrimaryCanceled()
     {
         if (primaryCoroutine != null)
         {
+            laserChargeTime = 0;
+            currentItem.OnPrimaryCancel();
             isPrimaryCoroutineRunning = false;
             StopCoroutine(primaryCoroutine);
         }
     }
+
+    private float laserChargeTime = 0;
 
     private IEnumerator PrimaryActionCoroutine()
     {
@@ -485,6 +622,17 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
                 {
                     SetTriggerRpc("Shoot");
                     currentItem.OnPrimaryAction(lookPosition);
+                    SyncArmRotationRpc(lookPosition);
+                }
+                if (currentItem is LaserWeapon laserWeapon)
+                {
+                    laserChargeTime += Time.deltaTime;
+                    if (laserChargeTime > 0f)
+                    {
+
+                    }
+
+
                     SyncArmRotationRpc(lookPosition);
                 }
                 else
@@ -559,32 +707,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
                 currentItem.OnAlternativeAction(lookPosition);
                 break;
         }
-
     }
-
-    public void OnSecondary(InputAction.CallbackContext context)
-    {
-        if (!isControllable) return;
-        if (context.performed)
-        {
-            if (currentItem != null)
-            {
-                currentItem.OnSecondaryAction(lookPosition);
-            }
-        }
-    }
-
-    public void OnAlternative(InputAction.CallbackContext context)
-    {
-        if (!isControllable) return;
-        if (context.performed)
-        {
-            if (currentItem != null)
-            {
-                currentItem.OnAlternativeAction(lookPosition);
-            }
-        }
-    }
+    */
 
     #endregion
 
@@ -693,7 +817,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             movement.SetDirection(Vector2.zero);
             animator.SetBool("IsMoving", false);
             rbody.linearVelocity = Vector2.zero;
-            OnPrimaryCancelled();
+            OnPrimaryCanceled();
         }
     }
 
@@ -706,7 +830,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             movement.SetDirection(Vector2.zero);
             animator.SetBool("IsMoving", false);
             rbody.linearVelocity = Vector2.zero;
-            OnPrimaryCancelled();
+            OnPrimaryCanceled();
         }
     }
 

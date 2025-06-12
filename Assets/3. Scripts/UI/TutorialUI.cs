@@ -28,6 +28,8 @@ public class TutorialUI : UIBehaviour
     [SerializeField]
     private TMP_Text titleText;
     [SerializeField]
+    private GameObject dontShowAgainButton;
+    [SerializeField]
     private AudioClip tutorialSound;
     public AudioClip TutorialSound => tutorialSound;
 
@@ -47,6 +49,7 @@ public class TutorialUI : UIBehaviour
 
         // Load the "Don't Show Again" preference from PlayerPrefs
         dontShowAgain = bool.Parse(PlayerPrefs.GetString(DONT_SHOW_AGAIN_KEY, "false"));
+        dontShowAgainButton.SetActive(false);
 
         OnVisibilityChanged.AddListener(HandleVisibilityChange);
     }
@@ -76,10 +79,10 @@ public class TutorialUI : UIBehaviour
         PlayerPrefs.Save();
     }
 
-    [ContextMenu("Update Don't Show Again")]
-    private void UpdateDontShowAgain()
+    [ContextMenu("Reset Don't Show Again")]
+    private void ResetDontShowAgain()
     {
-        SetDontShowAgain(dontShowAgain);
+        SetDontShowAgain(false);
     }
 
     private Coroutine pageChangeCoroutine;
@@ -94,6 +97,12 @@ public class TutorialUI : UIBehaviour
         else
         {
             currentIndex++;
+
+            if (currentIndex == tutorialProperties.Length - 1)
+                dontShowAgainButton.SetActive(true);
+            else
+                dontShowAgainButton.SetActive(false);
+
             if (pageChangeCoroutine != null) StopCoroutine(pageChangeCoroutine);
             pageChangeCoroutine = StartCoroutine(PageChangeCoroutine());
         }

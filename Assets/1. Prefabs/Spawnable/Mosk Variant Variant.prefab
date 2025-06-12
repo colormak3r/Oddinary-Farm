@@ -126,15 +126,13 @@ MonoBehaviour:
   graphicTransform: {fileID: 5633000217506403371}
   spriteFacingRight: 0
   roamRadius: 1
-  isCaptureable: 1
-  captureItemProperty: {fileID: 0}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:
     m_PersistentCalls:
       m_Calls: []
   currentStateName: 
-  weaponProperty: {fileID: 11400000, guid: cd267a9b4d75f83478b4a4406c8eea92, type: 2}
+  weaponProperty: {fileID: 11400000, guid: 0b833383e8bc7464d9bf0ff48ef2b7d8, type: 2}
 --- !u!4 &5633000217506403371 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3213396557102681403, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}

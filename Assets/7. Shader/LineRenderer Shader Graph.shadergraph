@@ -225,7 +225,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Texture2DMaterialSlot",
     "m_ObjectId": "3679ecdd6f864478910330bf971d0671",
     "m_Id": 0,
-    "m_DisplayName": "Rope Texture",
+    "m_DisplayName": "MainTex",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -534,10 +534,10 @@
     "m_Guid": {
         "m_GuidSerialized": "da977733-bc92-43f1-b80c-5372c525a911"
     },
-    "m_Name": "Rope Texture",
+    "m_Name": "MainTex",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Rope Texture",
-    "m_DefaultReferenceName": "_Rope_Texture",
+    "m_RefNameGeneratedByDisplayName": "MainTex",
+    "m_DefaultReferenceName": "_MainTex",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
