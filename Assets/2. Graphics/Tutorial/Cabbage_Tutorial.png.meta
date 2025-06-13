@@ -1,0 +1,815 @@
+fileFormatVersion: 2
+guid: ad220aaa1807a044db4d1a0b1fbc39f2
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3557751689518978386
+    second: Cabbage_Tutorial_0
+  - first:
+      213: 1872053638542458388
+    second: Cabbage_Tutorial_1
+  - first:
+      213: -6049347519294733098
+    second: Cabbage_Tutorial_2
+  - first:
+      213: 7853501044927322003
+    second: Cabbage_Tutorial_3
+  - first:
+      213: 6161088798986509479
+    second: Cabbage_Tutorial_4
+  - first:
+      213: 2484918635030948474
+    second: Cabbage_Tutorial_5
+  - first:
+      213: -5113587639102607213
+    second: Cabbage_Tutorial_6
+  - first:
+      213: -8772523956138269635
+    second: Cabbage_Tutorial_7
+  - first:
+      213: 7568925408437777289
+    second: Cabbage_Tutorial_8
+  - first:
+      213: 2046257776916643330
+    second: Cabbage_Tutorial_9
+  - first:
+      213: -1674786175081658740
+    second: Cabbage_Tutorial_10
+  - first:
+      213: 1660849393462401555
+    second: Cabbage_Tutorial_11
+  - first:
+      213: 7374710461926328322
+    second: Cabbage_Tutorial_12
+  - first:
+      213: 2459267358357152257
+    second: Cabbage_Tutorial_13
+  - first:
+      213: -576874030649119561
+    second: Cabbage_Tutorial_14
+  - first:
+      213: 782136021659737712
+    second: Cabbage_Tutorial_15
+  - first:
+      213: -6185386115330854575
+    second: Cabbage_Tutorial_16
+  - first:
+      213: 7063328295169847636
+    second: Cabbage_Tutorial_17
+  - first:
+      213: 8394873273330165568
+    second: Cabbage_Tutorial_18
+  - first:
+      213: -664041171318914533
+    second: Cabbage_Tutorial_19
+  - first:
+      213: -6377401368579389103
+    second: Cabbage_Tutorial_20
+  - first:
+      213: 153260385735579405
+    second: Cabbage_Tutorial_21
+  - first:
+      213: -3126998540191324984
+    second: Cabbage_Tutorial_22
+  - first:
+      213: 5101562721262587965
+    second: Cabbage_Tutorial_23
+  - first:
+      213: -5932476123239656080
+    second: Cabbage_Tutorial_24
+  - first:
+      213: 7765230351780175522
+    second: Cabbage_Tutorial_25
+  - first:
+      213: -6584178681109446943
+    second: Cabbage_Tutorial_26
+  - first:
+      213: -7760058829938943349
+    second: Cabbage_Tutorial_27
+  - first:
+      213: -6640772128284516154
+    second: Cabbage_Tutorial_28
+  - first:
+      213: -7685528692301057293
+    second: Cabbage_Tutorial_29
+  - first:
+      213: 4242190304491059713
+    second: Cabbage_Tutorial_30
+  - first:
+      213: 509264887242131932
+    second: Cabbage_Tutorial_31
+  - first:
+      213: -6956651725434255582
+    second: Cabbage_Tutorial_32
+  - first:
+      213: -8166634021090094102
+    second: Cabbage_Tutorial_33
+  - first:
+      213: 2614154748182271208
+    second: Cabbage_Tutorial_34
+  - first:
+      213: 7783693308750028220
+    second: Cabbage_Tutorial_35
+  - first:
+      213: -2453732896485410701
+    second: Cabbage_Tutorial_36
+  - first:
+      213: 8676014096944120137
+    second: Cabbage_Tutorial_37
+  - first:
+      213: -8172999573674569715
+    second: Cabbage_Tutorial_38
+  - first:
+      213: 8668947817022765405
+    second: Cabbage_Tutorial_39
+  - first:
+      213: -1836782009439885308
+    second: Cabbage_Tutorial_40
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 7
+  spritePivot: {x: 0.5, y: 0}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eaaec2b20b350aec0800000000000000
+      internalID: -3557751689518978386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_1
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 192
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41efccd9ddedaf910800000000000000
+      internalID: 1872053638542458388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_2
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 192
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d40c856b766c0ca0800000000000000
+      internalID: -6049347519294733098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_3
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 192
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3975d0a379d3dfc60800000000000000
+      internalID: 7853501044927322003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_4
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ac9a3dae95908550800000000000000
+      internalID: 6161088798986509479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 144
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7aa4c835543c7220800000000000000
+      internalID: 2484918635030948474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_6
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 144
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 390f57b9223e809b0800000000000000
+      internalID: -5113587639102607213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_7
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 144
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3426c2d0fbb14680800000000000000
+      internalID: -8772523956138269635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_8
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 144
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 983bc5d9e893a0960800000000000000
+      internalID: 7568925408437777289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_9
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 144
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20e3ff74b94c56c10800000000000000
+      internalID: 2046257776916643330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_10
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c86c58fd8d6f1c8e0800000000000000
+      internalID: -1674786175081658740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_11
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 96
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31adfba49b58c0710800000000000000
+      internalID: 1660849393462401555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_12
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 96
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 208c97c971c385660800000000000000
+      internalID: 7374710461926328322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_13
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 96
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1026796f1a2112220800000000000000
+      internalID: 2459267358357152257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_14
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 96
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bce20320288ef7f0800000000000000
+      internalID: -576874030649119561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07ed0195194bada00800000000000000
+      internalID: 782136021659737712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_16
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 48
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15132158918192aa0800000000000000
+      internalID: -6185386115330854575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_17
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 48
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 451709d49abf50260800000000000000
+      internalID: 7063328295169847636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_18
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 48
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 047e34f93c4908470800000000000000
+      internalID: 8394873273330165568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_19
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 48
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b124d4ba21ad8c6f0800000000000000
+      internalID: -664041171318914533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1594cb38e3bee77a0800000000000000
+      internalID: -6377401368579389103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_21
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0798e1428d702200800000000000000
+      internalID: 153260385735579405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_22
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c42bbe256baa94d0800000000000000
+      internalID: -3126998540191324984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_23
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d305b3804446cc640800000000000000
+      internalID: 5101562721262587965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cabbage_Tutorial_24
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07550d3c56c9bada0800000000000000
+      internalID: -5932476123239656080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Cabbage_Tutorial_0: -3557751689518978386
+      Cabbage_Tutorial_1: 1872053638542458388
+      Cabbage_Tutorial_10: -1674786175081658740
+      Cabbage_Tutorial_11: 1660849393462401555
+      Cabbage_Tutorial_12: 7374710461926328322
+      Cabbage_Tutorial_13: 2459267358357152257
+      Cabbage_Tutorial_14: -576874030649119561
+      Cabbage_Tutorial_15: 782136021659737712
+      Cabbage_Tutorial_16: -6185386115330854575
+      Cabbage_Tutorial_17: 7063328295169847636
+      Cabbage_Tutorial_18: 8394873273330165568
+      Cabbage_Tutorial_19: -664041171318914533
+      Cabbage_Tutorial_2: -6049347519294733098
+      Cabbage_Tutorial_20: -6377401368579389103
+      Cabbage_Tutorial_21: 153260385735579405
+      Cabbage_Tutorial_22: -3126998540191324984
+      Cabbage_Tutorial_23: 5101562721262587965
+      Cabbage_Tutorial_24: -5932476123239656080
+      Cabbage_Tutorial_3: 7853501044927322003
+      Cabbage_Tutorial_4: 6161088798986509479
+      Cabbage_Tutorial_5: 2484918635030948474
+      Cabbage_Tutorial_6: -5113587639102607213
+      Cabbage_Tutorial_7: -8772523956138269635
+      Cabbage_Tutorial_8: 7568925408437777289
+      Cabbage_Tutorial_9: 2046257776916643330
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

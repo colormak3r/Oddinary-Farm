@@ -22,6 +22,11 @@ MonoBehaviour:
   range: 1
   primaryCdr: 2
   secondaryCdr: 0.25
+  itemContext: 'LMB: Place
+
+    RMB: Remove
+
+    X  : Drop'
   pickupSound: {fileID: 0}
   selectSound: {fileID: 0}
   primarySound: {fileID: 0}
@@ -31,7 +36,7 @@ MonoBehaviour:
   damage: 1
   damageType: 2
   hostility: 2
-  knockbackForce: 200
+  knockbackForce: 100
   damageableLayer:
     serializedVersion: 2
     m_Bits: 2147487232

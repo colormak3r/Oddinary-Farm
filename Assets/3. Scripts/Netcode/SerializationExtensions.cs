@@ -149,6 +149,23 @@ public static class SerializationExtensions
     }
     #endregion
 
+    #region LaserWeaponProperty
+
+    public static void WriteValueSafe(this FastBufferWriter writer, in LaserWeaponProperty obj)
+    {
+        writer.WriteValueSafeInternal(obj);
+    }
+    public static void ReadValueSafe(this FastBufferReader reader, out LaserWeaponProperty obj)
+    {
+        reader.ReadValueSafeInternal(out obj);
+    }
+    public static void DuplicateValue(in LaserWeaponProperty value, ref LaserWeaponProperty duplicatedValue)
+    {
+        DuplicateValueInternal(value, ref duplicatedValue);
+    }
+
+    #endregion
+
     #region Face
     public static void WriteValueSafe(this FastBufferWriter writer, in Face obj)
     {

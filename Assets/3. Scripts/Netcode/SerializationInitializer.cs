@@ -35,6 +35,10 @@ public class SerializationInitializer : MonoBehaviour
         UserNetworkVariableSerialization<ConsummableProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<ConsummableProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
 
+        UserNetworkVariableSerialization<LaserWeaponProperty>.WriteValue = SerializationExtensions.WriteValueSafe;
+        UserNetworkVariableSerialization<LaserWeaponProperty>.ReadValue = SerializationExtensions.ReadValueSafe;
+        UserNetworkVariableSerialization<LaserWeaponProperty>.DuplicateValue = SerializationExtensions.DuplicateValue;
+
         UserNetworkVariableSerialization<Face>.WriteValue = SerializationExtensions.WriteValueSafe;
         UserNetworkVariableSerialization<Face>.ReadValue = SerializationExtensions.ReadValueSafe;
         UserNetworkVariableSerialization<Face>.DuplicateValue = SerializationExtensions.DuplicateValue;

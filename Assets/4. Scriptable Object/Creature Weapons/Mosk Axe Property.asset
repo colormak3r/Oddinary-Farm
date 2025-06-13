@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa20f3102cf82d445b533e1206e7ecc5, type: 3}
+  m_Name: Mosk Axe Property
+  m_EditorClassIdentifier: 
+  iconSprite: {fileID: 0}
+  objectSprite: {fileID: 0}
+  prefab: {fileID: 4068801595506240673, guid: 9e2bf8251c91bd941bb059b64ddbdb8f, type: 3}
+  isConsummable: 0
+  maxStack: 1
+  isSellable: 0
+  price: 1
+  range: 1
+  primaryCdr: 2
+  secondaryCdr: 0.25
+  itemContext: 'LMB: Place
+
+    RMB: Remove
+
+    X  : Drop'
+  pickupSound: {fileID: 0}
+  selectSound: {fileID: 0}
+  primarySound: {fileID: 0}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}
+  radius: 0.1
+  damage: 1
+  damageType: 2
+  hostility: 2
+  knockbackForce: 50
+  damageableLayer:
+    serializedVersion: 2
+    m_Bits: 2147487232
+  canHarvest: 0

@@ -46,6 +46,11 @@ public class Item : MonoBehaviour
         if (baseProperty.PrimarySound) PlayPrimarySoundRpc();
     }
 
+    public virtual void OnPrimaryCancel(Vector2 position)
+    {
+
+    }
+
     [Rpc(SendTo.Everyone)]
     private void PlayPrimarySoundRpc()
     {

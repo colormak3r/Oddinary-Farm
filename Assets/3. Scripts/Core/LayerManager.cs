@@ -43,4 +43,8 @@ public class LayerManager : MonoBehaviour
     [SerializeField]
     private LayerMask resourceLayer;
     public LayerMask ResourceLayer => resourceLayer;
+
+    [SerializeField]
+    private LayerMask damageableLayer;
+    public LayerMask DamageableLayer => damageableLayer;
 }

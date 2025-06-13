@@ -7,6 +7,7 @@ public enum DamageType
     Pierce,
     Slash,
     Water,
+    Laser,
 }
 
 [System.Serializable]
@@ -16,7 +17,6 @@ public enum Hostility
     Neutral,
     Hostile,
 }
-
 
 public interface IDamageable
 {

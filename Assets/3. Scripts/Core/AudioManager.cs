@@ -43,6 +43,8 @@ public class AudioManager : MonoBehaviour
     private AudioSource sfxAudioSource;
     [SerializeField]
     private AudioSource abmAudioSource;
+    [SerializeField]
+    private AudioSource pitchAudioSource;
 
     [Header("Sound Effects")]
     [SerializeField]
@@ -91,6 +93,7 @@ public class AudioManager : MonoBehaviour
         {
             value = Mathf.Clamp01(value);
             sfxAudioSource.volume = value;
+            pitchAudioSource.volume = value; // Sync pitch audio source volume with SFX volume
             PlayerPrefs.SetFloat(SFX_VOLUME_VALUE_STRING, value);
             OnSfxVolumeChange?.Invoke(value);
         }
@@ -120,6 +123,8 @@ public class AudioManager : MonoBehaviour
         if (showDebugs) Debug.Log("SFX Volume: " + sfxAudioSource.volume);
         abmAudioSource.volume = PlayerPrefs.GetFloat(ABM_VOLUME_VALUE_STRING, 0.1f);
         if (showDebugs) Debug.Log("ABM Volume: " + abmAudioSource.volume);
+        pitchAudioSource.volume = sfxAudioSource.volume; // Sync pitch audio source volume with SFX volume
+        if (showDebugs) Debug.Log("Pitch Audio Source Volume: " + pitchAudioSource.volume);
 
         DontDestroyOnLoad(gameObject);
     }
@@ -254,5 +259,16 @@ public class AudioManager : MonoBehaviour
                 Debug.LogError("Ambient track not found: " + track);
                 return null;
         }
+    }
+
+    public void ResetPitch()
+    {
+        pitchAudioSource.pitch = 1f;
+    }
+
+    public void PlaySoundIncreasePitch(AudioClip clip)
+    {
+        pitchAudioSource.PlayOneShot(clip);
+        pitchAudioSource.pitch = pitchAudioSource.pitch + 0.1f;
     }
 }

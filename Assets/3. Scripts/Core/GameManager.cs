@@ -79,6 +79,7 @@ public class GameManager : NetworkBehaviour
         if (IsServer) yield return ScenarioManager.Main.RunTestPresetCoroutine();
 
         if (TransitionUI.Main.IsShowing) yield return TransitionUI.Main.HideCoroutine();
+        if (!TutorialUI.Main.DontShowAgain) yield return TutorialUI.Main.ShowCoroutine();
 
         if (TimeManager.Main.IsDay)
             AudioManager.Main.PlayAmbientSound(AmbientTrack.Day);
