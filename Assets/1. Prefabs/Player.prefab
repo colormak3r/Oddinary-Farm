@@ -895,7 +895,7 @@ MonoBehaviour:
   recordPlantSpawns: 0
   recordFarmPlotSpawns: 0
   recordStructureSpawns: 0
-  assetSpawnPreset: {fileID: 11400000, guid: 2ade236206abd0a4191350db59650f67, type: 2}
+  assetSpawnPreset: {fileID: 11400000, guid: fb992e44b7115764882bd12def1e7bd5, type: 2}
   showDebugs: 0
 --- !u!114 &9034817965285367963
 MonoBehaviour:

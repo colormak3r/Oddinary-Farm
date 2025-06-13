@@ -2068,7 +2068,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96ae7b9a7aa3be640b3b6178098af14b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animationDelay: 0
+  parallelBehaviours: []
   clip: 0
+  animationLength: 0.25
 --- !u!1 &6157510437218344600
 GameObject:
   m_ObjectHideFlags: 0

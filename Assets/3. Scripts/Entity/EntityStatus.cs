@@ -155,7 +155,20 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (Time.time < nextDamagable) return false;
         nextDamagable = Time.time + iframeDuration;
 
-        TakeDamageRpc(damage, type, attacker.gameObject);
+
+        if (attacker.TryGetComponent(out NetworkBehaviour attackerNetworkBehaviour))
+        {
+            if (attackerNetworkBehaviour.IsSpawned)
+            {
+                TakeDamageRpc(damage, type, attacker.gameObject);
+            }
+            else
+            {
+                Debug.Log($"{attacker} is not spawned", attacker);
+                TakeDamageRpc(damage, type, default);
+            }
+        }
+
 
         return true;
     }

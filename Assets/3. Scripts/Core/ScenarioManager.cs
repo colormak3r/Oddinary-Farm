@@ -8,6 +8,7 @@ public enum ScenarioPreset
     CornFarmDemo,
     MidSizeFarmDemo,
     ChickenFarmDemo,
+    DefenseDemo,
 }
 
 public class ScenarioManager : NetworkBehaviour
@@ -25,6 +26,8 @@ public class ScenarioManager : NetworkBehaviour
     private AssetSpawnPreset midSizeFarmDemoPreset;
     [SerializeField]
     private AssetSpawnPreset chickenFarmDemoPreset;
+    [SerializeField]
+    private AssetSpawnPreset defenseDemoPreset;
 
     [Header("Settings")]
     [SerializeField]
@@ -94,10 +97,13 @@ public class ScenarioManager : NetworkBehaviour
                 yield return CornFarmDemo();
                 break;
             case ScenarioPreset.MidSizeFarmDemo:
-                yield return MidSizeFarmDemo();
+                yield return SpawnAssetPreset(midSizeFarmDemoPreset);
                 break;
             case ScenarioPreset.ChickenFarmDemo:
-                yield return ChickenFarmDemo();
+                yield return SpawnAssetPreset(chickenFarmDemoPreset);
+                break;
+            case ScenarioPreset.DefenseDemo:
+                yield return SpawnAssetPreset(defenseDemoPreset);
                 break;
             case ScenarioPreset.None:
                 break;
@@ -136,7 +142,7 @@ public class ScenarioManager : NetworkBehaviour
         }
     }
 
-    private IEnumerator MidSizeFarmDemo()
+    /*private IEnumerator MidSizeFarmDemo()
     {
         yield return SpawnAssetPreset(midSizeFarmDemoPreset);
     }
@@ -144,7 +150,7 @@ public class ScenarioManager : NetworkBehaviour
     private IEnumerator ChickenFarmDemo()
     {
         yield return SpawnAssetPreset(chickenFarmDemoPreset);
-    }
+    }*/
 
     private IEnumerator SpawnAssetPreset(AssetSpawnPreset assetSpawnPreset)
     {
@@ -194,7 +200,14 @@ public class ScenarioManager : NetworkBehaviour
             ScenarioPreset.CornFarmDemo => cornFarmDemoPreset,
             ScenarioPreset.MidSizeFarmDemo => midSizeFarmDemoPreset,
             ScenarioPreset.ChickenFarmDemo => chickenFarmDemoPreset,
-            _ => null,
+            ScenarioPreset.DefenseDemo => defenseDemoPreset,
+            _ => LogAndReturnNull(scenario)
         };
+    }
+
+    private AssetSpawnPreset LogAndReturnNull(ScenarioPreset scenario)
+    {
+        Debug.LogError($"Unhandled ScenarioPreset: {scenario}");
+        return null;
     }
 }

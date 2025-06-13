@@ -5,7 +5,6 @@ using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Chunk
 {
@@ -158,7 +157,7 @@ public class WorldGenerator : NetworkBehaviour
     private int halfChunkSize;
 
     private Offset2DArray<TerrainUnitProperty> terrainMap;
-    private Texture2D terrainMapTexture;
+    private Texture2D miniMapTexture;
 
     private Offset2DArray<bool> folliageMap;
     private HashSet<Vector2> invalidFoliagePositionHashSet = new HashSet<Vector2>();
@@ -214,7 +213,7 @@ public class WorldGenerator : NetworkBehaviour
             {
                 if (map[i, j] < depthLevel)
                 {
-                    terrainMapTexture.SetPixel(i + halfMapSize.x, j + halfMapSize.y, Color.blue);
+                    miniMapTexture.SetPixel(i + halfMapSize.x, j + halfMapSize.y, Color.blue);
                     var position = new Vector2(i, j);
                     InvalidateFolliageOnClient(position);
                     RemoveFoliage(position);
@@ -222,10 +221,20 @@ public class WorldGenerator : NetworkBehaviour
             }
         }
 
-        terrainMapTexture.Apply();
-        UpdateMapTexture(terrainMapTexture);
+        miniMapTexture.Apply();
+        UpdateMapTexture(miniMapTexture);
     }
 
+    public void UpdateMinimap(Vector2Int[] positions, Color color)
+    {
+        foreach (var position in positions)
+        {
+            miniMapTexture.SetPixel(position.x + halfMapSize.x, position.y + halfMapSize.y, color);
+        }
+
+        miniMapTexture.Apply();
+        UpdateMapTexture(miniMapTexture);
+    }
 
     #region World Generation
     private IEnumerator GenerateWorld()
@@ -270,8 +279,8 @@ public class WorldGenerator : NetworkBehaviour
         }
 
         // Update MapUI
-        terrainMapTexture = elevationMap.MapTexture;
-        UpdateMapTexture(terrainMapTexture);
+        miniMapTexture = elevationMap.MapTexture;
+        UpdateMapTexture(miniMapTexture);
 
         yield return null;
     }

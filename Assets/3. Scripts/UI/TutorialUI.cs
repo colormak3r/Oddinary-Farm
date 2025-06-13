@@ -50,6 +50,7 @@ public class TutorialUI : UIBehaviour
         // Load the "Don't Show Again" preference from PlayerPrefs
         dontShowAgain = bool.Parse(PlayerPrefs.GetString(DONT_SHOW_AGAIN_KEY, "false"));
         dontShowAgainButton.SetActive(false);
+        tutorialCamera.gameObject.SetActive(false);
 
         OnVisibilityChanged.AddListener(HandleVisibilityChange);
     }
@@ -63,6 +64,7 @@ public class TutorialUI : UIBehaviour
     private void HandleVisibilityChange(bool isVisible)
     {
         if (isVisible) OnPageChange();
+        tutorialCamera.gameObject.SetActive(isVisible);
     }
 
     public void OnDontShowAgainButton()
