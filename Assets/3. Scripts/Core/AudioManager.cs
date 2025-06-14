@@ -1,7 +1,5 @@
 using ColorMak3r.Utility;
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -11,19 +9,6 @@ public enum SoundEffect
     UIClick,
     UIHover,
     UIError
-}
-
-public enum MusicTrack
-{
-    MainMenu,
-    MainGame,
-}
-
-public enum AmbientTrack
-{
-    Day,
-    Night,
-    Rain
 }
 
 public class AudioManager : MonoBehaviour
@@ -37,6 +22,11 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Settings")]
     [SerializeField]
     private float transitionDuration = 0.5f;
+    [SerializeField]
+    private float combatMusicRange = 20f;
+    public float CombatMusicRange => combatMusicRange;
+    [SerializeField]
+    private float combatMusicDuration = 5f;
     [SerializeField]
     private AudioSource bgmAudioSource;
     [SerializeField]
@@ -56,21 +46,44 @@ public class AudioManager : MonoBehaviour
 
     [Header("Music Tracks")]
     [SerializeField]
-    private AudioClip mainMenuMusic;
+    private AudioClip menuMusic;
     [SerializeField]
-    private AudioClip mainGameMusic;
+    private AudioClip grasslandDayMusic;
+    [SerializeField]
+    private AudioClip grasslandNightMusic;
+    [SerializeField]
+    private AudioClip oceanDayMusic;
+    [SerializeField]
+    private AudioClip oceanNightMusic;
+    [SerializeField]
+    private AudioClip rainDayMusic;
+    [SerializeField]
+    private AudioClip rainNightMusic;
+    [SerializeField]
+    private AudioClip combatMusic;
 
     [Header("Ambient Tracks")]
     [SerializeField]
-    private AudioClip dayClip;
+    private AudioClip grasslandDayAmbient;
     [SerializeField]
-    private AudioClip nightClip;
+    private AudioClip grasslandNightAmbient;
     [SerializeField]
-    private AudioClip rainClip;
+    private AudioClip oceanDayAmbient;
+    [SerializeField]
+    private AudioClip oceanNightAmbient;
+    [SerializeField]
+    private AudioClip rainDayAmbient;
+    [SerializeField]
+    private AudioClip rainNightAmbient;
 
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs;
+    [SerializeField]
+    private bool isInCombat;
+
+    private float currentElevation = 1.0f;
+    private float oceanElevationThreshold = 0.5f;
 
     [HideInInspector]
     public UnityEvent<float> OnSfxVolumeChange;
@@ -139,12 +152,121 @@ public class AudioManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    public void OnNetworkSpawn()
+    {
+        oceanElevationThreshold = WorldGenerator.Main.OceanElevationThreshold;
+        TimeManager.Main.OnHourChanged.AddListener(OnHourChanged);
+        OnHourChanged(TimeManager.Main.CurrentHour);
+    }
+
+    public void OnNetworkDespawn()
+    {
+        TimeManager.Main.OnHourChanged.RemoveListener(OnHourChanged);
+        abmAudioSource.Stop();
+    }
+
+    private void OnHourChanged(int currentHour)
+    {
+        UpdateMusicNAmbientTracks();
+    }
+
+    public void OnElevationUpdated(float elevation)
+    {
+        currentElevation = elevation;
+        UpdateMusicNAmbientTracks();
+    }
+
+    private void UpdateMusicNAmbientTracks()
+    {
+        if (isInCombat)
+        {
+            PlayBackgroundMusic(combatMusic);
+            if (TimeManager.Main.IsDay)
+            {
+                // Day time logic
+                if (currentElevation > oceanElevationThreshold)
+                {
+                    if (showDebugs) Debug.Log("Playing grassland day ambient and music in combat");
+                    PlayAmbientSound(grasslandDayAmbient);
+                }
+                else
+                {
+                    if (showDebugs) Debug.Log("Playing ocean day ambient and music in combat");
+                    PlayAmbientSound(oceanDayAmbient);
+                }
+            }
+            else
+            {
+                // Night time logic
+                if (currentElevation > oceanElevationThreshold)
+                {
+                    if (showDebugs) Debug.Log("Playing grassland night ambient and music in combat");
+                    PlayAmbientSound(grasslandNightAmbient);
+
+                }
+                else
+                {
+                    if (showDebugs) Debug.Log("Playing ocean night ambient and music in combat");
+                    PlayAmbientSound(oceanNightAmbient);
+                }
+            }
+        }
+        else if (WeatherManager.Main.IsRainning)
+        {
+            // When it rain, it has the same logic
+            if (TimeManager.Main.IsDay)
+            {
+                if (showDebugs) Debug.Log("Playing rain day ambient and music");
+                PlayAmbientSound(rainDayAmbient);
+                PlayBackgroundMusic(rainDayMusic);
+            }
+            else
+            {
+                if (showDebugs) Debug.Log("Playing rain night ambient and music");
+                PlayAmbientSound(rainNightAmbient);
+                PlayBackgroundMusic(rainNightMusic);
+            }
+        }
+        else
+        {
+            if (TimeManager.Main.IsDay)
+            {
+                // Day time logic
+                if (currentElevation > oceanElevationThreshold)
+                {
+                    if (showDebugs) Debug.Log("Playing grassland day ambient and music");
+                    PlayAmbientSound(grasslandDayAmbient);
+                    PlayBackgroundMusic(grasslandDayMusic);
+                }
+                else
+                {
+                    if (showDebugs) Debug.Log("Playing ocean day ambient and music");
+                    PlayAmbientSound(oceanDayAmbient);
+                    PlayBackgroundMusic(oceanDayMusic);
+                }
+            }
+            else
+            {
+                // Night time logic
+                if (currentElevation > oceanElevationThreshold)
+                {
+                    if (showDebugs) Debug.Log("Playing grassland night ambient and music");
+                    PlayAmbientSound(grasslandNightAmbient);
+                    PlayBackgroundMusic(grasslandNightMusic);
+                }
+                else
+                {
+                    if (showDebugs) Debug.Log("Playing ocean night ambient and music");
+                    PlayAmbientSound(oceanNightAmbient);
+                    PlayBackgroundMusic(oceanNightMusic);
+                }
+            }
+        }
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.buildIndex == 0)
-            StartCoroutine(PlayBackgroundMusicCoroutine(MusicTrack.MainMenu));
-        else
-            StartCoroutine(PlayBackgroundMusicCoroutine(MusicTrack.MainGame));
+        if (scene.buildIndex == 0) PlayBackgroundMusic(menuMusic);
     }
 
     public void PlayOneShot(AudioClip clip)
@@ -174,17 +296,6 @@ public class AudioManager : MonoBehaviour
         audioSource.volume = end;
     }
 
-    public IEnumerator PlayBackgroundMusicCoroutine(MusicTrack musicTrack)
-    {
-        yield return LerpVolumeCoroutine(bgmAudioSource, BgmVolume, 0f, transitionDuration);
-
-        bgmAudioSource.clip = GetAudioClip(musicTrack);
-        bgmAudioSource.Play();
-
-        var volume = PlayerPrefs.GetFloat(BGM_VOLUME_VALUE_STRING, 0.5f);
-        yield return LerpVolumeCoroutine(bgmAudioSource, 0f, volume, transitionDuration);
-    }
-
     public void PlayClickSound()
     {
         PlaySoundEffect(SoundEffect.UIClick);
@@ -195,25 +306,74 @@ public class AudioManager : MonoBehaviour
         PlayOneShot(GetAudioClip(sfx));
     }
 
-    private AmbientTrack? cachedAmbientTrack = null;
-    public void PlayAmbientSound(AmbientTrack ambientTrack)
+    public void TriggerCombatMusic()
     {
-        if (cachedAmbientTrack == ambientTrack) return;
-        cachedAmbientTrack = ambientTrack;
-
-        StartCoroutine(PlayAmbientSoundCoroutine(ambientTrack));
+        nextCombatMusicEnd = Time.time + combatMusicDuration;
+        isInCombat = true;
+        UpdateMusicNAmbientTracks();
     }
 
-    private IEnumerator PlayAmbientSoundCoroutine(AmbientTrack ambientTrack)
+    private float nextCombatMusicEnd = 0f;
+    private void Update()
     {
+        if (Time.time > nextCombatMusicEnd && isInCombat)
+        {
+            isInCombat = false;
+            UpdateMusicNAmbientTracks();
+        }
+    }
+
+    #region Background Music
+
+    private Coroutine backgroundTransitionCoroutine;
+    private bool backgroundTransitioning = false;
+    private void PlayBackgroundMusic(AudioClip clip)
+    {
+        if (bgmAudioSource.clip == clip || backgroundTransitioning) return;
+        if (backgroundTransitionCoroutine != null) StopCoroutine(backgroundTransitionCoroutine);
+        backgroundTransitionCoroutine = StartCoroutine(PlayBackgroundMusicCoroutine(clip));
+    }
+
+    public IEnumerator PlayBackgroundMusicCoroutine(AudioClip audioClip)
+    {
+        backgroundTransitioning = true;
+        yield return LerpVolumeCoroutine(bgmAudioSource, BgmVolume, 0f, transitionDuration);
+
+        bgmAudioSource.clip = audioClip;
+        bgmAudioSource.Play();
+
+        var volume = PlayerPrefs.GetFloat(BGM_VOLUME_VALUE_STRING, 0.5f);
+        yield return LerpVolumeCoroutine(bgmAudioSource, 0f, volume, transitionDuration);
+        backgroundTransitioning = false;
+    }
+
+    #endregion
+
+    #region Ambient Sound
+
+    private Coroutine ambientTransitionCoroutine;
+    private bool ambientTransitioning = false;
+    private void PlayAmbientSound(AudioClip clip)
+    {
+        if (abmAudioSource.clip == clip || ambientTransitioning) return;
+        if (ambientTransitionCoroutine != null) StopCoroutine(ambientTransitionCoroutine);
+        ambientTransitionCoroutine = StartCoroutine(PlayAmbientSoundCoroutine(clip));
+    }
+
+    private IEnumerator PlayAmbientSoundCoroutine(AudioClip audioClip)
+    {
+        ambientTransitioning = true;
         yield return LerpVolumeCoroutine(abmAudioSource, AbmVolume, 0f, transitionDuration);
 
-        abmAudioSource.clip = GetAudioClip(ambientTrack);
+        abmAudioSource.clip = audioClip;
         abmAudioSource.Play();
 
         var volume = PlayerPrefs.GetFloat(ABM_VOLUME_VALUE_STRING, 0.5f);
         yield return LerpVolumeCoroutine(abmAudioSource, 0f, volume, transitionDuration);
+        ambientTransitioning = false;
     }
+
+    #endregion
 
     private AudioClip GetAudioClip(SoundEffect sfx)
     {
@@ -227,36 +387,6 @@ public class AudioManager : MonoBehaviour
                 return uiErrorSfx;
             default:
                 Debug.LogError("Sound effect not found: " + sfx);
-                return null;
-        }
-    }
-
-    private AudioClip GetAudioClip(MusicTrack track)
-    {
-        switch (track)
-        {
-            case MusicTrack.MainMenu:
-                return mainMenuMusic;
-            case MusicTrack.MainGame:
-                return mainGameMusic;
-            default:
-                Debug.LogError("Music track not found: " + track);
-                return null;
-        }
-    }
-
-    private AudioClip GetAudioClip(AmbientTrack track)
-    {
-        switch (track)
-        {
-            case AmbientTrack.Day:
-                return dayClip;
-            case AmbientTrack.Night:
-                return nightClip;
-            case AmbientTrack.Rain:
-                return rainClip;
-            default:
-                Debug.LogError("Ambient track not found: " + track);
                 return null;
         }
     }

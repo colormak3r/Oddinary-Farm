@@ -1,10 +1,11 @@
 using ColorMak3r.Utility;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.UIElements;
 
 public class EntityStatus : NetworkBehaviour, IDamageable
 {
@@ -39,6 +40,9 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     [HideInInspector]
     public UnityEvent OnDeathOnServer;
+    public Action<int> OnAttackerListCountChange;
+    [SerializeField]
+    private List<Transform> attackerList = new List<Transform>();
 
     protected HealthBarUI healthBarUI;
     public HealthBarUI HealthBarUI => healthBarUI;
@@ -176,11 +180,20 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     [Rpc(SendTo.Everyone)]
     private void TakeDamageRpc(uint damage, DamageType type, NetworkObjectReference attackerRef)
     {
+        // Notify AudioManager of potential combat event
+        if (hostility != Hostility.Neutral)
+        {
+            var playerObject = NetworkManager.Singleton.LocalClient?.PlayerObject;
+            if (playerObject != null && Vector2.Distance(playerObject.transform.position, transform.position) < AudioManager.Main.CombatMusicRange)
+            {
+                AudioManager.Main.TriggerCombatMusic();
+            }
+        }
+
         if (CurrentHealthValue > damage)
         {
             if (healthBarUI && damage > 0)
                 healthBarUI.SetValue(CurrentHealthValue - damage, maxHealth);
-
 
             // Damaged sound
             if (audioElement)

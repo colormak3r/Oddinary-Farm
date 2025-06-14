@@ -20,13 +20,13 @@ public class GameManager : NetworkBehaviour
     [Header("Debugs")]
     [SerializeField]
     private bool isInitialized;
+    public bool IsInitialized => isInitialized;
     [SerializeField]
     private bool isInitializing;
+    public bool IsInitializing => isInitializing;
     [SerializeField]
     private bool isGameOver;
     public bool IsGameOver => isGameOver;
-
-    public bool IsInitialized => isInitialized;
 
     private void Awake()
     {
@@ -39,12 +39,14 @@ public class GameManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         TimeManager.Main.OnHourChanged.AddListener(OnHourChanged);
+        AudioManager.Main.OnNetworkSpawn();
         Initialize();
     }
 
     public override void OnNetworkDespawn()
     {
         TimeManager.Main.OnHourChanged.RemoveListener(OnHourChanged);
+        AudioManager.Main.OnNetworkDespawn();
     }
 
     private void OnHourChanged(int currentHour)
@@ -80,11 +82,6 @@ public class GameManager : NetworkBehaviour
 
         if (TransitionUI.Main.IsShowing) yield return TransitionUI.Main.HideCoroutine();
         if (!TutorialUI.Main.DontShowAgain) yield return TutorialUI.Main.ShowCoroutine();
-
-        if (TimeManager.Main.IsDay)
-            AudioManager.Main.PlayAmbientSound(AmbientTrack.Day);
-        else
-            AudioManager.Main.PlayAmbientSound(AmbientTrack.Night);
 
         yield return MapUI.Main.ShowCoroutine();
 

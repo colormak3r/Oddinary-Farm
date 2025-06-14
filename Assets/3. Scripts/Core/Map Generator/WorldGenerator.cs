@@ -122,6 +122,8 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private TerrainUnitProperty voidUnitProperty;
     [SerializeField]
+    private TerrainUnitProperty sandUnitProperty;
+    [SerializeField]
     private GameObject terrainUnitPrefab;
 
     [Header("Resource Settings")]
@@ -148,7 +150,7 @@ public class WorldGenerator : NetworkBehaviour
 
     [Header("Map Components")]
     [SerializeField]
-    private TMP_Text heightText;
+    private TMP_Text elevationText;
 
     private Vector2Int halfMapSize;
     private Vector2Int paddingSize;
@@ -174,6 +176,7 @@ public class WorldGenerator : NetworkBehaviour
     private bool showStep;
 
     public float HighestElevation => elevationMap.MaxValue;
+    public float OceanElevationThreshold => sandUnitProperty.Elevation.max;
 
     public IEnumerator Initialize()
     {
@@ -385,7 +388,9 @@ public class WorldGenerator : NetworkBehaviour
     {
         MapUI.Main.UpdatePlayerPosition(position, trueMapSize);
         var snappedPosition = position.SnapToGrid();
-        heightText.text = Mathf.Round((GetElevation(position.x, position.y, true) - FloodManager.Main.BaseFloodLevel) * 1000) + "ft";
+        var elevation = GetElevation(snappedPosition.x, snappedPosition.y, true);
+        elevationText.text = (Mathf.Round(elevation - FloodManager.Main.BaseFloodLevel) * 1000) + "ft";
+        AudioManager.Main.OnElevationUpdated(elevation);
         yield return BuildTerrain(position);
     }
 

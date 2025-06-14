@@ -125,20 +125,10 @@ public class TimeManager : NetworkBehaviour
 
             if (hour_cached == nightStartTime)
             {
-                if (!WeatherManager.Main.IsRainning)
-                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Night);
-                else
-                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Rain);
-
                 OnNightStart?.Invoke();
             }
             else if (hour_cached == dayStartTime)
             {
-                if (!WeatherManager.Main.IsRainning)
-                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Day);
-                else
-                    AudioManager.Main.PlayAmbientSound(AmbientTrack.Rain);
-
                 OnDayStart?.Invoke();
             }
 

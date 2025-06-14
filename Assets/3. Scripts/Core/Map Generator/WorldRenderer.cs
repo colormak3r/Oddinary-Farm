@@ -1,3 +1,4 @@
+using ColorMak3r.Utility;
 using UnityEngine;
 
 public class WorldRenderer : MonoBehaviour
@@ -14,11 +15,11 @@ public class WorldRenderer : MonoBehaviour
     private void Update()
     {
         if (!GameManager.Main.IsInitialized) return;
-
-        if (position_cached != (Vector2)transform.position)
+        var currentPosition = ((Vector2)transform.position).SnapToGrid();
+        if (position_cached != currentPosition)
         {
-            position_cached = transform.position;
-            StartCoroutine(worldGenerator.BuildWorld(transform.position));
+            position_cached = currentPosition;
+            StartCoroutine(worldGenerator.BuildWorld(currentPosition));
         }
     }
 }

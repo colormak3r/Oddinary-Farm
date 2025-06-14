@@ -2,7 +2,6 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
-
 public class TargetDetector : NetworkBehaviour
 {
     [Header("Settings")]
@@ -110,7 +109,7 @@ public class TargetDetector : NetworkBehaviour
             if (Vector3.Distance(currentTarget.position, transform.position) > escapeRange)
             {
                 OnTargetEscaped?.Invoke(currentTarget);
-                currentTarget = null;
+                DeselectTarget("Target escaped from range: " + currentTarget);
             }
         }
     }
@@ -192,7 +191,9 @@ public class TargetDetector : NetworkBehaviour
         {
             var status = currentTarget.GetComponent<EntityStatus>();
             if (status != null)
+            {
                 status.OnDeathOnServer.RemoveListener(HandleOnTargetDie);
+            }
         }
 
         if (showDebugs) Debug.Log($"Deselecting target: {reason}");

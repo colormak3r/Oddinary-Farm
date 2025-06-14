@@ -19,7 +19,7 @@ public class MinMaxIntDrawer : PropertyDrawer
 
         // Set the width for the label
         var width = position.width;
-        position.width = EditorGUIUtility.labelWidth;
+        position.width = EditorGUIUtility.labelWidth - 13;
         EditorGUI.LabelField(position, label);
 
         // Adjust position for the slider
