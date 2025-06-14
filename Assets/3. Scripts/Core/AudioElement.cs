@@ -13,6 +13,8 @@ public class AudioElement : MonoBehaviour
 
     private AudioSource audioSource;
 
+    private bool isInitialized;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
@@ -22,6 +24,7 @@ public class AudioElement : MonoBehaviour
     {
         AudioManager.Main.OnSfxVolumeChange.AddListener(HandleSfxVolumeChange);
         HandleSfxVolumeChange(AudioManager.Main.SfxVolume);
+        isInitialized = true;
     }
 
     private void OnDestroy()
@@ -40,6 +43,7 @@ public class AudioElement : MonoBehaviour
         if (clip != null)
         {
             if (randomPitch) audioSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+            if (!isInitialized) HandleSfxVolumeChange(AudioManager.Main.SfxVolume);
             audioSource.PlayOneShot(clip);
         }
     }

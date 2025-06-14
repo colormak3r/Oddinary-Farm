@@ -135,14 +135,15 @@ MonoBehaviour:
   isInvincible: 0
   damagedEffectPrefab: {fileID: 3303192038522874649, guid: 9bdc915fcce33d04e9b98594dcf5049e, type: 3}
   deathEffectPrefab: {fileID: 2017998240076956080, guid: 92ab43977f9b492419a9652462fec256, type: 3}
-  damagedSound: {fileID: 8300000, guid: 3858773d709f0d64ca46a780ca805b59, type: 3}
-  deathSound: {fileID: 8300000, guid: 03082e85662cc81428a6c7659c92dfa1, type: 3}
+  damagedSound: {fileID: 8300000, guid: a55205e71e32607428ce6bf3b84f24b4, type: 3}
+  deathSound: {fileID: 8300000, guid: 3d54a46713562a848863ab191fb59494, type: 3}
   showDebugs: 0
   CurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
     m_PersistentCalls:
       m_Calls: []
+  attackerList: []
 --- !u!114 &5452321758450969809
 MonoBehaviour:
   m_ObjectHideFlags: 0

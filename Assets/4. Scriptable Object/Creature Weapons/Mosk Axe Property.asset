@@ -29,7 +29,7 @@ MonoBehaviour:
     X  : Drop'
   pickupSound: {fileID: 0}
   selectSound: {fileID: 0}
-  primarySound: {fileID: 0}
+  primarySound: {fileID: 8300000, guid: 419ae431411a2354e8fd782bb4c7924a, type: 3}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
   radius: 0.1

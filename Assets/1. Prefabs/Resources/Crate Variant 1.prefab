@@ -58,12 +58,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1265438066569551220, guid: 0c621d07ddc2f6048a1f1c27618790b3, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 3563645210
+      value: 2497032488
       objectReference: {fileID: 0}
     - target: {fileID: 1265438066569551220, guid: 0c621d07ddc2f6048a1f1c27618790b3, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
       value: 260159453
       objectReference: {fileID: 0}
+    - target: {fileID: 1330533312772141306, guid: 0c621d07ddc2f6048a1f1c27618790b3, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6daade3a6970eb54fbfe49ca74bba5ec, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

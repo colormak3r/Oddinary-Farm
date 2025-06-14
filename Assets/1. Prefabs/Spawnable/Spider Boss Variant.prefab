@@ -116,6 +116,10 @@ PrefabInstance:
       propertyPath: maxHealth
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 5062778191627551025, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 67c6fdff6c0b6b94ba316fcfa79f9e3d, type: 3}
     - target: {fileID: 5653936039348153610, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: lootTable
       value: 
@@ -136,6 +140,10 @@ PrefabInstance:
       propertyPath: weaponProperty
       value: 
       objectReference: {fileID: 11400000, guid: 9d61bc704392b564eb572050215e35f9, type: 2}
+    - target: {fileID: 6325684406526954248, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: Priority
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 7587470008011550257, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_Mass
       value: 3

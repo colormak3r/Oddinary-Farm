@@ -168,7 +168,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             }
             else
             {
-                Debug.Log($"{attacker} is not spawned", attacker);
+                if(showDebugs) Debug.Log($"{attacker} is not spawned", attacker);
                 TakeDamageRpc(damage, type, default);
             }
         }
@@ -268,22 +268,24 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntityDeathOnClient()
     {
+        SpawnDeathPrefab();
+
         StartCoroutine(DeathOnClientCoroutine());
+    }
+
+    protected virtual void SpawnDeathPrefab()
+    {
+        if (deathEffectPrefab != null)
+        {
+            var damageObj = Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+            var audioElement = damageObj.GetComponent<AudioElement>();
+            if (audioElement && deathSound) audioElement.PlayOneShot(deathSound);
+        }
     }
 
     protected virtual IEnumerator DeathOnClientCoroutine()
     {
-        Coroutine audioCoroutine = null;
         Coroutine effectCoroutine = null;
-
-        if (audioElement)
-        {
-            audioElement.PlayOneShot(deathSound);
-            audioCoroutine = StartCoroutine(MiscUtility.WaitCoroutine(deathSound.length));
-        }
-
-        if (deathEffectPrefab != null)
-            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
 
         // Disable all physics
         if (rbody) rbody.linearVelocity = Vector2.zero;
@@ -292,7 +294,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         effectCoroutine = StartCoroutine(transform.PopCoroutine(1, 0, 0.25f));
 
         yield return effectCoroutine;
-        yield return audioCoroutine;
 
         Destroy(gameObject);
     }

@@ -22,7 +22,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3362551772797652621, guid: a008f1d31971c044aad2e8c334c34f00, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 2639816716
+      value: 1496012476
       objectReference: {fileID: 0}
     - target: {fileID: 3362551772797652621, guid: a008f1d31971c044aad2e8c334c34f00, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
@@ -30,7 +30,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3569705655780300392, guid: a008f1d31971c044aad2e8c334c34f00, type: 3}
       propertyPath: m_Name
-      value: Chest Spider Variant Variant
+      value: Chest Spider Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4120595417690798464, guid: a008f1d31971c044aad2e8c334c34f00, type: 3}
       propertyPath: m_LocalPosition.x

@@ -28,10 +28,10 @@ MonoBehaviour:
   primarySound: {fileID: 0}
   secondarySound: {fileID: 8300000, guid: d2457fed02ff0d14c8e75f4f10a16113, type: 3}
   alternativeSound: {fileID: 0}
-  damage: 1
+  damage: 2
   radius: 0.2
   width: 2
-  maxDuration: 5
+  maxDuration: 4
   frequency: 0.5
   hostility: 0
   chargeStartSfx: {fileID: 8300000, guid: f62e5bd6e820bfe4f826cec5586b736d, type: 3}

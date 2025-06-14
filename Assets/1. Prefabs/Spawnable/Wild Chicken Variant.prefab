@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1591501530545888858, guid: 74f997006c8ba654f8a4063668afbe0a, type: 3}
       propertyPath: m_Name
-      value: Wild Chicken Variant Variant
+      value: Wild Chicken Variant
       objectReference: {fileID: 0}
     - target: {fileID: 1829850606512251754, guid: 74f997006c8ba654f8a4063668afbe0a, type: 3}
       propertyPath: hourTilHunger
@@ -20,6 +20,14 @@ PrefabInstance:
       propertyPath: hostility
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3074030984091370534, guid: 74f997006c8ba654f8a4063668afbe0a, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: c60dfcfba399b94469bfbd31f6a442d2, type: 3}
+    - target: {fileID: 3074030984091370534, guid: 74f997006c8ba654f8a4063668afbe0a, type: 3}
+      propertyPath: damagedSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 96af78ecee562ea42b06a8127579a591, type: 3}
     - target: {fileID: 6466285201108596743, guid: 74f997006c8ba654f8a4063668afbe0a, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 2405248631

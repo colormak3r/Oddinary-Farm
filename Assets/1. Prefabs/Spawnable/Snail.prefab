@@ -463,6 +463,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
   AuthorityMode: 0
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
@@ -640,8 +650,6 @@ MonoBehaviour:
   graphicTransform: {fileID: 4287736005901102148}
   spriteFacingRight: 1
   roamRadius: 5
-  isCaptureable: 0
-  captureItemProperty: {fileID: 0}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:
@@ -711,6 +719,7 @@ MonoBehaviour:
   OnDeathOnServer:
     m_PersistentCalls:
       m_Calls: []
+  attackerList: []
 --- !u!114 &6444526639934246005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -849,6 +858,13 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   offset: {x: 0, y: 0.5}
   muzzleTransform: {fileID: 0}
+  muzzleFlash: {fileID: 0}
+  recoilTransform: {fileID: 0}
+  recordPlantSpawns: 0
+  recordFarmPlotSpawns: 0
+  recordStructureSpawns: 0
+  assetSpawnPreset: {fileID: 0}
+  showDebugs: 0
 --- !u!114 &8878487423511282838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -877,11 +893,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 723511e5159bf03468db437cbb55f1da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canBeDrowned: 1
+  canBeDrown: 1
+  canBeWet: 1
+  wetPercentage: 0.1
   waterTransform: {fileID: 7017927651199965673}
   speed: 2
-  maxWaterY: 1.25
-  minWaterY: -3.5
+  waterLevel: 0.5
 --- !u!1001 &4206220139827267039
 PrefabInstance:
   m_ObjectHideFlags: 0

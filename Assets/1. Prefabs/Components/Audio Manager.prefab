@@ -68,8 +68,8 @@ MonoBehaviour:
   combatMusic: {fileID: 8300000, guid: 4631cdd66f8634c49b22e56c5a2c8124, type: 3}
   grasslandDayAmbient: {fileID: 8300000, guid: 23a6fccbad23aaf40b11a109d2b7dfdc, type: 3}
   grasslandNightAmbient: {fileID: 8300000, guid: bd1a5d188e336b3449c71c4b74a7e097, type: 3}
-  oceanDayAmbient: {fileID: 8300000, guid: 5596b33ab77290d49ac4d84f729ac905, type: 3}
-  oceanNightAmbient: {fileID: 8300000, guid: 5596b33ab77290d49ac4d84f729ac905, type: 3}
+  oceanDayAmbient: {fileID: 8300000, guid: 3de3469a0478e9b43990470ee2b855ea, type: 3}
+  oceanNightAmbient: {fileID: 8300000, guid: 3de3469a0478e9b43990470ee2b855ea, type: 3}
   rainDayAmbient: {fileID: 8300000, guid: 6923c5ccc5d40854586d2c3b3d2fa729, type: 3}
   rainNightAmbient: {fileID: 8300000, guid: 6923c5ccc5d40854586d2c3b3d2fa729, type: 3}
   showDebugs: 0
