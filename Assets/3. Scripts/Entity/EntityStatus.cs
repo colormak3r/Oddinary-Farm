@@ -168,7 +168,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             }
             else
             {
-                if(showDebugs) Debug.Log($"{attacker} is not spawned", attacker);
+                if (showDebugs) Debug.Log($"{attacker} is not spawned", attacker);
                 TakeDamageRpc(damage, type, default);
             }
         }
@@ -183,7 +183,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         // Notify AudioManager of potential combat event
         if (hostility != Hostility.Neutral)
         {
-            var playerObject = NetworkManager.Singleton.LocalClient?.PlayerObject;
+            var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+
             if (playerObject != null && Vector2.Distance(playerObject.transform.position, transform.position) < AudioManager.Main.CombatMusicRange)
             {
                 AudioManager.Main.TriggerCombatMusic();

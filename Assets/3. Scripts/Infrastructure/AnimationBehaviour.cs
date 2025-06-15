@@ -11,6 +11,7 @@ public class AnimationBehaviour : MonoBehaviour
     [Tooltip("List of animation behaviours to play in parallel with this behaviour")]
     private AnimationBehaviour[] parallelBehaviours;
 
+
     public virtual void StartAnimation()
     {
 
@@ -52,5 +53,10 @@ public class AnimationBehaviour : MonoBehaviour
     protected virtual IEnumerator PlayAnimationCoroutineInternal()
     {
         yield return null;
+    }
+
+    public void StopAnimation()
+    {
+        StopAllCoroutines();
     }
 }

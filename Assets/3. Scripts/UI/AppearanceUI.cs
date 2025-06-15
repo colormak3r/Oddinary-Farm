@@ -1,47 +1,14 @@
-using System.Globalization;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class AppearanceUI : UIBehaviour
 {
-    public static AppearanceUI Main { get; private set; }
-
-    private const string FACE_KEY = "Face Appearance";
-    private const string HEAD_KEY = "Head Appearance";
-    private const string HAT_KEY = "Hat Appearance";
-    private const string OUTFIT_KEY = "Outfit Appearance";
-
-    private void Awake()
-    {
-        if (Main == null)
-            Main = this;
-        else
-            Destroy(transform.parent.gameObject);
-    }
+    //public static AppearanceUI Main { get; private set; }
 
     [Header("Appearance UI Settings")]
     [SerializeField]
     private GameObject rowPrefab;
-    [SerializeField]
-    private Face[] faces;
-    [SerializeField]
-    private Head[] heads;
-    [SerializeField]
-    private Hat[] hats;
-    [SerializeField]
-    private Outfit[] outfits;
-
-    [Header("Settings")]
-    [SerializeField]
-    private Face defaultFace;
-    [SerializeField]
-    private Head defaultHead;
-    [SerializeField]
-    private Hat defaultHat;
-    [SerializeField]
-    private Outfit defaultOutfit;
 
     [Header("Required Component")]
     [SerializeField]
@@ -63,39 +30,25 @@ public class AppearanceUI : UIBehaviour
     [SerializeField]
     private Image rightLegImage;
 
-
-    [Header("Debugs")]
-    [SerializeField]
-    private Face currentFace;
-    [SerializeField]
-    private Head currentHead;
-    [SerializeField]
-    private Hat currentHat;
-    [SerializeField]
-    private Outfit currentOutfit;
-
-    public Face CurrentFace => currentFace;
-    public Head CurrentHead => currentHead;
-    public Hat CurrentHat => currentHat;
-    public Outfit CurrentOutfit => currentOutfit;
+    private AppearanceManager appearanceManager;
 
     protected override void Start()
     {
         base.Start();
 
-        currentFace = defaultFace;
-        currentHead = defaultHead;
-        currentHat = defaultHat;
-        currentOutfit = defaultOutfit;
+        appearanceManager = AppearanceManager.Main;
 
-        // TODO: Seperate AssetManager into a networked component and a local component
-        /*currentFace = AssetManager.Main.GetScriptableObjectByName<Face>(PlayerPrefs.GetString(FACE_KEY, defaultFace.name));
-        currentHead = AssetManager.Main.GetScriptableObjectByName<Head>(PlayerPrefs.GetString(HEAD_KEY, defaultHead.name));
-        currentHat = AssetManager.Main.GetScriptableObjectByName<Hat>(PlayerPrefs.GetString(HAT_KEY, defaultHat.name));
-        currentHat = AssetManager.Main.GetScriptableObjectByName<Hat>(PlayerPrefs.GetString(HAT_KEY, defaultHat.name));*/
-
-        Initialize(defaultFace, defaultHead, defaultHat, defaultOutfit);
-        FaceButtonClicked();
+        OnVisibilityChanged.AddListener(isShowing =>
+        {
+            if (isShowing)
+            {
+                Initialize(appearanceManager.CurrentFace,
+                    appearanceManager.CurrentHead,
+                    appearanceManager.CurrentHat,
+                    appearanceManager.CurrentOutfit);
+                FaceButtonClicked();
+            }
+        });
     }
 
     public void Initialize(Face face, Head head, Hat hat, Outfit outfit)
@@ -108,32 +61,32 @@ public class AppearanceUI : UIBehaviour
 
     public void FaceButtonClicked()
     {
-        RenderRows(faces);
+        RenderRows(appearanceManager.FaceAssets);
     }
 
     public void HeadButtonClicked()
     {
-        RenderRows(heads);
+        RenderRows(appearanceManager.HeadAssets);
     }
 
     public void HatButtonClicked()
     {
-        RenderRows(hats);
+        RenderRows(appearanceManager.HatAssets);
     }
 
     public void OutfitButtonClicked()
     {
-        RenderRows(outfits);
+        RenderRows(appearanceManager.OutfitAssets);
     }
 
-    private void RenderRows(AppearanceData[] data)
+    private void RenderRows(IReadOnlyList<AppearanceData> data)
     {
         while (contentTransform.childCount > 0)
         {
             DestroyImmediate(contentTransform.GetChild(0).gameObject);
         }
 
-        int count = data.Length;
+        int count = data.Count;
         for (int i = 0; i < count; i += 2)
         {
             var rowObj = Instantiate(rowPrefab, contentTransform);
@@ -168,23 +121,19 @@ public class AppearanceUI : UIBehaviour
 
     private void SetFace(Face face)
     {
-        currentFace = face;
+        appearanceManager.SetFace(face);
         faceImage.sprite = face.DisplaySprite;
-
-        if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateFace(face);
     }
 
     private void SetHead(Head head)
     {
-        currentHead = head;
+        appearanceManager.SetHead(head);
         headImage.sprite = head.DisplaySprite;
-
-        if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateHead(head);
     }
 
     private void SetHat(Hat hat)
     {
-        currentHat = hat;
+        appearanceManager.SetHat(hat);
         if (hat.name == "No Hat")
         {
             hatImage.enabled = false;
@@ -194,19 +143,15 @@ public class AppearanceUI : UIBehaviour
             hatImage.enabled = true;
             hatImage.sprite = hat.DisplaySprite;
         }
-
-        if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateHat(hat);
     }
 
     private void SetOutfit(Outfit outfit)
     {
-        currentOutfit = outfit;
+        appearanceManager.SetOutfit(outfit);
         torsoImage.sprite = outfit.TorsoSprite;
         leftArmImage.sprite = outfit.LeftArmSprite;
         rightArmImage.sprite = outfit.RightArmSprite;
         leftLegImage.sprite = outfit.LeftLegSprite;
         rightLegImage.sprite = outfit.RightLegSprite;
-
-        if (PlayerAppearance.Owner) PlayerAppearance.Owner.UpdateOutfit(outfit);
     }
 }

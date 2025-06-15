@@ -389,7 +389,7 @@ public class WorldGenerator : NetworkBehaviour
         MapUI.Main.UpdatePlayerPosition(position, trueMapSize);
         var snappedPosition = position.SnapToGrid();
         var elevation = GetElevation(snappedPosition.x, snappedPosition.y, true);
-        elevationText.text = (Mathf.Round(elevation - FloodManager.Main.BaseFloodLevel) * 1000) + "ft";
+        elevationText.text = Mathf.RoundToInt((elevation - FloodManager.Main.BaseFloodLevel) * 1000) + "ft";
         AudioManager.Main.OnElevationUpdated(elevation);
         yield return BuildTerrain(position);
     }

@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 55266240886399230, guid: 74f997006c8ba654f8a4063668afbe0a, type: 3}
+      propertyPath: CanBeDrowned.m_InternalValue
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1591501530545888858, guid: 74f997006c8ba654f8a4063668afbe0a, type: 3}
       propertyPath: m_Name
       value: Wild Chicken Variant

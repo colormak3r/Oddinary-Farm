@@ -1,8 +1,9 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
+
+using CTabButton = ColorMak3r.UI.TabButton;
 
 [System.Serializable]
 public struct TutorialProperty
@@ -26,12 +27,18 @@ public class TutorialUI : UIBehaviour
     [SerializeField]
     private TMP_Text nextButtonText;
     [SerializeField]
-    private TMP_Text titleText;
+    private GameObject displayPanel;
     [SerializeField]
     private GameObject dontShowAgainButton;
     [SerializeField]
     private AudioClip tutorialSound;
     public AudioClip TutorialSound => tutorialSound;
+
+    [Header("Tutorial Settings")]
+    [SerializeField]
+    private GameObject tabPanel;
+    [SerializeField]
+    private GameObject tabButtonPrefab;
 
     [Header("Tutorial Debugs")]
     [SerializeField]
@@ -39,6 +46,8 @@ public class TutorialUI : UIBehaviour
     [SerializeField]
     private bool dontShowAgain = false;
     public bool DontShowAgain => dontShowAgain;
+
+    private List<CTabButton> tabButtons = new List<CTabButton>();
 
     private void Awake()
     {
@@ -52,6 +61,15 @@ public class TutorialUI : UIBehaviour
         dontShowAgainButton.SetActive(false);
         tutorialCamera.gameObject.SetActive(false);
 
+        for (int i = 0; i < tutorialProperties.Length; i++)
+        {
+            var tabButton = Instantiate(tabButtonPrefab, tabPanel.transform)
+                .GetComponent<CTabButton>();
+            tabButton.Initialize(tutorialProperties[i].Name, i, this);
+            tabButton.SetSelected(i == 0 ? true : false);
+            tabButtons.Add(tabButton);
+        }
+
         OnVisibilityChanged.AddListener(HandleVisibilityChange);
     }
 
@@ -63,7 +81,7 @@ public class TutorialUI : UIBehaviour
 
     private void HandleVisibilityChange(bool isVisible)
     {
-        if (isVisible) OnPageChange();
+        if (isVisible) OnPageChange(currentIndex);
         tutorialCamera.gameObject.SetActive(isVisible);
     }
 
@@ -99,36 +117,42 @@ public class TutorialUI : UIBehaviour
         else
         {
             currentIndex++;
-
-            if (currentIndex == tutorialProperties.Length - 1)
-                dontShowAgainButton.SetActive(true);
-            else
-                dontShowAgainButton.SetActive(false);
-
-            if (pageChangeCoroutine != null) StopCoroutine(pageChangeCoroutine);
-            pageChangeCoroutine = StartCoroutine(PageChangeCoroutine());
+            OnPageChange(currentIndex);
         }
     }
-
-    private IEnumerator PageChangeCoroutine()
-    {
-        yield return HideCoroutine();
-        yield return ShowCoroutine();
-    }
-
-    public void UpdateNextButtonText() => nextButtonText.text = $"{(currentIndex == tutorialProperties.Length - 1 ? "Done" : "Next")}({currentIndex + 1}/{tutorialProperties.Length})";
 
     [ContextMenu("Mock Play Animation")]
     private void MockPlayAnimation()
     {
-        OnPageChange();
+        OnPageChange(0);
     }
 
-    private void OnPageChange()
+    private void OnPageChange(int newPageIndex)
     {
-        titleText.text = tutorialProperties[currentIndex].Name;
-        tutorialProperties[currentIndex].Controller.PlayAnimation();
-        tutorialCamera.transform.position = tutorialProperties[currentIndex].Coordinate;
-        UpdateNextButtonText();
+        // Disable the "Don't Show Again" button if not on the last page
+        if (newPageIndex == tutorialProperties.Length - 1)
+            dontShowAgainButton.SetActive(true);
+        else
+            dontShowAgainButton.SetActive(false);
+
+        // Deselect all buttons and select the current one
+        foreach (var button in tabButtons) button.SetSelected(false);
+        tabButtons[newPageIndex].SetSelected(true);
+
+        // Play the animation for the current tutorial property
+        tutorialProperties[newPageIndex].Controller.PlayAnimation();
+        tutorialCamera.transform.position = tutorialProperties[newPageIndex].Coordinate;
+
+        // Update Next button text
+        nextButtonText.text = $"{(currentIndex == tutorialProperties.Length - 1 ? "Done" : "Next")}({currentIndex + 1}/{tutorialProperties.Length})";
+    }
+
+    public void OnTabButton(int id)
+    {
+        tutorialProperties[currentIndex].Controller.StopAnimation();
+
+        currentIndex = id;
+
+        OnPageChange(id);
     }
 }

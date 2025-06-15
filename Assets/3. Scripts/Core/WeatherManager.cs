@@ -95,7 +95,7 @@ public class WeatherManager : NetworkBehaviour
 
         // Update current weather based on the new current hour
         var weatherData = weatherDataArray[TimeManager.Main.CurrentDate - 1];
-        isRainning = currentHour > weatherData.RainDuration.min && currentHour < weatherData.RainDuration.max;
+        isRainning = currentHour >= weatherData.RainDuration.min && currentHour < weatherData.RainDuration.max;
         if (showDebugs) Debug.Log($"Hour =  {currentHour}, isRainning = {isRainning}");
 
         if (isRainning != isRainning_cached)

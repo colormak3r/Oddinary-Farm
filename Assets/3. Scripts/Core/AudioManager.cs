@@ -308,6 +308,7 @@ public class AudioManager : MonoBehaviour
 
     public void TriggerCombatMusic()
     {
+        if (showDebugs) Debug.Log("Triggering combat music");
         nextCombatMusicEnd = Time.time + combatMusicDuration;
         isInCombat = true;
         UpdateMusicNAmbientTracks();
@@ -318,6 +319,7 @@ public class AudioManager : MonoBehaviour
     {
         if (Time.time > nextCombatMusicEnd && isInCombat)
         {
+            if (showDebugs) Debug.Log("Combat music ended");
             isInCombat = false;
             UpdateMusicNAmbientTracks();
         }

@@ -202,6 +202,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tamed Chicken Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8878487423511282838, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: CanBeDrowned.m_InternalValue
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3114174111768081107, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
     - {fileID: 1713903147799318877, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}

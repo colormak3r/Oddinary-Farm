@@ -63,10 +63,10 @@ public class PlayerAppearance : NetworkBehaviour
         {
             Owner = this;
 
-            UpdateFace(AppearanceUI.Main.CurrentFace);
-            UpdateHead(AppearanceUI.Main.CurrentHead);
-            UpdateHat(AppearanceUI.Main.CurrentHat);
-            UpdateOutfit(AppearanceUI.Main.CurrentOutfit);
+            UpdateFace(AppearanceManager.Main.CurrentFace);
+            UpdateHead(AppearanceManager.Main.CurrentHead);
+            UpdateHat(AppearanceManager.Main.CurrentHat);
+            UpdateOutfit(AppearanceManager.Main.CurrentOutfit);
         }
     }
 
