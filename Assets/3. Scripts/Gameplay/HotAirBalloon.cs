@@ -50,7 +50,7 @@ public class HotAirBalloon : Structure, IInteractable
         HandleOnHourChanged(TimeManager.Main.CurrentHour);
     }
     
-    // Unsubscribe from events 
+    // Unsubscribe from events
     public override void OnNetworkDespawn()
     {
         CurrentStage.OnValueChanged -= HandleCurrentStageChanged;
@@ -67,7 +67,6 @@ public class HotAirBalloon : Structure, IInteractable
             TimeManager.Main.OnHourChanged.RemoveListener(HandleOnHourChanged);
         }
     }
-
 
     private void HandleIsTakenOff(bool previousValue, bool newValue)
     {

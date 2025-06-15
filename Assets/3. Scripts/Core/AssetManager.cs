@@ -38,7 +38,8 @@ public struct SpawnableID
 public class AssetManager : NetworkBehaviour
 {
     public static AssetManager Main;
-
+    
+    // NOTE: Put const in front of these
     private static int ITEM_ID_OFFSET = 10000;
     private static int SPAWNABLE_ID_OFFSET = 20000;
 
@@ -278,7 +279,7 @@ public class AssetManager : NetworkBehaviour
 
     public void SpawnByID(int id, Vector2 position, int count = 1, bool log = false, float randomRange = 2f, bool randomForce = true)
     {
-        if (id < SPAWNABLE_ID_OFFSET)       // QUESTION: Why is this offset needed?
+        if (id < SPAWNABLE_ID_OFFSET)       // Anything less than id 20000 is an item
         {
             ItemProperty property = null;
             for (int i = 0; i < itemIds.Count; i++)     // Find item property
@@ -303,7 +304,7 @@ public class AssetManager : NetworkBehaviour
                 Debug.LogError("Item ID not found: " + id);
             }
         }
-        else if (id < 30000)        // QUESTION: What is this for? Are prefabs over 30,000?
+        else if (id < 30000)        // Anything between 20000 and 30000 is a prefab
         {
             SpawnPrefab(id, position, count, randomRange);
 

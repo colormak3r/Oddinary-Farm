@@ -40,7 +40,7 @@ public class Chunk
 public class Offset2DArray<T> : IEnumerable<T>
 {
     private T[,] array;                 // 2D Array
-    private int offsetX, offsetY;
+    private int offsetX, offsetY;       // Offsets made to have the array go negative
     public int minX => -offsetX;        // min x position
     public int maxX => array.GetLength(0) - offsetX - 1;    // max x position
     public int minY => -offsetY;        // min y position
@@ -114,9 +114,9 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private int paddingChunkCount = 2;
     [SerializeField]
-    private int renderDistance = 3;     // QUESTION: Max amount of chunks that can be rendered?
+    private int renderDistance = 3;     // Max amount of chunks that can be rendered at a time relative to the player
     [SerializeField]
-    private int renderXOffset = 4;
+    private int renderXOffset = 4;      // Render more chunks on the X
 
     [Header("Terrain Settings")]
     [SerializeField]
