@@ -8553,6 +8553,8 @@ GameObject:
   - component: {fileID: 1042586861}
   - component: {fileID: 1042586860}
   - component: {fileID: 1042586859}
+  - component: {fileID: 1042586863}
+  - component: {fileID: 1042586864}
   m_Layer: 5
   m_Name: Options Button
   m_TagString: Untagged
@@ -8686,6 +8688,44 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1042586857}
   m_CullTransparentMesh: 1
+--- !u!95 &1042586863
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042586857}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: da73626bd37096146962707df02e12f9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1042586864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1042586857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 239df259982b9ca439ff9955abcf9888, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverTrigger: Hover
+  clickTrigger: Click
+  idleTrigger: Idle
+  animator: {fileID: 1042586863}
 --- !u!1 &1060914322
 GameObject:
   m_ObjectHideFlags: 0
@@ -11817,6 +11857,8 @@ GameObject:
   - component: {fileID: 1605406326}
   - component: {fileID: 1605406325}
   - component: {fileID: 1605406324}
+  - component: {fileID: 1605406328}
+  - component: {fileID: 1605406329}
   m_Layer: 5
   m_Name: Quit Button
   m_TagString: Untagged
@@ -11950,6 +11992,44 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1605406322}
   m_CullTransparentMesh: 1
+--- !u!95 &1605406328
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605406322}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3559174790b957049bd1650e8a48a85f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1605406329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605406322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 239df259982b9ca439ff9955abcf9888, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverTrigger: Hover
+  clickTrigger: Click
+  idleTrigger: Idle
+  animator: {fileID: 1605406328}
 --- !u!1 &1607153485
 GameObject:
   m_ObjectHideFlags: 0
@@ -13030,6 +13110,8 @@ GameObject:
   - component: {fileID: 1718009272}
   - component: {fileID: 1718009271}
   - component: {fileID: 1718009270}
+  - component: {fileID: 1718009274}
+  - component: {fileID: 1718009273}
   m_Layer: 5
   m_Name: Multiplayer Button
   m_TagString: Untagged
@@ -13175,6 +13257,44 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1718009268}
   m_CullTransparentMesh: 1
+--- !u!114 &1718009273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718009268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 239df259982b9ca439ff9955abcf9888, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverTrigger: Hover
+  clickTrigger: Click
+  idleTrigger: Idle
+  animator: {fileID: 1718009274}
+--- !u!95 &1718009274
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1718009268}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 60455958953ba464dba04a74fb13006c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1723085916
 GameObject:
   m_ObjectHideFlags: 0
@@ -13187,6 +13307,8 @@ GameObject:
   - component: {fileID: 1723085920}
   - component: {fileID: 1723085919}
   - component: {fileID: 1723085918}
+  - component: {fileID: 1723085921}
+  - component: {fileID: 1723085922}
   m_Layer: 5
   m_Name: Appearance Button
   m_TagString: Untagged
@@ -13332,6 +13454,44 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1723085916}
   m_CullTransparentMesh: 1
+--- !u!95 &1723085921
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723085916}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 399732d3c95340a4a8d54dc6ff7406ff, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1723085922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723085916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 239df259982b9ca439ff9955abcf9888, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverTrigger: Hover
+  clickTrigger: Click
+  idleTrigger: Idle
+  animator: {fileID: 1723085921}
 --- !u!1 &1724048243
 GameObject:
   m_ObjectHideFlags: 0
