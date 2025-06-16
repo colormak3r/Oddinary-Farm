@@ -146,42 +146,44 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         TakeDamage(1, DamageType.Slash, Hostility.Neutral, null);
     }
 
-    public bool TakeDamage(uint damage, DamageType type, Hostility hostility, Transform attacker)
+    public bool TakeDamage(uint damage, DamageType type, Hostility attackerHostility, Transform attacker)
     {
-        if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {hostility}");
+        if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {attackerHostility}, from {attacker.gameObject} to {gameObject}", this);
 
-        if (Hostility == hostility && hostility != Hostility.Neutral) return false;
+        // Check if the attacker is hostile towards this entity
+        // If the attacker is neutral, it will also damage neutral entities
+        if (Hostility == attackerHostility && attackerHostility != Hostility.Neutral) return false;
 
         if (!IsSpawned) return false;
 
         if (isInvincible) return false;
 
+        // Iframe to prevent multiple damage in a short time
         if (Time.time < nextDamagable) return false;
         nextDamagable = Time.time + iframeDuration;
 
-
+        // Check if the attacker still exist before getting reference
         if (attacker.TryGetComponent(out NetworkBehaviour attackerNetworkBehaviour))
         {
             if (attackerNetworkBehaviour.IsSpawned)
             {
-                TakeDamageRpc(damage, type, attacker.gameObject);
+                TakeDamageRpc(damage, type, attackerHostility, attacker.gameObject);
             }
             else
             {
                 if (showDebugs) Debug.Log($"{attacker} is not spawned", attacker);
-                TakeDamageRpc(damage, type, default);
+                TakeDamageRpc(damage, type, attackerHostility, default);
             }
         }
-
 
         return true;
     }
 
     [Rpc(SendTo.Everyone)]
-    private void TakeDamageRpc(uint damage, DamageType type, NetworkObjectReference attackerRef)
+    private void TakeDamageRpc(uint damage, DamageType type, Hostility attackerHostility, NetworkObjectReference attackerRef)
     {
         // Notify AudioManager of potential combat event
-        if (hostility != Hostility.Neutral)
+        if (hostility != Hostility.Neutral && attackerHostility != Hostility.Absolute)
         {
             var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
 
@@ -193,6 +195,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
         if (CurrentHealthValue > damage)
         {
+            // Entity Take Damage Events
+            // Change UI 
             if (healthBarUI && damage > 0)
                 healthBarUI.SetValue(CurrentHealthValue - damage, maxHealth);
 
@@ -204,16 +208,19 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             if (damagedEffectPrefab)
                 Instantiate(damagedEffectPrefab, transform.position, Quaternion.identity);
 
+            // Only the server should handle health changes
             if (IsServer)
             {
                 CurrentHealth.Value -= damage;
                 OnEntityDamagedOnServer();
             }
 
+            // Trigger callback on all clients
             OnEntityDamagedOnClient();
         }
         else
         {
+            // Entity Death Events
             if (IsServer)
             {
                 CurrentHealth.Value = 0;
@@ -222,7 +229,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
                 OnDeathOnServer.RemoveAllListeners();
 
                 // TODO: Create virtual method that check for loot drop condition
-                // TODO: Pass attacker as prefer picker to loot generator
                 if (lootGenerator != null && type != DamageType.Water)
                 {
                     if (TryGetComponent(out Plant plant))

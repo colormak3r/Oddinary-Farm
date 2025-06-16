@@ -13,7 +13,7 @@ public class LassoProjectile : Projectile
 
         if (showDebugs) Debug.Log(collider.transform.root.name);
 
-        if (collider.transform.root.TryGetComponent<CaptureController>(out var captureController))
+        if (collider.transform.root.TryGetComponent<CaptureController>(out var captureController) && captureController.CaptureType == CaptureType.Lasso)
         {
             if (!captureController.IsLassoedValue)
             {

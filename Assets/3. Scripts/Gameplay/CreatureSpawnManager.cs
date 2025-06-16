@@ -53,6 +53,9 @@ public class CreatureSpawnManager : NetworkBehaviour
     [SerializeField]
     private bool showGizmos = false; // Show gizmos in the editor
     [SerializeField]
+    private bool isInitialized = false;
+    public bool IsInitialized => isInitialized;
+    [SerializeField]
     private int currentSafeRadius = 0;
     [SerializeField]
     private int currentSpawnRadius = 0;
@@ -70,6 +73,8 @@ public class CreatureSpawnManager : NetworkBehaviour
 
         timeManager = TimeManager.Main;
         timeManager.OnHourChanged.AddListener(OnHourChanged);
+
+        isInitialized = true;
     }
 
     public override void OnNetworkDespawn()

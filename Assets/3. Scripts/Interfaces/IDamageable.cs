@@ -16,6 +16,7 @@ public enum Hostility
     Friendly,
     Neutral,
     Hostile,
+    Absolute // Used for damage that ignores all hostility checks. Ignore combat music trigger. Use case: trap, debug, hunger stimulus, etc.
 }
 
 public interface IDamageable
