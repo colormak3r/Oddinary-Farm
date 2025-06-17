@@ -16,6 +16,7 @@ public class TutorialController : MonoBehaviour
     private float resetDelay = 1f;
 
     private AnimationBehaviour[] allBehaviours;
+    private bool isPlaying = false;
 
     private void Start()
     {
@@ -25,12 +26,14 @@ public class TutorialController : MonoBehaviour
     public void PlayAnimation()
     {
         StopAllCoroutines();
+
+        isPlaying = true;
         StartCoroutine(PlayAnimationCoroutine());
     }
 
     private IEnumerator PlayAnimationCoroutine()
     {
-        while (true)
+        while (isPlaying)
         {
             AudioManager.Main.ResetPitch();
 
@@ -58,6 +61,15 @@ public class TutorialController : MonoBehaviour
 
     public void StopAnimation()
     {
+        isPlaying = false;
         StopAllCoroutines();
+        foreach (var behaviour in allBehaviours)
+        {
+            if (behaviour != null)
+            {
+                behaviour.StopAnimation();
+                behaviour.StopAllCoroutines();
+            }
+        }
     }
 }

@@ -31,7 +31,7 @@ MonoBehaviour:
   damage: 1
   radius: 0.1
   width: 1
-  maxDuration: 1.5
+  maxDuration: 2.5
   frequency: 0.5
   hostility: 0
   chargeStartSfx: {fileID: 8300000, guid: f62e5bd6e820bfe4f826cec5586b736d, type: 3}

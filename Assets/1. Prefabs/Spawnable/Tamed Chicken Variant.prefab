@@ -186,6 +186,14 @@ PrefabInstance:
       propertyPath: hostility
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: c60dfcfba399b94469bfbd31f6a442d2, type: 3}
+    - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: damagedSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 96af78ecee562ea42b06a8127579a591, type: 3}
     - target: {fileID: 6444526639934246005, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: lootTable
       value: 
@@ -193,6 +201,10 @@ PrefabInstance:
     - target: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Name
       value: Tamed Chicken Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878487423511282838, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: CanBeDrowned.m_InternalValue
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3114174111768081107, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}

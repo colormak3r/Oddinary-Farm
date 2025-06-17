@@ -46,6 +46,16 @@ public class ShopUI : UIBehaviour
     [SerializeField]
     private Sprite unselectedSprite;
 
+    [Header("Shop Audio")]
+    [SerializeField]
+    private AudioClip openShopSound;
+    [SerializeField]
+    private AudioClip buySound;
+    [SerializeField]
+    private AudioClip sellSound;
+    [SerializeField]
+    private AudioClip errorSound;
+
     [Header("Shop UI Debugs")]
     [SerializeField]
     private bool showDebug;
@@ -62,6 +72,8 @@ public class ShopUI : UIBehaviour
         buyImage.sprite = selectedSprite;
         sellImage.sprite = unselectedSprite;
         var playerCount = NetworkManager.Singleton.ConnectedClients.Count;
+
+        AudioManager.Main.PlayOneShot(openShopSound);
 
         foreach (Transform child in contentContainer)
         {
@@ -118,14 +130,6 @@ public class ShopUI : UIBehaviour
 
         // Always default to buy mode
         ShopModeBuy();
-        /*if (shopMode == ShopMode.Buy)
-        {
-            ShopModeBuy();
-        }
-        else
-        {
-            ShopModeSell();
-        }*/
 
         StartCoroutine(ShowCoroutine());
     }
@@ -159,9 +163,13 @@ public class ShopUI : UIBehaviour
         var price = itemProperty.Price * playerCount;
         if (shopMode == ShopMode.Buy)
         {
+            // Buying items
+            AudioManager.Main.PlayOneShot(buySound);
+
             if (WalletManager.Main.LocalWallet < price)
             {
                 if (showDebug) Debug.Log($"Cannot afford {itemProperty.Name}");
+                AudioManager.Main.PlayOneShot(errorSound);
             }
             else
             {
@@ -176,6 +184,9 @@ public class ShopUI : UIBehaviour
         }
         else
         {
+            // Selling items
+            AudioManager.Main.PlayOneShot(sellSound);
+
             playerInventory.ConsumeItemOnClient(index);
             var value = (uint)Mathf.CeilToInt(price * shopInventory.PenaltyMultiplier);
             playerInventory.AddCoinsOnClient(value);

@@ -9,6 +9,9 @@ public class LaserWeapon : Item
     private float defaultPitch = 1f;
     private float pitchIncrement = 0.05f;
 
+    private bool isCharging = false;
+    public bool IsCharging => isCharging;
+
     public override void Initialize(ItemProperty baseProperty)
     {
         base.Initialize(baseProperty);
@@ -27,6 +30,7 @@ public class LaserWeapon : Item
 
         if (chargeStartTime < 0) chargeStartTime = Time.time;
         lastChargeTime = Time.time;
+        isCharging = true;
 
         if (chargeCoroutine != null) StopCoroutine(chargeCoroutine);
         chargeCoroutine = StartCoroutine(ChargeCoroutine());
@@ -94,6 +98,7 @@ public class LaserWeapon : Item
         }
 
         chargeStartTime = -1f;
+        isCharging = false;
     }
 
     public override void OnSecondaryAction(Vector2 position)
@@ -109,5 +114,6 @@ public class LaserWeapon : Item
         }
 
         chargeStartTime = -1f;
+        isCharging = false;
     }
 }

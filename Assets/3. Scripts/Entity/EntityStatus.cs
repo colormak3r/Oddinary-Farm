@@ -1,10 +1,11 @@
 using ColorMak3r.Utility;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.UIElements;
 
 public class EntityStatus : NetworkBehaviour, IDamageable
 {
@@ -39,6 +40,9 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     [HideInInspector]
     public UnityEvent OnDeathOnServer;
+    public Action<int> OnAttackerListCountChange;
+    [SerializeField]
+    private List<Transform> attackerList = new List<Transform>();
 
     protected HealthBarUI healthBarUI;
     public HealthBarUI HealthBarUI => healthBarUI;
@@ -142,32 +146,59 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         TakeDamage(1, DamageType.Slash, Hostility.Neutral, null);
     }
 
-    public bool TakeDamage(uint damage, DamageType type, Hostility hostility, Transform attacker)
+    public bool TakeDamage(uint damage, DamageType type, Hostility attackerHostility, Transform attacker)
     {
-        if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {hostility}");
+        if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {type}, hostility = {attackerHostility}, from {attacker.gameObject} to {gameObject}", this);
 
-        if (Hostility == hostility && hostility != Hostility.Neutral) return false;
+        // Check if the attacker is hostile towards this entity
+        // If the attacker is neutral, it will also damage neutral entities
+        if (Hostility == attackerHostility && attackerHostility != Hostility.Neutral) return false;
 
         if (!IsSpawned) return false;
 
         if (isInvincible) return false;
 
+        // Iframe to prevent multiple damage in a short time
         if (Time.time < nextDamagable) return false;
         nextDamagable = Time.time + iframeDuration;
 
-        TakeDamageRpc(damage, type, attacker.gameObject);
+        // Check if the attacker still exist before getting reference
+        if (attacker.TryGetComponent(out NetworkBehaviour attackerNetworkBehaviour))
+        {
+            if (attackerNetworkBehaviour.IsSpawned)
+            {
+                TakeDamageRpc(damage, type, attackerHostility, attacker.gameObject);
+            }
+            else
+            {
+                if (showDebugs) Debug.Log($"{attacker} is not spawned", attacker);
+                TakeDamageRpc(damage, type, attackerHostility, default);
+            }
+        }
 
         return true;
     }
 
     [Rpc(SendTo.Everyone)]
-    private void TakeDamageRpc(uint damage, DamageType type, NetworkObjectReference attackerRef)
+    private void TakeDamageRpc(uint damage, DamageType type, Hostility attackerHostility, NetworkObjectReference attackerRef)
     {
+        // Notify AudioManager of potential combat event
+        if (hostility != Hostility.Neutral && attackerHostility != Hostility.Absolute)
+        {
+            var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+
+            if (playerObject != null && Vector2.Distance(playerObject.transform.position, transform.position) < AudioManager.Main.CombatMusicRange)
+            {
+                AudioManager.Main.TriggerCombatMusic();
+            }
+        }
+
         if (CurrentHealthValue > damage)
         {
+            // Entity Take Damage Events
+            // Change UI 
             if (healthBarUI && damage > 0)
                 healthBarUI.SetValue(CurrentHealthValue - damage, maxHealth);
-
 
             // Damaged sound
             if (audioElement)
@@ -177,16 +208,19 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             if (damagedEffectPrefab)
                 Instantiate(damagedEffectPrefab, transform.position, Quaternion.identity);
 
+            // Only the server should handle health changes
             if (IsServer)
             {
                 CurrentHealth.Value -= damage;
                 OnEntityDamagedOnServer();
             }
 
+            // Trigger callback on all clients
             OnEntityDamagedOnClient();
         }
         else
         {
+            // Entity Death Events
             if (IsServer)
             {
                 CurrentHealth.Value = 0;
@@ -195,7 +229,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
                 OnDeathOnServer.RemoveAllListeners();
 
                 // TODO: Create virtual method that check for loot drop condition
-                // TODO: Pass attacker as prefer picker to loot generator
                 if (lootGenerator != null && type != DamageType.Water)
                 {
                     if (TryGetComponent(out Plant plant))
@@ -242,22 +275,24 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntityDeathOnClient()
     {
+        SpawnDeathPrefab();
+
         StartCoroutine(DeathOnClientCoroutine());
+    }
+
+    protected virtual void SpawnDeathPrefab()
+    {
+        if (deathEffectPrefab != null)
+        {
+            var damageObj = Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+            var audioElement = damageObj.GetComponent<AudioElement>();
+            if (audioElement && deathSound) audioElement.PlayOneShot(deathSound);
+        }
     }
 
     protected virtual IEnumerator DeathOnClientCoroutine()
     {
-        Coroutine audioCoroutine = null;
         Coroutine effectCoroutine = null;
-
-        if (audioElement)
-        {
-            audioElement.PlayOneShot(deathSound);
-            audioCoroutine = StartCoroutine(MiscUtility.WaitCoroutine(deathSound.length));
-        }
-
-        if (deathEffectPrefab != null)
-            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
 
         // Disable all physics
         if (rbody) rbody.linearVelocity = Vector2.zero;
@@ -266,7 +301,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         effectCoroutine = StartCoroutine(transform.PopCoroutine(1, 0, 0.25f));
 
         yield return effectCoroutine;
-        yield return audioCoroutine;
 
         Destroy(gameObject);
     }

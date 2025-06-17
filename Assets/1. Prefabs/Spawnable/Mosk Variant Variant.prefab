@@ -80,9 +80,17 @@ PrefabInstance:
       propertyPath: maxHealth
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5062778191627551025, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: be0c405f8c4cd664f8096a921211f06d, type: 3}
     - target: {fileID: 5217574162761703751, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: guardRadius
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6325684406526954248, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: Priority
+      value: 128
       objectReference: {fileID: 0}
     - target: {fileID: 6718941118838070681, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_SortingOrder

@@ -443,7 +443,13 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     public void OnPrimary(InputAction.CallbackContext context)
     {
-        if (!isControllable || isPointerOverUI || currentItem == null) return;
+        if (!isControllable || currentItem == null) return;
+
+        if (isPointerOverUI)
+        {
+            // When the gun is charged, the player can still shoot if UI is in the way
+            if (currentItem is not LaserWeapon laserWeapon || !laserWeapon.IsCharging) return;
+        }
 
         if (context.started)
         {
@@ -768,6 +774,9 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             else
                 lassoController.SetLassoState(LassoState.Hidden);
         }
+
+        // Prevent changing hotbar index when laser weapon is charging
+        if (currentItem is LaserWeapon laserWeapon && laserWeapon.IsCharging) return;
 
         // Play sound effect
         AudioManager.Main.PlaySoundEffect(SoundEffect.UIHover);

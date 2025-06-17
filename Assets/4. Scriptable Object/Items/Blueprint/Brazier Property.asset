@@ -22,10 +22,15 @@ MonoBehaviour:
   range: 10
   primaryCdr: 0.25
   secondaryCdr: 0.25
+  itemContext: 'LMB: Place
+
+    RMB: Remove
+
+    X  : Drop'
   pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
   selectSound: {fileID: 0}
-  primarySound: {fileID: 0}
-  secondarySound: {fileID: 0}
+  primarySound: {fileID: 8300000, guid: 9fb1b755bafa7744f8e21ba3bfd68a2a, type: 3}
+  secondarySound: {fileID: 8300000, guid: 3cb88b7cf1c2b814eab9c65eeb22b8eb, type: 3}
   alternativeSound: {fileID: 0}
   size: {x: 1, y: 1}
   terrainLayer:

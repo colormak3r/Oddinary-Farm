@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 3458568397082104985}
   - component: {fileID: 8968559354677375507}
   - component: {fileID: 8725120439007353097}
+  - component: {fileID: 3284280419715406304}
   m_Layer: 10
   m_Name: General Shop
   m_TagString: Untagged
@@ -253,6 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b0ed2bb8d311ad4bb375f5f0ccc52de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canBeSelected: 1
   offset: {x: 0, y: 1.5}
   size: {x: 3, y: 4}
 --- !u!114 &8968559354677375507
@@ -292,6 +294,20 @@ MonoBehaviour:
   elevation: 0
   previousWaterLevel: 0
   previousDepth: 0
+--- !u!114 &3284280419715406304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4286882051922282244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f527d404a7e0a640bd070de1353edb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  color: {r: 0.3019608, g: 0.39607847, b: 0.7058824, a: 1}
 --- !u!1 &7479066920920115073
 GameObject:
   m_ObjectHideFlags: 0

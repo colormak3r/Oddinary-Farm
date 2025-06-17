@@ -186,7 +186,6 @@ GameObject:
   - component: {fileID: 1745390494722101591}
   - component: {fileID: -1350741837255328079}
   - component: {fileID: -4209537825161131759}
-  - component: {fileID: 4144789532550474485}
   - component: {fileID: 4138184307597425321}
   - component: {fileID: 1701917104167263387}
   - component: {fileID: 8183907551932009680}
@@ -301,18 +300,6 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
---- !u!210 &4144789532550474485
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5937313573806529732}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_SortAtRoot: 0
 --- !u!50 &4138184307597425321
 Rigidbody2D:
   serializedVersion: 5

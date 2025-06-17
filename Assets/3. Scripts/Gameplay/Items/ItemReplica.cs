@@ -229,8 +229,8 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     public void IgnorePickerOnServer(Transform ignore)
     {
         ignorePicker = ignore;
-        if (ignoreCoroutine != null) StopCoroutine(ignoreCoroutine);
-        ignoreCoroutine = StartCoroutine(IgnorePickerCoroutine());
+        /*if (ignoreCoroutine != null) StopCoroutine(ignoreCoroutine);
+        ignoreCoroutine = StartCoroutine(IgnorePickerCoroutine());*/
     }
 
     private IEnumerator IgnorePickerCoroutine()
@@ -242,12 +242,23 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     private GameObject ScanForPlayer()
     {
         var hits = Physics2D.OverlapCircleAll(transform.position, pickupRadius, playerLayer);
-        if (hits.Length == 0) return null;
+        if (hits.Length == 0)
+        {
+            ignorePicker = null;
+            return null;
+        }
+
         float closetDistance = float.MaxValue;
         int closestIndex = -1;
+        bool foundIgnorePicker = false;
+
         for (int i = 0; i < hits.Length; i++)
         {
-            if (hits[i].transform == ignorePicker) continue;
+            if (hits[i].transform == ignorePicker)
+            {
+                foundIgnorePicker = true;
+                continue;
+            }
 
             var distance = Vector2.Distance(hits[i].transform.position, transform.position);
             if (distance < closetDistance)
@@ -255,6 +266,11 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
                 closetDistance = distance;
                 closestIndex = i;
             }
+        }
+
+        if (!foundIgnorePicker)
+        {
+            ignorePicker = null;
         }
 
         if (closestIndex == -1) return null;

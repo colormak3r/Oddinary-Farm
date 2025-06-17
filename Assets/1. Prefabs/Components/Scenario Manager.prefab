@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 2978218675
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 3717092696
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -73,9 +73,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   currentScenario: 0
-  cornFarmDemoPreset: {fileID: 0}
+  cornFarmDemoPreset: {fileID: 11400000, guid: cda550f3e26fbeb4b81dd144dcc68d69, type: 2}
   midSizeFarmDemoPreset: {fileID: 11400000, guid: 0c9d18ab2afe89d4f91ee4f36163fd91, type: 2}
   chickenFarmDemoPreset: {fileID: 11400000, guid: 2ade236206abd0a4191350db59650f67, type: 2}
+  defenseDemoPreset: {fileID: 11400000, guid: fb992e44b7115764882bd12def1e7bd5, type: 2}
+  overrideSettings: 0
+  canSpawnEnemies: 0
+  canSpawnResources: 0
+  realMinutesPerInGameDay: 10
+  dayOffset: 1
+  hourOffset: 19
+  minuteOffset: 30
   woodenFence: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
   cornSeed: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
 --- !u!114 &4705413433818748291
@@ -94,6 +102,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0.5}
   muzzleTransform: {fileID: 0}
   muzzleFlash: {fileID: 0}
+  recoilTransform: {fileID: 0}
   recordPlantSpawns: 0
   recordFarmPlotSpawns: 0
   recordStructureSpawns: 0

@@ -215,7 +215,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     public void DropItem(int index)
     {
-        if (inventory[index].IsEmpty) return;
+        if (inventory[index].IsEmpty || index == 0) return;
 
         var property = inventory[index].Property;
         ConsumeItemOnClient(index);

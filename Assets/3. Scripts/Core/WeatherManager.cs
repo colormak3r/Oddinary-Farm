@@ -1,10 +1,149 @@
 using System.Collections.Generic;
-using System.Text;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
-using static UnityEngine.Rendering.DebugUI;
+
+[System.Serializable]
+public struct WeatherData
+{
+    public bool IsThunderStorm;
+    public MinMaxInt RainDuration;
+}
+
+public class WeatherManager : NetworkBehaviour
+{
+    public static WeatherManager Main;
+
+    private void Awake()
+    {
+        if (Main == null)
+            Main = this;
+        else
+            Destroy(gameObject);
+    }
+
+    [Header("Light Settings")]
+    [SerializeField]
+    private Light2D sunlightLight;
+    [SerializeField]
+    private Gradient dryLightColor;
+    [SerializeField]
+    private Gradient rainLightColor;
+    [SerializeField]
+    private float transitionSpeed = 1f;
+
+    [Header("Rain Settings")]
+    [SerializeField]
+    private ParticleSystem rainParticleSystem;
+    [SerializeField]
+    private WeatherData[] weatherDataArray;
+
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showDebugs;
+    [SerializeField]
+    private bool isInitialized = false;
+    public bool IsInitialized => isInitialized;
+    [SerializeField]
+    private bool isRainning = false;
+    public bool IsRainning => isRainning;
+    private bool isRainning_cached = false;
+
+    private bool forcedRain = false;
+
+    [HideInInspector]
+    public UnityEvent OnRainStarted;
+    [HideInInspector]
+    public UnityEvent OnRainStopped;
+
+    private TimeManager timeManager;
+
+    private void OnEnable()
+    {
+        TimeManager.Main.OnHourChanged.AddListener(UpdateRainValue);
+    }
+
+    private void OnDisable()
+    {
+        TimeManager.Main.OnHourChanged.RemoveListener(UpdateRainValue);
+    }
+    private void Update()
+    {
+        if (!isInitialized) return;
+
+        UpdateGlobalLight();
+    }
+
+    public void Initialize(TimeManager timeManager)
+    {
+        this.timeManager = timeManager;
+
+        isInitialized = true;
+    }
+
+    private void UpdateGlobalLight()
+    {
+        var timeRatio = (timeManager.CurrentTimeSpan.Minutes + timeManager.CurrentTimeSpan.Hours * 60) / (float)TimeManager.MINUTES_A_DAY;
+        if (isRainning)
+            sunlightLight.color = Color.Lerp(sunlightLight.color, rainLightColor.Evaluate(timeRatio), Time.deltaTime * transitionSpeed);
+        else
+            sunlightLight.color = Color.Lerp(sunlightLight.color, dryLightColor.Evaluate(timeRatio), Time.deltaTime * transitionSpeed);
+    }
+
+    private void UpdateRainValue(int currentHour)
+    {
+        if (!isInitialized) return;
+
+        // Update current weather based on the new current hour
+        var weatherData = weatherDataArray[TimeManager.Main.CurrentDate - 1];
+        isRainning = (currentHour >= weatherData.RainDuration.min && currentHour < weatherData.RainDuration.max) || forcedRain;
+        if (showDebugs) Debug.Log($"Hour =  {currentHour}, isRainning = {isRainning}");
+
+        if (isRainning != isRainning_cached)
+        {
+            isRainning_cached = isRainning;
+            if (isRainning)
+            {
+                OnRainStarted?.Invoke();
+                rainParticleSystem.Play();
+            }
+            else
+            {
+                OnRainStopped?.Invoke();
+                rainParticleSystem?.Stop();
+            }
+        }
+    }
+
+    #region Utility
+
+    public void ForcedRain(bool value)
+    {
+        forcedRain = value;
+        UpdateRainValue(TimeManager.Main.CurrentHour);
+    }
+
+    [ContextMenu("Forced Rain On")]
+    private void ForcedRainOn()
+    {
+        ForcedRain(true);
+    }
+
+    [ContextMenu("Forced Rain Off")]
+    private void ForcedRainOff()
+    {
+        ForcedRain(false);
+    }
+
+    #endregion
+}
+
+/*using System.Collections.Generic;
+using Unity.Netcode;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.Rendering.Universal;
 
 public class WeatherManager : NetworkBehaviour
 {
@@ -230,6 +369,7 @@ public class WeatherManager : NetworkBehaviour
             }
         }
     }
-}
+}*/
+
 
 

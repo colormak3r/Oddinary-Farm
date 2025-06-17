@@ -10,18 +10,39 @@ public class AudioElement : MonoBehaviour
     [Header("Audio Settings")]
     [SerializeField]
     private AudioClip[] soundEffects;
+    [SerializeField]
+    private bool ignoreWarnings = false;
 
     private AudioSource audioSource;
+
+    private bool isInitialized;
 
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
+        if (audioSource.rolloffMode != AudioRolloffMode.Linear && !ignoreWarnings)
+        {
+            Debug.LogWarning($"{gameObject} audioSource rolloff mode is not set to Linear. This may cause unexpected audio behavior.", this);
+        }
+        if (audioSource.spatialBlend != 1 && !ignoreWarnings)
+        {
+            Debug.LogWarning($"{gameObject} audioSource spatial blend is not set to 3D. This may cause unexpected audio behavior.", this);
+        }
+        if (audioSource.minDistance != 10 && !ignoreWarnings)
+        {
+            Debug.LogWarning($"{gameObject} audioSource minDistance is not 10. This may cause unexpected audio behavior.", this);
+        }
+        if (audioSource.maxDistance != 25 && !ignoreWarnings)
+        {
+            Debug.LogWarning($"{gameObject} audioSource maxDistance is not 25. This may cause unexpected audio behavior.", this);
+        }
     }
 
     private void Start()
     {
         AudioManager.Main.OnSfxVolumeChange.AddListener(HandleSfxVolumeChange);
         HandleSfxVolumeChange(AudioManager.Main.SfxVolume);
+        isInitialized = true;
     }
 
     private void OnDestroy()
@@ -40,6 +61,7 @@ public class AudioElement : MonoBehaviour
         if (clip != null)
         {
             if (randomPitch) audioSource.pitch = UnityEngine.Random.Range(0.8f, 1.2f);
+            if (!isInitialized) HandleSfxVolumeChange(AudioManager.Main.SfxVolume);
             audioSource.PlayOneShot(clip);
         }
     }

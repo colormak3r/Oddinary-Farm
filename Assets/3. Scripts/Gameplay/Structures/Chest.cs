@@ -19,14 +19,26 @@ public class Chest : NetworkBehaviour, IInteractable
     [SerializeField]
     private Sprite emptySprite;
     [SerializeField]
+    private AudioClip openSound;
+    [SerializeField]
+    private AudioClip collectSound;
+    [SerializeField]
     private SpriteRenderer spriteRenderer;
 
     private NetworkVariable<ChestState> CurrentState = new NetworkVariable<ChestState>(global::ChestState.Unopened);
     public ChestState CurrentStateValue => CurrentState.Value;
 
+    private AudioElement audioElement;
+
+    private void Awake()
+    {
+        audioElement = GetComponent<AudioElement>();
+    }
+
     public override void OnNetworkSpawn()
     {
         CurrentState.OnValueChanged += OnChestStateChanged;
+        OnChestStateChanged(ChestState.Unopened, CurrentStateValue);
     }
 
     public override void OnNetworkDespawn()
@@ -43,9 +55,11 @@ public class Chest : NetworkBehaviour, IInteractable
                 break;
             case ChestState.Opened:
                 spriteRenderer.sprite = openedSprite;
+                audioElement.PlayOneShot(openSound);
                 break;
             case ChestState.Empty:
                 spriteRenderer.sprite = emptySprite;
+                audioElement.PlayOneShot(collectSound);
                 GetComponent<SelectorModifier>().SetCanBeSelected(false);
                 break;
         }

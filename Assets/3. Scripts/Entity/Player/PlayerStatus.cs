@@ -1,5 +1,6 @@
 using ColorMak3r.Utility;
 using Steamworks;
+using System;
 using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
@@ -71,16 +72,9 @@ public class PlayerStatus : EntityStatus
 
     protected override IEnumerator DeathOnClientCoroutine()
     {
-        Coroutine audioCoroutine = null;
         Coroutine effectCoroutine = null;
-        if (audioElement)
-        {
-            audioElement.PlayOneShot(deathSound);
-            audioCoroutine = StartCoroutine(MiscUtility.WaitCoroutine(deathSound.length));
-        }
 
-        if (deathEffectPrefab != null)
-            Instantiate(deathEffectPrefab, transform.position, Quaternion.identity);
+        SpawnDeathPrefab();
 
         // Disable all physics
         rbody.linearVelocity = Vector2.zero;
@@ -102,7 +96,6 @@ public class PlayerStatus : EntityStatus
         }
 
         yield return effectCoroutine;
-        yield return audioCoroutine;
 
         // Disable all renderers
         //foreach (var renderer in renderers) renderer.enabled = false;

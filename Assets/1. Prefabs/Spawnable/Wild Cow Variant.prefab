@@ -575,6 +575,14 @@ PrefabInstance:
       propertyPath: maxHealth
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 608f533931f80ee4487fe871594a3cc8, type: 3}
+    - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: damagedSound
+      value: 
+      objectReference: {fileID: 8300000, guid: a798b27ea3a7761498d3904917668a8a, type: 3}
     - target: {fileID: 6444526639934246005, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: lootTable
       value: 
@@ -594,6 +602,10 @@ PrefabInstance:
     - target: {fileID: 8870924125776796283, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_Offset.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8878487423511282838, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: CanBeDrowned.m_InternalValue
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1713903147799318877, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}

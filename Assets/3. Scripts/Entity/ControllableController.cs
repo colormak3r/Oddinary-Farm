@@ -12,6 +12,7 @@ public class ControllableController : NetworkBehaviour
     private bool isAppearanceUIVisible;
     private bool isGameplayUIVisible;
     private bool isUpgradeUIVisible;
+    private bool isTutorialUIVisible;
 
     private void Awake()
     {
@@ -25,8 +26,9 @@ public class ControllableController : NetworkBehaviour
             ShopUI.Main.OnVisibilityChanged.AddListener(OnShopUIVisibilityChanged);
             OptionsUI.Main.OnVisibilityChanged.AddListener(OnOptionsUIVisibilityChanged);
             AudioUI.Main.OnVisibilityChanged.AddListener(OnAudioUIVisibilityChanged);
-            AppearanceUI.Main.OnVisibilityChanged.AddListener(OnAppearanceUIVisibilityChanged);
+            //AppearanceUI.Main.OnVisibilityChanged.AddListener(OnAppearanceUIVisibilityChanged);
             UpgradeUI.Main.OnVisibilityChanged.AddListener(OnUpgradeUIVisibilityChanged);
+            TutorialUI.Main.OnVisibilityChanged.AddListener(OnTutorialUIVisibilityChanged);
         }
     }
 
@@ -38,8 +40,9 @@ public class ControllableController : NetworkBehaviour
             ShopUI.Main.OnVisibilityChanged.RemoveListener(OnShopUIVisibilityChanged);
             OptionsUI.Main.OnVisibilityChanged.RemoveListener(OnOptionsUIVisibilityChanged);
             AudioUI.Main.OnVisibilityChanged.RemoveListener(OnAudioUIVisibilityChanged);
-            AppearanceUI.Main.OnVisibilityChanged.RemoveListener(OnAppearanceUIVisibilityChanged);
+            //AppearanceUI.Main.OnVisibilityChanged.RemoveListener(OnAppearanceUIVisibilityChanged);
             UpgradeUI.Main.OnVisibilityChanged.RemoveListener(OnUpgradeUIVisibilityChanged);
+            TutorialUI.Main.OnVisibilityChanged.RemoveListener(OnTutorialUIVisibilityChanged);
         }
     }
 
@@ -73,10 +76,17 @@ public class ControllableController : NetworkBehaviour
         Evaluate();
     }
 
+    private void OnTutorialUIVisibilityChanged(bool isShowing)
+    {
+        isTutorialUIVisible = isShowing;
+        Evaluate();
+    }
+
     private void Evaluate()
     {
         bool controllable = !isShopUIVisible && !isOptionsUIVisible
-            && !isAudioUIVisible && !isAppearanceUIVisible && !isUpgradeUIVisible;
+            && !isAudioUIVisible && !isAppearanceUIVisible && !isUpgradeUIVisible
+            && !isTutorialUIVisible;
 
         foreach (var controllableItem in controllables)
         {

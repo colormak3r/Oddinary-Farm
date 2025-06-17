@@ -49,6 +49,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   transitionDuration: 0.5
+  combatMusicRange: 20
+  combatMusicDuration: 5
   bgmAudioSource: {fileID: 7274749114494245808}
   sfxAudioSource: {fileID: 5300539599679627233}
   abmAudioSource: {fileID: 4038575026899039811}
@@ -56,12 +58,22 @@ MonoBehaviour:
   uiClickSfx: {fileID: 8300000, guid: c7e7238f161c0ce46a2d0e7394da7732, type: 3}
   uiHoverSfx: {fileID: 8300000, guid: a36ee6fc858e46048b3481d8c6ac227c, type: 3}
   uiErrorSfx: {fileID: 8300000, guid: ec8a041c0f362c5468c6b5072a0866fd, type: 3}
-  mainMenuMusic: {fileID: 8300000, guid: e9698595bbc55c643aabacb8f54118e4, type: 3}
-  mainGameMusic: {fileID: 8300000, guid: e9698595bbc55c643aabacb8f54118e4, type: 3}
-  dayClip: {fileID: 8300000, guid: 0d644ebcad18ebd4a878aa5d50e9a32e, type: 3}
-  nightClip: {fileID: 8300000, guid: 8b05ef3ff52690249b49434d3f22635e, type: 3}
-  rainClip: {fileID: 8300000, guid: ae2e0b534c4656d478a7ff7f4525733c, type: 3}
+  menuMusic: {fileID: 8300000, guid: 9a776ed4a26233e48b03c56ea6c66c37, type: 3}
+  grasslandDayMusic: {fileID: 8300000, guid: 9a776ed4a26233e48b03c56ea6c66c37, type: 3}
+  grasslandNightMusic: {fileID: 8300000, guid: 7392528d026e99e48844b0749e8ea4b7, type: 3}
+  oceanDayMusic: {fileID: 8300000, guid: 9a776ed4a26233e48b03c56ea6c66c37, type: 3}
+  oceanNightMusic: {fileID: 8300000, guid: 7392528d026e99e48844b0749e8ea4b7, type: 3}
+  rainDayMusic: {fileID: 8300000, guid: 9a776ed4a26233e48b03c56ea6c66c37, type: 3}
+  rainNightMusic: {fileID: 8300000, guid: 7392528d026e99e48844b0749e8ea4b7, type: 3}
+  combatMusic: {fileID: 8300000, guid: 4631cdd66f8634c49b22e56c5a2c8124, type: 3}
+  grasslandDayAmbient: {fileID: 8300000, guid: 23a6fccbad23aaf40b11a109d2b7dfdc, type: 3}
+  grasslandNightAmbient: {fileID: 8300000, guid: bd1a5d188e336b3449c71c4b74a7e097, type: 3}
+  oceanDayAmbient: {fileID: 8300000, guid: 3de3469a0478e9b43990470ee2b855ea, type: 3}
+  oceanNightAmbient: {fileID: 8300000, guid: 3de3469a0478e9b43990470ee2b855ea, type: 3}
+  rainDayAmbient: {fileID: 8300000, guid: 6923c5ccc5d40854586d2c3b3d2fa729, type: 3}
+  rainNightAmbient: {fileID: 8300000, guid: 6923c5ccc5d40854586d2c3b3d2fa729, type: 3}
   showDebugs: 0
+  isInCombat: 0
   OnSfxVolumeChange:
     m_PersistentCalls:
       m_Calls: []

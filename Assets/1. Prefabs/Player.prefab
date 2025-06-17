@@ -725,13 +725,14 @@ MonoBehaviour:
   damagedEffectPrefab: {fileID: 2083952450802541041, guid: 6e1d734580f48ba4bb197387df8b1920, type: 3}
   deathEffectPrefab: {fileID: 3380964621595077600, guid: b46a9319c9fc1e04ab28e16ec8f3db02, type: 3}
   damagedSound: {fileID: 8300000, guid: 20a7d71691b827846a2db73d37f293ba, type: 3}
-  deathSound: {fileID: 8300000, guid: 67c6fdff6c0b6b94ba316fcfa79f9e3d, type: 3}
+  deathSound: {fileID: 8300000, guid: da81908babf34694799320bd1135404c, type: 3}
   showDebugs: 0
   CurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
     m_PersistentCalls:
       m_Calls: []
+  attackerList: []
   respawnPoint: {fileID: 0}
   playerHitbox: {fileID: 4434417828680881472}
   playerNameUI: {fileID: 8509437197401579281}
@@ -895,7 +896,7 @@ MonoBehaviour:
   recordPlantSpawns: 0
   recordFarmPlotSpawns: 0
   recordStructureSpawns: 0
-  assetSpawnPreset: {fileID: 11400000, guid: 2ade236206abd0a4191350db59650f67, type: 2}
+  assetSpawnPreset: {fileID: 11400000, guid: fb992e44b7115764882bd12def1e7bd5, type: 2}
   showDebugs: 0
 --- !u!114 &9034817965285367963
 MonoBehaviour:
@@ -1473,8 +1474,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Player
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: fafcb1032b8432441b1f22c0b3cae56a, type: 2}
-  m_sharedMaterial: {fileID: -948151912980856712, guid: fafcb1032b8432441b1f22c0b3cae56a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 3eda289793ca8364a8e88b619b445e62, type: 2}
+  m_sharedMaterial: {fileID: 5257020145753852032, guid: 3eda289793ca8364a8e88b619b445e62, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1506,7 +1507,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0

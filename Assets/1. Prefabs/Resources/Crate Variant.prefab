@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -1362058913294850930, guid: 024a33bd637c9df4f956ac587863e322, type: 3}
+    - target: {fileID: 3792849900436727924, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
+      propertyPath: deathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6daade3a6970eb54fbfe49ca74bba5ec, type: 3}
     - target: {fileID: 3988594065566451194, guid: fc0f998c59f708f45b9d55d2cb6b1e75, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 260159453

@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -2377735727823366626, guid: 6e953f30850c9c04db9e498980988bab, type: 3}
+    - target: {fileID: 4670239931597515383, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: Priority
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: hostility
       value: 0
@@ -215,8 +219,6 @@ MonoBehaviour:
   graphicTransform: {fileID: 6503449066055046542}
   spriteFacingRight: 0
   roamRadius: 5
-  isCaptureable: 0
-  captureItemProperty: {fileID: 0}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:

@@ -33,16 +33,6 @@ public class Blueprint : Spawner
     public override void OnSecondaryAction(Vector2 position)
     {
         base.OnSecondaryAction(position);
-        RemoveStructureOnServer(position);
-    }
-
-    private void RemoveStructureOnServer(Vector2 position)
-    {
-        var structureHit = Physics2D.OverlapPoint(position, LayerManager.StructureLayer);
-        if (structureHit && structureHit.TryGetComponent(out Structure structure))
-        {
-            structure.RemoveStructure();
-            Previewer.Main.Show(false);
-        }
+        ItemSystem.RemoveStructure(position, LayerManager.Main.StructureLayer);
     }
 }

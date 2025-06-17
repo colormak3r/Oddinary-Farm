@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.Splines.SplineInstantiate;
 
 public class CreatureSpawnManager : NetworkBehaviour
 {
@@ -39,13 +37,24 @@ public class CreatureSpawnManager : NetworkBehaviour
     [SerializeField]
     private LayerMask spawnBlockLayer;
 
-    [Header("Testing")]
+    [Header("Wave Testing")]
     [SerializeField]
     private CreatureWave testCreatureWave;
+
+    [Header("Spawn Testing")]
+    [SerializeField]
+    private GameObject prefab;
+    [SerializeField]
+    private float testSpawnDelay = 0.5f;
+    [SerializeField]
+    private Vector2 spawnPosition = Vector2.zero;
 
     [Header("Debugs")]
     [SerializeField]
     private bool showGizmos = false; // Show gizmos in the editor
+    [SerializeField]
+    private bool isInitialized = false;
+    public bool IsInitialized => isInitialized;
     [SerializeField]
     private int currentSafeRadius = 0;
     [SerializeField]
@@ -64,6 +73,8 @@ public class CreatureSpawnManager : NetworkBehaviour
 
         timeManager = TimeManager.Main;
         timeManager.OnHourChanged.AddListener(OnHourChanged);
+
+        isInitialized = true;
     }
 
     public override void OnNetworkDespawn()
@@ -187,6 +198,37 @@ public class CreatureSpawnManager : NetworkBehaviour
     {
         SpawnWaveOnServer(testCreatureWave, position, safeRadius, spawnRadius);
     }
+
+    #region Spawn Testing
+
+    private bool isSpawningTestCreature = false;
+
+    [ContextMenu("Spawn Test Creature")]
+    private void SpawnTestCreature()
+    {
+        if (!IsServer) return;
+
+        isSpawningTestCreature = !isSpawningTestCreature;
+
+        if (isSpawningTestCreature)
+            StartCoroutine(SpawnTestCreatureCoroutine());
+        else
+            StopCoroutine(SpawnTestCreatureCoroutine());
+    }
+
+    private IEnumerator SpawnTestCreatureCoroutine()
+    {
+        while (isSpawningTestCreature)
+        {
+            var creature = Instantiate(prefab, spawnPosition, Quaternion.identity);
+            creature.GetComponent<NetworkObject>().Spawn();
+
+            yield return new WaitForSeconds(testSpawnDelay);
+        }
+    }
+
+    #endregion
+
 
     private void OnDrawGizmos()
     {

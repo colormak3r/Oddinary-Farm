@@ -1,9 +1,12 @@
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
 public class CreatureSpawner : NetworkBehaviour
 {
     [Header("Spawner Settings")]
+    [SerializeField]
+    private bool canSpawn = true;
     [SerializeField]
     private CreatureWave creatureWave;
     [SerializeField]
@@ -17,7 +20,13 @@ public class CreatureSpawner : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer) SpawnWave();
+        if (IsServer && canSpawn) StartCoroutine(SpawnWaveCoroutine());
+    }
+
+    private IEnumerator SpawnWaveCoroutine()
+    {
+        yield return new WaitUntil(() => CreatureSpawnManager.Main.IsInitialized);
+        SpawnWave();
     }
 
     [ContextMenu("Spawn Wave")]
