@@ -38,6 +38,7 @@ public class UIButtonAnimations : MonoBehaviour, IPointerEnterHandler, IPointerE
     [SerializeField] private Vector3 originalRotation = Vector3.zero;
     
     private Coroutine currentAnimation;
+    private bool isHovered = false;
 
     private void Awake()
     {
@@ -53,14 +54,42 @@ public class UIButtonAnimations : MonoBehaviour, IPointerEnterHandler, IPointerE
             originalRotation = targetTransform.localEulerAngles;
         }
     }
+
+    private void OnEnable()
+    {
+        ResetToOriginalState();
+    }
+
+    private void OnDisable()
+    {
+        isHovered = false;
+    }
+
+    public void ResetToOriginalState()
+    {
+        isHovered = false;
+        AnimateToState(originalColor, originalTextColor, originalScale, originalRotation, animationDuration);
+    }
+
+    private void OnCanvasGroupChanged()
+    {
+        if (!gameObject.activeInHierarchy)
+        {
+            isHovered = false;
+        }
+    }
     
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (isHovered) return;
+        isHovered = true;
         AnimateToState(hoverColor, hoverTextColor, hoverScale, hoverRotation, animationDuration);
     }
     
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (!isHovered) return;
+        isHovered = false;
         AnimateToState(originalColor, originalTextColor, originalScale, originalRotation, animationDuration);
     }
     
