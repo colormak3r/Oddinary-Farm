@@ -102,7 +102,7 @@ public class HungerStimulus : NetworkBehaviour
 
         if (isHungry && Time.time > nextDeath)
         {
-            GetComponent<EntityStatus>().TakeDamage(100, DamageType.Blunt, Hostility.Neutral, transform);
+            GetComponent<EntityStatus>().TakeDamage(100, DamageType.Blunt, Hostility.Absolute, transform);
         }
 
         if (isHungry && targetFood == null)

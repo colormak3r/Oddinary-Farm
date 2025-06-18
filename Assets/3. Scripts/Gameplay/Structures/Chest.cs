@@ -38,6 +38,7 @@ public class Chest : NetworkBehaviour, IInteractable
     public override void OnNetworkSpawn()
     {
         CurrentState.OnValueChanged += OnChestStateChanged;
+        OnChestStateChanged(ChestState.Unopened, CurrentStateValue);
     }
 
     public override void OnNetworkDespawn()

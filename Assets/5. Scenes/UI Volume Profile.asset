@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   skipIterations:
     m_OverrideState: 0
     m_Value: 1
@@ -86,10 +86,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   components:
   - {fileID: 706813328748585299}
-  - {fileID: -8000352670147331206}
   - {fileID: 2944655874801303097}
   - {fileID: 1048417300614681829}
   - {fileID: -1932752614357714246}
+  - {fileID: -8000352670147331206}
 --- !u!114 &706813328748585299
 MonoBehaviour:
   m_ObjectHideFlags: 3

@@ -29,6 +29,22 @@ public class ScenarioManager : NetworkBehaviour
     [SerializeField]
     private AssetSpawnPreset defenseDemoPreset;
 
+    [Header("Temporary Settings")]
+    [SerializeField]
+    private bool overrideSettings = false;
+    [SerializeField]
+    private bool canSpawnEnemies = false;
+    [SerializeField]
+    private bool canSpawnResources = false;
+    [SerializeField]
+    private float realMinutesPerInGameDay = 10f;
+    [SerializeField]
+    private int dayOffset = 1;
+    [SerializeField]
+    private int hourOffset = 19;
+    [SerializeField]
+    private int minuteOffset = 50;
+
     [Header("Settings")]
     [SerializeField]
     private BlueprintProperty woodenFence;
@@ -56,6 +72,26 @@ public class ScenarioManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+    }
+
+    protected override void OnNetworkPostSpawn()
+    {
+        if (IsServer & overrideSettings)
+        {
+            StartCoroutine(InitializeCoroutine());
+        }
+    }
+
+    private IEnumerator InitializeCoroutine()
+    {
+        WorldGenerator.Main.SetCanSpawnResources(canSpawnResources);
+
+        yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
+        TimeManager.Main.SetRealMinutesPerDay(realMinutesPerInGameDay);
+        TimeManager.Main.SetTimeOffset(dayOffset, hourOffset, minuteOffset);
+
+        yield return new WaitUntil(() => CreatureSpawnManager.Main.IsInitialized);
+        CreatureSpawnManager.Main.SetCanSpawn(canSpawnEnemies);
     }
 
     public override void OnNetworkDespawn()

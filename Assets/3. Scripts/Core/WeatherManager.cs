@@ -50,6 +50,8 @@ public class WeatherManager : NetworkBehaviour
     public bool IsRainning => isRainning;
     private bool isRainning_cached = false;
 
+    private bool forcedRain = false;
+
     [HideInInspector]
     public UnityEvent OnRainStarted;
     [HideInInspector]
@@ -95,7 +97,7 @@ public class WeatherManager : NetworkBehaviour
 
         // Update current weather based on the new current hour
         var weatherData = weatherDataArray[TimeManager.Main.CurrentDate - 1];
-        isRainning = currentHour >= weatherData.RainDuration.min && currentHour < weatherData.RainDuration.max;
+        isRainning = (currentHour >= weatherData.RainDuration.min && currentHour < weatherData.RainDuration.max) || forcedRain;
         if (showDebugs) Debug.Log($"Hour =  {currentHour}, isRainning = {isRainning}");
 
         if (isRainning != isRainning_cached)
@@ -113,6 +115,28 @@ public class WeatherManager : NetworkBehaviour
             }
         }
     }
+
+    #region Utility
+
+    public void ForcedRain(bool value)
+    {
+        forcedRain = value;
+        UpdateRainValue(TimeManager.Main.CurrentHour);
+    }
+
+    [ContextMenu("Forced Rain On")]
+    private void ForcedRainOn()
+    {
+        ForcedRain(true);
+    }
+
+    [ContextMenu("Forced Rain Off")]
+    private void ForcedRainOff()
+    {
+        ForcedRain(false);
+    }
+
+    #endregion
 }
 
 /*using System.Collections.Generic;

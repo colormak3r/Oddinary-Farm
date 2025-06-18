@@ -14,6 +14,9 @@ public class RenderTextureHook : MonoBehaviour
 
     private void Awake()
     {
+        if (displayImage == null) return;
+        if (showInEditor) Debug.LogWarning($"{gameObject.name} RenderTextureHook is enabled in the editor. Remember to turn this off before commit to Git", this);
+
         displayImage.enabled = true;
         displayImage.texture = renderTexture;
     }
@@ -21,7 +24,7 @@ public class RenderTextureHook : MonoBehaviour
 #if UNITY_EDITOR
     private void Update()
     {
-        if (Application.isPlaying) return;
+        if (Application.isPlaying || displayImage == null || renderTexture == null) return;
         displayImage.enabled = showInEditor;
         if (showInEditor)
         {
