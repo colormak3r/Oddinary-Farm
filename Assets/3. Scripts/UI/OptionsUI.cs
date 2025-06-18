@@ -67,7 +67,7 @@ public class OptionsUI : UIBehaviour
         HideNoFade();
         MainMenuUI.Main.Show();
     }
-
+    
     private void ResumeButtonClicked()
     {
         Hide();

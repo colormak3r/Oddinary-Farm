@@ -14,35 +14,22 @@ public class MainMenuUI : UIBehaviour
             Destroy(gameObject);
     }
 
-    public void SinglePlayerButtonClicked()
+    public void PlayButtonClicked()
     {
-        ConnectionManager.Main.StartGameSinglePlayer();
-    }
-
-    public void MultiplayerLocalHostButtonClicked()
-    {
-        ConnectionManager.Main.StartGameMultiplayerLocalHost();
-    }
-
-    public void MultiplayerLocalClientButtonClicked()
-    {
-        ConnectionManager.Main.StartGameMultiplayerLocalClient();
-    }
-
-    public void MultiplayerOnlineHostButtonClicked()
-    {
-        ConnectionManager.Main.StartGameMultiplayerOnlineHost();
-    }
-
-    public void MultiplayerOnlineClientButtonClicked() 
-    { 
-        ConnectionManager.Main.StartGameMultiplayerOnlineClient();
+        HideNoFade();
+        PlayUI.Main.Show();
     }
 
     public void OptionsButtonClicked()
     {
         HideNoFade();
         OptionsUI.Main.Show();
+    }
+
+    public void CreditsButtonClicked()
+    {
+        HideNoFade();
+        CreditsUI.Main.Show();
     }
 
     public void QuitButtonClicked()

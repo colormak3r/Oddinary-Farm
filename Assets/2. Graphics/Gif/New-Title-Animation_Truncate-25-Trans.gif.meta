@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      New-Title-Animation_Truncate-25-Trans_0: -5268123740053146949
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
