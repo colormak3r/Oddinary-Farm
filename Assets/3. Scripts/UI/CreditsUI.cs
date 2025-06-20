@@ -42,18 +42,18 @@ public class CreditsUI : UIBehaviour
 
         string[] roles = {
             "Game Director, Lead Programmer", "Associate Director, Programmer", "Writer", "Pixel Artist", "Marketing & Community Manager", "Pixel Artist",
-            "Music Composer, Concept Artist, Pixel Artist", "Concept Artist", "QA & Play Tester", "Programmer"
+            "Music Composer, Concept Artist, Pixel Artist", "Concept Artist", "QA & Play Tester", "Associate Director, Programmer"
         };
 
         string creditsOutput = "";
 
         for (int i = 0; i < names.Length; i++)
         {
-            creditsOutput += $"<align=center><size=18>{names[i]}</size>\n<size=9><color=#703A3F>{roles[i]}</color></size></align>\n\n";
+            creditsOutput += $"<align=center><size=20>{names[i]}</size>\n<size=10><color=#703A3F>{roles[i]}</color></size></align>\n\n";
         }
 
         creditsText.text = creditsOutput;
-        creditsText.margin = new Vector4(50, 10, 50, 0);
+        creditsText.margin = new Vector4(50, 7, 50, 0);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
