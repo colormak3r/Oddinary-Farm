@@ -7086,6 +7086,7 @@ GameObject:
   - component: {fileID: 731032693}
   - component: {fileID: 731032695}
   - component: {fileID: 731032694}
+  - component: {fileID: 731032696}
   m_Layer: 0
   m_Name: Hot Air Balloon (1)
   m_TagString: Untagged
@@ -7150,6 +7151,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 731032692}
   m_CullTransparentMesh: 1
+--- !u!114 &731032696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731032692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a6b4cb1c18a8724e9dff23d793e05c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xDriftRange: 0.2
+  yDriftRange: 0.3
+  driftSpeed: 1
 --- !u!1 &732696115
 GameObject:
   m_ObjectHideFlags: 0
@@ -8217,6 +8233,7 @@ GameObject:
   - component: {fileID: 825362263}
   - component: {fileID: 825362265}
   - component: {fileID: 825362264}
+  - component: {fileID: 825362266}
   m_Layer: 0
   m_Name: Hot Air Balloon (2)
   m_TagString: Untagged
@@ -8281,6 +8298,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 825362262}
   m_CullTransparentMesh: 1
+--- !u!114 &825362266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825362262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a6b4cb1c18a8724e9dff23d793e05c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xDriftRange: 0.2
+  yDriftRange: 0.3
+  driftSpeed: 1
 --- !u!1 &834404379
 GameObject:
   m_ObjectHideFlags: 0
@@ -8292,6 +8324,7 @@ GameObject:
   - component: {fileID: 834404380}
   - component: {fileID: 834404382}
   - component: {fileID: 834404381}
+  - component: {fileID: 834404383}
   m_Layer: 0
   m_Name: Hot Air Balloon (3)
   m_TagString: Untagged
@@ -8356,6 +8389,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 834404379}
   m_CullTransparentMesh: 1
+--- !u!114 &834404383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 834404379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a6b4cb1c18a8724e9dff23d793e05c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xDriftRange: 0.2
+  yDriftRange: 0.3
+  driftSpeed: 1
 --- !u!1 &862456159
 GameObject:
   m_ObjectHideFlags: 0
@@ -18193,7 +18241,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -3.4, y: -71.100006}
+  m_AnchoredPosition: {x: -3.4, y: -71}
   m_SizeDelta: {x: 30, y: 17}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1782877704
