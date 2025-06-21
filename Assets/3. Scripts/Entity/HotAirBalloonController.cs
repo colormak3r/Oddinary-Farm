@@ -58,13 +58,14 @@ public class HotAirBalloonController : NetworkBehaviour
         SetControlInternal(isControlled);
     }
 
+    // Toggle player immunity and input
     private void SetControlInternal(bool isControlled)
     {
-        physicCollider.enabled = !isControlled;
-        moveableController.SetMoveable(!isControlled);
-        entityMovement.SetCanBeKnockback(!isControlled);
-        IsControlled.Value = isControlled;
-        drownController.SetCanBeDrowned(!isControlled);
-        drownGraphic.SetCanBeWet(!isControlled);
+        physicCollider.enabled = !isControlled;             // Toggle player collider
+        moveableController.SetMoveable(!isControlled);      // Toggle player movement
+        entityMovement.SetCanBeKnockback(!isControlled);    // Toggle player knockback
+        IsControlled.Value = isControlled;                  // Toggle Controlled value
+        drownController.SetCanBeDrowned(!isControlled);     // Toggle player drown
+        drownGraphic.SetCanBeWet(!isControlled);            // Toggle player wet effect
     }
 }

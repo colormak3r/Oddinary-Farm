@@ -45,6 +45,7 @@ public class HotAirBalloon : Structure, IInteractable
 
         if (IsOwner)
         {
+            // Run on client's time
             TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
         }
         HandleOnHourChanged(TimeManager.Main.CurrentHour);
@@ -73,14 +74,14 @@ public class HotAirBalloon : Structure, IInteractable
         if (!newValue) 
             return;
 
-        // Lock baloon rotation
+        // Lock balloon rotation
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
 
         // Change sorting order to front
         var sortingGroups = GetComponentsInChildren<SortingGroup>();
         foreach (var sortingGroup in sortingGroups)
         {
-            sortingGroup.sortingLayerName = "UI";
+            sortingGroup.sortingLayerName = "UI";       // QUESTION: Why the UI layer?
             sortingGroup.sortingOrder = 99;
         }
 
@@ -137,7 +138,7 @@ public class HotAirBalloon : Structure, IInteractable
                 NetworkObject.ChangeOwnership(default);
             }
 
-            // Just placed, is it take off time?
+            // Just placed; is it take off time?
             if (TimeManager.Main.CurrentDate > takeOffDate || (TimeManager.Main.CurrentDate == takeOffDate && TimeManager.Main.CurrentHour >= takeOffHour))
             {
                 IsTakenOff.Value = true;
@@ -161,13 +162,13 @@ public class HotAirBalloon : Structure, IInteractable
         if (IsTakenOff.Value) 
             return;
 
-        if (CurrentStage.Value < upgradeStages.GetStageCount() - 1)     // If the current stage is not the final stage
+        if (CurrentStage.Value < upgradeStages.GetStageCount() - 1)     // If the current stage is not the final stage -> toggle upgrade UI
             UpgradeUI.Main.Initialize(source.GetComponent<PlayerInventory>(), upgradeStages, CurrentStageValue, UpgradeBalloon);
         else
         {
             if (CurrentOwner.Value.TryGet(out var networkObject))
             {
-                if (networkObject == source.GetComponent<NetworkObject>())      // QUESTION: If the object is a newtworked object?
+                if (networkObject == source.GetComponent<NetworkObject>())      // QUESTION: If the object is a networked object?
                 {
                     SetOwnerRpc(default);
 
@@ -178,7 +179,7 @@ public class HotAirBalloon : Structure, IInteractable
             }
             else
             {
-                SetOwnerRpc(source.gameObject);     // Set the woner to the gameobject
+                SetOwnerRpc(source.gameObject);     // Set the owner to the gameobject
                 playerPosition = source.position;
 
                 source.GetComponent<HotAirBalloonController>().SetControl(true);        // Hot air balloon has control
