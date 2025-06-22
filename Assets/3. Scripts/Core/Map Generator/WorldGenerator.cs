@@ -383,20 +383,39 @@ public class WorldGenerator : NetworkBehaviour
     #region World Building
     private Vector2 closetChunkPosition_cached = Vector2.one;
     private bool isGenerating = false;
+    private Vector2 cached_position;
 
     public IEnumerator BuildWorld(Vector2 position)
     {
+        // Update the cached position
+        if (cached_position != position)
+        {
+            var distance = Vector2.Distance(cached_position, position);
+            StatisticManager.Main.UpdateStat(StatisticType.DistanceTravelled, (ulong)Mathf.RoundToInt(distance));
+            cached_position = position;
+        }
+
+        // Update the player position on the map
         MapUI.Main.UpdatePlayerPosition(position, trueMapSize);
+
+        // Snap the position to the grid
         var snappedPosition = position.SnapToGrid();
+
+        // Update the elevation text
         var elevation = GetElevation(snappedPosition.x, snappedPosition.y, true);
         elevationText.text = Mathf.RoundToInt((elevation - FloodManager.Main.BaseFloodLevel) * 1000) + "ft";
+
+        // Update the audio elevation for biome music context switcher
         AudioManager.Main.OnElevationUpdated(elevation);
+
+        // Build the terrain at the snapped position
         yield return BuildTerrain(position);
     }
 
     public IEnumerator BuildTerrain(Vector2 position)
     {
-        position = position.SnapToGrid();
+        // Assume the position has been snapped in BuildWorld
+        // position = position.SnapToGrid();
 
         var closetChunkPosition = position.SnapToGrid(chunkSize, true);
         if (closetChunkPosition_cached != closetChunkPosition)

@@ -343,12 +343,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   container: {fileID: 6026101150664435241}
+  firstElement: {fileID: 0}
   fadeDuration: 0.25
   delayShow: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
   excludeFromUIManager: 0
   background: {fileID: 0}
+  showDebugs: 0
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -953,6 +955,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundEffects: []
+  ignoreWarnings: 0
 --- !u!82 &6544998554535444510
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1122,7 +1125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  canSpawnPet: 0
+  canSpawnPet: 1
   pets:
   - {fileID: 875170009560843256, guid: db68934e500d2cb489bcaecea9f0d8be, type: 3}
 --- !u!114 &4142363607695392232

@@ -9,8 +9,8 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConsoleCommand 
-{ 
+public class ConsoleCommand
+{
     private string command;
     private string[] args;
     private string description;
@@ -188,8 +188,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     {
         if (filename == "")
         {
-            string d = System.Environment.GetFolderPath(
-               System.Environment.SpecialFolder.Desktop) + "/ODD_LOGS";
+            // TODO: change to Application.persistentDataPath later
+            string d = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/ODD_LOGS";
             System.IO.Directory.CreateDirectory(d);
             DateTime now = DateTime.Now;
             // Format the DateTime as MMDDYY-HHMMSS

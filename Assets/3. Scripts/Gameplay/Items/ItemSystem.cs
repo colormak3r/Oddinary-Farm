@@ -393,7 +393,6 @@ public class ItemSystem : NetworkBehaviour
         {
             lassoController.ThrowLasso(position);
         }
-
     }
 
     public void LassoSecondary()

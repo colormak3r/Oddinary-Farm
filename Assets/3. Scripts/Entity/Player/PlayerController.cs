@@ -375,18 +375,23 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             if (ShopUI.Main.IsShowing)
             {
                 ShopUI.Main.CloseShop();
+                AudioManager.Main.PlayClickSound();
+                InputManager.Main.SwitchMap(InputMap.Gameplay);
             }
             else
             {
                 if (OptionsUI.Main.IsShowing)
                 {
-                    // TODO: Use UI Map instead
                     OptionsUI.Main.Hide();
+                    AudioManager.Main.PlayClickSound();
+                    InputManager.Main.SwitchMap(InputMap.Gameplay);
                 }
                 else
                 {
                     InventoryUI.Main.CloseInventory();
                     OptionsUI.Main.Show();
+                    AudioManager.Main.PlayClickSound();
+                    InputManager.Main.SwitchMap(InputMap.UI);
                 }
             }
         }
@@ -454,6 +459,12 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (context.started)
         {
             OnPrimaryStarted();
+
+            // Update Stats
+            if (currentItem.BaseProperty != null)
+            {
+                StatisticManager.Main.UpdateStat(StatisticType.ItemsUsed, currentItem.BaseProperty);
+            }
         }
         else if (context.canceled)
         {

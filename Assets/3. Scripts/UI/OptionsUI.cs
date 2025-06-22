@@ -1,8 +1,8 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.GPUSort;
 
 public class OptionsUI : UIBehaviour
 {
@@ -25,6 +25,8 @@ public class OptionsUI : UIBehaviour
     private GameObject appearanceButton;
     [SerializeField]
     private Button backButton;
+    [SerializeField]
+    private Button resumeButton;
 
     private TMP_Text backButtonText;
 
@@ -36,17 +38,15 @@ public class OptionsUI : UIBehaviour
         {
             leaveButton.SetActive(false);
             appearanceButton.SetActive(false);
-            backButtonText.text = "Back";
-            backButton.onClick.RemoveListener(ResumeButtonClicked);
-            backButton.onClick.AddListener(BackButtonClicked);
+            resumeButton.gameObject.SetActive(false);
+            backButton.gameObject.SetActive(true);
         }
         else
         {
             leaveButton.SetActive(true);
             appearanceButton.SetActive(true);
-            backButtonText.text = "Resume";
-            backButton.onClick.RemoveListener(BackButtonClicked);
-            backButton.onClick.AddListener(ResumeButtonClicked);
+            resumeButton.gameObject.SetActive(true);
+            backButton.gameObject.SetActive(false);
         }
     }
 
@@ -55,21 +55,35 @@ public class OptionsUI : UIBehaviour
         AudioUI.Main.Initialize();
         HideNoFade();
         AudioUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 
     public void LeaveButtonClicked()
     {
+        Hide();
         GameManager.Main.ReturnToMainMenu();
+        AudioManager.Main.PlayClickSound();
     }
 
     public void BackButtonClicked()
     {
         HideNoFade();
         MainMenuUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
-    
-    private void ResumeButtonClicked()
+
+    public void ResumeButtonClicked()
     {
-        Hide();
+        HideNoFade();
+        PauseButtonUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+
+        }
+        else
+        {
+            InputManager.Main.SwitchMap(InputMap.Gameplay);
+        }
     }
 }

@@ -25,6 +25,9 @@ public class PlayerStatus : EntityStatus
     private IControllable[] controllables;
     private NetworkTransform networkTransform;
 
+    private ulong timeDied;
+    private float timeSinceLastDeath;
+
     protected override void Awake()
     {
         base.Awake();
@@ -45,6 +48,8 @@ public class PlayerStatus : EntityStatus
         {
             if (SteamClient.IsValid)
                 PlayerName.Value = SteamClient.Name;
+
+            timeSinceLastDeath = Time.time;
         }
     }
 
@@ -57,6 +62,21 @@ public class PlayerStatus : EntityStatus
     private void HandlePlayerNameChange(FixedString128Bytes previousValue, FixedString128Bytes newValue)
     {
         playerNameUI.SetPlayerName(newValue.ToString());
+    }
+
+    protected override void OnEntityDamagedOnClient(uint damage, NetworkObjectReference attackerRef)
+    {
+        base.OnEntityDamagedOnClient(damage, attackerRef);
+
+        // Update Stats
+        if (attackerRef.TryGet(out NetworkObject networkObject))
+        {
+            StatisticManager.Main.UpdateStat(StatisticType.DamageTaken, networkObject.gameObject.name, damage);
+        }
+        else
+        {
+            StatisticManager.Main.UpdateStat(StatisticType.DamageTaken, "Unidentified", damage);
+        }
     }
 
     protected override void OnEntityDeathOnServer()
@@ -72,6 +92,12 @@ public class PlayerStatus : EntityStatus
 
     protected override IEnumerator DeathOnClientCoroutine()
     {
+        // Record death data
+        timeDied++;
+        StatisticManager.Main.UpdateStat(StatisticType.TimeDied, timeDied);
+        StatisticManager.Main.UpdateStat(StatisticType.TimeSinceLastDeath, (ulong)Mathf.RoundToInt(Time.time - timeSinceLastDeath));
+        timeSinceLastDeath = Time.time;
+
         Coroutine effectCoroutine = null;
 
         SpawnDeathPrefab();

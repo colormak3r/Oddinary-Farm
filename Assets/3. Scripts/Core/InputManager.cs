@@ -36,7 +36,7 @@ public class InputManager : MonoBehaviour
     private bool showDebugs = false;
     [SerializeField]
     private InputMap currentInputMap;
-
+    [SerializeField]
     private DefaultInputActions inputActions;
     public DefaultInputActions InputActions => inputActions;
 
@@ -49,7 +49,7 @@ public class InputManager : MonoBehaviour
 
     private void OnEnable()
     {
-        inputActions.Enable();
+        //inputActions.Enable();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -64,11 +64,11 @@ public class InputManager : MonoBehaviour
     {
         if (scene.buildIndex == 0)
         {
-            SwitchMap(InputMap.UI);
+            //SwitchMap(InputMap.UI);
         }
         else
         {
-            SwitchMap(InputMap.Console);
+            //SwitchMap(InputMap.Console);
         }
     }
 
@@ -82,6 +82,14 @@ public class InputManager : MonoBehaviour
 
         currentActionMap = GetActionMap(map);
         currentActionMap.Enable();
+
+        if (showDebugs)
+        {
+            Debug.Log("Switching to map: " + map);
+            Debug.Log($"uiActionMap.enabled = {uiActionMap.enabled}");
+            Debug.Log($"gameplayActionMap.enabled = {gameplayActionMap.enabled}");
+            Debug.Log($"consoleActionMap.enabled = {consoleActionMap.enabled}");
+        }
     }
 
     public void SwitchToPreviousMap()

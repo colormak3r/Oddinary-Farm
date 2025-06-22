@@ -24,16 +24,51 @@ public class UIController : MonoBehaviour, DefaultInputActions.IUIActions
 
     public void OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        
+
     }
 
     public void OnClick(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        
+
     }
 
     public void OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-        
+
+    }
+
+    public void OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnPoint(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnRightClick(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnMiddleClick(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnScrollWheel(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnTrackedDevicePosition(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+
+    }
+
+    public void OnTrackedDeviceOrientation(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+
     }
 }

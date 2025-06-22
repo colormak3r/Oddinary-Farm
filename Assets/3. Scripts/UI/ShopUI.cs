@@ -128,6 +128,8 @@ public class ShopUI : UIBehaviour
 
         InventoryUI.Main.CloseInventory();
 
+        InputManager.Main.SwitchMap(InputMap.UI);
+
         // Always default to buy mode
         ShopModeBuy();
 
@@ -145,6 +147,8 @@ public class ShopUI : UIBehaviour
         shopTransform = null;
 
         StartCoroutine(CloseShopCoroutine());
+
+        InputManager.Main.SwitchMap(InputMap.Gameplay);
     }
 
     private IEnumerator CloseShopCoroutine()

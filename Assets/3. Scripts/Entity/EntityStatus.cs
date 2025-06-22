@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
@@ -212,11 +213,18 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             if (IsServer)
             {
                 CurrentHealth.Value -= damage;
-                OnEntityDamagedOnServer();
+                OnEntityDamagedOnServer(damage, attackerRef);
             }
 
             // Trigger callback on all clients
-            OnEntityDamagedOnClient();
+            OnEntityDamagedOnClient(damage, attackerRef);
+
+            // Update stat on kill
+            // Check if the attacker is the local player
+            if (attackerRef.TryGet(out NetworkObject networkObject) && networkObject == NetworkManager.ConnectedClients[NetworkManager.LocalClientId].PlayerObject)
+            {
+                StatisticManager.Main.UpdateStat(StatisticType.DamageDealt, gameObject.name, 1);
+            }
         }
         else
         {
@@ -246,6 +254,13 @@ public class EntityStatus : NetworkBehaviour, IDamageable
                 OnEntityDeathOnServer();
             }
 
+            // Update stat on kill
+            // Check if the attacker is the local player
+            if (attackerRef.TryGet(out NetworkObject networkObject) && networkObject == NetworkManager.ConnectedClients[NetworkManager.LocalClientId].PlayerObject)
+            {
+                StatisticManager.Main.UpdateStat(StatisticType.EntitiesKilled, gameObject.name, 1);
+            }
+
             OnEntityDeathOnClient();
         }
     }
@@ -254,12 +269,12 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     #region On Damaged
 
-    protected virtual void OnEntityDamagedOnClient()
+    protected virtual void OnEntityDamagedOnClient(uint damage, NetworkObjectReference attackerRef)
     {
 
     }
 
-    protected virtual void OnEntityDamagedOnServer()
+    protected virtual void OnEntityDamagedOnServer(uint damage, NetworkObjectReference attackerRef)
     {
 
     }

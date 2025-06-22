@@ -5,13 +5,16 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.GPUSort;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class UIBehaviour : MonoBehaviour
 {
     [Header("UI Behaviour Settings")]
     [SerializeField]
     protected GameObject container;
+    [SerializeField]
+    protected GameObject firstElement;
     [SerializeField]
     protected float fadeDuration = 0.25f;
     [SerializeField]
@@ -29,6 +32,8 @@ public class UIBehaviour : MonoBehaviour
     private Image background;
 
     [Header("UI Behaviour Debugs")]
+    [SerializeField]
+    protected bool showDebugs = false;
     [SerializeField]
     private bool isShowing;
     public bool IsShowing => isShowing;
@@ -129,6 +134,19 @@ public class UIBehaviour : MonoBehaviour
         if (dsffoRenderers != null && dsffoRenderers.Length > 0)
             yield return dsffoRenderers.UIFadeCoroutine(0, 1, fade ? fadeDuration : 0);
         isAnimating = false;
+
+        var gamepads = Gamepad.all;
+        if (gamepads.Count > 0)
+        {
+            if (firstElement)
+            {
+                EventSystem.current.SetSelectedGameObject(firstElement);
+            }
+            else
+            {
+                if (showDebugs) Debug.LogWarning($"{name} has no firstElement set");
+            }
+        }
     }
 
     public IEnumerator HideCoroutine(bool fade = true)

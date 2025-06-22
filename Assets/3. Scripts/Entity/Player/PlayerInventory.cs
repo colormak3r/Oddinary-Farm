@@ -148,6 +148,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
             if (playSound) audioElement.PlayOneShot(property.PickupSound);
 
+            // Update stat
+            StatisticManager.Main.UpdateStat(StatisticType.ItemsCollected, property.Name);
+
             return true;
         }
         else if (property.MaxStack > 1 && FindPartialSlot(property, out var partialIndex))
@@ -162,6 +165,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             {
                 ChangeHotBarIndex(partialIndex);
             }
+
+            // Update stat
+            StatisticManager.Main.UpdateStat(StatisticType.ItemsCollected, property.Name);
 
             return true;
         }
@@ -184,6 +190,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             {
                 ChangeHotBarIndex(emptyIndex);
             }
+
+            // Update stat
+            StatisticManager.Main.UpdateStat(StatisticType.ItemsCollected, property.Name);
 
             return true;
         }
