@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
@@ -317,6 +316,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
         yield return effectCoroutine;
 
+        // Under heavy load, the object might not be despawned immediately on server
+        yield return new WaitUntil(() => IsSpawned == false);
         Destroy(gameObject);
     }
 
