@@ -365,10 +365,13 @@ MonoBehaviour:
   farmPlotLayer:
     serializedVersion: 2
     m_Bits: 256
+  showDebugs: 0
   CurrentStage:
     m_InternalValue: 0
   isWatered:
     m_InternalValue: 0
+  Property:
+    m_InternalValue: {fileID: 0}
 --- !u!114 &4354009276847991936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -520,6 +523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundEffects: []
+  ignoreWarnings: 0
 --- !u!114 &2381061234703857880
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -14,6 +14,8 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
 
     [Header("Debugs")]
     [SerializeField]
+    private bool showDebugs = false;
+    [SerializeField]
     private NetworkVariable<int> CurrentStage = new NetworkVariable<int>();
     [SerializeField]
     private NetworkVariable<bool> isWatered;
@@ -57,6 +59,7 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
     public override void OnNetworkDespawn()
     {
         Property.OnValueChanged -= HandlePropertyChanged;
+        CurrentStage.OnValueChanged -= HandleStageChanged;
 
         if (IsServer)
         {
@@ -133,6 +136,7 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
     {
         if (isWatered.Value) return;
         isWatered.Value = true;
+        if (showDebugs) Debug.Log($"Plant {name} watered on server", this);
 
         StartGrowing();
     }
@@ -143,13 +147,15 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
     {
         if (CurrentStage.Value < Property.Value.Stages.Length - 1)
         {
-            if (growthCoroutine != null) StopCoroutine(growthCoroutine);
+            if (growthCoroutine != null) return;
             growthCoroutine = StartCoroutine(GrowthCoroutine());
         }
     }
 
     private IEnumerator GrowthCoroutine()
     {
+        if (showDebugs) Debug.Log($"Plant {name} started growing", this);
+
         var stage = Property.Value.Stages[CurrentStage.Value];
         yield return new WaitForSeconds(stage.duration * TimeManager.Main.HourDuration);
 
@@ -159,13 +165,17 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         // Heal plant when grown a stage
         entityStatus.GetHealed(1);
 
+        growthCoroutine = null;
+
         if (IsHarvestable)
         {
+            if (showDebugs) Debug.Log($"Plant {name} is harvestable now", this);
             isWatered.Value = false;
             farmPlot.GetDriedOnServer();
         }
         else
         {
+            if (showDebugs) Debug.Log($"Plant {name} is not harvestable yet, continuing to grow", this);
             StartGrowing();
             farmPlot.GetWatered();
         }
@@ -210,14 +220,18 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         else
         {
             var stage = Property.Value.Stages[CurrentStage.Value];
-            CurrentStage.Value += stage.stageIncrement;
+            CurrentStage.Value = Mathf.Min(CurrentStage.Value + stage.stageIncrement, Property.Value.Stages.Length - 1);
 
             if (WeatherManager.Main.IsRainning)
             {
-                GetWateredRpc();
+                if (showDebugs) Debug.Log($"Plant {name} is watered by rain after harvest", this);
+                // isWatered should already be true here
+                // isWatered.Value = true;
+                StartGrowing();
             }
             else
             {
+                if (showDebugs) Debug.Log($"Plant {name} is dried after harvest", this);
                 farmPlot.GetDriedOnServer();
                 isWatered.Value = false;
             }
