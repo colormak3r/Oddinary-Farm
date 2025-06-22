@@ -17,7 +17,7 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
     private NetworkVariable<int> CurrentStage = new NetworkVariable<int>();
     [SerializeField]
     private NetworkVariable<bool> isWatered;
-
+    [SerializeField]
     private NetworkVariable<PlantProperty> Property = new NetworkVariable<PlantProperty>();
     public PlantProperty PropertyValue => Property.Value;
 
@@ -137,11 +137,14 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         StartGrowing();
     }
 
+
+    private Coroutine growthCoroutine;
     private void StartGrowing()
     {
         if (CurrentStage.Value < Property.Value.Stages.Length - 1)
         {
-            StartCoroutine(GrowthCoroutine());
+            if (growthCoroutine != null) StopCoroutine(growthCoroutine);
+            growthCoroutine = StartCoroutine(GrowthCoroutine());
         }
     }
 
@@ -151,7 +154,7 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         yield return new WaitForSeconds(stage.duration * TimeManager.Main.HourDuration);
 
         if (CurrentStage.Value < Property.Value.Stages.Length - 1)
-            CurrentStage.Value += stage.stageIncrement;
+            CurrentStage.Value = Mathf.Min(CurrentStage.Value + stage.stageIncrement, Property.Value.Stages.Length - 1);
 
         // Heal plant when grown a stage
         entityStatus.GetHealed(1);
@@ -181,7 +184,6 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         lootGenerator.DropLootOnServer(harvester);
         GetHarvestedOnServer();
     }
-
 
     public bool Consume()
     {
