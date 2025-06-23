@@ -243,7 +243,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "PrintSpawnableIdList",
     "Spectate [id] [x] [y]",
     "ShowUI [bool]",
-    "SpawnTestWave [x=0] [y=0] [safeRadius=5] [spawnRadius=10]",
+    "SpawnTestWave [x=0] [y=0] [safeRadius=30] [spawnRadius=40]",
     "CanSpawn [bool]",
     "SetMinutesPerDay [realMinutePerDay]",
     "SetTimeOffset [day] [hour] [minute]",
@@ -339,11 +339,11 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
             }
             else if (command == commands[9].ToLower())
             {
-                // SpawnTestWave [x=0] [y=0] [safeRadius=5] [spawnRadius=10]
+                // SpawnTestWave [x=0] [y=0] [safeRadius=30] [spawnRadius=40]
                 var x = args.Length > 1 ? float.Parse(args[1]) : 0f;
                 var y = args.Length > 2 ? float.Parse(args[2]) : 0f;
-                var safeRadius = args.Length > 3 ? int.Parse(args[3]) : 5;
-                var spawnRadius = args.Length > 4 ? int.Parse(args[4]) : 10;
+                var safeRadius = args.Length > 3 ? int.Parse(args[3]) : 30;
+                var spawnRadius = args.Length > 4 ? int.Parse(args[4]) : 40;
 
                 if (CreatureSpawnManager.Main == null) throw new Exception("CreatureSpawnManager not found. Has the game started yet?");
                 CreatureSpawnManager.Main.SpawnTestWave(new Vector2(x, y), safeRadius, spawnRadius);
@@ -466,6 +466,10 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                     else if (args[1].Contains("chicken"))
                     {
                         ScenarioManager.Main.SetScenario(ScenarioPreset.ChickenFarmDemo);
+                    }
+                    else if (args[1].Contains("def"))
+                    {
+                        ScenarioManager.Main.SetScenario(ScenarioPreset.DefenseDemo);
                     }
                     else
                     {

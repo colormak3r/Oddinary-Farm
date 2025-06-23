@@ -34,11 +34,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2474804323160958134, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: detectRange
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2474804323160958134, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: escapeRange
-      value: 10
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2474804323160958134, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: huntingTime

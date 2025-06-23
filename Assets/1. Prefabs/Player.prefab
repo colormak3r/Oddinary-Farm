@@ -729,7 +729,7 @@ MonoBehaviour:
   damagedSound: {fileID: 8300000, guid: 20a7d71691b827846a2db73d37f293ba, type: 3}
   deathSound: {fileID: 8300000, guid: da81908babf34694799320bd1135404c, type: 3}
   showDebugs: 0
-  CurrentHealth:
+  NetworkCurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
     m_PersistentCalls:
@@ -1125,7 +1125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  canSpawnPet: 1
+  canSpawnPet: 0
   pets:
   - {fileID: 875170009560843256, guid: db68934e500d2cb489bcaecea9f0d8be, type: 3}
 --- !u!114 &4142363607695392232

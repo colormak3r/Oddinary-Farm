@@ -108,11 +108,11 @@ public class HungerStimulus : NetworkBehaviour
         if (isHungry && targetFood == null)
         {
             targetFood = ScanForFood();
-            targetFoodTransform = targetFood?.Transform;
         }
 
-        if (targetFood != null)
+        if (targetFood != null && targetFood.Transform != null)
         {
+            targetFoodTransform = targetFood.Transform;
             if (Vector2.Distance(transform.position, targetFood.Transform.position) < foodConsumptionRadius)
             {
                 if (targetFood.Consume())
@@ -139,9 +139,13 @@ public class HungerStimulus : NetworkBehaviour
             if (stallStart >= 0f && Time.time - stallStart > StallDelay)
             {
                 targetFood = ScanForFood();
-                targetFoodTransform = targetFood?.Transform;
+                if (targetFood != null) targetFoodTransform = targetFood.Transform;
                 stallStart = -1f;
             }
+        }
+        else
+        {
+            targetFoodTransform = null;
         }
     }
 

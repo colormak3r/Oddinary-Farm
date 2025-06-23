@@ -171,6 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b0ed2bb8d311ad4bb375f5f0ccc52de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canBeSelected: 1
   offset: {x: 0, y: 1}
   size: {x: 3, y: 3}
 --- !u!114 &908942693083441081
@@ -189,7 +190,7 @@ MonoBehaviour:
   isMovable: 1
   isRemovable: 1
   property: {fileID: 11400000, guid: b9bded3ffc69f894bb40a4891116a709, type: 2}
-  takeOffDate: 7
+  takeOffDate: 10
   takeOffHour: 22
   upgradeStages: {fileID: 11400000, guid: 3b0c73b5f2dc8654292082cc4fbeb893, type: 2}
   spriteRenderer: {fileID: 6487843671388318122}
@@ -276,7 +277,6 @@ MonoBehaviour:
   floodDuration: 3
   spriteRenderer: {fileID: 6487843671388318122}
   alphaRenderer: []
-  isInitialized: 0
   elevation: 0
   previousWaterLevel: 0
   previousDepth: 0

@@ -21,7 +21,7 @@ public enum Hostility
 
 public interface IDamageable
 {
-    public uint GetCurrentHealth();
-    public Hostility GetHostility();
-    public bool TakeDamage(uint damage, DamageType type, Hostility hostility, Transform attacker);
+    public uint CurrentHealth { get; }
+    public Hostility Hostility { get; }
+    public bool TakeDamage(uint damage, DamageType type, Hostility attackerHostility, Transform attacker);
 }

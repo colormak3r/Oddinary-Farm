@@ -87,7 +87,7 @@ public class PlayerStatus : EntityStatus
 
     protected override void OnEntityRespawnOnClient()
     {
-        healthBarUI.SetValue(CurrentHealthValue, MaxHealth);
+        healthBarUI.SetValue(CurrentHealth, MaxHealth);
     }
 
     protected override IEnumerator DeathOnClientCoroutine()

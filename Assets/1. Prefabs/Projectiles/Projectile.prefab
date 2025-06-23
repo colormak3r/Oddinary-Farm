@@ -5025,7 +5025,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   property: {fileID: 0}
   vfxSystem: {fileID: 6153125484712277475}
-  showDebugs: 0
+  <showDebugs>k__BackingField: 0
 --- !u!50 &-725539337554934400
 Rigidbody2D:
   serializedVersion: 5

@@ -99,7 +99,7 @@ public class ItemSystem : NetworkBehaviour
                 {
                     damageable.TakeDamage(meleeWeaponProperty.Damage, meleeWeaponProperty.DamageType, meleeWeaponProperty.Hostility, transform.root);
 
-                    if (damageable.GetHostility() == meleeWeaponProperty.Hostility)
+                    if (damageable.Hostility == meleeWeaponProperty.Hostility)
                     {
                         if (meleeWeaponProperty.DamageType == DamageType.Slash || meleeWeaponProperty.CanHarvest)
                         {
@@ -113,7 +113,7 @@ public class ItemSystem : NetworkBehaviour
                     else
                     {
                         // Check if the object is already dead
-                        if (damageable.GetCurrentHealth() == 0) continue;
+                        if (damageable.CurrentHealth == 0) continue;
 
                         if (collider.TryGetComponent<EntityMovement>(out var movement))
                         {
@@ -295,7 +295,7 @@ public class ItemSystem : NetworkBehaviour
 
             if (structureHit.TryGetComponent(out EntityStatus entityStatus))
             {
-                if (entityStatus.GetCurrentHealth() == entityStatus.MaxHealth)
+                if (entityStatus.CurrentHealth == entityStatus.MaxHealth)
                 {
                     structure.RemoveStructure();
                 }

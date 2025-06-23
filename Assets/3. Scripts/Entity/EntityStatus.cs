@@ -35,8 +35,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     [SerializeField]
     private bool showDebugs;
     [SerializeField]
-    private NetworkVariable<uint> CurrentHealth = new NetworkVariable<uint>();
-    public uint CurrentHealthValue => CurrentHealth.Value;
+    private NetworkVariable<uint> NetworkCurrentHealth = new NetworkVariable<uint>();
+    public uint CurrentHealth => NetworkCurrentHealth.Value;
 
     [HideInInspector]
     public UnityEvent OnDeathOnServer;
@@ -70,11 +70,11 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     public override void OnNetworkSpawn()
     {
-        HandleCurrentHealthChange(0, CurrentHealthValue);
+        HandleCurrentHealthChange(0, CurrentHealth);
 
         if (IsServer)
         {
-            CurrentHealth.Value = maxHealth;
+            NetworkCurrentHealth.Value = maxHealth;
             OnEntitySpawnOnServer();
         }
         else
@@ -82,12 +82,12 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             OnEntitySpawnOnClient();
         }
 
-        CurrentHealth.OnValueChanged += HandleCurrentHealthChange;
+        NetworkCurrentHealth.OnValueChanged += HandleCurrentHealthChange;
     }
 
     public override void OnNetworkDespawn()
     {
-        CurrentHealth.OnValueChanged -= HandleCurrentHealthChange;
+        NetworkCurrentHealth.OnValueChanged -= HandleCurrentHealthChange;
     }
 
     protected virtual void HandleCurrentHealthChange(uint previousValue, uint newValue)
@@ -107,7 +107,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     {
         if (showDebugs) Debug.Log($"GetHealed: HealAmount = {healAmount}");
         if (!IsSpawned) return false;
-        if (CurrentHealthValue < maxHealth)
+        if (CurrentHealth < maxHealth)
         {
             GetHealedRpc(healAmount);
             return true;
@@ -121,7 +121,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     [Rpc(SendTo.Everyone)]
     private void GetHealedRpc(uint healAmount)
     {
-        var newHealthValue = CurrentHealthValue + healAmount;
+        var newHealthValue = CurrentHealth + healAmount;
         if (newHealthValue > maxHealth)
         {
             if (showDebugs) Debug.Log($"GetHealedRpc: NewHealthValue = {newHealthValue} > MaxHealth = {maxHealth}");
@@ -131,19 +131,19 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (IsServer)
         {
             if (showDebugs) Debug.Log($"GetHealedRpc: NewHealthValue = {newHealthValue}");
-            CurrentHealth.Value = newHealthValue;
+            NetworkCurrentHealth.Value = newHealthValue;
         }
 
         if (healthBarUI) healthBarUI.SetValue(newHealthValue, maxHealth);
     }
     #endregion
 
-    #region Take Damaged
+    #region Take Damage
 
-    [ContextMenu("Take Damaged")]
+    [ContextMenu("Take Damage")]
     private void TakeDamage()
     {
-        TakeDamage(1, DamageType.Slash, Hostility.Neutral, null);
+        TakeDamage(1, DamageType.Slash, global::Hostility.Neutral, null);
     }
 
     public bool TakeDamage(uint damage, DamageType type, Hostility attackerHostility, Transform attacker)
@@ -183,7 +183,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     private void TakeDamageRpc(uint damage, DamageType type, Hostility attackerHostility, NetworkObjectReference attackerRef)
     {
         // Notify AudioManager of potential combat event
-        if (hostility != Hostility.Neutral && attackerHostility != Hostility.Absolute)
+        if (hostility != global::Hostility.Neutral && attackerHostility != global::Hostility.Absolute)
         {
             var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
 
@@ -193,12 +193,12 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             }
         }
 
-        if (CurrentHealthValue > damage)
+        if (CurrentHealth > damage)
         {
             // Entity Take Damage Events
             // Change UI 
             if (healthBarUI && damage > 0)
-                healthBarUI.SetValue(CurrentHealthValue - damage, maxHealth);
+                healthBarUI.SetValue(CurrentHealth - damage, maxHealth);
 
             // Damaged sound
             if (audioElement)
@@ -211,7 +211,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             // Only the server should handle health changes
             if (IsServer)
             {
-                CurrentHealth.Value -= damage;
+                NetworkCurrentHealth.Value -= damage;
                 OnEntityDamagedOnServer(damage, attackerRef);
             }
 
@@ -230,7 +230,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             // Entity Death Events
             if (IsServer)
             {
-                CurrentHealth.Value = 0;
+                NetworkCurrentHealth.Value = 0;
 
                 OnDeathOnServer?.Invoke();
                 OnDeathOnServer.RemoveAllListeners();
@@ -350,7 +350,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         if (IsServer)
         {
             isInvincible = false;
-            CurrentHealth.Value = maxHealth;
+            NetworkCurrentHealth.Value = maxHealth;
             OnEntityRespawnOnServer();
         }
 
@@ -370,9 +370,6 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     #endregion
 
     #region Utility
-    public uint GetCurrentHealth() => CurrentHealthValue;
-    public Hostility GetHostility() => Hostility;
-
     private void OnValidate()
     {
         // Check how many bits are set

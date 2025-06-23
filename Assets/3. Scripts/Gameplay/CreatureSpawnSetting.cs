@@ -19,7 +19,6 @@ public struct CreatureWave
 public struct CreatureSpawn
 {
     public GameObject creaturePrefab;
-    [Range(1, 100)]
     public int spawnCount;
 }
 

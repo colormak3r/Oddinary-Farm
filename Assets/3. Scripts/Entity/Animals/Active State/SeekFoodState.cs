@@ -18,7 +18,7 @@ public class SeekFoodState : BehaviourState
         base.ExecuteState();
 
         // Make sure the transform exists before accessing it
-        if (animal.HungerStimulus && animal.HungerStimulus.TargetFood != null && animal.HungerStimulus.TargetFood.Transform)
+        if (animal.HungerStimulus != null && animal.HungerStimulus.TargetFood != null && animal.HungerStimulus.TargetFood.Transform != null)
         {
             var targetFood = animal.HungerStimulus.TargetFood.Transform;
             if (targetFood == null) return;
