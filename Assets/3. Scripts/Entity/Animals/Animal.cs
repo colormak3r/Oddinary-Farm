@@ -80,6 +80,21 @@ public abstract class Animal : NetworkBehaviour
 
     private Coroutine moveCoroutine;
 
+    protected virtual void Awake()
+    {
+        animator = GetComponentInChildren<Animator>();
+        networkAnimator = GetComponent<NetworkAnimator>();
+        movement = GetComponent<EntityMovement>();
+        status = GetComponent<EntityStatus>();
+        rbody = GetComponent<Rigidbody2D>();
+        targetDetector = GetComponent<TargetDetector>();
+        threatDetector = GetComponent<ThreatDetector>();
+        hungerStimulus = GetComponent<HungerStimulus>();
+        followStimulus = GetComponent<FollowStimulus>();
+        moveTowardStimulus = GetComponent<MoveTowardStimulus>();
+        currentItem = GetComponentInChildren<Item>();
+    }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -100,21 +115,6 @@ public abstract class Animal : NetworkBehaviour
             graphicTransform.localScale = spriteFacingRight ? RIGHT_DIRECTION : LEFT_DIRECTION;
         else
             graphicTransform.localScale = spriteFacingRight ? LEFT_DIRECTION : RIGHT_DIRECTION;
-    }
-
-    protected virtual void Awake()
-    {
-        animator = GetComponentInChildren<Animator>();
-        networkAnimator = GetComponent<NetworkAnimator>();
-        movement = GetComponent<EntityMovement>();
-        status = GetComponent<EntityStatus>();
-        rbody = GetComponent<Rigidbody2D>();
-        targetDetector = GetComponent<TargetDetector>();
-        threatDetector = GetComponent<ThreatDetector>();
-        hungerStimulus = GetComponent<HungerStimulus>();
-        followStimulus = GetComponent<FollowStimulus>();
-        moveTowardStimulus = GetComponent<MoveTowardStimulus>();
-        currentItem = GetComponentInChildren<Item>();
     }
 
     private void FixedUpdate()
