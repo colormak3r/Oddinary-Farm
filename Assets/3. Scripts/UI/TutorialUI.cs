@@ -13,7 +13,7 @@ public struct TutorialProperty
     public TutorialController Controller;
 }
 
-public class TutorialUI : UIBehaviour
+public class TutorialUI : UIBehaviour, ITabCallback
 {
     private static string DONT_SHOW_AGAIN_KEY = "DontShowTutorialAgain";
 
