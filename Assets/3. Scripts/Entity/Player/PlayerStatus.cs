@@ -71,11 +71,11 @@ public class PlayerStatus : EntityStatus
         // Update Stats
         if (attackerRef.TryGet(out NetworkObject networkObject))
         {
-            StatisticManager.Main.UpdateStat(StatisticType.DamageTaken, networkObject.gameObject.name, damage);
+            StatisticsManager.Main.UpdateStat(StatisticType.DamageTaken, networkObject.gameObject.name, damage);
         }
         else
         {
-            StatisticManager.Main.UpdateStat(StatisticType.DamageTaken, "Unidentified", damage);
+            StatisticsManager.Main.UpdateStat(StatisticType.DamageTaken, "Unidentified", damage);
         }
     }
 
@@ -94,8 +94,8 @@ public class PlayerStatus : EntityStatus
     {
         // Record death data
         timeDied++;
-        StatisticManager.Main.UpdateStat(StatisticType.TimeDied, timeDied);
-        StatisticManager.Main.UpdateStat(StatisticType.TimeSinceLastDeath, (ulong)Mathf.RoundToInt(Time.time - timeSinceLastDeath));
+        StatisticsManager.Main.UpdateStat(StatisticType.TimeDied, timeDied);
+        StatisticsManager.Main.UpdateStat(StatisticType.TimeSinceLastDeath, (ulong)Mathf.RoundToInt(Time.time - timeSinceLastDeath));
         timeSinceLastDeath = Time.time;
 
         Coroutine effectCoroutine = null;

@@ -25,7 +25,8 @@ public class InventoryUI : UIBehaviour
 
     [Header("Inventory UISettings")]
     [SerializeField]
-    private UIBehaviour hotbarUIBehaviour;
+    private UIBehaviour tabInventoryUIBehaviour;
+    public UIBehaviour TabInventoryUIBehaviour => tabInventoryUIBehaviour;
     [SerializeField]
     private TMP_Text walletText;
     [SerializeField]
@@ -74,13 +75,13 @@ public class InventoryUI : UIBehaviour
 
     public void ToggleInventory()
     {
-        if (hotbarUIBehaviour.gameObject.activeInHierarchy)
-            hotbarUIBehaviour.ToggleShow();
+        if (tabInventoryUIBehaviour.gameObject.activeInHierarchy)
+            tabInventoryUIBehaviour.ToggleShow();
     }
 
-    public void CloseInventory()
+    public void CloseTabInventory()
     {
-        if (hotbarUIBehaviour.gameObject.activeInHierarchy)
-            hotbarUIBehaviour.Hide();
+        if (tabInventoryUIBehaviour.gameObject.activeInHierarchy)
+            tabInventoryUIBehaviour.Hide();
     }
 }

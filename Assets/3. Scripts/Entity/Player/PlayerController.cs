@@ -371,27 +371,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (context.performed)
         {
-            if (ShopUI.Main.IsShowing)
+            // This should be called to open the options menu only
+            if (InventoryUI.Main.TabInventoryUIBehaviour.IsShowing)
             {
-                ShopUI.Main.CloseShop();
-                AudioManager.Main.PlayClickSound();
-                InputManager.Main.SwitchMap(InputMap.Gameplay);
+                InventoryUI.Main.CloseTabInventory();
             }
-            else
+            else if (!OptionsUI.Main.IsShowing)
             {
-                if (OptionsUI.Main.IsShowing)
-                {
-                    OptionsUI.Main.Hide();
-                    AudioManager.Main.PlayClickSound();
-                    InputManager.Main.SwitchMap(InputMap.Gameplay);
-                }
-                else
-                {
-                    InventoryUI.Main.CloseInventory();
-                    OptionsUI.Main.Show();
-                    AudioManager.Main.PlayClickSound();
-                    InputManager.Main.SwitchMap(InputMap.UI);
-                }
+                PauseButtonUI.Main.PauseButtonClicked();
             }
         }
     }
@@ -462,7 +449,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             // Update Stats
             if (currentItem.BaseProperty != null)
             {
-                StatisticManager.Main.UpdateStat(StatisticType.ItemsUsed, currentItem.BaseProperty);
+                StatisticsManager.Main.UpdateStat(StatisticType.ItemsUsed, currentItem.BaseProperty);
             }
         }
         else if (context.canceled)

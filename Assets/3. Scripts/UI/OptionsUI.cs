@@ -27,6 +27,8 @@ public class OptionsUI : UIBehaviour
     private Button backButton;
     [SerializeField]
     private Button resumeButton;
+    [SerializeField]
+    private Button statButton;
 
     private TMP_Text backButtonText;
 
@@ -40,6 +42,7 @@ public class OptionsUI : UIBehaviour
             appearanceButton.SetActive(false);
             resumeButton.gameObject.SetActive(false);
             backButton.gameObject.SetActive(true);
+            statButton.gameObject.SetActive(false);
         }
         else
         {
@@ -47,6 +50,7 @@ public class OptionsUI : UIBehaviour
             appearanceButton.SetActive(true);
             resumeButton.gameObject.SetActive(true);
             backButton.gameObject.SetActive(false);
+            statButton.gameObject.SetActive(true);
         }
     }
 
@@ -74,16 +78,23 @@ public class OptionsUI : UIBehaviour
 
     public void ResumeButtonClicked()
     {
-        HideNoFade();
-        PauseButtonUI.Main.Show();
         AudioManager.Main.PlayClickSound();
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
-
+            Debug.LogWarning("This should not happen. Cannot resume in the main menu scene.");
         }
         else
         {
+            Hide();
+            PauseButtonUI.Main.Show();
             InputManager.Main.SwitchMap(InputMap.Gameplay);
         }
+    }
+
+    public void StatButtonClicked()
+    {
+        HideNoFade();
+        StatUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 }

@@ -53,6 +53,7 @@ public class WalletManager : NetworkBehaviour
     private void OnGlobalWalletChanged(ulong previousValue, ulong newValue)
     {
         InventoryUI.Main.UpdateWallet(newValue - localSpending);
+        StatisticsManager.Main.UpdateStat(StatisticType.GlobalCoinsCollected, newValue);
     }
 
     public void AddToWallet(uint amount)

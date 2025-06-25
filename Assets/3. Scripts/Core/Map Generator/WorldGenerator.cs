@@ -384,14 +384,15 @@ public class WorldGenerator : NetworkBehaviour
     private Vector2 closetChunkPosition_cached = Vector2.one;
     private bool isGenerating = false;
     private Vector2 cached_position;
+    private float traveledDistance = 0;
 
     public IEnumerator BuildWorld(Vector2 position)
     {
         // Update the cached position
         if (cached_position != position)
         {
-            var distance = Vector2.Distance(cached_position, position);
-            StatisticManager.Main.UpdateStat(StatisticType.DistanceTravelled, (ulong)Mathf.RoundToInt(distance));
+            traveledDistance += Vector2.Distance(cached_position, position);
+            StatisticsManager.Main.UpdateStat(StatisticType.DistanceTravelled, (ulong)Mathf.RoundToInt(traveledDistance));
             cached_position = position;
         }
 

@@ -674,11 +674,11 @@
                 {
                     "name": "Click",
                     "type": "PassThrough",
-                    "id": "773c7e46-f7b2-472e-89ca-8360cf9cd388",
-                    "expectedControlType": "",
+                    "id": "59f2cc63-01cb-4e8f-a6b9-354509a8b4a0",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "RightClick",
@@ -1147,6 +1147,50 @@
                 },
                 {
                     "name": "",
+                    "id": "c96ba7ca-2f7c-4b88-9f62-7b761b4ccbfd",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "226a7789-7627-46ec-8da3-0107c4163ce5",
+                    "path": "<Pen>/tip",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b6ad3920-d76b-4e4d-a984-b92b2eed4901",
+                    "path": "<Touchscreen>/touch*/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "32c21389-f30b-4477-935a-78e8d103265e",
+                    "path": "<XRController>/trigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR",
+                    "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "db8f6d56-36c4-4ca1-90fa-3974582faa40",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
@@ -1160,6 +1204,17 @@
                     "name": "",
                     "id": "c97c8558-fe2e-4049-b008-019e37f94e98",
                     "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3dcd7021-7cf0-4b0b-9760-d46f39f5cd27",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

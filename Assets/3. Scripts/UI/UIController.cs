@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class UIController : MonoBehaviour, DefaultInputActions.IUIActions
 {
+    public static UIController Main { get; private set; }
+
+    private void Awake()
+    {
+        if (Main == null)
+            Main = this;
+        else
+            Destroy(gameObject);
+
+        DontDestroyOnLoad(gameObject);
+    }
+
     private void Start()
     {
         InputManager.Main.InputActions.UI.SetCallbacks(this);
@@ -15,11 +27,6 @@ public class UIController : MonoBehaviour, DefaultInputActions.IUIActions
         {
             ConsoleUI.Main.OpenConsole();
         }
-    }
-
-    public void OnBack(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        // TODO: Implement concrete method of UI back action
     }
 
     public void OnNavigate(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -34,7 +41,21 @@ public class UIController : MonoBehaviour, DefaultInputActions.IUIActions
 
     public void OnCancel(UnityEngine.InputSystem.InputAction.CallbackContext context)
     {
-
+        if (context.performed)
+        {
+            if (ShopUI.Main && ShopUI.Main.IsShowing)
+            {
+                ShopUI.Main.CloseShop();
+            }
+            else if (OptionsUI.Main && OptionsUI.Main.IsShowing)
+            {
+                OptionsUI.Main.ResumeButtonClicked();
+            }
+            else if (StatUI.Main && StatUI.Main.IsShowing)
+            {
+                StatUI.Main.CloseButton();
+            }
+        }
     }
 
     public void OnSubmit(UnityEngine.InputSystem.InputAction.CallbackContext context)

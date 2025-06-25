@@ -20,8 +20,7 @@ public class PauseButtonUI : UIBehaviour
 
     public void PauseButtonClicked()
     {
-        Debug.Log("Pause button clicked");
-        //HideNoFade();
+        HideNoFade();
         OptionsUI.Main.Show();
         AudioManager.Main.PlayClickSound();
         InputManager.Main.SwitchMap(InputMap.UI);

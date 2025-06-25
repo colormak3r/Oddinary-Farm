@@ -77,7 +77,7 @@ public class GameManager : NetworkBehaviour
         else
             TransitionUI.Main.HideNoFade();
 
-        StatisticManager.Main.Initialize();
+        StatisticsManager.Main.Initialize();
         yield return WorldGenerator.Main.Initialize();
         if (IsServer) yield return ScenarioManager.Main.RunTestPresetCoroutine();
 

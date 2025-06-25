@@ -222,7 +222,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             // Check if the attacker is the local player
             if (attackerRef.TryGet(out NetworkObject networkObject) && networkObject == NetworkManager.ConnectedClients[NetworkManager.LocalClientId].PlayerObject)
             {
-                StatisticManager.Main.UpdateStat(StatisticType.DamageDealt, gameObject.name, 1);
+                StatisticsManager.Main.UpdateStat(StatisticType.DamageDealt, gameObject.name, 1);
             }
         }
         else
@@ -257,7 +257,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
             // Check if the attacker is the local player
             if (attackerRef.TryGet(out NetworkObject networkObject) && networkObject == NetworkManager.ConnectedClients[NetworkManager.LocalClientId].PlayerObject)
             {
-                StatisticManager.Main.UpdateStat(StatisticType.EntitiesKilled, gameObject.name, 1);
+                StatisticsManager.Main.UpdateStat(StatisticType.EntitiesKilled, gameObject.name, 1);
             }
 
             OnEntityDeathOnClient();

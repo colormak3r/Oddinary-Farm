@@ -120,7 +120,7 @@ public class CaptureController : NetworkBehaviour
     public void CaptureLassoSuccess()
     {
         // Update stats
-        StatisticManager.Main.UpdateStat(StatisticType.AnimalsCaptured, gameObject.name, 1);
+        StatisticsManager.Main.UpdateStat(StatisticType.AnimalsCaptured, gameObject.name, 1);
 
         CaptureLassoSuccessRpc();
     }
