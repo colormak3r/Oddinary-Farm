@@ -126,6 +126,10 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private GameObject terrainUnitPrefab;
 
+    [Header("Flood Settings")]
+    [SerializeField]
+    private Color floodColor;
+
     [Header("Resource Settings")]
     [SerializeField]
     private bool canSpawnResources = true;
@@ -216,7 +220,7 @@ public class WorldGenerator : NetworkBehaviour
             {
                 if (map[i, j] < depthLevel)
                 {
-                    miniMapTexture.SetPixel(i + halfMapSize.x, j + halfMapSize.y, Color.blue);
+                    miniMapTexture.SetPixel(i + halfMapSize.x, j + halfMapSize.y, floodColor);
                     var position = new Vector2(i, j);
                     InvalidateFolliageOnClient(position);
                     RemoveFoliage(position);
@@ -233,6 +237,22 @@ public class WorldGenerator : NetworkBehaviour
         foreach (var position in positions)
         {
             miniMapTexture.SetPixel(position.x + halfMapSize.x, position.y + halfMapSize.y, color);
+        }
+
+        miniMapTexture.Apply();
+        UpdateMapTexture(miniMapTexture);
+    }
+
+    public void ResetMinimap(Vector2Int[] positions)
+    {
+        var map = elevationMap.RawMap;
+        var halfMapSize = mapSize / 2;
+
+        foreach (var position in positions)
+        {
+            var x = position.x;
+            var y = position.y;
+            miniMapTexture.SetPixel(x + halfMapSize.x, y + halfMapSize.y, GetDefaultProperty(elevationMap.RawMap[x, y]).MapColor);
         }
 
         miniMapTexture.Apply();

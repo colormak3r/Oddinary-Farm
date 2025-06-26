@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,15 +14,34 @@ public class MapUI : UIBehaviour
         {
             Destroy(gameObject);
         }
+
+        elevationMapImage.rectTransform.sizeDelta = new Vector2(currentZoomLevel, currentZoomLevel);
     }
 
     [Header("Settings")]
     [SerializeField]
+    private RectTransform mapContainer;
+    [SerializeField]
     private Image elevationMapImage;
+
+    [Header("Debugs")]
     [SerializeField]
-    private Image resourceMapImage;
+    private int currentZoomLevel = 200;
     [SerializeField]
-    private Image playerIcon;
+    private int minZoomLevel = 100;
+    [SerializeField]
+    private int maxZoomLevel = 600;
+    [SerializeField]
+    private int zoomStep = 50;
+    [SerializeField]
+    private float lerpSpeed = 10f;
+    [SerializeField]
+    private Vector2 playerPositionOffset = new Vector2(0, 0.5f);
+
+    private Vector2 position_cached;
+    private Vector2Int mapSize_cached;
+
+    private Vector2 mapPosition;
 
     public void UpdateElevationMap(Sprite mapSprite)
     {
@@ -32,6 +49,16 @@ public class MapUI : UIBehaviour
     }
 
     public void UpdatePlayerPosition(Vector2 position, Vector2Int mapSize)
+    {
+        position = position + playerPositionOffset;
+
+        position_cached = position;
+        mapSize_cached = mapSize;
+
+        CalculateMapPosition(position_cached, mapSize_cached);
+    }
+
+    private void CalculateMapPosition(Vector2 position, Vector2Int mapSize)
     {
         // Calculate half map dimensions in world units (assuming map is centered at (0,0))
         float halfMapWidth = mapSize.x / 2f;
@@ -50,11 +77,33 @@ public class MapUI : UIBehaviour
         float uiY = normalizedY * (mapRect.rect.height / 2f);
 
         // Update the player icon's anchored position on the map UI
-        playerIcon.rectTransform.anchoredPosition = new Vector2(uiX, uiY);
+        mapPosition = new Vector2(-uiX, -uiY);
     }
 
-    public void UpdateResourceMap(Sprite mapSprite)
+    private void Update()
     {
-        resourceMapImage.sprite = mapSprite;
+        elevationMapImage.rectTransform.anchoredPosition = Vector2.Lerp(elevationMapImage.rectTransform.anchoredPosition, mapPosition, lerpSpeed * Time.deltaTime);
+    }
+
+    public void ZoomIn()
+    {
+        currentZoomLevel += zoomStep;
+        if (currentZoomLevel > maxZoomLevel)
+        {
+            currentZoomLevel = maxZoomLevel;
+        }
+
+        elevationMapImage.rectTransform.sizeDelta = new Vector2(currentZoomLevel, currentZoomLevel);
+        CalculateMapPosition(position_cached, mapSize_cached);
+    }
+    public void ZoomOut()
+    {
+        currentZoomLevel -= zoomStep;
+        if (currentZoomLevel < minZoomLevel)
+        {
+            currentZoomLevel = minZoomLevel;
+        }
+        elevationMapImage.rectTransform.sizeDelta = new Vector2(currentZoomLevel, currentZoomLevel);
+        CalculateMapPosition(position_cached, mapSize_cached);
     }
 }

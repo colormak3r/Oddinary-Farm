@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 3608521828551919829}
   - component: {fileID: 1417610664343478020}
   - component: {fileID: 1281673768632911640}
+  - component: {fileID: -4035773228749842935}
   m_Layer: 10
   m_Name: Concrete Fence
   m_TagString: Untagged
@@ -138,7 +139,7 @@ MonoBehaviour:
   damagedSound: {fileID: 8300000, guid: a55205e71e32607428ce6bf3b84f24b4, type: 3}
   deathSound: {fileID: 8300000, guid: 3d54a46713562a848863ab191fb59494, type: 3}
   showDebugs: 0
-  CurrentHealth:
+  NetworkCurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
     m_PersistentCalls:
@@ -321,6 +322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundEffects: []
+  ignoreWarnings: 0
 --- !u!114 &3608521828551919829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,6 +375,23 @@ MonoBehaviour:
   elevation: 0
   previousWaterLevel: 0
   previousDepth: 0
+--- !u!114 &-4035773228749842935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 737704494243597508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f527d404a7e0a640bd070de1353edb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  positions:
+  - {x: 0, y: 0.5}
+  color: {r: 0.3529412, g: 0.3254902, b: 0.3254902, a: 1}
+  showGizmos: 0
 --- !u!1 &3221076355038008428
 GameObject:
   m_ObjectHideFlags: 0

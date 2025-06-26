@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21169d3da4f6e5e42b73ed03f366f42e, type: 3}
   m_Name: MidSizeFarm AssetSpawnPreset
   m_EditorClassIdentifier: 
+  startingWallet: 100000
+  startingItems: []
   PrefabPositions:
   - Prefab: {fileID: 5625321612986297944, guid: 99f381f961ad979428952597f4c477dc, type: 3}
     Position: {x: -6, y: 6}

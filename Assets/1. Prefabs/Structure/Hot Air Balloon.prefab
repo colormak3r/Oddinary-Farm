@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 677623035613944037}
   - component: {fileID: 4051804999155219241}
   - component: {fileID: 4176837517728966053}
+  - component: {fileID: 4497251070843497839}
   m_Layer: 10
   m_Name: Hot Air Balloon
   m_TagString: Untagged
@@ -100,14 +101,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1485063722
+  GlobalObjectIdHash: 3811201366
   InScenePlacedSourceGlobalObjectIdHash: 1485063722
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
@@ -257,7 +258,7 @@ FixedJoint2D:
   m_BreakAction: 0
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: -5, y: 0}
+  m_ConnectedAnchor: {x: 0, y: 0}
   m_DampingRatio: 0
   m_Frequency: 0
 --- !u!114 &4176837517728966053
@@ -280,6 +281,31 @@ MonoBehaviour:
   elevation: 0
   previousWaterLevel: 0
   previousDepth: 0
+--- !u!114 &4497251070843497839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940610010983976717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f527d404a7e0a640bd070de1353edb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  positions:
+  - {x: -1, y: 0}
+  - {x: -1, y: 1}
+  - {x: -1, y: 2}
+  - {x: 0, y: 0}
+  - {x: 0, y: 1}
+  - {x: 0, y: 2}
+  - {x: 1, y: 0}
+  - {x: 1, y: 1}
+  - {x: 1, y: 2}
+  color: {r: 0.5568628, g: 0.2784314, b: 0.54901963, a: 1}
+  showGizmos: 0
 --- !u!1 &2707789027467210874
 GameObject:
   m_ObjectHideFlags: 0
