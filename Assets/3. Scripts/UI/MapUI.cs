@@ -95,6 +95,7 @@ public class MapUI : UIBehaviour
 
         elevationMapImage.rectTransform.sizeDelta = new Vector2(currentZoomLevel, currentZoomLevel);
         CalculateMapPosition(position_cached, mapSize_cached);
+        elevationMapImage.rectTransform.anchoredPosition = mapPosition;
     }
     public void ZoomOut()
     {
@@ -105,5 +106,6 @@ public class MapUI : UIBehaviour
         }
         elevationMapImage.rectTransform.sizeDelta = new Vector2(currentZoomLevel, currentZoomLevel);
         CalculateMapPosition(position_cached, mapSize_cached);
+        elevationMapImage.rectTransform.anchoredPosition = mapPosition;
     }
 }
