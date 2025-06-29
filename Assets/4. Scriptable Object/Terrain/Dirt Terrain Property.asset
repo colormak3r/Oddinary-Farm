@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1e5fd2c0583c894ba5fc8fad3a93211, type: 3}
   m_Name: Dirt Terrain Property
   m_EditorClassIdentifier: 
-  mapColor: {r: 0.4784314, g: 0.26666668, b: 0.2901961, a: 1}
+  mapColor: {r: 0.47843137, g: 0.26666668, b: 0.2901961, a: 1}
   elevation:
     min: 0.5
     max: 0.55
@@ -21,6 +21,7 @@ MonoBehaviour:
   spillOverChance: 0.3
   folliageChance: 0
   folliageSprite: []
+  overlaySway: 0
   overlayChance: 0.3
   overlaySprite:
   - {fileID: 739865222, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
@@ -32,4 +33,4 @@ MonoBehaviour:
   - {fileID: -1550966934, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   underlaySprite: []
   drawOutline: 1
-  outlineColor: {r: 0.627451, g: 0.35686275, b: 0.3254902, a: 1}
+  outlineColor: {r: 0.61960787, g: 0.27058825, b: 0.22352941, a: 1}

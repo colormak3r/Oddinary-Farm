@@ -107,6 +107,7 @@ public class WorldGenerator : NetworkBehaviour
     [Header("Map Settings")]
     [SerializeField]
     private Vector2Int mapSize = new Vector2Int(500, 500);
+    public Vector2Int MapSize => mapSize;
     [SerializeField]
     private int chunkSize = 5;
     [SerializeField]
@@ -137,6 +138,8 @@ public class WorldGenerator : NetworkBehaviour
     private GameObject[] resourcePrefabs;
     [SerializeField]
     private int countPerYield = 10;
+    [SerializeField]
+    private int noResourceZoneSize = 15; // Size of no resource zone around the player spawn point
 
     [Header("Folliage Settings")]
     [SerializeField]
@@ -179,14 +182,15 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private bool showStep;
 
-    public float HighestElevation => elevationMap.MaxValue;
+    public float HighestElevationValue => elevationMap.HighestElevationValue;
+    public Vector2 HighestElevationPoint => elevationMap.HighestElevationPoint;
     public float OceanElevationThreshold => sandUnitProperty.Elevation.max;
 
     public IEnumerator Initialize()
     {
         yield return GenerateWorld();
         FloodManager.Main.Initialize();
-        yield return BuildWorld(Vector2.zero);
+        yield return BuildWorld(GameManager.Main.SpawnPoint);
         isInitialized = true;
     }
 
@@ -277,7 +281,15 @@ public class WorldGenerator : NetworkBehaviour
         yield return GenerateTerrain();
         if (IsHost)
         {
-            yield return GenerateResources();
+            if (ScenarioManager.Main.OverrideSettings)
+            {
+                // When setting is overrided, check for ScenarioManager setting
+                if (ScenarioManager.Main.CanSpawnResources) yield return GenerateResources();
+            }
+            else if (canSpawnResources)
+            {
+                yield return GenerateResources();
+            }
         }
         yield return GenerateFolliage();
     }
@@ -310,7 +322,7 @@ public class WorldGenerator : NetworkBehaviour
 
     private void UpdateMapTexture(Texture2D texture)
     {
-        var terrainMapSprite = Sprite.Create(texture, new Rect(0, 0, mapSize.x, mapSize.y), Vector2.zero);
+        var terrainMapSprite = Sprite.Create(texture, new Rect(0, 0, mapSize.x, mapSize.y), new Vector2(0.5f, 0.5f));
         terrainMapSprite.texture.filterMode = FilterMode.Point;
         MapUI.Main.UpdateElevationMap(terrainMapSprite);
     }
@@ -350,15 +362,21 @@ public class WorldGenerator : NetworkBehaviour
                 }
                 else
                 {
-                    if (terrainMap[x, y] != voidUnitProperty && resourceMap.RawMap[x, y] >= 0.99f && terrainMap[x, y].Elevation.min > FloodManager.Main.CurrentSafeLevel)
-                    {
-                        SpawnResource(x, y);
-                        count++;
-                        if (count % countPerYield == 0)
+                    var dx = x - HighestElevationPoint.x;
+                    var dy = y - HighestElevationPoint.y;
+                    if (dx * dx + dy * dy > noResourceZoneSize * noResourceZoneSize)
+                        if (terrainMap[x, y] != voidUnitProperty                                    // No resources in water
+                        && resourceMap.RawMap[x, y] >= 0.99f                                        // Resource threshold
+                        && terrainMap[x, y].Elevation.min > FloodManager.Main.CurrentSafeLevel      // Not flooded
+                        && dx * dx + dy * dy > noResourceZoneSize * noResourceZoneSize)             // Outside of no resource zone (around player spawn point)
                         {
-                            yield return null;
+                            SpawnResource(x, y);
+                            count++;
+                            if (count % countPerYield == 0)
+                            {
+                                yield return null;
+                            }
                         }
-                    }
                 }
             }
         }

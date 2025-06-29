@@ -577,7 +577,12 @@ MonoBehaviour:
   positions:
   - {x: 0, y: 0}
   color: {r: 0.7137255, g: 0.8352941, b: 0.23529412, a: 1}
+  defaultHeatValue: 1
+  heatDecayPerDay: 0.1
+  minHeat: 0.5
   showGizmos: 0
+  CurrentHeat:
+    m_InternalValue: 0
 --- !u!1001 &771624051194356418
 PrefabInstance:
   m_ObjectHideFlags: 0

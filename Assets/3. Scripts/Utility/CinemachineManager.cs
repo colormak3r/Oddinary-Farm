@@ -16,9 +16,9 @@ public class CinemachineManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        cinemachineCamera = GetComponent<CinemachineCamera>();
+        iCamera = GetComponent<CinemachineCamera>();
     }
 
-    private CinemachineCamera cinemachineCamera;
-    public CinemachineCamera CinemachineCamera => cinemachineCamera;
+    private CinemachineCamera iCamera;
+    public CinemachineCamera Camera => iCamera;
 }

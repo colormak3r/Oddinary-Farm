@@ -16,15 +16,16 @@ public class MapUI : UIBehaviour
         }
 
         elevationMapImage.rectTransform.sizeDelta = new Vector2(currentZoomLevel, currentZoomLevel);
+        heatMapImage.rectTransform.sizeDelta = new Vector2(currentZoomLevel, currentZoomLevel);
     }
 
-    [Header("Settings")]
-    [SerializeField]
-    private RectTransform mapContainer;
+    [Header("Map Settings")]
     [SerializeField]
     private Image elevationMapImage;
+    [SerializeField]
+    private Image heatMapImage;
 
-    [Header("Debugs")]
+    [Header("Map Debugs")]
     [SerializeField]
     private int currentZoomLevel = 200;
     [SerializeField]
@@ -46,6 +47,11 @@ public class MapUI : UIBehaviour
     public void UpdateElevationMap(Sprite mapSprite)
     {
         elevationMapImage.sprite = mapSprite;
+    }
+
+    public void UpdateHeatMap(Sprite heatMapSprite)
+    {
+        heatMapImage.sprite = heatMapSprite;
     }
 
     public void UpdatePlayerPosition(Vector2 position, Vector2Int mapSize)
@@ -83,6 +89,7 @@ public class MapUI : UIBehaviour
     private void Update()
     {
         elevationMapImage.rectTransform.anchoredPosition = Vector2.Lerp(elevationMapImage.rectTransform.anchoredPosition, mapPosition, lerpSpeed * Time.deltaTime);
+        heatMapImage.rectTransform.anchoredPosition = Vector2.Lerp(heatMapImage.rectTransform.anchoredPosition, mapPosition, lerpSpeed * Time.deltaTime);
     }
 
     public void ZoomIn()
@@ -94,8 +101,10 @@ public class MapUI : UIBehaviour
         }
 
         elevationMapImage.rectTransform.sizeDelta = new Vector2(currentZoomLevel, currentZoomLevel);
+        heatMapImage.rectTransform.sizeDelta = new Vector2(currentZoomLevel, currentZoomLevel);
         CalculateMapPosition(position_cached, mapSize_cached);
         elevationMapImage.rectTransform.anchoredPosition = mapPosition;
+        heatMapImage.rectTransform.anchoredPosition = mapPosition;
     }
     public void ZoomOut()
     {
@@ -105,7 +114,9 @@ public class MapUI : UIBehaviour
             currentZoomLevel = minZoomLevel;
         }
         elevationMapImage.rectTransform.sizeDelta = new Vector2(currentZoomLevel, currentZoomLevel);
+        heatMapImage.rectTransform.sizeDelta = new Vector2(currentZoomLevel, currentZoomLevel);
         CalculateMapPosition(position_cached, mapSize_cached);
         elevationMapImage.rectTransform.anchoredPosition = mapPosition;
+        heatMapImage.rectTransform.anchoredPosition = mapPosition;
     }
 }

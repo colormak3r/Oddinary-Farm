@@ -1,5 +1,6 @@
 using System.Collections;
 using Unity.Netcode;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public enum ScenarioPreset
@@ -17,7 +18,7 @@ public class ScenarioManager : NetworkBehaviour
 
     [Header("Settings")]
     [SerializeField]
-    private ScenarioPreset currentScenario;
+    private NetworkVariable<ScenarioPreset> CurrentScenario = new NetworkVariable<ScenarioPreset>();
 
     [Header("Asset Spawn Preset")]
     [SerializeField]
@@ -32,10 +33,12 @@ public class ScenarioManager : NetworkBehaviour
     [Header("Temporary Settings")]
     [SerializeField]
     private bool overrideSettings = false;
+    public bool OverrideSettings => overrideSettings;
     [SerializeField]
     private bool canSpawnEnemies = false;
     [SerializeField]
     private bool canSpawnResources = false;
+    public bool CanSpawnResources => canSpawnResources;
     [SerializeField]
     private float realMinutesPerInGameDay = 10f;
     [SerializeField]
@@ -69,23 +72,18 @@ public class ScenarioManager : NetworkBehaviour
         itemSystem = GetComponent<ItemSystem>();
     }
 
-    public override void OnNetworkSpawn()
-    {
-        NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-    }
-
     protected override void OnNetworkPostSpawn()
     {
         if (IsServer & overrideSettings)
         {
             StartCoroutine(InitializeCoroutine());
         }
+
+        StartCoroutine(WaitForPlayerObjectCoroutine());
     }
 
     private IEnumerator InitializeCoroutine()
     {
-        WorldGenerator.Main.SetCanSpawnResources(canSpawnResources);
-
         yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
         TimeManager.Main.SetRealMinutesPerDay(realMinutesPerInGameDay);
         TimeManager.Main.SetTimeOffset(dayOffset, hourOffset, minuteOffset);
@@ -94,32 +92,23 @@ public class ScenarioManager : NetworkBehaviour
         CreatureSpawnManager.Main.SetCanSpawn(canSpawnEnemies);
     }
 
-    public override void OnNetworkDespawn()
+    private IEnumerator WaitForPlayerObjectCoroutine()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-    }
+        yield return new WaitUntil(() => NetworkManager.Singleton.LocalClient.PlayerObject != null);
 
-    private void OnClientConnected(ulong clientId)
-    {
-        if (currentScenario == ScenarioPreset.None) return;
+        if (CurrentScenario.Value == ScenarioPreset.None) yield break;
 
-        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        var playerObject = NetworkManager.Singleton.LocalClient.PlayerObject;
+        var inventory = playerObject.GetComponent<PlayerInventory>();
+        var preset = GetAssetSpawnPreset(CurrentScenario.Value);
+
+        // Add starting coins to the player's inventory
+        inventory.AddCoinsOnClient(preset.StartingWallet);
+
+        // Add starting items to the player's inventory
+        foreach (var item in preset.StartingItems)
         {
-            var playerObject = client.PlayerObject;
-            if (playerObject.IsLocalPlayer)
-            {
-                var inventory = playerObject.GetComponent<PlayerInventory>();
-                var preset = GetAssetSpawnPreset(currentScenario);
-
-                // Add starting coins to the player's inventory
-                inventory.AddCoinsOnClient(preset.StartingWallet);
-
-                // Add starting items to the player's inventory
-                foreach (var item in preset.StartingItems)
-                {
-                    inventory.AddItem(item);
-                }
-            }
+            inventory.AddItem(item);
         }
     }
 
@@ -127,7 +116,7 @@ public class ScenarioManager : NetworkBehaviour
     {
         layerManager = LayerManager.Main;
 
-        switch (currentScenario)
+        switch (CurrentScenario.Value)
         {
             case ScenarioPreset.CornFarmDemo:
                 yield return CornFarmDemo();
@@ -178,37 +167,31 @@ public class ScenarioManager : NetworkBehaviour
         }
     }
 
-    /*private IEnumerator MidSizeFarmDemo()
-    {
-        yield return SpawnAssetPreset(midSizeFarmDemoPreset);
-    }
-
-    private IEnumerator ChickenFarmDemo()
-    {
-        yield return SpawnAssetPreset(chickenFarmDemoPreset);
-    }*/
-
     private IEnumerator SpawnAssetPreset(AssetSpawnPreset assetSpawnPreset)
     {
+        var spawnPoint = WorldGenerator.Main.HighestElevationPoint - new Vector2(3, 0);
+
         foreach (var prefabPosition in assetSpawnPreset.PrefabPositions)
         {
+            var position = prefabPosition.Position + spawnPoint;
             if (prefabPosition.Prefab == AssetManager.Main.FarmPlotPrefab)
             {
-                itemSystem.SpawnFarmPlot(prefabPosition.Position);
+                itemSystem.SpawnFarmPlot(position);
             }
             else
             {
-                AssetManager.Main.SpawnPrefabOnServer(prefabPosition.Prefab, prefabPosition.Position);
+                AssetManager.Main.SpawnPrefabOnServer(prefabPosition.Prefab, position);
             }
 
-            DestroyResource(prefabPosition.Position);
+            DestroyResource(position);
             yield return null;
         }
 
         foreach (var prefabPosition in assetSpawnPreset.SpawnerPositions)
         {
-            itemSystem.Spawn(prefabPosition.Position, prefabPosition.SpawnerProperty);
-            DestroyResource(prefabPosition.Position);
+            var position = prefabPosition.Position + spawnPoint;
+            itemSystem.Spawn(position, prefabPosition.SpawnerProperty);
+            DestroyResource(position);
             yield return null;
         }
 
@@ -226,7 +209,7 @@ public class ScenarioManager : NetworkBehaviour
 
     public void SetScenario(ScenarioPreset scenario)
     {
-        this.currentScenario = scenario;
+        CurrentScenario.Value = scenario;
     }
 
     private AssetSpawnPreset GetAssetSpawnPreset(ScenarioPreset scenario)

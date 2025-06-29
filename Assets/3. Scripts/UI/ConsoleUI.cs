@@ -231,7 +231,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "StartInstantFlood",
     "SetCanFlood",
     "SetFlood",
-    "Scenario"};
+    "Scenario",
+    "ShowHeatMapCenter",};
 
     private string[] commandHelps =
     {"Help",
@@ -252,7 +253,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "StartInstantFlood",
     "SetCanFlood [bool]",
     "SetFlood [0~1]",
-    "Scenario [name]"};
+    "Scenario [name]",
+    "ShowHeatMapCenter [bool]",};
 
     private void ParseCommand(string input)
     {
@@ -480,6 +482,13 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                 {
                     ScenarioManager.Main.SetScenario(ScenarioPreset.None);
                 }
+            }
+            else if (command == commands[19].ToLower())
+            {
+                // ShowHeatMapCenter [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
+                if (HeatMapManager.Main == null) throw new Exception("HeatMapManager not found. Has the game started yet?");
+                HeatMapManager.Main.ShowHeatMapCenter(defaultBool);
             }
             else
             {

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1e5fd2c0583c894ba5fc8fad3a93211, type: 3}
   m_Name: Sand Terrain Property
   m_EditorClassIdentifier: 
-  mapColor: {r: 0.9333334, g: 0.6313726, b: 0.37647063, a: 1}
+  mapColor: {r: 0.95686275, g: 0.7058824, b: 0.105882354, a: 1}
   elevation:
     min: 0.4
     max: 0.5
@@ -21,6 +21,7 @@ MonoBehaviour:
   spillOverChance: 1
   folliageChance: 0
   folliageSprite: []
+  overlaySway: 0
   overlayChance: 0.5
   overlaySprite:
   - {fileID: -1983206874, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
@@ -32,4 +33,4 @@ MonoBehaviour:
   - {fileID: -1061490942, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   underlaySprite: []
   drawOutline: 1
-  outlineColor: {r: 0.8745098, g: 0.9647059, b: 0.9607843, a: 1}
+  outlineColor: {r: 0.93333334, g: 0.6313726, b: 0.3764706, a: 1}

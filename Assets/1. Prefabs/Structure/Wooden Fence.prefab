@@ -391,7 +391,12 @@ MonoBehaviour:
   positions:
   - {x: 0, y: 0.5}
   color: {r: 0.47843137, g: 0.26666668, b: 0.2901961, a: 1}
+  defaultHeatValue: 0.5
+  heatDecayPerDay: 0.5
+  minHeat: 0.1
   showGizmos: 0
+  CurrentHeat:
+    m_InternalValue: 0
 --- !u!1 &3221076355038008428
 GameObject:
   m_ObjectHideFlags: 0

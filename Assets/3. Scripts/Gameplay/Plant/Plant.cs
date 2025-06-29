@@ -27,6 +27,7 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
     private LootGenerator lootGenerator;
     private EntityStatus entityStatus;
     private FarmPlot farmPlot;
+    private MapElement mapElement;
 
     public bool IsHarvestable => Property.Value.Stages[CurrentStage.Value].isHarvestStage;
     public ItemProperty Seed => Property.Value.SeedProperty;
@@ -42,6 +43,7 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         lootGenerator = GetComponentInChildren<LootGenerator>();
         entityStatus = GetComponent<EntityStatus>();
+        mapElement = GetComponent<MapElement>();
     }
 
     public override void OnNetworkSpawn()
@@ -164,6 +166,7 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
 
         // Heal plant when grown a stage
         entityStatus.GetHealed(1);
+        mapElement.ResetHeatValue();
 
         growthCoroutine = null;
 

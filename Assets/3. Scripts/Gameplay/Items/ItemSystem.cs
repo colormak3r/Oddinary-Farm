@@ -223,7 +223,6 @@ public class ItemSystem : NetworkBehaviour
     {
         GameObject go = Instantiate(AssetManager.Main.FarmPlotPrefab, position - TransformUtility.HALF_UNIT_Y_V2, Quaternion.identity);
         go.GetComponent<NetworkObject>().Spawn();
-        CreatureSpawnManager.Main.UpdateSafeRadius(Mathf.CeilToInt(Mathf.Max(Mathf.Abs(position.x), Mathf.Abs(position.y))) + 5);
 
         if (recordFarmPlotSpawns)
         {

@@ -117,7 +117,7 @@ public class FloodController : MonoBehaviour
     private void SetFloodMaterial(float waterLevel, float depth)
     {
         foreach (var renderer in alphaRenderer)
-            renderer.color = new Color(1, 1, 1, 1 - waterLevel);
+            renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, 1 - waterLevel);
 
         spriteRenderer.GetPropertyBlock(mpb);
 

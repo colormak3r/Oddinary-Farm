@@ -22,7 +22,7 @@ public class Spectator : MonoBehaviour
         var connectedClients = NetworkManager.Singleton.ConnectedClientsList;
         if (id > (ulong)connectedClients.Count)
         {
-            CinemachineManager.Main.CinemachineCamera.Follow = transform;
+            CinemachineManager.Main.Camera.Follow = transform;
         }
         else
         {
@@ -30,7 +30,7 @@ public class Spectator : MonoBehaviour
             {
                 if (client.ClientId == id)
                 {
-                    CinemachineManager.Main.CinemachineCamera.Follow = client.PlayerObject.transform;
+                    CinemachineManager.Main.Camera.Follow = client.PlayerObject.transform;
                     return;
                 }
             }
@@ -40,7 +40,7 @@ public class Spectator : MonoBehaviour
 
     public void SetCamera(Transform transform)
     {
-        CinemachineManager.Main.CinemachineCamera.Follow = transform;
+        CinemachineManager.Main.Camera.Follow = transform;
     }
 
     public void SetPosition(Vector2 position)

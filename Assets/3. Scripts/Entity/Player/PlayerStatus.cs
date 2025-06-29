@@ -11,8 +11,6 @@ public class PlayerStatus : EntityStatus
 {
     [Header("Player Settings")]
     [SerializeField]
-    private Transform respawnPoint;
-    [SerializeField]
     private Collider2D playerHitbox;
     [SerializeField]
     private PlayerNameUI playerNameUI;
@@ -128,9 +126,11 @@ public class PlayerStatus : EntityStatus
         foreach (var light in lights) light.enabled = false;
 
         // Determain respawn position
-        var respawnPos = respawnPoint != null ? respawnPoint.position : Vector3.zero;
-        var deathPos = transform.position;
+        var respawnPos = GameManager.Main.SpawnPoint;
+        //var deathPos = transform.position;
 
+        // Prevent respawning in water or if the map is flooded
+        // Remove temporarily for behavior change
         /*var int_respawnPos = ((Vector2)respawnPos).ToInt();
         if (WorldGenerator.Main.GetElevation(int_respawnPos.x, int_respawnPos.y) < FloodManager.Main.CurrentFloodLevelValue)
         {

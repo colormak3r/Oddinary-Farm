@@ -4,16 +4,35 @@ using ColorMak3r.Utility;
 using System.Collections;
 using Unity.VisualScripting;
 using System.Collections.Generic;
+using System;
 
 public class MapElement : NetworkBehaviour
 {
-    [Header("Settings")]
+    [Header("Map Settings")]
     [SerializeField]
     private Vector2[] positions;
     [SerializeField]
     private Color color;
+
+    [Header("Heat Settings")]
+    [SerializeField]
+    [Range(0f, 1f)]
+    private float defaultHeatValue = 0.5f;
+    [SerializeField]
+    [Range(0f, 1f)]
+    private float heatDecayPerDay = 0.1f;
+    [SerializeField]
+    [Range(0f, 1f)]
+    private float minHeat = 0.1f;
+
+    [Header("Debugs")]
     [SerializeField]
     private bool showGizmos = false;
+    [SerializeField]
+    private NetworkVariable<float> CurrentHeat = new NetworkVariable<float>();
+    public float CurrentHeatValue => CurrentHeat.Value;
+
+    private float heatDecayPerHour => heatDecayPerDay / 24f;
 
     private Vector2Int[] snappedPositions;
 
@@ -31,11 +50,40 @@ public class MapElement : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         StartCoroutine(WaitWorldGeneratorLoad());
+        CurrentHeat.OnValueChanged += HandleOnCurrentHeatChanged;
+
+        if (IsServer)
+        {
+            TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
+            CurrentHeat.Value = defaultHeatValue;
+        }
     }
 
     public override void OnNetworkDespawn()
     {
         WorldGenerator.Main.ResetMinimap(snappedPositions);
+
+        if (IsServer)
+        {
+            TimeManager.Main.OnHourChanged.RemoveListener(HandleOnHourChanged);
+            CurrentHeat.Value = 0f; // Reset heat value on despawn
+        }
+
+        CurrentHeat.OnValueChanged -= HandleOnCurrentHeatChanged;
+    }
+
+    private void HandleOnCurrentHeatChanged(float previousValue, float newValue)
+    {
+        HeatMapManager.Main.UpdateHeatMap(snappedPositions, newValue);
+    }
+
+    private void HandleOnHourChanged(int currentHour)
+    {
+        /*if (CurrentHeatValue > minHeat)
+        {
+            float newHeatValue = Mathf.Max(CurrentHeatValue - heatDecayPerHour, minHeat);
+            CurrentHeat.Value = newHeatValue;
+        }*/
     }
 
     private IEnumerator WaitWorldGeneratorLoad()
@@ -44,9 +92,10 @@ public class MapElement : NetworkBehaviour
         WorldGenerator.Main.UpdateMinimap(snappedPositions, color);
     }
 
-    private void ResetMapColor()
+    public void ResetHeatValue()
     {
-        WorldGenerator.Main.ResetMinimap(snappedPositions);
+        if (!IsServer) return;
+        CurrentHeat.Value = defaultHeatValue;
     }
 
     private void OnDrawGizmos()

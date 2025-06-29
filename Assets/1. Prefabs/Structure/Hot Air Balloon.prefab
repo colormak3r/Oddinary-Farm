@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3811201366
+  GlobalObjectIdHash: 1485063722
   InScenePlacedSourceGlobalObjectIdHash: 1485063722
   DeferredDespawnTick: 0
   Ownership: 1
@@ -305,7 +305,12 @@ MonoBehaviour:
   - {x: 1, y: 1}
   - {x: 1, y: 2}
   color: {r: 0.5568628, g: 0.2784314, b: 0.54901963, a: 1}
+  defaultHeatValue: 1
+  heatDecayPerDay: 0
+  minHeat: 1
   showGizmos: 0
+  CurrentHeat:
+    m_InternalValue: 0
 --- !u!1 &2707789027467210874
 GameObject:
   m_ObjectHideFlags: 0

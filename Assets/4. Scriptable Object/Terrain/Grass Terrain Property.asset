@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1e5fd2c0583c894ba5fc8fad3a93211, type: 3}
   m_Name: Grass Terrain Property
   m_EditorClassIdentifier: 
-  mapColor: {r: 0.4431373, g: 0.6666667, b: 0.20392159, a: 1}
+  mapColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
   elevation:
     min: 0.55
-    max: 0.95
+    max: 0.75
   isAccessible: 1
   blockProperty: {fileID: 11400000, guid: cae112df666cda34cb83978a88571cf6, type: 2}
   spillOverChance: 0.3
@@ -23,6 +23,7 @@ MonoBehaviour:
   folliageSprite:
   - {fileID: 1913753943, guid: 4eed87844f6b4cb4999dd860b5814bc8, type: 3}
   - {fileID: -638667126, guid: 4eed87844f6b4cb4999dd860b5814bc8, type: 3}
+  overlaySway: 1
   overlayChance: 0.5
   overlaySprite:
   - {fileID: -195600167, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
@@ -50,4 +51,4 @@ MonoBehaviour:
   - {fileID: 1356425900, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
   underlaySprite: []
   drawOutline: 1
-  outlineColor: {r: 0.7137255, g: 0.8352941, b: 0.23529412, a: 1}
+  outlineColor: {r: 0.11764706, g: 0.7372549, b: 0.4509804, a: 1}

@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1e5fd2c0583c894ba5fc8fad3a93211, type: 3}
+  m_Name: Vine Terrain Property
+  m_EditorClassIdentifier: 
+  mapColor: {r: 0.22352941, g: 0.48235294, b: 0.26666668, a: 1}
+  elevation:
+    min: 0.75
+    max: 1
+  isAccessible: 1
+  blockProperty: {fileID: 11400000, guid: cae112df666cda34cb83978a88571cf6, type: 2}
+  spillOverChance: 0.3
+  folliageChance: 0
+  folliageSprite: []
+  overlaySway: 0
+  overlayChance: 0.9
+  overlaySprite:
+  - {fileID: -230716968, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -1177343318, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -1437184191, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: 2045475772, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: 1878939294, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  - {fileID: -8077704692549116000, guid: dad18ba6990044c4c98b27f78fed9a45, type: 3}
+  - {fileID: -916647486, guid: dad18ba6990044c4c98b27f78fed9a45, type: 3}
+  - {fileID: -1085863371, guid: dad18ba6990044c4c98b27f78fed9a45, type: 3}
+  - {fileID: -51773760, guid: dad18ba6990044c4c98b27f78fed9a45, type: 3}
+  - {fileID: -1315952534, guid: dad18ba6990044c4c98b27f78fed9a45, type: 3}
+  baseSprite:
+  - {fileID: 1506400202, guid: 37bcc3d8f4a4b8f4a8c13b181837db56, type: 3}
+  underlaySprite: []
+  drawOutline: 1
+  outlineColor: {r: 0.13725491, g: 0.5647059, b: 0.3882353, a: 1}
