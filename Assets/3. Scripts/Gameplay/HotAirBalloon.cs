@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
+using static Unity.VisualScripting.Member;
 
 public class HotAirBalloon : Structure, IInteractable
 {
@@ -13,46 +14,51 @@ public class HotAirBalloon : Structure, IInteractable
     private UpgradeStages upgradeStages;
     [SerializeField]
     private SpriteRenderer spriteRenderer;
-    [SerializeField]
-    private Vector3 playerOffset;
 
     private NetworkVariable<int> CurrentStage = new NetworkVariable<int>();
-    private NetworkVariable<bool> IsTakenOff = new NetworkVariable<bool>();
-    private NetworkVariable<NetworkObjectReference> CurrentOwner = new NetworkVariable<NetworkObjectReference>();
-
-    private FixedJoint2D fixedJoint;
+    private NetworkVariable<bool> CanTakeOff = new NetworkVariable<bool>();
 
     public int CurrentStageValue => CurrentStage.Value;
-    private Vector2 playerPosition;
+
+    private MountInteraction mountInteraction;
+    private MountController mountController;
 
     public override void OnNetworkSpawn()
     {
-        fixedJoint = GetComponent<FixedJoint2D>();
+        mountInteraction = GetComponent<MountInteraction>();
+        mountController = GetComponent<MountController>();
+
+        if (mountInteraction == null || mountController == null)
+        {
+            Debug.LogError("HotAirBalloon Error: Missing MountInteraction or MountController scripts.");
+            return;
+        }
+
+        // Set mount values to false on init
+        mountController.SetControllable(false);
+        mountController.SetMoveable(false);
+        mountInteraction.SetCanMount(false);
+        mountInteraction.OnMount += TakeOff;
 
         CurrentStage.OnValueChanged += HandleCurrentStageChanged;
         HandleCurrentStageChanged(0, CurrentStage.Value);
-        CurrentOwner.OnValueChanged += HandleCurrentOwnerChanged;
-        HandleCurrentOwnerChanged(default, CurrentOwner.Value);
-        IsTakenOff.OnValueChanged += HandleIsTakenOff;
-        HandleIsTakenOff(false, IsTakenOff.Value);
 
         if (IsOwner)
         {
-            TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
+            TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);        // See when to take off
         }
-        HandleOnHourChanged(TimeManager.Main.CurrentHour);
+        HandleOnHourChanged(TimeManager.Main.CurrentHour);      // See if player can take off 
     }
 
     public override void OnNetworkDespawn()
     {
-        CurrentStage.OnValueChanged -= HandleCurrentStageChanged;
-        CurrentOwner.OnValueChanged -= HandleCurrentOwnerChanged;
-        IsTakenOff.OnValueChanged -= HandleIsTakenOff;
-
-        if (IsServer)
+        if (mountInteraction == null || mountController == null)
         {
-            HandleOnPlayerDieOnServer();
+            Debug.LogError("HotAirBalloon Error: Missing MountInteraction or MountController scripts.");
+            return;
         }
+
+        CurrentStage.OnValueChanged -= HandleCurrentStageChanged;
 
         if (IsOwner)
         {
@@ -60,10 +66,13 @@ public class HotAirBalloon : Structure, IInteractable
         }
     }
 
-
-    private void HandleIsTakenOff(bool previousValue, bool newValue)
+    private void TakeOff(Transform source)
     {
-        if (!newValue) return;
+        if (!CanTakeOff.Value)      // Take off only if conditions are met
+            return;
+
+        if (source == null)
+            return;
 
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
 
@@ -84,24 +93,26 @@ public class HotAirBalloon : Structure, IInteractable
 
         // Move the hot air balloon
         if (IsOwner)
-            GetComponent<EntityMovement>().SetDirection(Vector2.up);
+        {
+            // TODO: Take Off From Mount Controller
+            mountController.SetControllable(true);  // Player can control the hotAirBalloon
+            mountController.SetMoveable(true);      // HotAirBalloon can move
+            mountInteraction.SetCanMount(false);    // Player cannot dismount from balloon
+        }
     }
-
 
     private void HandleOnHourChanged(int currentHour)
     {
-        if (IsTakenOff.Value) return;
+        if (CanTakeOff.Value)
+            return;
 
         if (currentHour == takeOffHour)
         {
             if (TimeManager.Main.CurrentDate == takeOffDate)
             {
-                if (CurrentOwner.Value.TryGet(out var networkObject))
+                if (IsServer)
                 {
-                    if (IsServer)
-                    {
-                        IsTakenOff.Value = true;
-                    }
+                    CanTakeOff.Value = true;
                 }
             }
         }
@@ -112,97 +123,15 @@ public class HotAirBalloon : Structure, IInteractable
         spriteRenderer.sprite = upgradeStages.GetStage(newValue).sprite;
     }
 
-    private void HandleCurrentOwnerChanged(NetworkObjectReference previousValue, NetworkObjectReference newValue)
-    {
-        if (IsServer)
-        {
-            if (newValue.TryGet(out var networkObject))
-            {
-                NetworkObject.ChangeOwnership(networkObject.OwnerClientId);
-            }
-            else
-            {
-                NetworkObject.ChangeOwnership(default);
-            }
-
-            if (TimeManager.Main.CurrentDate > takeOffDate || (TimeManager.Main.CurrentDate == takeOffDate && TimeManager.Main.CurrentHour >= takeOffHour))
-            {
-                IsTakenOff.Value = true;
-            }
-        }
-
-        if (newValue.TryGet(out var localnetworkObject))
-        {
-            var playerStatus = localnetworkObject.GetComponent<PlayerStatus>();
-            fixedJoint.connectedBody = localnetworkObject.GetComponent<Rigidbody2D>();
-        }
-        else
-        {
-            fixedJoint.connectedBody = null;
-        }
-    }
-
     public void Interact(Transform source)
     {
-        if (IsTakenOff.Value) return;
-
-        if (CurrentStage.Value < upgradeStages.GetStageCount() - 1)
+        if (CurrentStage.Value < upgradeStages.GetStageCount() - 1)     // Player needs to upgrade balloon
             UpgradeUI.Main.Initialize(source.GetComponent<PlayerInventory>(), upgradeStages, CurrentStageValue, UpgradeBalloon);
-        else
+        else                                              // Player can mount balloon now
         {
-            if (CurrentOwner.Value.TryGet(out var networkObject))
-            {
-                if (networkObject == source.GetComponent<NetworkObject>())
-                {
-                    SetOwnerRpc(default);
-
-                    source.transform.position = playerPosition;
-                    source.GetComponent<HotAirBalloonController>().SetControl(false);
-                    source.transform.SetParent(null);
-                }
-            }
-            else
-            {
-                SetOwnerRpc(source.gameObject);
-                playerPosition = source.position;
-
-                source.GetComponent<HotAirBalloonController>().SetControl(true);
-                source.transform.position = transform.position + playerOffset;
-                source.transform.SetParent(transform);
-            }
+            mountInteraction.SetCanMount(true);
+            mountInteraction.Interact(source);
         }
-    }
-
-    [Rpc(SendTo.Server)]
-    private void SetOwnerRpc(NetworkObjectReference networkObjectReference)
-    {
-        if (networkObjectReference.TryGet(out var networkObject))
-        {
-            var playerStatus = networkObject.GetComponent<PlayerStatus>();
-            playerStatus.OnDeathOnServer.AddListener(HandleOnPlayerDieOnServer);
-            CurrentOwner.Value = networkObjectReference;
-        }
-        else
-        {
-            HandleOnPlayerDieOnServer();
-        }
-    }
-
-    private void HandleOnPlayerDieOnServer()
-    {
-        PlayerStatus playerStatus = null;
-        if (CurrentOwner.Value.TryGet(out var networkObject))
-        {
-            var playerGO = networkObject.gameObject;
-            playerGO.GetComponent<HotAirBalloonController>().SetControl(false);
-            playerStatus = networkObject.GetComponent<PlayerStatus>();
-        }
-
-        if (playerStatus)
-            playerStatus.OnDeathOnServer.AddListener(HandleOnPlayerDieOnServer);
-
-
-        CurrentOwner.Value = default;
     }
 
     public void UpgradeBalloon()
@@ -218,9 +147,11 @@ public class HotAirBalloon : Structure, IInteractable
     }
 
     [ContextMenu("Take Off")]
-    private void TakeOff()
+    private void TakeOffDebug()
     {
-        if (!IsServer) return;
-        IsTakenOff.Value = true;
+        if (!IsServer)
+            return;
+
+        TakeOff(null);
     }
 }

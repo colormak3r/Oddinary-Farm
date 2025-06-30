@@ -1,9 +1,10 @@
 /*
  * Created By:      Ryan Carpenter
  * Date Created:    06/23/2025
- * Last Modified:   06/25/2025 (Ryan)
+ * Last Modified:   06/27/2025 (Ryan)
  * Notes:           Handles all interactions with a mount
 */
+using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -14,11 +15,11 @@ using UnityEngine.Events;
 /// Releases/binds the controls of the player and mount.
 /// Handles changes in player transform when mounting.
 /// </summary>
-public class MountInteraction : NetworkBehaviour
+public class MountInteraction : NetworkBehaviour, IInteractable
 {
     [Header("Events")]
-    [SerializeField] public UnityEvent OnMount;       // Called when a player mounts; can be used to signal animal behaviors 
-    [SerializeField] public UnityEvent OnDismount;    // Called when a player dismounts; can be used to signal animal behaviors 
+    [SerializeField] public Action<Transform> OnMount;       // Called when a player mounts; can be used to signal animal behaviors 
+    [SerializeField] public Action<Transform> OnDismount;    // Called when a player dismounts; can be used to signal animal behaviors 
 
     [Header("Settings")]
     [SerializeField] private Vector3 _mountOffset;     // Offset determines where the player stands relative to the mount
@@ -26,19 +27,24 @@ public class MountInteraction : NetworkBehaviour
     [Header("Debugging")]
     [SerializeField] private bool _debug = false;
 
+    public bool CanMount { get; set; } = true;
+
     private NetworkVariable<NetworkObjectReference> CurrentOwner = new NetworkVariable<NetworkObjectReference>();
     private Coroutine _mountingTransformCo;
 
     public override void OnNetworkSpawn()
     {
-        PlayerController.OnPlayerInteract += Interact;
         CurrentOwner.OnValueChanged += HandleCurrentOwnerChange;
     }
 
     public override void OnNetworkDespawn()
     {
-        PlayerController.OnPlayerInteract -= Interact;
         CurrentOwner.OnValueChanged -= HandleCurrentOwnerChange;
+
+        if (IsServer)
+        {
+            HandleOnPlayerDieOnServer();
+        }
     }
 
     /// <summary>
@@ -47,28 +53,40 @@ public class MountInteraction : NetworkBehaviour
     /// Case 2: New owner is detected, mount is occupied
     /// Case 3: Prev owner wants to release, mount is freed
     /// </summary>
-    /// <param name="source">Player's NetworkObject</param>
-    public void Interact(NetworkObject source)
+    /// <param name="source">Player's transform.</param>
+    public void Interact(Transform source)
     {
-        if (CurrentOwner.Value.TryGet(out NetworkObject networkObject))     // There is already an owner
+        if (_debug) Debug.Log("Attempting Mount...");
+
+        if (!CanMount)
+            return;
+
+        // Try getting a network object comp from the source
+        if (!source.gameObject.TryGetComponent<NetworkObject>(out var sourceNetObj))
+        {
+            Debug.LogWarning("Mount Interaction Warning: Interacted source was not a NetworkObject");
+            return;
+        }
+
+        if (CurrentOwner.Value.TryGet(out var networkObject))     // There is already an owner
         {
             // Case 1
-            if (networkObject == source)        // Unmount
+            if (networkObject == sourceNetObj)        // Unmount
             {
-                if (_debug) Debug.Log("Player has Unmounted");
+                if (_debug) Debug.Log("Mount Interaction: Player has Unmounted");
                 SetCurrentOwnerRpc(default);        // Change CurrentOwner Network Variable
-                OnDismount?.Invoke();
+                OnDismount?.Invoke(source);
             }
             // Case 2
             else                                // Cannot mount because there's already a mounter
-                if (_debug) Debug.Log("Already has a mounter.");
+                if (_debug) Debug.Log("Mount Interaction: Already has a mounter.");
         }
         // Case 3
         else                    // There is no owner of the object -> Mount
         {
-            if (_debug) Debug.Log("Player has Mounted");
-            SetCurrentOwnerRpc(source);        // Change CurrentOwner Network Variable
-            OnMount?.Invoke();
+            if (_debug) Debug.Log("Mount Interaction: Player has Mounted");
+            SetCurrentOwnerRpc(sourceNetObj);        // Change CurrentOwner Network Variable
+            OnMount?.Invoke(source);
             // TODO: Handle multiple seats; parent under new child objects
         }
     }
@@ -80,7 +98,32 @@ public class MountInteraction : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void SetCurrentOwnerRpc(NetworkObjectReference source)      // Set owner on server
     {
-        CurrentOwner.Value = source;
+        if (source.TryGet(out var networkObject))
+        {
+            var playerStatus = networkObject.GetComponent<PlayerStatus>();
+            playerStatus.OnDeathOnServer.AddListener(HandleOnPlayerDieOnServer);
+            CurrentOwner.Value = source;
+        }
+        else
+        {
+            HandleOnPlayerDieOnServer();
+        }
+    }
+
+    private void HandleOnPlayerDieOnServer()
+    {
+        PlayerStatus playerStatus = null;
+        if (CurrentOwner.Value.TryGet(out var networkObject))
+        {
+            var playerGO = networkObject.gameObject;
+            // TODO: Release control of MountController
+            playerStatus = networkObject.GetComponent<PlayerStatus>();
+        }
+
+        if (playerStatus)
+            playerStatus.OnDeathOnServer.AddListener(HandleOnPlayerDieOnServer);
+
+        CurrentOwner.Value = default;
     }
 
     /// <summary>
@@ -105,14 +148,14 @@ public class MountInteraction : NetworkBehaviour
                 // Mount the player
                 nextNetObj.transform.SetParent(transform);                  // Set parent on server
                 NetworkObject.ChangeOwnership(nextNetObj.OwnerClientId);    // Owner is client
-                if (_debug) Debug.Log("Parent on Server.");
+                if (_debug) Debug.Log("Mount Interaction: Parent on Server.");
             }
             else if (isDismounting) // Player is prev owner
             {
                 // Dismount the player
                 prevNetObj.transform.SetParent(null);   // Release parent on server
                 NetworkObject.ChangeOwnership(0);       // Owner is now server
-                if (_debug) Debug.Log("Release parent on Server.");
+                if (_debug) Debug.Log("Mount Interaction: Release parent on Server.");
             }
         }
 
@@ -126,29 +169,38 @@ public class MountInteraction : NetworkBehaviour
             // Parent player then reset position
             _mountingTransformCo = StartCoroutine(MountingTransformCo(nextNetObj.transform));
 
-            // Disable player movement and give to mount
-            TogglePlayerMovement(nextNetObj, false);
-            if (_debug) Debug.Log("Transform on Client.");
+            //TogglePlayerInput(prevNetObj, false);
+
+            if (_debug) Debug.Log("Mount Interaction: Transform on Client.");
         }
         else if (isDismounting)
+        {
             // Enable player movement and release from mount
-            TogglePlayerMovement(prevNetObj, true);
+            //TogglePlayerInput(prevNetObj, true);
+        }
     }
 
+    /*
     /// <summary>
     /// Releases/binds control of the player movement to input.
     /// </summary>
     /// <param name="source">Player Network Object</param>
     /// <param name="toggle">Can move = true, Cannot move = false</param>
-    private void TogglePlayerMovement(NetworkObject source, bool toggle)
+    private void TogglePlayerInput(NetworkObject source, bool toggle)
     {
         if (source.gameObject.TryGetComponent<PlayerController>(out var player))
         {
-            player.TogglePlayerMovement(toggle);
-            if (_debug) Debug.Log($"Move Input Toggle = {toggle}");
+            if (_debug) Debug.Log($"Mount Interaction: Input Toggle = {toggle}");
         }
         else
-            Debug.LogError($"Error Disabling Movement Input, PlayerController could not be found.");
+            Debug.LogError($"Mount Interaction Error: Disabling Movement Input, PlayerController could not be found.");
+    }
+    */
+
+    public void SetCanMount(bool value)
+    {
+        CanMount = value;
+        Debug.Log($"CanMount = {value}");
     }
 
     /// <summary>
@@ -157,11 +209,11 @@ public class MountInteraction : NetworkBehaviour
     /// <param name="transform">Player transform</param>
     private IEnumerator MountingTransformCo(Transform transform)
     {
-        if (_debug) Debug.Log("Waiting For Parent");
+        if (_debug) Debug.Log("Mount Interaction: Waiting For Parent");
         yield return new WaitUntil(() => transform.parent != null);     // Parent player under mount
         transform.localPosition = _mountOffset;    // Reset player position
         _mountingTransformCo = null;        // Reset coroutine
-        if (_debug) Debug.Log($"Parenting Done: {transform.localPosition}");
+        if (_debug) Debug.Log($"Mount Interaction: Parenting Done, player offset relative to parent = {transform.localPosition}");
     }
 }
 

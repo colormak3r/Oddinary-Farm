@@ -46,6 +46,6 @@ MonoBehaviour:
   previewIconOffset: {x: 0, y: 0}
   previewValidColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
   previewInvalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}
-  prefabToSpawn: {fileID: 940610010983976717, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
+  prefabToSpawn: {fileID: 940610010983976717, guid: e37b283e7c7403b49a0009c9f60d5c8e, type: 3}
   spawnOffset: {x: 0, y: -1}
   clearFoliage: 1
