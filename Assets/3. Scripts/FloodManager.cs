@@ -83,9 +83,9 @@ public class FloodManager : NetworkBehaviour
         OnFloodLevelChanged?.Invoke(newValue, CurrentSafeLevel, CurrentDepthLevel);
     }
 
-    public void Initialize()
+    public void Initialize(float highestElevation)
     {
-        floodLevelChangePerHour = (WorldGenerator.Main.HighestElevationValue - baseFloodLevel) / (floodCompleteDuration * 24);
+        floodLevelChangePerHour = (highestElevation - baseFloodLevel) / (floodCompleteDuration * 24);
     }
     private IEnumerator FloodCoroutine()
     {

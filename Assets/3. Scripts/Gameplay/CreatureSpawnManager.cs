@@ -1,5 +1,11 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/02/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using ColorMak3r.Utility;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -30,10 +36,6 @@ public class CreatureSpawnManager : NetworkBehaviour
     private CreatureSpawnSetting creatureSpawnSetting;
 
     [Header("Spawn Settings")]
-    [SerializeField]
-    private int baseSpawnRadius = 10;
-    [SerializeField]
-    private int baseSafeRadius = 10;
     [SerializeField]
     private LayerMask spawnBlockLayer;
 

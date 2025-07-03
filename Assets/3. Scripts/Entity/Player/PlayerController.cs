@@ -143,12 +143,24 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         IsFacingRight.OnValueChanged -= HandleOnIsFacingRightChanged;
     }
 
+    private Vector2 closetChunkPosition_cached;
+
     private void Update()
     {
+        if (!GameManager.Main.IsInitialized) return;
+
+        if (IsServer)
+        {
+            var closetChunkPosition = transform.position.SnapToGrid(WorldGenerator.Main.ChunkSize, true);
+            if (closetChunkPosition_cached != closetChunkPosition)
+            {
+                WorldGenerator.Main.BuildResourceOnServer(transform.position);
+                closetChunkPosition_cached = closetChunkPosition;
+            }
+        }
+
         // Run Client-Side only
         if (!IsOwner || !isInitialized) return;
-
-        if (!GameManager.Main.IsInitialized) return;
 
         // WorldGenerator.BuildWorld has been moved to WorldRenderer
         // This is so the spectator can also make use of the world generator

@@ -49,6 +49,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     protected LootGenerator lootGenerator;
     protected AudioElement audioElement;
     protected Rigidbody2D rbody;
+    private ObservabilityController observabilityController;
 
     protected Collider2D[] colliders;
     protected SpriteRenderer[] renderers;
@@ -62,6 +63,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         lootGenerator = GetComponent<LootGenerator>();
         audioElement = GetComponent<AudioElement>();
         rbody = GetComponent<Rigidbody2D>();
+        observabilityController = GetComponent<ObservabilityController>();
 
         colliders = GetComponentsInChildren<Collider2D>();
         renderers = GetComponentsInChildren<SpriteRenderer>();
@@ -284,6 +286,8 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntityDeathOnServer()
     {
+        if (observabilityController) observabilityController.EndObservabilityOnServer();
+
         NetworkObject.Despawn(false);
     }
 

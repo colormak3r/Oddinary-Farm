@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      farm-night_0: -5288545722098176452
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

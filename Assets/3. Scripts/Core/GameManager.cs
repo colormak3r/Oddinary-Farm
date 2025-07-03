@@ -56,7 +56,10 @@ public class GameManager : NetworkBehaviour
         TimeManager.Main.OnHourChanged.AddListener(OnHourChanged);
         AudioManager.Main.OnNetworkSpawn();
         Initialize();
+
+        SpawnPointObjectRef.OnValueChanged += HandleSpawnPointObjectRefChanged;
     }
+
 
     public override void OnNetworkDespawn()
     {
@@ -67,6 +70,23 @@ public class GameManager : NetworkBehaviour
 
         TimeManager.Main.OnHourChanged.RemoveListener(OnHourChanged);
         AudioManager.Main.OnNetworkDespawn();
+
+        SpawnPointObjectRef.OnValueChanged -= HandleSpawnPointObjectRefChanged;
+    }
+
+    private void HandleSpawnPointObjectRefChanged(NetworkObjectReference previousValue, NetworkObjectReference newValue)
+    {
+        if (newValue.TryGet(out var spawnPointNetObj))
+        {
+            CinemachineManager.Main.Camera.ForceCameraPosition(
+                spawnPointNetObj.transform.position + spawnPointOffset,
+                Quaternion.identity
+            );
+        }
+        else
+        {
+            Debug.LogWarning("Spawn point reference lost or invalid.");
+        }
     }
 
     private void OnHourChanged(int currentHour)
@@ -119,35 +139,18 @@ public class GameManager : NetworkBehaviour
             TransitionUI.Main.HideNoFade();
 
         // All clients initialize these on their own
+        TimeManager.Main.Initialize();
+        yield return WorldGenerator.Main.Initialize();
         StatisticsManager.Main.Initialize();
         HeatMapManager.Main.Initialize(WorldGenerator.Main.MapSize);
 
-        // Initialize WolrdGenerator: generates the world and build the visible chunks 
-        yield return WorldGenerator.Main.Initialize();
-
-        // Initialize spawn object
-        // Spawn point is offset from spawn object
-        NetworkObject spawnPointNetObj;
+        // Server side initialization
         if (IsServer)
         {
-            var spawnPointObj = Instantiate(spawnPointPrefab, WorldGenerator.Main.HighestElevationPoint, Quaternion.identity);
-            spawnPointNetObj = spawnPointObj.GetComponent<NetworkObject>();
-            spawnPointNetObj.Spawn();
-            SpawnPointObjectRef.Value = spawnPointNetObj;
+            WalletManager.Main.InitializeOnServer();
+            CreateSpawnPointOnServer();
+            yield return ScenarioManager.Main.RunTestPresetCoroutine();
         }
-
-        while (!SpawnPointObjectRef.Value.TryGet(out spawnPointNetObj))
-        {
-            yield return null; // Wait until the spawn point is available
-        }
-
-        CinemachineManager.Main.Camera.ForceCameraPosition(
-            spawnPointNetObj.transform.position + spawnPointOffset,
-            Quaternion.identity
-        );
-
-        // Build the scenario preset if it's a server
-        if (IsServer) yield return ScenarioManager.Main.RunTestPresetCoroutine();
 
         isInitialized = true;
         // The player can take control after this
@@ -164,6 +167,17 @@ public class GameManager : NetworkBehaviour
     }
 
     #endregion
+
+    private void CreateSpawnPointOnServer()
+    {
+        if (!IsServer) return;
+
+        // Create a spawn point at the highest elevation point
+        var spawnPointObj = Instantiate(spawnPointPrefab, WorldGenerator.Main.HighestElevationPoint, Quaternion.identity);
+        var spawnPointNetObj = spawnPointObj.GetComponent<NetworkObject>();
+        spawnPointNetObj.Spawn();
+        SpawnPointObjectRef.Value = spawnPointNetObj;
+    }
 
     #region Game Over
 

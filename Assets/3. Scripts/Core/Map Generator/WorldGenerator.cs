@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class Chunk
 {
@@ -92,6 +93,22 @@ public class Offset2DArray<T> : IEnumerable<T>
     }
 }
 
+public class ObservablePrefabStatus
+{
+    public GameObject prefab = null;
+    public bool isObservable = false;
+    public bool isSpawned = false;
+    public ObservabilityController controller = null;
+
+    public ObservablePrefabStatus(GameObject prefab, bool isObservable)
+    {
+        this.prefab = prefab;
+        this.isObservable = isObservable;
+        isSpawned = false;
+        controller = null;
+    }
+}
+
 public class WorldGenerator : NetworkBehaviour
 {
     public static WorldGenerator Main;
@@ -110,6 +127,7 @@ public class WorldGenerator : NetworkBehaviour
     public Vector2Int MapSize => mapSize;
     [SerializeField]
     private int chunkSize = 5;
+    public int ChunkSize => chunkSize;
     [SerializeField]
     private int paddingChunkCount = 2;
     [SerializeField]
@@ -137,9 +155,10 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private GameObject[] resourcePrefabs;
     [SerializeField]
-    private int countPerYield = 10;
-    [SerializeField]
     private int noResourceZoneSize = 15; // Size of no resource zone around the player spawn point
+    [SerializeField]
+    private int renderResourceDistance = 5; // Distance to render resources around the player
+    public int RenderResourceDistance => renderResourceDistance;
 
     [Header("Folliage Settings")]
     [SerializeField]
@@ -171,12 +190,15 @@ public class WorldGenerator : NetworkBehaviour
     private Offset2DArray<bool> folliageMap;
     private HashSet<Vector2> invalidFoliagePositionHashSet = new HashSet<Vector2>();
 
+    private Offset2DArray<ObservablePrefabStatus> resourceStatusMap;
+
     private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
 
     [Header("Debugs")]
     [SerializeField]
     private bool isInitialized = false;
     public bool IsInitialized => isInitialized;
+
     [SerializeField]
     private bool showGizmos;
     [SerializeField]
@@ -189,8 +211,9 @@ public class WorldGenerator : NetworkBehaviour
     public IEnumerator Initialize()
     {
         yield return GenerateWorld();
-        FloodManager.Main.Initialize();
-        yield return BuildWorld(GameManager.Main.SpawnPoint);
+        FloodManager.Main.Initialize(HighestElevationValue);
+        yield return BuildWorld(HighestElevationPoint);
+        StartCoroutine(UnloadResourceCoroutine());
         isInitialized = true;
     }
 
@@ -264,7 +287,7 @@ public class WorldGenerator : NetworkBehaviour
     }
 
     #region World Generation
-    private IEnumerator GenerateWorld()
+    public IEnumerator GenerateWorld()
     {
         // Calculate the half map size and padding size
         halfMapSize = mapSize / 2;
@@ -278,25 +301,17 @@ public class WorldGenerator : NetworkBehaviour
         resourceMap.GenerateMap(mapSize);
         moistureMap.GenerateMap(mapSize);
 
-        yield return GenerateTerrain();
-        if (IsHost)
-        {
-            if (ScenarioManager.Main.OverrideSettings)
-            {
-                // When setting is overrided, check for ScenarioManager setting
-                if (ScenarioManager.Main.CanSpawnResources) yield return GenerateResources();
-            }
-            else if (canSpawnResources)
-            {
-                yield return GenerateResources();
-            }
-        }
-        yield return GenerateFolliage();
+        // Generate data from the maps
+        GenerateTerrain();
+        GenerateFolliage();
+        GenerateResources();
+
+        yield return null;
     }
     #endregion
 
     #region Terrain Generation
-    private IEnumerator GenerateTerrain()
+    private void GenerateTerrain()
     {
         // Generate the terrain map        
         terrainMap = new Offset2DArray<TerrainUnitProperty>(-trueHalfMapSize.x, trueHalfMapSize.x, -trueHalfMapSize.y, trueHalfMapSize.y);
@@ -316,8 +331,6 @@ public class WorldGenerator : NetworkBehaviour
         // Update MapUI
         miniMapTexture = elevationMap.MapTexture;
         UpdateMapTexture(miniMapTexture);
-
-        yield return null;
     }
 
     private void UpdateMapTexture(Texture2D texture)
@@ -346,53 +359,43 @@ public class WorldGenerator : NetworkBehaviour
     #endregion
 
     #region Resource Generation
-    private IEnumerator GenerateResources()
+    private void GenerateResources()
     {
-        if (!canSpawnResources) yield break;
+        resourceStatusMap = new Offset2DArray<ObservablePrefabStatus>(-trueHalfMapSize.x, trueHalfMapSize.x, -trueHalfMapSize.y, trueHalfMapSize.y);
+        var prefabLength = resourcePrefabs.Length;
 
-        var count = 0;
         for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x + 1; x++)
         {
             for (int y = -trueHalfMapSize.y; y < trueHalfMapSize.y + 1; y++)
             {
                 if (x < -halfMapSize.x || x >= halfMapSize.x || y < -halfMapSize.y || y >= halfMapSize.y)
                 {
-                    // Do nothing
                     // Padding area
+                    resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false);    // No resource      
                 }
                 else
                 {
                     var dx = x - HighestElevationPoint.x;
                     var dy = y - HighestElevationPoint.y;
-                    if (dx * dx + dy * dy > noResourceZoneSize * noResourceZoneSize)
-                        if (terrainMap[x, y] != voidUnitProperty                                    // No resources in water
+                    if (terrainMap[x, y] != voidUnitProperty                                        // No resources in water
                         && resourceMap.RawMap[x, y] >= 0.99f                                        // Resource threshold
                         && terrainMap[x, y].Elevation.min > FloodManager.Main.CurrentSafeLevel      // Not flooded
                         && dx * dx + dy * dy > noResourceZoneSize * noResourceZoneSize)             // Outside of no resource zone (around player spawn point)
-                        {
-                            SpawnResource(x, y);
-                            count++;
-                            if (count % countPerYield == 0)
-                            {
-                                yield return null;
-                            }
-                        }
+                    {
+                        resourceStatusMap[x, y] = new ObservablePrefabStatus(resourcePrefabs.GetRandomElement(), true);
+                    }
+                    else
+                    {
+                        resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false); // No resource                    
+                    }
                 }
             }
         }
     }
-
-    private void SpawnResource(int x, int y)
-    {
-        var res = Instantiate(resourcePrefabs.GetRandomElement(), new Vector3(x, y - 0.5f, 0), Quaternion.identity, transform);
-        var resNetObject = res.GetComponent<NetworkObject>();
-        resNetObject.Spawn();
-        resNetObject.TrySetParent(transform);
-    }
     #endregion
 
     #region Generate Folliage
-    private IEnumerator GenerateFolliage()
+    private void GenerateFolliage()
     {
         folliageMap = new Offset2DArray<bool>(-trueHalfMapSize.x, trueHalfMapSize.x, -trueHalfMapSize.y, trueHalfMapSize.y);
 
@@ -414,7 +417,6 @@ public class WorldGenerator : NetworkBehaviour
                 }
             }
         }
-        yield return null;
     }
     #endregion
 
@@ -530,33 +532,11 @@ public class WorldGenerator : NetworkBehaviour
         yield return null;
     }
 
-
     private IEnumerator RemoveExcessChunks(Vector2 closetChunkPosition)
     {
-        /*List<Vector2> positionsToRemove = new List<Vector2>();
-
-        // Determine the bounds of the loop
-        int rangeX = (renderDistance + renderXOffset) * chunkSize;
-        int rangeY = renderDistance * chunkSize;
-
-        int minX = (int)closetChunkPosition.x - rangeX;
-        int maxX = (int)closetChunkPosition.x + rangeX;
-        int minY = (int)closetChunkPosition.y - rangeY;
-        int maxY = (int)closetChunkPosition.y + rangeY;
-
-        // Iterate over the dictionary to find chunks outside the bounds
-        foreach (var entry in positionToChunk)
-        {
-            Vector2 pos = entry.Key;
-            if (pos.x < minX || pos.x > maxX || pos.y < minY || pos.y > maxY)
-            {
-                positionsToRemove.Add(pos);
-            }
-        }*/
-
         List<Vector2> positionsToRemove = positionToChunk.Keys.Where(pos =>
-        Mathf.Abs(pos.x - closetChunkPosition.x) > (renderDistance + renderXOffset) * chunkSize ||
-        Mathf.Abs(pos.y - closetChunkPosition.y) > renderDistance * chunkSize).ToList();
+        Mathf.Abs(pos.x - closetChunkPosition.x) > (renderDistance + renderXOffset + 1) * chunkSize ||
+        Mathf.Abs(pos.y - closetChunkPosition.y) > (renderDistance + 1) * chunkSize).ToList();
 
         // Remove the identified chunks
         foreach (var pos in positionsToRemove)
@@ -586,6 +566,82 @@ public class WorldGenerator : NetworkBehaviour
         yield return null;
     }
 
+    private Dictionary<Vector2Int, ObservablePrefabStatus> spawnedResources = new Dictionary<Vector2Int, ObservablePrefabStatus>();
+
+    public void BuildResourceOnServer(Vector2 position)
+    {
+        if (!IsServer) return;
+
+        if (!canSpawnResources && !ScenarioManager.Main.CanSpawnResources) return;
+
+        StartCoroutine(LoadResourceCoroutine(position));
+    }
+
+    private IEnumerator LoadResourceCoroutine(Vector2 position)
+    {
+        var snappedPosition = position.SnapToGrid().ToInt();
+        int renderRadius = renderResourceDistance * chunkSize;
+
+        for (int x = snappedPosition.x - renderRadius; x <= snappedPosition.x + renderRadius; x++)
+        {
+            for (int y = snappedPosition.y - renderRadius; y <= snappedPosition.y + renderRadius; y++)
+            {
+                var resourcePos = new Vector2Int(x, y);
+                if (resourceStatusMap.GetElementSafe(resourcePos.x, resourcePos.y, out var resourceStatus)
+                    && resourceStatus.prefab != null)
+                {
+                    if (resourceStatus.isObservable && !resourceStatus.isSpawned)
+                    {
+                        //TODO: Handle resource spawning logic with buffer
+                        var resObj = SpawnResource(resourcePos, resourceStatus.prefab);
+                        resObj.GetComponent<ObservabilityController>().InitializeOnServer(resourceStatus);
+                        resourceStatus.isSpawned = true;
+                        spawnedResources[resourcePos] = resourceStatus;
+
+                        yield return null;
+                    }
+                }
+            }
+        }
+    }
+
+    private IEnumerator UnloadResourceCoroutine()
+    {
+        var listOfPlayer = NetworkManager.ConnectedClients.Values.ToList();
+
+        while (true)
+        {
+            List<Vector2Int> positionsToRemove = new List<Vector2Int>();
+            foreach (var player in listOfPlayer)
+            {
+                var netObj = player.PlayerObject;
+                if (netObj == null || !netObj.IsSpawned) continue;
+                var closetChunkPosition = netObj.transform.position.SnapToGrid(chunkSize, true);
+                foreach (var resource in spawnedResources)
+                {
+                    var pos = resource.Key;
+                    if (Mathf.Abs(pos.x - closetChunkPosition.x) > (renderResourceDistance + 1) * chunkSize ||
+                        Mathf.Abs(pos.y - closetChunkPosition.y) > (renderResourceDistance + 1) * chunkSize)
+                    {
+                        // Remove the resource if it's out of range
+                        positionsToRemove.Add(pos);
+                    }
+                }
+            }
+
+            Debug.Log($"Unloading {positionsToRemove.Count} objects");
+            foreach (var item in positionsToRemove)
+            {
+                if (spawnedResources[item].isSpawned)
+                    spawnedResources[item].controller.DespawnOnServer();
+            }
+
+            positionsToRemove.Clear();
+
+            yield return new WaitForSeconds(5f);
+        }
+    }
+
     private GameObject SpawnTerrainUnit(Vector2 position, TerrainUnitProperty property)
     {
         var terrainObj = LocalObjectPooling.Main.Spawn(terrainUnitPrefab);
@@ -605,6 +661,16 @@ public class WorldGenerator : NetworkBehaviour
         folliageObj.GetComponent<FloodController>().SetElevation(GetElevation(position.x, position.y, true));
 
         return folliageObj;
+    }
+
+    private GameObject SpawnResource(Vector2 position, GameObject prefab)
+    {
+        var resObj = Instantiate(prefab, new Vector2(position.x, position.y - 0.5f), Quaternion.identity, transform);
+        var resNetObject = resObj.GetComponent<NetworkObject>();
+        resNetObject.Spawn();
+        resNetObject.TrySetParent(transform);
+
+        return resObj;
     }
 
     #endregion
@@ -633,11 +699,6 @@ public class WorldGenerator : NetworkBehaviour
             return voidUnitProperty;
         else
             return terrainMap[x, y];
-    }
-
-    public bool IsValidResourcePosition(int x, int y)
-    {
-        return terrainMap[x, y].Elevation.min == 0.55f; // Elevation of grass
     }
 
     public void InvalidateFolliage(Vector2[] positions)

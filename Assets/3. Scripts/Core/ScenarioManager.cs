@@ -1,6 +1,12 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/02/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections;
 using Unity.Netcode;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public enum ScenarioPreset
@@ -38,7 +44,7 @@ public class ScenarioManager : NetworkBehaviour
     private bool canSpawnEnemies = false;
     [SerializeField]
     private bool canSpawnResources = false;
-    public bool CanSpawnResources => canSpawnResources;
+    public bool CanSpawnResources => overrideSettings & canSpawnResources;
     [SerializeField]
     private float realMinutesPerInGameDay = 10f;
     [SerializeField]

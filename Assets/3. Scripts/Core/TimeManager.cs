@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/02/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System;
 using TMPro;
 using Unity.Netcode;
@@ -76,14 +83,15 @@ public class TimeManager : NetworkBehaviour
     [HideInInspector]
     public UnityEvent OnNightStart;
 
-    public override void OnNetworkSpawn()
+    public void Initialize()
     {
         networkManager = NetworkManager.Singleton;
         UpdateTime();
-        isInitialized = true;
 
         // Initialize WeatherManager
         WeatherManager.Main.Initialize(this);
+
+        isInitialized = true;
     }
 
     private void Update()

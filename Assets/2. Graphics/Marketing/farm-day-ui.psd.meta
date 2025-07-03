@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      farm-day-ui_0: 3319038409755011038
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

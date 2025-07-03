@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/02/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using ColorMak3r.Utility;
 using System.Collections.Generic;
 using UnityEditor;
@@ -23,8 +30,6 @@ public class HeatMapManager : MonoBehaviour
 
     [Header("Heat Map Debugs")]
     [SerializeField]
-    private bool showGizmos = false;
-    [SerializeField]
     private bool showHeatMapCenter = false;
     [SerializeField]
     private Vector2 heatCenter;
@@ -32,7 +37,6 @@ public class HeatMapManager : MonoBehaviour
 
     private Texture2D heatMapTexture;
     private float[,] heatMapData;
-
 
     public void Initialize(Vector2Int mapSize)
     {

@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      farm-cow_0: -7008388178866544521
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

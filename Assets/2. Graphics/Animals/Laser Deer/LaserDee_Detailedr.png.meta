@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      LaserDee_Detailedr_0: 2489493880206528433
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

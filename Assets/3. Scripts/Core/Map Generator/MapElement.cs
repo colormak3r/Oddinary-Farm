@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/02/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using Unity.Netcode;
 using UnityEngine;
 using ColorMak3r.Utility;
@@ -21,9 +28,6 @@ public class MapElement : NetworkBehaviour
     [SerializeField]
     [Range(0f, 1f)]
     private float heatDecayPerDay = 0.1f;
-    [SerializeField]
-    [Range(0f, 1f)]
-    private float minHeat = 0.1f;
 
     [Header("Debugs")]
     [SerializeField]
