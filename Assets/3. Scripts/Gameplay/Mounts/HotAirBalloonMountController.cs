@@ -1,26 +1,31 @@
 using UnityEngine;
-using static Unity.VisualScripting.Member;
 
 public class HotAirBalloonMountController : MountController
 {
+    [SerializeField] private Collider2D  physicCollider;
+
+    private Rigidbody2D rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
     protected override void HandleOnMount(Transform source)
     {
-        if (source.TryGetComponent<HotAirBalloonController>(out var controller))
-        {
-            controller.SetControl(true);       // Disable Player controls
-        }
+        base.HandleOnMount(source);
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     protected override void HandleOnDismount(Transform source)
     {
-        if (source.TryGetComponent<HotAirBalloonController>(out var controller))
-        {
-            controller.SetControl(false);       // Disable Player controls
-        }
+        base.HandleOnDismount(source);
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
     }
 
-    protected override void Move(Vector2 motion, float deltaTime)
+    public override void Move(Vector2 direction)
     {
-        Debug.Log("Player is Moving Balloon");
+        Debug.Log($"Player is Moving Balloon = {direction}");
+        movement.SetDirection(direction);
     }
 }

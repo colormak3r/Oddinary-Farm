@@ -1,7 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
-using static Unity.VisualScripting.Member;
 
 public class HotAirBalloon : Structure, IInteractable
 {
@@ -35,8 +34,6 @@ public class HotAirBalloon : Structure, IInteractable
         }
 
         // Set mount values to false on init
-        mountController.SetControllable(false);
-        mountController.SetMoveable(false);
         mountInteraction.SetCanMount(false);
         mountInteraction.OnMount += TakeOff;
 
@@ -95,8 +92,6 @@ public class HotAirBalloon : Structure, IInteractable
         if (IsOwner)
         {
             // TODO: Take Off From Mount Controller
-            mountController.SetControllable(true);  // Player can control the hotAirBalloon
-            mountController.SetMoveable(true);      // HotAirBalloon can move
             mountInteraction.SetCanMount(false);    // Player cannot dismount from balloon
         }
     }

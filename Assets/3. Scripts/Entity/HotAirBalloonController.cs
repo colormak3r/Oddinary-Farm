@@ -48,7 +48,6 @@ public class HotAirBalloonController : NetworkBehaviour
         {
             SetControlInternal(isControlled);
         }
-
     }
 
     [Rpc(SendTo.Owner)]
@@ -62,7 +61,6 @@ public class HotAirBalloonController : NetworkBehaviour
         physicCollider.enabled = !isControlled;
         moveableController.SetMoveable(!isControlled);
         entityMovement.SetCanBeKnockback(!isControlled);
-        IsControlled.Value = isControlled;
         drownController.SetCanBeDrowned(!isControlled);
         drownGraphic.SetCanBeWet(!isControlled);
     }

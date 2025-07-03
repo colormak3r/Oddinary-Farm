@@ -84,6 +84,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private Animator animator;
     private PlayerAnimationController animationController;
     private LassoController lassoController;
+    private MountController mountController;
 
     private bool isOwner;
     private bool isInitialized;
@@ -94,6 +95,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private bool rotateArm = false;
     private bool isPointerOverUI;
+
+    private bool isMounting = false;
 
     private Item currentItem;
     private Camera mainCamera;
@@ -307,8 +310,17 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (!isControllable || !isMoveable) return;
 
         var direction = context.ReadValue<Vector2>().normalized;
-        movement.SetDirection(direction);
-        animator.SetBool("IsMoving", direction != Vector2.zero);
+
+        if (isMounting)
+        {
+            mountController?.Move(direction);
+            // TODO: Set mount animation
+        }
+        else
+        {
+            movement.SetDirection(direction);
+            animator.SetBool("IsMoving", direction != Vector2.zero);
+        }
     }
 
     public void OnLookPosition(InputAction.CallbackContext context)
@@ -841,6 +853,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             rbody.linearVelocity = Vector2.zero;
             OnPrimaryCanceled();
         }
+    }
+
+    public void SetIsMounting(bool value, MountController mountController)
+    {
+        isMounting = value;
+        this.mountController = mountController;
+
+        Debug.Log($"Player Controller: isMounting = {isMounting}, mountController = {mountController}");
     }
 
     private void OnDrawGizmos()

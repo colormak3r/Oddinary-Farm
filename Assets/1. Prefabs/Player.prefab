@@ -477,7 +477,6 @@ GameObject:
   - component: {fileID: 6544998554535444510}
   - component: {fileID: 8566257446586188789}
   - component: {fileID: -7142879616327259524}
-  - component: {fileID: 7416913132412665058}
   - component: {fileID: 5784231218223123395}
   - component: {fileID: 2314209063463895116}
   - component: {fileID: 4142363607695392232}
@@ -953,6 +952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundEffects: []
+  ignoreWarnings: 0
 --- !u!82 &6544998554535444510
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1074,27 +1074,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f0b8c094275d048a7409dff44e4ef2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &7416913132412665058
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5447349809502746784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f73ad13c2f45be843a3dd8af2a0d769c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  physicCollider: {fileID: 1645639027840338568}
-  moveableController: {fileID: -7142879616327259524}
-  entityMovement: {fileID: 3602106504410570466}
-  drownController: {fileID: 4142363607695392232}
-  drownGraphic: {fileID: 9089012222026432931}
-  spriteRenderer: {fileID: 5195975373052726653}
-  IsControlled:
-    m_InternalValue: 0
 --- !u!114 &5784231218223123395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1759,11 +1738,6 @@ SpriteRenderer:
 --- !u!95 &4780399004627203737 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2920264091579073169, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
-  m_PrefabInstance: {fileID: 7697143422033409032}
-  m_PrefabAsset: {fileID: 0}
---- !u!212 &5195975373052726653 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 2506938444932282741, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
   m_PrefabInstance: {fileID: 7697143422033409032}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5462536194489437288 stripped

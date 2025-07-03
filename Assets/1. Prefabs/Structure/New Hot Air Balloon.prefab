@@ -273,7 +273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   isMovable: 1
-  isRemovable: 1
+  isRemovable: 0
   property: {fileID: 11400000, guid: b9bded3ffc69f894bb40a4891116a709, type: 2}
   takeOffDate: 7
   takeOffHour: 22
