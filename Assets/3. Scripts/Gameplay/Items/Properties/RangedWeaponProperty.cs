@@ -12,9 +12,13 @@ public class RangedWeaponProperty : WeaponProperty
     private float projectileSpread = 30;
     [SerializeField]
     private bool spreadEvenly;
+    [SerializeField]
+    private Vector2 muzzleOffset;
 
     public ProjectileProperty ProjectileProperty => projectileProperty;
+
     public int ProjectileCount => projectileCount;
     public float ProjectileSpread => projectileSpread;
     public bool SpreadEvenly => spreadEvenly;
+    public Vector2 MuzzleOffset => muzzleOffset;
 }

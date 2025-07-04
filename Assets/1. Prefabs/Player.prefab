@@ -735,7 +735,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   attackerList: []
-  respawnPoint: {fileID: 0}
   playerHitbox: {fileID: 4434417828680881472}
   playerNameUI: {fileID: 8509437197401579281}
 --- !u!114 &6332147781516178474
@@ -1636,6 +1635,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2746253684418572068}
     m_Modifications:
+    - target: {fileID: 1972213988096895208, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1972213988096895208, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4284115393529965016, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1676,9 +1683,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5723803762276944087, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5873126707091820464, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
       propertyPath: m_Name
       value: Player Graphic
+      objectReference: {fileID: 0}
+    - target: {fileID: 6157510437218344600, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6588747729813794840, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6588747729813794840, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754405846005925376, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230206001503940393, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8953829128706957093, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
       propertyPath: playerController

@@ -160,16 +160,31 @@ public class ItemSystem : NetworkBehaviour
 
         if (muzzleFlash != null) StartCoroutine(MuzzleFlashCoroutine());
 
+        float spread = 0f;
+        float step = 0f;
+
+        if (rangedWeaponProperty.SpreadEvenly && rangedWeaponProperty.ProjectileCount > 1)
+        {
+            step = rangedWeaponProperty.ProjectileSpread / (rangedWeaponProperty.ProjectileCount - 1);
+            spread = -rangedWeaponProperty.ProjectileSpread / 2;
+        }
+
         for (int i = 0; i < rangedWeaponProperty.ProjectileCount; i++)
         {
-            var spread = rangedWeaponProperty.ProjectileSpread;
+            float currentSpread;
+
             if (!rangedWeaponProperty.SpreadEvenly)
             {
-                spread = Random.Range(-spread, spread);
+                currentSpread = Random.Range(-rangedWeaponProperty.ProjectileSpread, rangedWeaponProperty.ProjectileSpread);
+            }
+            else
+            {
+                currentSpread = spread;
+                spread += step;
             }
 
             var muzzlePosition = muzzleTransform.position;
-            var direction = Quaternion.Euler(0, 0, spread) * (position - muzzlePosition).normalized;
+            var direction = Quaternion.Euler(0, 0, currentSpread) * (position - muzzlePosition).normalized;
             var rotation = Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, 90) * direction);
             var projectile = LocalObjectPooling.Main.Spawn(AssetManager.Main.ProjectilePrefab);
             projectile.transform.position = muzzlePosition;
@@ -177,6 +192,7 @@ public class ItemSystem : NetworkBehaviour
             projectile.GetComponent<Projectile>().Initialize(owner, rangedWeaponProperty.ProjectileProperty, isAuthoritative);
         }
     }
+
 
     private IEnumerator MuzzleFlashCoroutine()
     {
@@ -428,6 +444,9 @@ public class ItemSystem : NetworkBehaviour
     {
         var startTime = Time.time;
         var endTime = startTime + duration;
+        var calculatedDamage = (uint)Mathf.Max(1, property.Damage * (uint)Mathf.FloorToInt(duration / 2 / property.Frequency));
+        if (showDebugs) Debug.Log($"Calculated Damage: {calculatedDamage} for duration: {duration} with frequency: {property.Frequency}");
+
         while (Time.time < endTime)
         {
             var raycasts = Physics2D.CircleCastAll(startPosition, property.Radius, (targetPosition - startPosition).normalized, property.Range, LayerManager.Main.DamageableLayer);
@@ -435,7 +454,7 @@ public class ItemSystem : NetworkBehaviour
             {
                 if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
                 {
-                    damageable.TakeDamage(property.Damage, DamageType.Laser, property.Hostility, transform.root);
+                    damageable.TakeDamage(calculatedDamage, DamageType.Laser, property.Hostility, transform.root);
                 }
             }
 
@@ -576,4 +595,10 @@ public class ItemSystem : NetworkBehaviour
     }
 
     #endregion
+
+    public void SetMuzzleOffset(Vector2 offset)
+    {
+        if (muzzleTransform) muzzleTransform.localPosition = offset;
+        if (muzzleFlash) muzzleFlash.transform.localPosition = offset + new Vector2(.3125f, 0);
+    }
 }

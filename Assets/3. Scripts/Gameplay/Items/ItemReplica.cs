@@ -32,6 +32,7 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     private float nextScanTime = 0f;
     private bool canBePickedup = true;
     private bool pickupPrefered = false;
+    private Vector3 pickupOffset = new Vector3(0, 0.75f); // Offset to apply when picking up
     private Coroutine pickupCoroutine;
     private Coroutine ignoreCoroutine;
     private Coroutine preferCoroutine;
@@ -185,7 +186,7 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     {
         if (showDebugs) Debug.Log($"Picked up by {picker}", picker);
 
-        var pickerPos = picker.position;
+        var pickerPos = picker.position + pickupOffset;
         var endTime = Time.time + duration;
         var sqrDistance = (transform.position - pickerPos).sqrMagnitude;
         while (sqrDistance > 0.01f)

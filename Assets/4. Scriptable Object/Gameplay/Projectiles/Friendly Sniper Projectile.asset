@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a57e2f2cc0303e409b66e96b4acfa84, type: 3}
   m_Name: Friendly Sniper Projectile
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 101df456ce565364fb33ae5fe7c2cb22, type: 3}
+  sprite: {fileID: 21300000, guid: edd1fa304661fad47901d0b9390d58be, type: 3}
   animator: {fileID: 0}
   speed: 50
   damage: 5

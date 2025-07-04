@@ -83,6 +83,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private Animator animator;
     private PlayerAnimationController animationController;
     private LassoController lassoController;
+    private ItemSystem itemSystem;
 
     private bool isOwner;
     private bool isInitialized;
@@ -107,6 +108,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         rbody = GetComponent<Rigidbody2D>();
         animationController = GetComponentInChildren<PlayerAnimationController>();
         lassoController = GetComponentInChildren<LassoController>();
+        itemSystem = GetComponent<ItemSystem>();
 
         mainCamera = Camera.main;
         gameplayRenderer = GameplayRenderer.Main;
@@ -241,13 +243,19 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             return;
         }
 
-        rotateArm = itemProperty is RangedWeaponProperty || itemProperty is LaserWeaponProperty;
+        var rangedWeapon = itemProperty as RangedWeaponProperty;
+        var laserWeapon = itemProperty as LaserWeaponProperty;
+        rotateArm = rangedWeapon != null || laserWeapon != null;
+
         if (rotateArm)
         {
             // The player is holding a ranged weapon
             armRotation.SetActive(true);
             arm.SetActive(false);
             itemRotationRenderer.sprite = itemProperty.ObjectSprite;
+            // TODO: change ranged weapon into projectile weapon. Both laser and projectile weapons should use the same system
+            if (rangedWeapon) itemSystem.SetMuzzleOffset(rangedWeapon.MuzzleOffset);
+            if (laserWeapon) itemSystem.SetMuzzleOffset(laserWeapon.MuzzleOffset);
         }
         else
         {
