@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/03/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System;
 using Unity.Netcode;
 using UnityEngine;
@@ -61,6 +68,8 @@ public class Chest : NetworkBehaviour, IInteractable
                 spriteRenderer.sprite = emptySprite;
                 audioElement.PlayOneShot(collectSound);
                 GetComponent<SelectorModifier>().SetCanBeSelected(false);
+                if (IsServer && TryGetComponent<ObservabilityController>(out var controller))
+                    controller.EndObservabilityOnServer();
                 break;
         }
     }

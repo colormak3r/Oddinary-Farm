@@ -1,5 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/03/2025 (Khoa)
+ * Notes:           Used to make sure at least one NetworkManager is active in the scene.
+*/
+
 using Unity.Netcode;
 using UnityEngine;
 

@@ -91,15 +91,14 @@ public class GameManager : NetworkBehaviour
 
     private void OnHourChanged(int currentHour)
     {
-        if (!canGameOver) return;
+        if (!canGameOver || !IsInitialized) return;
 
         // Check if the flood level is at or above the highest elevation
         if (FloodManager.Main.CurrentFloodLevelValue >= WorldGenerator.Main.HighestElevationValue)
         {
             var localPlayer = NetworkManager.Singleton.LocalClient.PlayerObject;
-            var escaped = localPlayer.GetComponent<HotAirBalloonController>().IsControlledValue;
             localPlayer.GetComponent<ControllableController>().SetControl(false);
-            GameOver(escaped);
+            GameOver(true);
         }
     }
 

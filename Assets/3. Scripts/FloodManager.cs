@@ -1,6 +1,12 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/3/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System;
 using System.Collections;
-using Unity.Jobs;
 using Unity.Netcode;
 using UnityEngine;
 

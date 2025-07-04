@@ -5,7 +5,6 @@ using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class Chunk
 {
@@ -173,8 +172,6 @@ public class WorldGenerator : NetworkBehaviour
     private ResourceMap resourceMap;
     [SerializeField]
     private MoistureMap moistureMap;
-
-    [Header("Map Components")]
     [SerializeField]
     private TMP_Text elevationText;
 
@@ -198,7 +195,8 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private bool isInitialized = false;
     public bool IsInitialized => isInitialized;
-
+    [SerializeField]
+    private bool showDebugs = false; // Show debug information in the console
     [SerializeField]
     private bool showGizmos;
     [SerializeField]
@@ -607,38 +605,48 @@ public class WorldGenerator : NetworkBehaviour
 
     private IEnumerator UnloadResourceCoroutine()
     {
-        var listOfPlayer = NetworkManager.ConnectedClients.Values.ToList();
-
         while (true)
         {
+            yield return new WaitForSeconds(5f);
+
             List<Vector2Int> positionsToRemove = new List<Vector2Int>();
-            foreach (var player in listOfPlayer)
+            var listOfPlayers = NetworkManager.ConnectedClients.Values.ToList();
+
+            foreach (var resource in spawnedResources)
             {
-                var netObj = player.PlayerObject;
-                if (netObj == null || !netObj.IsSpawned) continue;
-                var closetChunkPosition = netObj.transform.position.SnapToGrid(chunkSize, true);
-                foreach (var resource in spawnedResources)
+                var pos = resource.Key;
+                bool isVisibleToAnyPlayer = false;
+
+                foreach (var player in listOfPlayers)
                 {
-                    var pos = resource.Key;
-                    if (Mathf.Abs(pos.x - closetChunkPosition.x) > (renderResourceDistance + 1) * chunkSize ||
-                        Mathf.Abs(pos.y - closetChunkPosition.y) > (renderResourceDistance + 1) * chunkSize)
+                    var netObj = player.PlayerObject;
+                    if (netObj == null || !netObj.IsSpawned) continue;
+
+                    var playerChunkPos = netObj.transform.position.SnapToGrid(chunkSize, true);
+
+                    if (Mathf.Abs(pos.x - playerChunkPos.x) <= (renderResourceDistance + 1) * chunkSize &&
+                        Mathf.Abs(pos.y - playerChunkPos.y) <= (renderResourceDistance + 1) * chunkSize)
                     {
-                        // Remove the resource if it's out of range
-                        positionsToRemove.Add(pos);
+                        isVisibleToAnyPlayer = true;
+                        break; // No need to check other players
                     }
+                }
+
+                if (!isVisibleToAnyPlayer)
+                {
+                    positionsToRemove.Add(pos);
                 }
             }
 
-            Debug.Log($"Unloading {positionsToRemove.Count} objects");
+            if (showDebugs) Debug.Log($"Unloading {positionsToRemove.Count} objects");
             foreach (var item in positionsToRemove)
             {
                 if (spawnedResources[item].isSpawned)
-                    spawnedResources[item].controller.DespawnOnServer();
+                {
+                    spawnedResources[item].controller.UnloadOnServer();
+                    spawnedResources.Remove(item);
+                }
             }
-
-            positionsToRemove.Clear();
-
-            yield return new WaitForSeconds(5f);
         }
     }
 

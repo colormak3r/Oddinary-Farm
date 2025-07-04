@@ -286,7 +286,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     protected virtual void OnEntityDeathOnServer()
     {
-        if (observabilityController) observabilityController.EndObservabilityOnServer();
+        if (observabilityController) observabilityController.DespawnOnServer();
 
         NetworkObject.Despawn(false);
     }
