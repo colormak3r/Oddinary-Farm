@@ -98,7 +98,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8862408004728527693, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_Name
-      value: Mosk Variant Variant
+      value: Mosk  Variant
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7795703810178639337, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
@@ -134,6 +134,7 @@ MonoBehaviour:
   graphicTransform: {fileID: 5633000217506403371}
   spriteFacingRight: 0
   roamRadius: 1
+  itemProperty: {fileID: 11400000, guid: 0b833383e8bc7464d9bf0ff48ef2b7d8, type: 2}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:

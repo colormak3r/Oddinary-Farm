@@ -285,6 +285,10 @@ PrefabInstance:
       propertyPath: escapeRange
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 1217543349911835841, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
+      propertyPath: penaltyRange
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 2969930888409347896, guid: 47a84d88220f7ff4f96b8729b4f5ca52, type: 3}
       propertyPath: moveSpeed
       value: 6000

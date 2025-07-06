@@ -165,17 +165,17 @@ public class EntityStatus : NetworkBehaviour, IDamageable
         nextDamagable = Time.time + iframeDuration;
 
         // Check if the attacker still exist before getting reference
-        if (attacker.TryGetComponent(out NetworkBehaviour attackerNetworkBehaviour))
+        if (attacker != null && attacker.TryGetComponent(out NetworkBehaviour attackerNetworkBehaviour))
         {
             if (attackerNetworkBehaviour.IsSpawned)
             {
                 TakeDamageRpc(damage, type, attackerHostility, attacker.gameObject);
             }
-            else
-            {
-                if (showDebugs) Debug.Log($"{attacker} is not spawned", attacker);
-                TakeDamageRpc(damage, type, attackerHostility, default);
-            }
+        }
+        else
+        {
+            if (showDebugs) Debug.Log($"Attacker is not spawned or null");
+            TakeDamageRpc(damage, type, attackerHostility, default);
         }
 
         return true;

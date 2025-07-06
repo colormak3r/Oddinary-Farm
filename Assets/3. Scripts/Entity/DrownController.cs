@@ -1,9 +1,7 @@
 using ColorMak3r.Utility;
-using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class DrownController : NetworkBehaviour
 {
@@ -69,16 +67,33 @@ public class DrownController : NetworkBehaviour
     {
         if (!CanBeDrowned.Value) return;
 
-        if (rbody == null)
+        if (rbody == null)                         // STATIC object
         {
-            StartCoroutine(StaticDrownBootstrap(depthLevel));
+            if (worldGenerator.IsInitialized)
+                CheckFloodLevel(transform.position); // run immediately
+            else
+                staticCheckPending = true;           // defer to Update()
         }
-        else
+        else                                        // DYNAMIC object
         {
             if (worldGenerator.IsInitialized)
                 CheckFloodLevel(((Vector2)transform.position).SnapToGrid());
         }
     }
+
+    private bool staticCheckPending;
+
+    private void Update()
+    {
+        if (!IsServer) return;          // only the host does drowning logic
+
+        if (staticCheckPending && worldGenerator.IsInitialized)
+        {
+            staticCheckPending = false;
+            CheckFloodLevel(transform.position);
+        }
+    }
+
 
     private Vector2 position_cached = Vector2.one;
     private IEnumerator DynamicDrownBootstrap()
@@ -111,17 +126,17 @@ public class DrownController : NetworkBehaviour
         }
     }
 
-    private IEnumerator StaticDrownBootstrap(float currentDepthLevel)
+    /*private IEnumerator StaticDrownBootstrap(float currentDepthLevel)
     {
-        yield return new WaitUntil(() => worldGenerator.IsInitialized);
+        while (!worldGenerator.IsInitialized) yield return null;
         CheckFloodLevel(transform.position);
-        /*var position = ((Vector2)transform.position).SnapToGrid();
+        *//*var position = ((Vector2)transform.position).SnapToGrid();
         if (currentDepthLevel > worldGenerator.GetElevation(position.x, position.y))
         {
             if (drownCoroutine != null) StopCoroutine(drownCoroutine);
             drownCoroutine = StartCoroutine(DrownCoroutine());
-        }*/
-    }
+        }*//*
+    }*/
 
     private IEnumerator DrownCoroutine()
     {

@@ -44,6 +44,10 @@ PrefabInstance:
       propertyPath: huntingTime
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2474804323160958134, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: penaltyRange
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 3843649885323722000, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 566614290
@@ -130,6 +134,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5811680737040740820, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: axeProperty
+      value: 
+      objectReference: {fileID: 11400000, guid: 9d61bc704392b564eb572050215e35f9, type: 2}
+    - target: {fileID: 5811680737040740820, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: itemProperty
       value: 
       objectReference: {fileID: 11400000, guid: 9d61bc704392b564eb572050215e35f9, type: 2}
     - target: {fileID: 5811680737040740820, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}

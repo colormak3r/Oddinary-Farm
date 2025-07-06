@@ -4856,13 +4856,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2322122838544267343, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2322122838544267343, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: m_Color.g
+      value: 0.98286885
+      objectReference: {fileID: 0}
+    - target: {fileID: 2322122838544267343, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2474804323160958134, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: activeTime
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2474804323160958134, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: targetMask.m_Bits
+      value: 2147486208
+      objectReference: {fileID: 0}
     - target: {fileID: 3843649885323722000, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 937626001
+      value: 2007025279
       objectReference: {fileID: 0}
     - target: {fileID: 3843649885323722000, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -4971,13 +4987,13 @@ MonoBehaviour:
   graphicTransform: {fileID: 6718628245006291433}
   spriteFacingRight: 0
   roamRadius: 5
+  itemProperty: {fileID: 11400000, guid: cd267a9b4d75f83478b4a4406c8eea92, type: 2}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:
     m_PersistentCalls:
       m_Calls: []
   currentStateName: 
-  weaponProperty: {fileID: 11400000, guid: cd267a9b4d75f83478b4a4406c8eea92, type: 2}
   idleStateChangeCdr:
     min: 1
     max: 2

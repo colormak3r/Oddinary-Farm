@@ -1,11 +1,16 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/05/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
 using ColorMak3r.Utility;
 
 public class Snail : Animal
 {
     [Header("Snail Settings")]
-    [SerializeField]
-    private HandProperty handProperty;
     [SerializeField]
     private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
     private float nextIdleStateChange;
@@ -26,8 +31,6 @@ public class Snail : Animal
 
         if (IsServer)
         {
-            CurrentItem.Initialize(handProperty);
-
             thinkingState = new ThinkingState(this);
             nibblingState = new NibblingState(this);
             roamingState = new RoamingState(this);
@@ -57,7 +60,7 @@ public class Snail : Animal
         {
             // Active States
             nextIdleStateChange = 0;
-            if (TargetDetector.DistanceToTarget > handProperty.Range)
+            if (TargetDetector.DistanceToTarget > ItemProperty.Range)
             {
                 if (currentState != chasingState) ChangeState(chasingState);
             }

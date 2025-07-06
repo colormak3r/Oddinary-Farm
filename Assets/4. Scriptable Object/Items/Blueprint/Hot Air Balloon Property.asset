@@ -18,7 +18,7 @@ MonoBehaviour:
   isConsummable: 1
   maxStack: 1
   isSellable: 1
-  price: 3200
+  price: 12800
   range: 10
   primaryCdr: 0.25
   secondaryCdr: 0.25

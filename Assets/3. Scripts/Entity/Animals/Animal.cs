@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/05/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -27,6 +34,9 @@ public abstract class Animal : NetworkBehaviour
     private bool spriteFacingRight;
     [SerializeField]
     private float roamRadius = 5f;
+    [SerializeField]
+    private ItemProperty itemProperty;
+    protected ItemProperty ItemProperty => itemProperty;
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
@@ -92,7 +102,11 @@ public abstract class Animal : NetworkBehaviour
         hungerStimulus = GetComponent<HungerStimulus>();
         followStimulus = GetComponent<FollowStimulus>();
         moveTowardStimulus = GetComponent<MoveTowardStimulus>();
-        currentItem = GetComponentInChildren<Item>();
+        if (itemProperty != null)
+        {
+            var weaponObj = Instantiate(itemProperty.Prefab, transform);
+            currentItem = weaponObj.GetComponent<Item>();
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -101,6 +115,8 @@ public abstract class Animal : NetworkBehaviour
         IsFacingRight.OnValueChanged += HandleOnIsFacingRightChanged;
 
         HandleOnIsFacingRightChanged(false, IsFacingRight.Value);
+
+        if (currentItem != null) currentItem.Initialize(itemProperty);
     }
     public override void OnNetworkDespawn()
     {

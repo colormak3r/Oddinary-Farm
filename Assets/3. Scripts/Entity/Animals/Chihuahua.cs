@@ -1,12 +1,16 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/05/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Chihuahua : Animal
 {
     [Header("Chihuahua Settings")]
-    [SerializeField]
-    private MeleeWeaponProperty weaponProperty;
-
     private BehaviourState thinkingState;
     private BehaviourState sittingState;
     private BehaviourState followingState;
@@ -22,8 +26,6 @@ public class Chihuahua : Animal
 
         if (IsServer)
         {
-            CurrentItem.Initialize(weaponProperty);
-
             thinkingState = new ThinkingState(this);
             sittingState = new SittingState(this);
             followingState = new FollowingState(this);
@@ -67,7 +69,7 @@ public class Chihuahua : Animal
         }
         else
         {
-            if (TargetDetector.DistanceToTarget > weaponProperty.Range)
+            if (TargetDetector.DistanceToTarget > ItemProperty.Range)
             {
                 if (currentState != chasingState) ChangeState(chasingState);
             }

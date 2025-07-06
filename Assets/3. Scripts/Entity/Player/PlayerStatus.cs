@@ -140,11 +140,15 @@ public class PlayerStatus : EntityStatus
         // Black out and move player to respawn position
         if (IsOwner)
         {
-            yield return new WaitForSeconds(3f);
+            yield return CountdownUI.Main.CountdownRoutine(TimeManager.Main.IsDay ? 3f : 10f);
             yield return TransitionUI.Main.ShowCoroutine();
 
             transform.position = respawnPos;
             Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+
+            yield return new WaitUntil(() => !WorldGenerator.Main.IsGenerating);
+            WorldGenerator.Main.BuildWorld(transform.position);
+            yield return new WaitUntil(() => !WorldGenerator.Main.IsGenerating);
 
             yield return TransitionUI.Main.HideCoroutine();
         }

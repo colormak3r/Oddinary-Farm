@@ -1,10 +1,15 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/05/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
 
 public class Spider : Animal
 {
     [Header("Spider Settings")]
-    [SerializeField]
-    private WeaponProperty weaponProperty;
     [SerializeField]
     private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
     private float nextIdleStateChange;
@@ -26,8 +31,6 @@ public class Spider : Animal
         base.OnNetworkSpawn();
         if (IsServer)
         {
-            CurrentItem.Initialize(weaponProperty);
-
             thinkingState = new ThinkingState(this);
             burrowingState = new BurrowingState(this);
             roamingState = new RoamingState(this);
@@ -88,7 +91,7 @@ public class Spider : Animal
         {
             nextIdleStateChange = 0;
 
-            if (TargetDetector.DistanceToTarget > weaponProperty.Range)
+            if (TargetDetector.DistanceToTarget > ItemProperty.Range)
             {
                 if (currentState != chasingState) ChangeState(chasingState);
             }

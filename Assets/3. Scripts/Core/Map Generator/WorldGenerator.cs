@@ -234,7 +234,8 @@ public class WorldGenerator : NetworkBehaviour
 
     private IEnumerator FloodLevelChangeCoroutine(float depthLevel)
     {
-        yield return new WaitUntil(() => GameManager.Main.IsInitialized);
+        while (!GameManager.Main.IsInitialized) yield return null;
+
         var map = elevationMap.RawMap;
         var halfMapSize = mapSize / 2;
         var invalidPosition = new List<Vector2>();
@@ -249,6 +250,7 @@ public class WorldGenerator : NetworkBehaviour
                     var position = new Vector2(i, j);
                     InvalidateFolliageOnClient(position);
                     RemoveFoliage(position);
+                    yield return null; // Yield to prevent freezing the main thread
                 }
             }
         }
@@ -421,6 +423,7 @@ public class WorldGenerator : NetworkBehaviour
     #region World Building
     private Vector2 closetChunkPosition_cached = Vector2.one;
     private bool isGenerating = false;
+    public bool IsGenerating => isGenerating;
     private Vector2 cached_position;
     private float traveledDistance = 0;
 
@@ -570,7 +573,7 @@ public class WorldGenerator : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (!canSpawnResources && !ScenarioManager.Main.CanSpawnResources) return;
+        if (!canSpawnResources || (ScenarioManager.Main.OverrideSettings && !ScenarioManager.Main.CanSpawnResources)) return;
 
         StartCoroutine(LoadResourceCoroutine(position));
     }

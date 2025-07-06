@@ -1,8 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/05/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [RequireComponent(typeof(AudioSource))]
 public class AudioElement : MonoBehaviour
@@ -68,7 +71,6 @@ public class AudioElement : MonoBehaviour
 
     public void PlayOneShot(AudioClip clip, float pitch)
     {
-
         if (clip != null)
         {
             audioSource.pitch = pitch;

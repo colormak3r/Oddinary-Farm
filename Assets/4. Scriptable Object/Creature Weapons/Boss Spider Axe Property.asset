@@ -22,9 +22,14 @@ MonoBehaviour:
   range: 2
   primaryCdr: 2
   secondaryCdr: 0.25
+  itemContext: 'LMB: Place
+
+    RMB: Remove
+
+    X  : Drop'
   pickupSound: {fileID: 0}
   selectSound: {fileID: 0}
-  primarySound: {fileID: 0}
+  primarySound: {fileID: 8300000, guid: 69daa57976447ba4b885ad9cefaadfb8, type: 3}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
   radius: 0.1

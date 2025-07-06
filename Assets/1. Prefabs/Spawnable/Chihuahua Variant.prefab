@@ -1,67 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1688772635939986163
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 4618742774218740578}
-    m_Modifications:
-    - target: {fileID: 2227690571127156858, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2227690571127156858, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2227690571127156858, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2227690571127156858, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2227690571127156858, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2227690571127156858, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2227690571127156858, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2227690571127156858, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2227690571127156858, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2227690571127156858, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7801270977288863951, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-      propertyPath: m_Name
-      value: Melee Weapon Variant
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
---- !u!4 &686201935306369673 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2227690571127156858, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
-  m_PrefabInstance: {fileID: 1688772635939986163}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7044189838386248138
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -183,10 +121,7 @@ PrefabInstance:
     - {fileID: 3114174111768081107, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
     m_RemovedGameObjects:
     - {fileID: 2855597938857917124, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 686201935306369673}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       insertIndex: -1
@@ -219,13 +154,13 @@ MonoBehaviour:
   graphicTransform: {fileID: 6503449066055046542}
   spriteFacingRight: 0
   roamRadius: 5
+  itemProperty: {fileID: 11400000, guid: 386cf64c07f7f7a4e91258b04256168f, type: 2}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:
     m_PersistentCalls:
       m_Calls: []
   currentStateName: 
-  weaponProperty: {fileID: 11400000, guid: 386cf64c07f7f7a4e91258b04256168f, type: 2}
   nextSittingTime: 0
 --- !u!114 &1523214623172210129
 MonoBehaviour:
@@ -277,11 +212,6 @@ MonoBehaviour:
   maxOffsetTime: 5
   aheadPosition: {x: 0, y: 0}
   randomAheadOffset: {x: 0, y: 0}
---- !u!4 &4618742774218740578 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
-  m_PrefabInstance: {fileID: 7044189838386248138}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6503449066055046542 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4287736005901102148, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}

@@ -22,12 +22,18 @@ MonoBehaviour:
   range: 10
   primaryCdr: 3
   secondaryCdr: 3
+  itemContext: 'LMB: Place
+
+    RMB: Remove
+
+    X  : Drop'
   pickupSound: {fileID: 0}
   selectSound: {fileID: 0}
-  primarySound: {fileID: 0}
+  primarySound: {fileID: 8300000, guid: 8a96721ac9b272e4897cfe7a525216bb, type: 3}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
   projectileProperty: {fileID: 11400000, guid: ef029d74a43b2854a8c6788928f02089, type: 2}
   projectileCount: 1
   projectileSpread: 0
   spreadEvenly: 0
+  muzzleOffset: {x: 0, y: 0}

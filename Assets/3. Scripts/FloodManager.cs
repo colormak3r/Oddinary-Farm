@@ -93,6 +93,7 @@ public class FloodManager : NetworkBehaviour
     {
         floodLevelChangePerHour = (highestElevation - baseFloodLevel) / (floodCompleteDuration * 24);
     }
+
     private IEnumerator FloodCoroutine()
     {
         while (CurrentFloodLevel.Value < 1.01f)

@@ -1,7 +1,7 @@
 /*
  * Created By:      Khoa Nguyen
  * Date Created:    --/--/----
- * Last Modified:   07/02/2025 (Khoa)
+ * Last Modified:   07/05/2025 (Khoa)
  * Notes:           <write here>
 */
 
@@ -40,24 +40,15 @@ public class MapElement : NetworkBehaviour
 
     private Vector2Int[] snappedPositions;
 
-    private void Awake()
-    {
-        List<Vector2Int> snappedPositions = new List<Vector2Int>();
-        foreach (var position in positions)
-        {
-            var localPos = ((Vector2)transform.position + position).SnapToGrid();
-            snappedPositions.Add(new Vector2Int(Mathf.RoundToInt(localPos.x), Mathf.RoundToInt(localPos.y)));
-        }
-        this.snappedPositions = snappedPositions.ToArray();
-    }
-
     public override void OnNetworkSpawn()
     {
-        StartCoroutine(WaitWorldGeneratorLoad());
+        UpdatePosition();
+        StartCoroutine(WaitGameManagerLoad());
         CurrentHeat.OnValueChanged += HandleOnCurrentHeatChanged;
 
         if (IsServer)
         {
+            // TODO: move heat decay logic to the manager
             TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
             CurrentHeat.Value = defaultHeatValue;
         }
@@ -65,6 +56,7 @@ public class MapElement : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
+        UpdatePosition();
         WorldGenerator.Main.ResetMinimap(snappedPositions);
 
         if (IsServer)
@@ -90,9 +82,21 @@ public class MapElement : NetworkBehaviour
         }*/
     }
 
-    private IEnumerator WaitWorldGeneratorLoad()
+    private void UpdatePosition()
     {
-        yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
+        List<Vector2Int> snappedPositions = new List<Vector2Int>();
+        foreach (var position in positions)
+        {
+            var localPos = ((Vector2)transform.position + position).SnapToGrid();
+            snappedPositions.Add(new Vector2Int(Mathf.RoundToInt(localPos.x), Mathf.RoundToInt(localPos.y)));
+        }
+        this.snappedPositions = snappedPositions.ToArray();
+    }
+
+    private IEnumerator WaitGameManagerLoad()
+    {
+        yield return new WaitUntil(() => GameManager.Main.IsInitialized);
+        UpdatePosition();
         WorldGenerator.Main.UpdateMinimap(snappedPositions, color);
     }
 

@@ -1,10 +1,15 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/05/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
 
 public class TunnelingSpider : Animal
 {
     [Header("Tunneling Spider Settings")]
-    [SerializeField]
-    private WeaponProperty weaponProperty;
     [SerializeField]
     private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
     private float nextIdleStateChange;
@@ -40,8 +45,6 @@ public class TunnelingSpider : Animal
         base.OnNetworkSpawn();
         if (IsServer)
         {
-            CurrentItem.Initialize(weaponProperty);
-
             thinkingState = new ThinkingState(this);
             burrowingState = new BurrowingState(this);
             roamingState = new RoamingState(this);
@@ -100,19 +103,22 @@ public class TunnelingSpider : Animal
         else
         {
             nextIdleStateChange = 0;
+            if (TargetDetector.DistanceToTarget < ItemProperty.Range + 1)
+            {
+                if (tunnelingController.IsTunnelingValue)
+                {
+                    tunnelingController.SetTunneling(false);
+                    nextCanTunnel = Time.time + 2f; // Cooldown before tunneling again
+                }
+            }
 
-            if (TargetDetector.DistanceToTarget > weaponProperty.Range)
+            if (TargetDetector.DistanceToTarget > ItemProperty.Range)
             {
                 if (currentState != chasingState) ChangeState(chasingState);
             }
             else
             {
                 if (currentState != attackPrimaryState) ChangeState(attackPrimaryState);
-                if (tunnelingController.IsTunnelingValue)
-                {
-                    tunnelingController.SetTunneling(false);
-                    nextCanTunnel = Time.time + 5f; // Cooldown before tunneling again
-                }
             }
         }
     }

@@ -1,53 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5179185249232924001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6393804495831758586}
-  - component: {fileID: 2437604844209166044}
-  m_Layer: 11
-  m_Name: Axe
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6393804495831758586
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5179185249232924001}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3945629672685620183}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2437604844209166044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5179185249232924001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 764ff69df5af2394ba51b3cfb5fa6a0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  showDebug: 0
-  showGizmos: 1
-  baseProperty: {fileID: 0}
-  meleeWeaponProperty: {fileID: 0}
 --- !u!1001 &1664464937133711743
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -179,10 +131,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 4007135450909282502, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
     - {fileID: 2855597938857917124, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6393804495831758586}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       insertIndex: 10
@@ -197,11 +146,6 @@ PrefabInstance:
 --- !u!4 &3213396557102681403 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4287736005901102148, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
-  m_PrefabInstance: {fileID: 1664464937133711743}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &3945629672685620183 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
   m_PrefabInstance: {fileID: 1664464937133711743}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &8862408004728527693 stripped
@@ -225,13 +169,13 @@ MonoBehaviour:
   graphicTransform: {fileID: 3213396557102681403}
   spriteFacingRight: 0
   roamRadius: 5
+  itemProperty: {fileID: 11400000, guid: cd267a9b4d75f83478b4a4406c8eea92, type: 2}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:
     m_PersistentCalls:
       m_Calls: []
   currentStateName: 
-  weaponProperty: {fileID: 11400000, guid: cd267a9b4d75f83478b4a4406c8eea92, type: 2}
   idleStateChangeCdr:
     min: 1
     max: 2
