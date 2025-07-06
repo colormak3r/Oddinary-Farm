@@ -1,6 +1,12 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/3/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System;
 using System.Collections;
-using Unity.Jobs;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -83,10 +89,11 @@ public class FloodManager : NetworkBehaviour
         OnFloodLevelChanged?.Invoke(newValue, CurrentSafeLevel, CurrentDepthLevel);
     }
 
-    public void Initialize()
+    public void Initialize(float highestElevation)
     {
-        floodLevelChangePerHour = (WorldGenerator.Main.HighestElevation - baseFloodLevel) / (floodCompleteDuration * 24);
+        floodLevelChangePerHour = (highestElevation - baseFloodLevel) / (floodCompleteDuration * 24);
     }
+
     private IEnumerator FloodCoroutine()
     {
         while (CurrentFloodLevel.Value < 1.01f)

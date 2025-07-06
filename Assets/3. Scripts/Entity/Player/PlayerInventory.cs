@@ -148,6 +148,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
             if (playSound) audioElement.PlayOneShot(property.PickupSound);
 
+            // Update stat
+            StatisticsManager.Main.UpdateStat(StatisticType.ItemsCollected, property);
+
             return true;
         }
         else if (property.MaxStack > 1 && FindPartialSlot(property, out var partialIndex))
@@ -162,6 +165,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             {
                 ChangeHotBarIndex(partialIndex);
             }
+
+            // Update stat
+            StatisticsManager.Main.UpdateStat(StatisticType.ItemsCollected, property);
 
             return true;
         }
@@ -184,6 +190,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             {
                 ChangeHotBarIndex(emptyIndex);
             }
+
+            // Update stat
+            StatisticsManager.Main.UpdateStat(StatisticType.ItemsCollected, property);
 
             return true;
         }
@@ -276,13 +285,17 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     #endregion
 
     #region Currency
+    private ulong personalCoinsCollected = 0;
     public void AddCoinsOnClient(uint value)
     {
+        personalCoinsCollected += value;
         WalletManager.Main.AddToWallet(value);
         OnCoinsValueChanged?.Invoke(WalletManager.Main.LocalWallet);
+        StatisticsManager.Main.UpdateStat(StatisticType.PersonalCoinsCollected, personalCoinsCollected);
         if (showDebug) Debug.Log($"Added {value} coins to inventory. Total coins = {WalletManager.Main.LocalWallet}");
     }
 
+    private ulong personalCoinsSpent = 0;
     public void ConsumeCoinsOnClient(uint value)
     {
         if (value > WalletManager.Main.LocalWallet)
@@ -291,8 +304,11 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             return;
         }
 
+        personalCoinsSpent += value;
+
         WalletManager.Main.RemoveFromWallet(value);
         OnCoinsValueChanged?.Invoke(WalletManager.Main.LocalWallet);
+        StatisticsManager.Main.UpdateStat(StatisticType.PersonalCoinsSpent, personalCoinsSpent);
         if (showDebug) Debug.Log($"Consumed {value} coins from inventory. Total coins = {WalletManager.Main.LocalWallet}");
     }
     #endregion

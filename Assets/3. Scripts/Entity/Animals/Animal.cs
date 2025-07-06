@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/05/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -27,6 +34,9 @@ public abstract class Animal : NetworkBehaviour
     private bool spriteFacingRight;
     [SerializeField]
     private float roamRadius = 5f;
+    [SerializeField]
+    private ItemProperty itemProperty;
+    protected ItemProperty ItemProperty => itemProperty;
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 
@@ -80,12 +90,33 @@ public abstract class Animal : NetworkBehaviour
 
     private Coroutine moveCoroutine;
 
+    protected virtual void Awake()
+    {
+        animator = GetComponentInChildren<Animator>();
+        networkAnimator = GetComponent<NetworkAnimator>();
+        movement = GetComponent<EntityMovement>();
+        status = GetComponent<EntityStatus>();
+        rbody = GetComponent<Rigidbody2D>();
+        targetDetector = GetComponent<TargetDetector>();
+        threatDetector = GetComponent<ThreatDetector>();
+        hungerStimulus = GetComponent<HungerStimulus>();
+        followStimulus = GetComponent<FollowStimulus>();
+        moveTowardStimulus = GetComponent<MoveTowardStimulus>();
+        if (itemProperty != null)
+        {
+            var weaponObj = Instantiate(itemProperty.Prefab, transform);
+            currentItem = weaponObj.GetComponent<Item>();
+        }
+    }
+
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         IsFacingRight.OnValueChanged += HandleOnIsFacingRightChanged;
 
         HandleOnIsFacingRightChanged(false, IsFacingRight.Value);
+
+        if (currentItem != null) currentItem.Initialize(itemProperty);
     }
     public override void OnNetworkDespawn()
     {
@@ -100,21 +131,6 @@ public abstract class Animal : NetworkBehaviour
             graphicTransform.localScale = spriteFacingRight ? RIGHT_DIRECTION : LEFT_DIRECTION;
         else
             graphicTransform.localScale = spriteFacingRight ? LEFT_DIRECTION : RIGHT_DIRECTION;
-    }
-
-    protected virtual void Awake()
-    {
-        animator = GetComponentInChildren<Animator>();
-        networkAnimator = GetComponent<NetworkAnimator>();
-        movement = GetComponent<EntityMovement>();
-        status = GetComponent<EntityStatus>();
-        rbody = GetComponent<Rigidbody2D>();
-        targetDetector = GetComponent<TargetDetector>();
-        threatDetector = GetComponent<ThreatDetector>();
-        hungerStimulus = GetComponent<HungerStimulus>();
-        followStimulus = GetComponent<FollowStimulus>();
-        moveTowardStimulus = GetComponent<MoveTowardStimulus>();
-        currentItem = GetComponentInChildren<Item>();
     }
 
     private void FixedUpdate()

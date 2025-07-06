@@ -206,6 +206,7 @@ GameObject:
   - component: {fileID: 6584886272789103332}
   - component: {fileID: 2381061234703857880}
   - component: {fileID: 2269034370699265688}
+  - component: {fileID: 8816154562917156455}
   m_Layer: 9
   m_Name: Plant
   m_TagString: Untagged
@@ -365,10 +366,13 @@ MonoBehaviour:
   farmPlotLayer:
     serializedVersion: 2
     m_Bits: 256
+  showDebugs: 0
   CurrentStage:
     m_InternalValue: 0
   isWatered:
     m_InternalValue: 0
+  Property:
+    m_InternalValue: {fileID: 0}
 --- !u!114 &4354009276847991936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -404,7 +408,7 @@ MonoBehaviour:
   damagedSound: {fileID: 8300000, guid: 92242034659cf4e4ba523495d8b88aad, type: 3}
   deathSound: {fileID: 8300000, guid: fc1bf534e2ad6644a9857cdb21412e65, type: 3}
   showDebugs: 0
-  CurrentHealth:
+  NetworkCurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
     m_PersistentCalls:
@@ -520,6 +524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundEffects: []
+  ignoreWarnings: 0
 --- !u!114 &2381061234703857880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -556,6 +561,28 @@ MonoBehaviour:
   elevation: 0
   previousWaterLevel: 0
   previousDepth: 0
+--- !u!114 &8816154562917156455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4773706747441023441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f527d404a7e0a640bd070de1353edb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  positions:
+  - {x: 0, y: 0}
+  color: {r: 0.7137255, g: 0.8352941, b: 0.23529412, a: 1}
+  defaultHeatValue: 1
+  heatDecayPerDay: 0.1
+  minHeat: 0.5
+  showGizmos: 0
+  CurrentHeat:
+    m_InternalValue: 0
 --- !u!1001 &771624051194356418
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,8 +1,8 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.GPUSort;
 
 public class OptionsUI : UIBehaviour
 {
@@ -25,6 +25,10 @@ public class OptionsUI : UIBehaviour
     private GameObject appearanceButton;
     [SerializeField]
     private Button backButton;
+    [SerializeField]
+    private Button resumeButton;
+    [SerializeField]
+    private Button statButton;
 
     private TMP_Text backButtonText;
 
@@ -36,17 +40,17 @@ public class OptionsUI : UIBehaviour
         {
             leaveButton.SetActive(false);
             appearanceButton.SetActive(false);
-            backButtonText.text = "Back";
-            backButton.onClick.RemoveListener(ResumeButtonClicked);
-            backButton.onClick.AddListener(BackButtonClicked);
+            resumeButton.gameObject.SetActive(false);
+            backButton.gameObject.SetActive(true);
+            statButton.gameObject.SetActive(false);
         }
         else
         {
             leaveButton.SetActive(true);
             appearanceButton.SetActive(true);
-            backButtonText.text = "Resume";
-            backButton.onClick.RemoveListener(BackButtonClicked);
-            backButton.onClick.AddListener(ResumeButtonClicked);
+            resumeButton.gameObject.SetActive(true);
+            backButton.gameObject.SetActive(false);
+            statButton.gameObject.SetActive(true);
         }
     }
 
@@ -55,21 +59,42 @@ public class OptionsUI : UIBehaviour
         AudioUI.Main.Initialize();
         HideNoFade();
         AudioUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 
     public void LeaveButtonClicked()
     {
+        Hide();
         GameManager.Main.ReturnToMainMenu();
+        AudioManager.Main.PlayClickSound();
     }
 
     public void BackButtonClicked()
     {
         HideNoFade();
         MainMenuUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
-    
-    private void ResumeButtonClicked()
+
+    public void ResumeButtonClicked()
     {
-        Hide();
+        AudioManager.Main.PlayClickSound();
+        if (SceneManager.GetActiveScene().buildIndex == 0)
+        {
+            Debug.LogWarning("This should not happen. Cannot resume in the main menu scene.");
+        }
+        else
+        {
+            Hide();
+            PauseButtonUI.Main.Show();
+            InputManager.Main.SwitchMap(InputMap.Gameplay);
+        }
+    }
+
+    public void StatButtonClicked()
+    {
+        HideNoFade();
+        StatUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 }

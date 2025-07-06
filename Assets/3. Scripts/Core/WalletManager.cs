@@ -36,11 +36,6 @@ public class WalletManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
-        {
-            currentGlobalWallet.Value = initialGlobalWallet;
-        }
-
         currentGlobalWallet.OnValueChanged += OnGlobalWalletChanged;
         OnGlobalWalletChanged(0, currentGlobalWallet.Value);
     }
@@ -53,6 +48,14 @@ public class WalletManager : NetworkBehaviour
     private void OnGlobalWalletChanged(ulong previousValue, ulong newValue)
     {
         InventoryUI.Main.UpdateWallet(newValue - localSpending);
+        StatisticsManager.Main.UpdateStat(StatisticType.GlobalCoinsCollected, newValue);
+    }
+
+    public void InitializeOnServer()
+    {
+        if (!IsServer) return;
+
+        currentGlobalWallet.Value += initialGlobalWallet;
     }
 
     public void AddToWallet(uint amount)

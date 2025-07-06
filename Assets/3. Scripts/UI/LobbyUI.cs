@@ -57,9 +57,7 @@ public class LobbyUI : UIBehaviour
     [SerializeField]
     private Button joinRoomButton;
 
-    [Header("Debugs")]
-    [SerializeField]
-    private bool showDebugs;
+    [Header("LobbyUI Debugs")]
     [SerializeField]
     private LobbyMode lobbyMode;
 

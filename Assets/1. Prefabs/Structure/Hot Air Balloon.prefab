@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 677623035613944037}
   - component: {fileID: 4051804999155219241}
   - component: {fileID: 4176837517728966053}
+  - component: {fileID: 4497251070843497839}
   m_Layer: 10
   m_Name: Hot Air Balloon
   m_TagString: Untagged
@@ -107,7 +108,7 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
@@ -171,6 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b0ed2bb8d311ad4bb375f5f0ccc52de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canBeSelected: 1
   offset: {x: 0, y: 1}
   size: {x: 3, y: 3}
 --- !u!114 &908942693083441081
@@ -189,7 +191,7 @@ MonoBehaviour:
   isMovable: 1
   isRemovable: 1
   property: {fileID: 11400000, guid: b9bded3ffc69f894bb40a4891116a709, type: 2}
-  takeOffDate: 7
+  takeOffDate: 10
   takeOffHour: 22
   upgradeStages: {fileID: 11400000, guid: 3b0c73b5f2dc8654292082cc4fbeb893, type: 2}
   spriteRenderer: {fileID: 6487843671388318122}
@@ -256,7 +258,7 @@ FixedJoint2D:
   m_BreakAction: 0
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: -5, y: 0}
+  m_ConnectedAnchor: {x: 0, y: 0}
   m_DampingRatio: 0
   m_Frequency: 0
 --- !u!114 &4176837517728966053
@@ -276,10 +278,39 @@ MonoBehaviour:
   floodDuration: 3
   spriteRenderer: {fileID: 6487843671388318122}
   alphaRenderer: []
-  isInitialized: 0
   elevation: 0
   previousWaterLevel: 0
   previousDepth: 0
+--- !u!114 &4497251070843497839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 940610010983976717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f527d404a7e0a640bd070de1353edb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  positions:
+  - {x: -1, y: 0}
+  - {x: -1, y: 1}
+  - {x: -1, y: 2}
+  - {x: 0, y: 0}
+  - {x: 0, y: 1}
+  - {x: 0, y: 2}
+  - {x: 1, y: 0}
+  - {x: 1, y: 1}
+  - {x: 1, y: 2}
+  color: {r: 0.5568628, g: 0.2784314, b: 0.54901963, a: 1}
+  defaultHeatValue: 1
+  heatDecayPerDay: 0
+  minHeat: 1
+  showGizmos: 0
+  CurrentHeat:
+    m_InternalValue: 0
 --- !u!1 &2707789027467210874
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,6 @@ using ColorMak3r.Utility;
 using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -84,6 +83,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private Animator animator;
     private PlayerAnimationController animationController;
     private LassoController lassoController;
+    private ItemSystem itemSystem;
 
     private bool isOwner;
     private bool isInitialized;
@@ -108,6 +108,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         rbody = GetComponent<Rigidbody2D>();
         animationController = GetComponentInChildren<PlayerAnimationController>();
         lassoController = GetComponentInChildren<LassoController>();
+        itemSystem = GetComponent<ItemSystem>();
 
         mainCamera = Camera.main;
         gameplayRenderer = GameplayRenderer.Main;
@@ -144,12 +145,24 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         IsFacingRight.OnValueChanged -= HandleOnIsFacingRightChanged;
     }
 
+    private Vector2 closetChunkPosition_cached;
+
     private void Update()
     {
+        if (!GameManager.Main.IsInitialized) return;
+
+        if (IsServer)
+        {
+            var closetChunkPosition = transform.position.SnapToGrid(WorldGenerator.Main.ChunkSize, true);
+            if (closetChunkPosition_cached != closetChunkPosition)
+            {
+                WorldGenerator.Main.BuildResourceOnServer(transform.position);
+                closetChunkPosition_cached = closetChunkPosition;
+            }
+        }
+
         // Run Client-Side only
         if (!IsOwner || !isInitialized) return;
-
-        if (!GameManager.Main.IsInitialized) return;
 
         // WorldGenerator.BuildWorld has been moved to WorldRenderer
         // This is so the spectator can also make use of the world generator
@@ -230,13 +243,19 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             return;
         }
 
-        rotateArm = itemProperty is RangedWeaponProperty || itemProperty is LaserWeaponProperty;
+        var rangedWeapon = itemProperty as RangedWeaponProperty;
+        var laserWeapon = itemProperty as LaserWeaponProperty;
+        rotateArm = rangedWeapon != null || laserWeapon != null;
+
         if (rotateArm)
         {
             // The player is holding a ranged weapon
             armRotation.SetActive(true);
             arm.SetActive(false);
             itemRotationRenderer.sprite = itemProperty.ObjectSprite;
+            // TODO: change ranged weapon into projectile weapon. Both laser and projectile weapons should use the same system
+            if (rangedWeapon) itemSystem.SetMuzzleOffset(rangedWeapon.MuzzleOffset);
+            if (laserWeapon) itemSystem.SetMuzzleOffset(laserWeapon.MuzzleOffset);
         }
         else
         {
@@ -372,22 +391,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (context.performed)
         {
-            if (ShopUI.Main.IsShowing)
+            // This should be called to open the options menu only
+            if (InventoryUI.Main.TabInventoryUIBehaviour.IsShowing)
             {
-                ShopUI.Main.CloseShop();
+                InventoryUI.Main.CloseTabInventory();
             }
-            else
+            else if (!OptionsUI.Main.IsShowing)
             {
-                if (OptionsUI.Main.IsShowing)
-                {
-                    // TODO: Use UI Map instead
-                    OptionsUI.Main.Hide();
-                }
-                else
-                {
-                    InventoryUI.Main.CloseInventory();
-                    OptionsUI.Main.Show();
-                }
+                PauseButtonUI.Main.PauseButtonClicked();
             }
         }
     }
@@ -454,6 +465,12 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (context.started)
         {
             OnPrimaryStarted();
+
+            // Update Stats
+            if (currentItem.BaseProperty != null)
+            {
+                StatisticsManager.Main.UpdateStat(StatisticType.ItemsUsed, currentItem.BaseProperty);
+            }
         }
         else if (context.canceled)
         {

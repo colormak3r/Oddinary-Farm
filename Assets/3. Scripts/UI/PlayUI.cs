@@ -24,16 +24,6 @@ public class PlayUI : UIBehaviour
         ConnectionManager.Main.StartGameSinglePlayer();
     }
 
-    public void MultiplayerLocalHostButtonClicked()
-    {
-        ConnectionManager.Main.StartGameMultiplayerLocalHost();
-    }
-
-    public void MultiplayerLocalClientButtonClicked()
-    {
-        ConnectionManager.Main.StartGameMultiplayerLocalClient();
-    }
-
     public void MultiplayerOnlineHostButtonClicked()
     {
         ConnectionManager.Main.StartGameMultiplayerOnlineHost();

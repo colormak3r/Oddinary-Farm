@@ -67,5 +67,6 @@ public class AudioUI : UIBehaviour
     {
         HideNoFade();
         OptionsUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 }

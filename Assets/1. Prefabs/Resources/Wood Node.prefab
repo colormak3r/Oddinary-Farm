@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2707483043122201943}
   - component: {fileID: 3211592142929367722}
   - component: {fileID: 6135079755855790817}
+  - component: {fileID: -1522536794092570904}
   m_Layer: 12
   m_Name: Wood Node
   m_TagString: Untagged
@@ -134,11 +135,12 @@ MonoBehaviour:
   damagedSound: {fileID: 8300000, guid: 3858773d709f0d64ca46a780ca805b59, type: 3}
   deathSound: {fileID: 8300000, guid: 0db3f5ace1019804ba02c893bd7113d6, type: 3}
   showDebugs: 0
-  CurrentHealth:
+  NetworkCurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
     m_PersistentCalls:
       m_Calls: []
+  attackerList: []
 --- !u!114 &7407149648869802556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundEffects: []
+  ignoreWarnings: 0
 --- !u!114 &3211592142929367722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,10 +298,21 @@ MonoBehaviour:
   floodDuration: 3
   spriteRenderer: {fileID: 3221880858544378413}
   alphaRenderer: []
-  isInitialized: 0
   elevation: 0
   previousWaterLevel: 0
   previousDepth: 0
+--- !u!114 &-1522536794092570904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2916747403788541215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41d12d51f692f7e4ca9d556e77f73877, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3930633831116992502
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,12 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.Rendering.VolumeComponent;
 using Random = UnityEngine.Random;
 
-public class TerrainUnit : MonoBehaviour, ILocalObjectPoolBehaviour
+public class TerrainUnit : MonoBehaviour
 {
     private static Vector2[] SCAN_POSITION = new Vector2[]
     {
@@ -42,6 +39,12 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolBehaviour
     [SerializeField]
     private SpriteRenderer baseRenderer;
 
+    [Header("Materials")]
+    [SerializeField]
+    private Material defaultMaterial;
+    [SerializeField]
+    private Material swayMaterial;
+
     [Header("Debugs")]
     [SerializeField]
     private TerrainUnitProperty property;
@@ -66,6 +69,7 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolBehaviour
 
         // Overlay
         overlayRenderer.sprite = property.OverlayChance > Random.value ? property.OverlaySprite : null;
+        overlayRenderer.material = property.OverlaySway ? swayMaterial : defaultMaterial;
 
         // Base
         baseRenderer.sprite = property.BaseSprite;
@@ -158,7 +162,6 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolBehaviour
                         index2 = i;
                 }
             }
-
             if (index2 - index1 == 1)
             {
                 outlineRenderer.sprite = outlineSprites[1];
@@ -185,21 +188,5 @@ public class TerrainUnit : MonoBehaviour, ILocalObjectPoolBehaviour
         {
             outlineRenderer.sprite = outlineSprites[4];
         }
-    }
-
-    public void LocalSpawn()
-    {
-        /*overlayRenderer.enabled = true;
-        baseRenderer.enabled = true;
-
-        movementBlocker.enabled = true;*/
-    }
-
-    public void LocalDespawn()
-    {
-        /*overlayRenderer.enabled = false;
-        baseRenderer.enabled = false;
-
-        movementBlocker.enabled = false;*/
     }
 }

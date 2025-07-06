@@ -3,19 +3,19 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
-public class UIButtonAnimations : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class UIButtonAnimations : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, ISelectHandler, IDeselectHandler
 
 {
     [Header("Animation Settings")]
     [SerializeField] private float animationDuration = 0.2f;
     [SerializeField] private AnimationCurve animationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-    
+
     [Header("Hover Variables")]
     [SerializeField] private Color hoverColor = Color.white;
     [SerializeField] private Color hoverTextColor = Color.white;
     [SerializeField] private Vector3 hoverScale = Vector3.one * 1.05f;
     [SerializeField] private Vector3 hoverRotation = new Vector3(0, 0, -1.5f);
-    
+
     [Header("Click Variables")]
     [SerializeField] private Color clickColor = Color.white;
     [SerializeField] private Color clickTextColor = Color.white;
@@ -27,7 +27,7 @@ public class UIButtonAnimations : MonoBehaviour, IPointerEnterHandler, IPointerE
     [SerializeField] private Color postClickTextColor = Color.white;
     [SerializeField] private Vector3 postClickScale = Vector3.one * 1.05f;
     [SerializeField] private Vector3 postClickRotation = new Vector3(0, 0, -1.5f);
-    
+
     [Header("Button Components")]
     [SerializeField] private Image targetImage;
     [SerializeField] private TextMeshProUGUI targetText;
@@ -36,7 +36,7 @@ public class UIButtonAnimations : MonoBehaviour, IPointerEnterHandler, IPointerE
     [SerializeField] private Color originalTextColor = Color.white;
     [SerializeField] private Vector3 originalScale = Vector3.one;
     [SerializeField] private Vector3 originalRotation = Vector3.zero;
-    
+
     private Coroutine currentAnimation;
     private bool isHovered = false;
 
@@ -44,10 +44,10 @@ public class UIButtonAnimations : MonoBehaviour, IPointerEnterHandler, IPointerE
     {
         if (targetImage != null)
             originalColor = targetImage.color;
-        
+
         if (targetText != null)
             originalTextColor = targetText.color;
-        
+
         if (targetTransform != null)
         {
             originalScale = targetTransform.localScale;
@@ -78,21 +78,35 @@ public class UIButtonAnimations : MonoBehaviour, IPointerEnterHandler, IPointerE
             isHovered = false;
         }
     }
-    
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (isHovered) return;
         isHovered = true;
         AnimateToState(hoverColor, hoverTextColor, hoverScale, hoverRotation, animationDuration);
     }
-    
+
     public void OnPointerExit(PointerEventData eventData)
     {
         if (!isHovered) return;
         isHovered = false;
         AnimateToState(originalColor, originalTextColor, originalScale, originalRotation, animationDuration);
     }
-    
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        if (isHovered) return;
+        isHovered = true;
+        AnimateToState(hoverColor, hoverTextColor, hoverScale, hoverRotation, animationDuration);
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        if (!isHovered) return;
+        isHovered = false;
+        AnimateToState(originalColor, originalTextColor, originalScale, originalRotation, animationDuration);
+    }
+
     public void OnPointerClick(PointerEventData eventData)
     {
         StartCoroutine(ClickAnimation());
@@ -109,12 +123,12 @@ public class UIButtonAnimations : MonoBehaviour, IPointerEnterHandler, IPointerE
         //AnimateToState(originalColor, originalTextColor, originalScale, originalRotation, animationDuration);
         AnimateToState(postClickColor, postClickTextColor, postClickScale, postClickRotation, animationDuration);
     }
-    
+
     private void AnimateToState(Color targetColor, Color targetTextColor, Vector3 targetScale, Vector3 targetRotation, float duration)
     {
         if (currentAnimation != null)
             StopCoroutine(currentAnimation);
-            
+
         currentAnimation = StartCoroutine(AnimateToStateCoroutine(targetColor, targetTextColor, targetScale, targetRotation, duration));
     }
 

@@ -62,6 +62,11 @@ namespace ColorMak3r.Utility
             }
         }
 
+        public static Vector2 SnapToGrid(this Vector3 position, int size = 1, bool rigid = false)
+        {
+            return SnapToGrid((Vector2)position, size, rigid);
+        }
+
         /// <summary>
         /// Snaps the given <paramref name="position"/> to a grid defined by a <see cref="Vector2"/> <paramref name="gridSize"/>, 
         /// allowing different horizontal and vertical grid sizes. 
@@ -79,7 +84,7 @@ namespace ColorMak3r.Utility
         /// <returns>
         /// The <see cref="Vector2"/> representing the snapped position.
         /// </returns>
-        public static Vector2 SnapToGrid(this Vector2 position, Vector2 gridSize, bool rigid = false)
+        public static Vector3 SnapToGrid(this Vector2 position, Vector2 gridSize, bool rigid = false)
         {
             // Convert the floating-point gridSize to integer values 
             // to determine even/odd behavior.

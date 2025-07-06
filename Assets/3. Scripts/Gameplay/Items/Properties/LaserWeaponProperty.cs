@@ -22,6 +22,9 @@ public class LaserWeaponProperty : WeaponProperty
     [SerializeField]
     private Hostility hostility;
     public Hostility Hostility => hostility;
+    [SerializeField]
+    private Vector2 muzzleOffset;
+    public Vector2 MuzzleOffset => muzzleOffset;
 
     [Header("Sound Effect")]
     [SerializeField]

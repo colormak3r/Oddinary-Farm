@@ -343,12 +343,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   container: {fileID: 6026101150664435241}
+  firstElement: {fileID: 0}
   fadeDuration: 0.25
   delayShow: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
   excludeFromUIManager: 0
   background: {fileID: 0}
+  showDebugs: 0
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:
@@ -727,13 +729,12 @@ MonoBehaviour:
   damagedSound: {fileID: 8300000, guid: 20a7d71691b827846a2db73d37f293ba, type: 3}
   deathSound: {fileID: 8300000, guid: da81908babf34694799320bd1135404c, type: 3}
   showDebugs: 0
-  CurrentHealth:
+  NetworkCurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
     m_PersistentCalls:
       m_Calls: []
   attackerList: []
-  respawnPoint: {fileID: 0}
   playerHitbox: {fileID: 4434417828680881472}
   playerNameUI: {fileID: 8509437197401579281}
 --- !u!114 &6332147781516178474
@@ -953,6 +954,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundEffects: []
+  ignoreWarnings: 0
 --- !u!82 &6544998554535444510
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1633,6 +1635,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2746253684418572068}
     m_Modifications:
+    - target: {fileID: 1972213988096895208, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1972213988096895208, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4284115393529965016, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1673,9 +1683,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5723803762276944087, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5873126707091820464, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
       propertyPath: m_Name
       value: Player Graphic
+      objectReference: {fileID: 0}
+    - target: {fileID: 6157510437218344600, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6588747729813794840, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6588747729813794840, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754405846005925376, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8230206001503940393, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8953829128706957093, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
       propertyPath: playerController

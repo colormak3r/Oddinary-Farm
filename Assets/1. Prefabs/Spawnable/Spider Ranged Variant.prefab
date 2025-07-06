@@ -151,10 +151,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 4007135450909282502, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
     - {fileID: 2855597938857917124, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 2438962268882889384, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6999877366048219596}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       insertIndex: 10
@@ -197,13 +194,13 @@ MonoBehaviour:
   graphicTransform: {fileID: 3213396557102681403}
   spriteFacingRight: 0
   roamRadius: 5
+  itemProperty: {fileID: 11400000, guid: bd52a963bfe22be43b4aed5ce14a5c2a, type: 2}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:
     m_PersistentCalls:
       m_Calls: []
   currentStateName: 
-  weaponProperty: {fileID: 11400000, guid: bd52a963bfe22be43b4aed5ce14a5c2a, type: 2}
   idleStateChangeCdr:
     min: 1
     max: 2
@@ -223,7 +220,7 @@ MonoBehaviour:
   raycastTarget: 1
   detectRange: 7
   escapeRange: 10
-  penaltyRange: 2
+  penaltyRange: 4
   activeTime: 2
   targetHostility: 0
   targetMask:
@@ -256,65 +253,3 @@ MonoBehaviour:
   guardRadius: 5
   reachRadius: 5
   reachedTarget: 0
---- !u!1001 &5301140942624977600
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 3945629672685620183}
-    m_Modifications:
-    - target: {fileID: 2933498094096552716, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2933498094096552716, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2933498094096552716, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2933498094096552716, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2933498094096552716, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2933498094096552716, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2933498094096552716, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2933498094096552716, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2933498094096552716, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2933498094096552716, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6493089648266601401, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-      propertyPath: m_Name
-      value: Projectile Gun Variant
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 485f96db894dc62428366905bf64fda6, type: 3}
---- !u!4 &6999877366048219596 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2933498094096552716, guid: 485f96db894dc62428366905bf64fda6, type: 3}
-  m_PrefabInstance: {fileID: 5301140942624977600}
-  m_PrefabAsset: {fileID: 0}

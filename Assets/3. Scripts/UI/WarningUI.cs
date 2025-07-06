@@ -29,8 +29,8 @@ public class WarningUI : UIBehaviour
     {
         for (int i = 0; i < 3; i++)
         {
-            AudioManager.Main.PlayOneShot(warningSound);
             yield return ShowCoroutine();
+            AudioManager.Main.PlayOneShot(warningSound);
             yield return new WaitForSeconds(waitDuration);
             yield return HideCoroutine();
         }

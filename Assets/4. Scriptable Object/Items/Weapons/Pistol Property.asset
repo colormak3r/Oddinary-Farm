@@ -34,3 +34,4 @@ MonoBehaviour:
   projectileCount: 1
   projectileSpread: 0
   spreadEvenly: 0
+  muzzleOffset: {x: 1, y: 0.125}

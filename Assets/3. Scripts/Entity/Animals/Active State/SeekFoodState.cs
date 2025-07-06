@@ -16,9 +16,14 @@ public class SeekFoodState : BehaviourState
     public override void ExecuteState()
     {
         base.ExecuteState();
-        var targetFood = animal.HungerStimulus.TargetFood?.Transform;
-        if (targetFood == null) return;
-        animal.MoveDirection((targetFood.position - animal.transform.position).normalized);
+
+        // Make sure the transform exists before accessing it
+        if (animal.HungerStimulus != null && animal.HungerStimulus.TargetFood != null && animal.HungerStimulus.TargetFood.Transform != null)
+        {
+            var targetFood = animal.HungerStimulus.TargetFood.Transform;
+            if (targetFood == null) return;
+            animal.MoveDirection((targetFood.position - animal.transform.position).normalized);
+        }
     }
 
     public override void ExitState()

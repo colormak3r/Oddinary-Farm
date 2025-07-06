@@ -570,6 +570,7 @@ GameObject:
   - component: {fileID: -5939728544036363060}
   - component: {fileID: -6368999011962406436}
   - component: {fileID: 5113934168564665480}
+  - component: {fileID: 1924700410835324304}
   m_Layer: 10
   m_Name: Turret
   m_TagString: Untagged
@@ -626,7 +627,7 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
@@ -837,11 +838,12 @@ MonoBehaviour:
   damagedSound: {fileID: 8300000, guid: 54b6510704152384cac1cad9aaec8da0, type: 3}
   deathSound: {fileID: 8300000, guid: e0c07741e59101440b11ff3b27b8e408, type: 3}
   showDebugs: 0
-  CurrentHealth:
+  NetworkCurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
     m_PersistentCalls:
       m_Calls: []
+  attackerList: []
 --- !u!114 &1429127181994273071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -858,6 +860,7 @@ MonoBehaviour:
   offset: {x: 0, y: 0.5}
   muzzleTransform: {fileID: 810560053875789270}
   muzzleFlash: {fileID: 2133435850586580014}
+  recoilTransform: {fileID: 0}
   recordPlantSpawns: 0
   recordFarmPlotSpawns: 0
   recordStructureSpawns: 0
@@ -973,6 +976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soundEffects: []
+  ignoreWarnings: 0
 --- !u!114 &-6368999011962406436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1009,6 +1013,31 @@ MonoBehaviour:
   elevation: 0
   previousWaterLevel: 0
   previousDepth: 0
+--- !u!114 &1924700410835324304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8837993320125130146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f527d404a7e0a640bd070de1353edb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  positions:
+  - {x: -0.5, y: 0}
+  - {x: -0.5, y: 1}
+  - {x: 0.5, y: 0}
+  - {x: 0.5, y: 1}
+  color: {r: 0.1882353, g: 0.17254902, b: 0.18039216, a: 1}
+  defaultHeatValue: 0.5
+  heatDecayPerDay: 0
+  minHeat: 0.5
+  showGizmos: 0
+  CurrentHeat:
+    m_InternalValue: 0
 --- !u!1001 &9118820903780815706
 PrefabInstance:
   m_ObjectHideFlags: 0

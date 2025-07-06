@@ -1,11 +1,15 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/05/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
 
 public class Mosk : Animal
 {
     [Header("Spider Settings")]
-    [SerializeField]
-    private WeaponProperty weaponProperty;
-
     private BehaviourState thinkingState;
     private BehaviourState roamingState;
     private BehaviourState moveTowardState;
@@ -19,8 +23,6 @@ public class Mosk : Animal
         base.OnNetworkSpawn();
         if (IsServer)
         {
-            CurrentItem.Initialize(weaponProperty);
-
             thinkingState = new ThinkingState(this);
             roamingState = new RoamingState(this);
             moveTowardState = new MoveTowardState(this);
@@ -64,7 +66,7 @@ public class Mosk : Animal
         }
         else
         {
-            if (TargetDetector.DistanceToTarget > weaponProperty.Range)
+            if (TargetDetector.DistanceToTarget > ItemProperty.Range)
             {
                 if (currentState != chasingState) ChangeState(chasingState);
             }

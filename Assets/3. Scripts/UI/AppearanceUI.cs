@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CTabButton = ColorMak3r.UI.TabButton;
 
-public class AppearanceUI : UIBehaviour
+public class AppearanceUI : UIBehaviour, ITabCallback
 {
     //public static AppearanceUI Main { get; private set; }
 
@@ -13,6 +14,14 @@ public class AppearanceUI : UIBehaviour
     [Header("Required Component")]
     [SerializeField]
     private Transform contentTransform;
+    [SerializeField]
+    private CTabButton faceButton;
+    [SerializeField]
+    private CTabButton headButton;
+    [SerializeField]
+    private CTabButton hatButton;
+    [SerializeField]
+    private CTabButton outfitButton;
     [SerializeField]
     private Image faceImage;
     [SerializeField]
@@ -37,6 +46,11 @@ public class AppearanceUI : UIBehaviour
         base.Start();
 
         appearanceManager = AppearanceManager.Main;
+
+        faceButton.Initialize("Face", 0, this);
+        headButton.Initialize("Head", 1, this);
+        hatButton.Initialize("Hat", 2, this);
+        outfitButton.Initialize("Outfit", 3, this);
 
         OnVisibilityChanged.AddListener(isShowing =>
         {
@@ -153,5 +167,37 @@ public class AppearanceUI : UIBehaviour
         rightArmImage.sprite = outfit.RightArmSprite;
         leftLegImage.sprite = outfit.LeftLegSprite;
         rightLegImage.sprite = outfit.RightLegSprite;
+    }
+
+    public void OnTabButton(int id)
+    {
+        // Deselect all buttons
+        faceButton.SetSelected(false);
+        headButton.SetSelected(false);
+        hatButton.SetSelected(false);
+        outfitButton.SetSelected(false);
+
+        switch (id)
+        {
+            case 0:
+                faceButton.SetSelected(true);
+                FaceButtonClicked();
+                break;
+            case 1:
+                headButton.SetSelected(true);
+                HeadButtonClicked();
+                break;
+            case 2:
+                hatButton.SetSelected(true);
+                HatButtonClicked();
+                break;
+            case 3:
+                outfitButton.SetSelected(true);
+                OutfitButtonClicked();
+                break;
+            default:
+                Debug.LogWarning($"Unknown tab ID: {id}");
+                break;
+        }
     }
 }

@@ -126,7 +126,9 @@ public class ShopUI : UIBehaviour
         HandleCoinValueChanged(WalletManager.Main.LocalWallet);
         playerInventory.OnCoinsValueChanged.AddListener(HandleCoinValueChanged);
 
-        InventoryUI.Main.CloseInventory();
+        InventoryUI.Main.CloseTabInventory();
+
+        InputManager.Main.SwitchMap(InputMap.UI);
 
         // Always default to buy mode
         ShopModeBuy();
@@ -145,6 +147,9 @@ public class ShopUI : UIBehaviour
         shopTransform = null;
 
         StartCoroutine(CloseShopCoroutine());
+
+        AudioManager.Main.PlayClickSound();
+        InputManager.Main.SwitchMap(InputMap.Gameplay);
     }
 
     private IEnumerator CloseShopCoroutine()

@@ -28,12 +28,13 @@ MonoBehaviour:
   primarySound: {fileID: 0}
   secondarySound: {fileID: 8300000, guid: d2457fed02ff0d14c8e75f4f10a16113, type: 3}
   alternativeSound: {fileID: 0}
-  damage: 2
+  damage: 1
   radius: 0.2
   width: 2
-  maxDuration: 4
-  frequency: 0.5
+  maxDuration: 2.1
+  frequency: 0.35
   hostility: 0
+  muzzleOffset: {x: 2, y: 0}
   chargeStartSfx: {fileID: 8300000, guid: f62e5bd6e820bfe4f826cec5586b736d, type: 3}
   prematureShotSfx: {fileID: 8300000, guid: b387f3200e5778a408665dc4388957e3, type: 3}
   chargingUpSfx: {fileID: 8300000, guid: 594a1e93f8176834b9e153c873e43c9c, type: 3}

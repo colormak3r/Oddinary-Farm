@@ -13,7 +13,7 @@ public class AttackPrimaryState : BehaviourState
     public override void ExecuteState()
     {
         base.ExecuteState();
-        if (Time.time > nextAction && animal.TargetDetector.CurrentTarget != null)
+        if (Time.time > nextAction && animal.TargetDetector.CurrentTarget != null && animal.NetworkObject.IsSpawned)
         {
             animal.CurrentItem.OnPrimaryAction(animal.TargetDetector.CurrentTarget.position);
             nextAction = Time.time + animal.CurrentItem.BaseProperty.PrimaryCdr;

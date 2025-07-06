@@ -31,6 +31,10 @@ public class PerlinNoiseGenerator : MapGenerator
     [SerializeField]
     private float exponent = 1f;
 
+    [Header("Debugs")]
+    [SerializeField]
+    protected bool showDebugs;
+
     public override void GenerateMap(Vector2Int mapSize)
     {
         var halfMapSize = mapSize / 2;
@@ -100,7 +104,7 @@ public class PerlinNoiseGenerator : MapGenerator
         // Find the correct color mapping
         for (int i = 0; i < mapColors.Length; i++)
         {
-            if (noiseValue <= mapColors[i].value)
+            if (noiseValue < mapColors[i].value)
             {
                 selectedColor = mapColors[i].color;
                 break;

@@ -24,6 +24,8 @@ public class TerrainUnitProperty : ScriptableObject
     [SerializeField]
     private Sprite[] folliageSprite;
     [SerializeField]
+    private bool overlaySway;
+    [SerializeField]
     private float overlayChance = 0.5f;
     [SerializeField]
     private Sprite[] overlaySprite;
@@ -35,7 +37,7 @@ public class TerrainUnitProperty : ScriptableObject
     [SerializeField]
     private bool drawOutline;
     [SerializeField]
-    private Color outlineColor = Color.white;
+    private Color outlineColor;
 
     public Color MapColor => mapColor;
     public MinMaxFloat Elevation => elevation;
@@ -43,6 +45,7 @@ public class TerrainUnitProperty : ScriptableObject
     public TerrainBlockProperty BlockProperty => blockProperty;
 
     public float OverlayChance => overlayChance;
+    public bool OverlaySway => overlaySway;
     public float SpillOverChance => spillOverChance;
     public float FolliageChance => folliageChance;
     public Sprite FolliageSprite => folliageSprite.GetRandomElement();
@@ -54,6 +57,6 @@ public class TerrainUnitProperty : ScriptableObject
 
     public bool Match(float elevation)
     {
-        return elevation >= this.elevation.min && elevation <= this.elevation.max;
+        return elevation >= this.elevation.min && elevation < this.elevation.max;
     }
 }

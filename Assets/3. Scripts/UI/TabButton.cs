@@ -17,15 +17,14 @@ namespace ColorMak3r.UI
 
         private bool isSelected = false;
         private int id = 0;
-        private TutorialUI tutorialUI;
+        private ITabCallback uiTabCallback;
 
-        public void Initialize(string text, int id, TutorialUI tutorialUI)
+        public void Initialize(string text, int id, ITabCallback uiTabCallback)
         {
             buttonImage = GetComponent<Image>();
             buttonText = GetComponentInChildren<TMP_Text>();
-
-            this.tutorialUI = tutorialUI;
             buttonText.text = text;
+            this.uiTabCallback = uiTabCallback;
             this.id = id;
         }
 
@@ -37,7 +36,7 @@ namespace ColorMak3r.UI
 
         public void OnClick()
         {
-            tutorialUI.OnTabButton(id);
+            uiTabCallback.OnTabButton(id);
         }
     }
 }

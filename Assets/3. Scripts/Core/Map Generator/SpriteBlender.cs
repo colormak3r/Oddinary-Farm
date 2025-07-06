@@ -1,4 +1,10 @@
-using ColorMak3r.Utility;
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/02/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

@@ -61,16 +61,17 @@ public class Projectile : MonoBehaviour
 
         if (showDebugs) Debug.Log(collider.transform.root.name);
 
-        if (collider.transform.root.TryGetComponent<NetworkBehaviour>(out var networkBehaviour))
+        // Entity Status has already checked if the target is spawned, but keeping it for safety
+        /*if (collider.transform.root.TryGetComponent<NetworkBehaviour>(out var networkBehaviour))
         {
             if (!networkBehaviour.IsSpawned)
             {
                 // If the target is not spawned, we do not hit it
                 return;
             }
-        }
+        }*/
 
-        if (collider.transform.root.TryGetComponent<IDamageable>(out var damageable))
+        if (collider.transform.TryGetComponent<IDamageable>(out var damageable) || collider.transform.root.TryGetComponent<IDamageable>(out damageable))
         {
             if (isAuthoritative)
             {

@@ -9,8 +9,8 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ConsoleCommand 
-{ 
+public class ConsoleCommand
+{
     private string command;
     private string[] args;
     private string description;
@@ -188,8 +188,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     {
         if (filename == "")
         {
-            string d = System.Environment.GetFolderPath(
-               System.Environment.SpecialFolder.Desktop) + "/ODD_LOGS";
+            // TODO: change to Application.persistentDataPath later
+            string d = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/ODD_LOGS";
             System.IO.Directory.CreateDirectory(d);
             DateTime now = DateTime.Now;
             // Format the DateTime as MMDDYY-HHMMSS
@@ -231,7 +231,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "StartInstantFlood",
     "SetCanFlood",
     "SetFlood",
-    "Scenario"};
+    "Scenario",
+    "ShowHeatMapCenter",};
 
     private string[] commandHelps =
     {"Help",
@@ -243,7 +244,7 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "PrintSpawnableIdList",
     "Spectate [id] [x] [y]",
     "ShowUI [bool]",
-    "SpawnTestWave [x=0] [y=0] [safeRadius=5] [spawnRadius=10]",
+    "SpawnTestWave [x=0] [y=0] [safeRadius=30] [spawnRadius=40]",
     "CanSpawn [bool]",
     "SetMinutesPerDay [realMinutePerDay]",
     "SetTimeOffset [day] [hour] [minute]",
@@ -252,7 +253,8 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
     "StartInstantFlood",
     "SetCanFlood [bool]",
     "SetFlood [0~1]",
-    "Scenario [name]"};
+    "Scenario [name]",
+    "ShowHeatMapCenter [bool]",};
 
     private void ParseCommand(string input)
     {
@@ -339,11 +341,11 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
             }
             else if (command == commands[9].ToLower())
             {
-                // SpawnTestWave [x=0] [y=0] [safeRadius=5] [spawnRadius=10]
+                // SpawnTestWave [x=0] [y=0] [safeRadius=30] [spawnRadius=40]
                 var x = args.Length > 1 ? float.Parse(args[1]) : 0f;
                 var y = args.Length > 2 ? float.Parse(args[2]) : 0f;
-                var safeRadius = args.Length > 3 ? int.Parse(args[3]) : 5;
-                var spawnRadius = args.Length > 4 ? int.Parse(args[4]) : 10;
+                var safeRadius = args.Length > 3 ? int.Parse(args[3]) : 30;
+                var spawnRadius = args.Length > 4 ? int.Parse(args[4]) : 40;
 
                 if (CreatureSpawnManager.Main == null) throw new Exception("CreatureSpawnManager not found. Has the game started yet?");
                 CreatureSpawnManager.Main.SpawnTestWave(new Vector2(x, y), safeRadius, spawnRadius);
@@ -467,6 +469,10 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                     {
                         ScenarioManager.Main.SetScenario(ScenarioPreset.ChickenFarmDemo);
                     }
+                    else if (args[1].Contains("def"))
+                    {
+                        ScenarioManager.Main.SetScenario(ScenarioPreset.DefenseDemo);
+                    }
                     else
                     {
                         throw new ArgumentException(UNKNOWN_ARGUMENT + $" '{args[1]}'");
@@ -476,6 +482,13 @@ public class ConsoleUI : UIBehaviour, DefaultInputActions.IConsoleActions
                 {
                     ScenarioManager.Main.SetScenario(ScenarioPreset.None);
                 }
+            }
+            else if (command == commands[19].ToLower())
+            {
+                // ShowHeatMapCenter [bool]
+                var defaultBool = args.Length > 1 ? ParseBool(args[1]) : true;
+                if (HeatMapManager.Main == null) throw new Exception("HeatMapManager not found. Has the game started yet?");
+                HeatMapManager.Main.ShowHeatMapCenter(defaultBool);
             }
             else
             {

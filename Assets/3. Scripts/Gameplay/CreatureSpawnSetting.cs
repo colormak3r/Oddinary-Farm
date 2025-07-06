@@ -12,6 +12,7 @@ public struct CreatureWave
     [Range(0, 23)]
     public int spawnHour;
     public bool showWarning;
+    public bool headToHeadCenter;
     public CreatureSpawn[] creatureSpawns;
 }
 
@@ -19,7 +20,6 @@ public struct CreatureWave
 public struct CreatureSpawn
 {
     public GameObject creaturePrefab;
-    [Range(1, 100)]
     public int spawnCount;
 }
 

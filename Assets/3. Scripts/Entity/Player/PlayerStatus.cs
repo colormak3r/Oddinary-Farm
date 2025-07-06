@@ -11,8 +11,6 @@ public class PlayerStatus : EntityStatus
 {
     [Header("Player Settings")]
     [SerializeField]
-    private Transform respawnPoint;
-    [SerializeField]
     private Collider2D playerHitbox;
     [SerializeField]
     private PlayerNameUI playerNameUI;
@@ -24,6 +22,9 @@ public class PlayerStatus : EntityStatus
 
     private IControllable[] controllables;
     private NetworkTransform networkTransform;
+
+    private ulong timeDied;
+    private float timeSinceLastDeath;
 
     protected override void Awake()
     {
@@ -45,6 +46,8 @@ public class PlayerStatus : EntityStatus
         {
             if (SteamClient.IsValid)
                 PlayerName.Value = SteamClient.Name;
+
+            timeSinceLastDeath = Time.time;
         }
     }
 
@@ -59,6 +62,21 @@ public class PlayerStatus : EntityStatus
         playerNameUI.SetPlayerName(newValue.ToString());
     }
 
+    protected override void OnEntityDamagedOnClient(uint damage, NetworkObjectReference attackerRef)
+    {
+        base.OnEntityDamagedOnClient(damage, attackerRef);
+
+        // Update Stats
+        if (attackerRef.TryGet(out NetworkObject networkObject))
+        {
+            StatisticsManager.Main.UpdateStat(StatisticType.DamageTaken, networkObject.gameObject.name, damage);
+        }
+        else
+        {
+            StatisticsManager.Main.UpdateStat(StatisticType.DamageTaken, "Unidentified", damage);
+        }
+    }
+
     protected override void OnEntityDeathOnServer()
     {
         // Override to prevent player from being destroyed
@@ -67,11 +85,17 @@ public class PlayerStatus : EntityStatus
 
     protected override void OnEntityRespawnOnClient()
     {
-        healthBarUI.SetValue(CurrentHealthValue, MaxHealth);
+        healthBarUI.SetValue(CurrentHealth, MaxHealth);
     }
 
     protected override IEnumerator DeathOnClientCoroutine()
     {
+        // Record death data
+        timeDied++;
+        StatisticsManager.Main.UpdateStat(StatisticType.TimeDied, timeDied);
+        StatisticsManager.Main.UpdateStat(StatisticType.TimeSinceLastDeath, (ulong)Mathf.RoundToInt(Time.time - timeSinceLastDeath));
+        timeSinceLastDeath = Time.time;
+
         Coroutine effectCoroutine = null;
 
         SpawnDeathPrefab();
@@ -102,9 +126,11 @@ public class PlayerStatus : EntityStatus
         foreach (var light in lights) light.enabled = false;
 
         // Determain respawn position
-        var respawnPos = respawnPoint != null ? respawnPoint.position : Vector3.zero;
-        var deathPos = transform.position;
+        var respawnPos = GameManager.Main.SpawnPoint;
+        //var deathPos = transform.position;
 
+        // Prevent respawning in water or if the map is flooded
+        // Remove temporarily for behavior change
         /*var int_respawnPos = ((Vector2)respawnPos).ToInt();
         if (WorldGenerator.Main.GetElevation(int_respawnPos.x, int_respawnPos.y) < FloodManager.Main.CurrentFloodLevelValue)
         {
@@ -114,11 +140,15 @@ public class PlayerStatus : EntityStatus
         // Black out and move player to respawn position
         if (IsOwner)
         {
-            yield return new WaitForSeconds(3f);
+            yield return CountdownUI.Main.CountdownRoutine(TimeManager.Main.IsDay ? 3f : 10f);
             yield return TransitionUI.Main.ShowCoroutine();
 
             transform.position = respawnPos;
             Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, -10);
+
+            yield return new WaitUntil(() => !WorldGenerator.Main.IsGenerating);
+            WorldGenerator.Main.BuildWorld(transform.position);
+            yield return new WaitUntil(() => !WorldGenerator.Main.IsGenerating);
 
             yield return TransitionUI.Main.HideCoroutine();
         }

@@ -54,7 +54,6 @@ public class AssetManager : NetworkBehaviour
         FetchAssets();
 #endif
         BuildAssetDictionary();
-        //PopulateCurrencyDictionary();
     }
 
     [Header("Settings")]
@@ -103,7 +102,7 @@ public class AssetManager : NetworkBehaviour
     private bool showDebugs;
 
 #if UNITY_EDITOR
-    [ContextMenu("Fetch Assets")]
+[ContextMenu("Fetch Assets")]
     public void FetchAssets()
     {
         scriptableObjectList.Clear();
@@ -179,7 +178,6 @@ public class AssetManager : NetworkBehaviour
         return prefabs;
     }
 #endif
-
 
     private void BuildAssetDictionary()
     {
