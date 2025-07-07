@@ -481,7 +481,6 @@ GameObject:
   - component: {fileID: -7142879616327259524}
   - component: {fileID: 7416913132412665058}
   - component: {fileID: 5784231218223123395}
-  - component: {fileID: 2314209063463895116}
   - component: {fileID: 4142363607695392232}
   - component: {fileID: 9089012222026432931}
   - component: {fileID: 199473237824664443}
@@ -1111,22 +1110,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showCircle: 0
   circleTransform: {fileID: 2381770749817415326}
---- !u!114 &2314209063463895116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5447349809502746784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55c1be17469d87c4e9feba63a73c280c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  canSpawnPet: 0
-  pets:
-  - {fileID: 875170009560843256, guid: db68934e500d2cb489bcaecea9f0d8be, type: 3}
 --- !u!114 &4142363607695392232
 MonoBehaviour:
   m_ObjectHideFlags: 0

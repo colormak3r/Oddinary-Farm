@@ -23,6 +23,9 @@ public class HotAirBalloon : Structure, IInteractable
     private FixedJoint2D fixedJoint;
 
     public int CurrentStageValue => CurrentStage.Value;
+
+    public bool IsHoldInteractable => false;
+
     private Vector2 playerPosition;
 
     public override void OnNetworkSpawn()
@@ -222,5 +225,15 @@ public class HotAirBalloon : Structure, IInteractable
     {
         if (!IsServer) return;
         IsTakenOff.Value = true;
+    }
+
+    public void InteractionStart(Transform source)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void InteractionEnd(Transform source)
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -12,9 +12,11 @@ public class AudioElement : MonoBehaviour
 {
     [Header("Audio Settings")]
     [SerializeField]
-    private AudioClip[] soundEffects;
-    [SerializeField]
     private bool ignoreWarnings = false;
+    [SerializeField]
+    private bool playOnAwake = false;
+    [SerializeField]
+    private AudioClip[] soundEffects;
 
     private AudioSource audioSource;
 
@@ -46,6 +48,8 @@ public class AudioElement : MonoBehaviour
         AudioManager.Main.OnSfxVolumeChange.AddListener(HandleSfxVolumeChange);
         HandleSfxVolumeChange(AudioManager.Main.SfxVolume);
         isInitialized = true;
+        if (playOnAwake && soundEffects.Length > 0)
+            PlayOneShot(soundEffects[0], true);
     }
 
     private void OnDestroy()

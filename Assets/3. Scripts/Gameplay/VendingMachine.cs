@@ -9,11 +9,23 @@ public class VendingMachine : Structure, IInteractable
     [SerializeField]
     private ShopInventory shopInventory;
 
+    public bool IsHoldInteractable => false;
+
     public void Interact(Transform source)
     {
         if (ShopUI.Main.IsShowing)
             ShopUI.Main.CloseShop();
         else
             ShopUI.Main.OpenShop(source.GetComponent<PlayerInventory>(), shopInventory, transform);
+    }
+
+    public void InteractionEnd(Transform source)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void InteractionStart(Transform source)
+    {
+        throw new System.NotImplementedException();
     }
 }

@@ -148,6 +148,10 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private Color floodColor;
 
+    [Header("Chihuahua Rescue Settings")]
+    [SerializeField]
+    private MinMaxFloat chihuahuaElevation;
+
     [Header("Resource Settings")]
     [SerializeField]
     private bool canSpawnResources = true;
@@ -305,6 +309,7 @@ public class WorldGenerator : NetworkBehaviour
         GenerateTerrain();
         GenerateFolliage();
         GenerateResources();
+        GenerateChihuahuaRescuePositions();
 
         yield return null;
     }
@@ -415,6 +420,25 @@ public class WorldGenerator : NetworkBehaviour
                         folliageMap[x, y] = true;
                     }
                 }
+            }
+        }
+    }
+    #endregion
+
+    #region Generate Chihuahua Rescue Positions
+    private List<Vector2> chihuahuaRescuePositions;
+    public Vector2 RandomChihuahuaRescuePosition => chihuahuaRescuePositions.GetRandomElement();
+    private void GenerateChihuahuaRescuePositions()
+    {
+        chihuahuaRescuePositions = new List<Vector2>();
+        chihuahuaRescuePositions.Capacity = mapSize.x;
+        for (int x = -halfMapSize.x; x < halfMapSize.x + 1; x++)
+        {
+            for (int y = -halfMapSize.y; y < halfMapSize.y + 1; y++)
+            {
+                if (elevationMap.RawMap[x, y] > chihuahuaElevation.min
+                    && elevationMap.RawMap[x, y] <= chihuahuaElevation.max)
+                    chihuahuaRescuePositions.Add(new Vector2(x, y));
             }
         }
     }
@@ -769,6 +793,15 @@ public class WorldGenerator : NetworkBehaviour
             Gizmos.DrawWireCube(chunk.position, Vector3.one * chunk.size);
             Gizmos.DrawSphere(chunk.position, 0.1f);
             //Handles.Label(chunk.position + Vector2.one * 0.1f, $"({chunk.position.x},{chunk.position.y})");
+        }
+
+        if (chihuahuaRescuePositions != null && chihuahuaRescuePositions.Count > 0)
+        {
+            Gizmos.color = Color.yellow;
+            foreach (var pos in chihuahuaRescuePositions)
+            {
+                Gizmos.DrawSphere(pos, 0.2f);
+            }
         }
 
         //Gizmos.color = Color.red;

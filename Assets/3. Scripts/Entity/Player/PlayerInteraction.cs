@@ -21,6 +21,7 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
     private bool showGizmos;
 
     private IInteractable currentInteractable;
+    public IInteractable CurrentInteractable => currentInteractable;
     private DistanceComparer distanceComparer;
     private Vector3 interactablePosition_cached;
 
@@ -41,9 +42,29 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
         // ScanItemPickupOnServer();
     }
 
-    public void Interact()
+    public void InteractionStart()
     {
-        currentInteractable?.Interact(transform);
+        //currentInteractable?.Interact(transform);
+        if (currentInteractable == null) return;
+
+        if (currentInteractable.IsHoldInteractable)
+        {
+            currentInteractable.InteractionStart(transform);
+        }
+        else
+        {
+            currentInteractable.Interact(transform);
+        }
+    }
+
+    public void InteractionEnd()
+    {
+        if (currentInteractable == null) return;
+
+        if (currentInteractable.IsHoldInteractable)
+        {
+            currentInteractable.InteractionEnd(transform);
+        }
     }
 
     [SerializeField]

@@ -370,7 +370,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (context.performed)
         {
-            interaction.Interact();
+            interaction.InteractionStart();
+            if (interaction.CurrentInteractable != null && interaction.CurrentInteractable.IsHoldInteractable)
+                SetMoveable(false); // Prevent player from moving while interacting
+        }
+        else if (context.canceled)
+        {
+            interaction.InteractionEnd();
+            SetMoveable(true);
         }
     }
 

@@ -8646,6 +8646,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 946911817}
   m_CullTransparentMesh: 1
+--- !u!1001 &957098535
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5389879931732221396, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: m_Name
+      value: Pet Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6130527805216881797, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2658147300
+      objectReference: {fileID: 0}
+    - target: {fileID: 8371992208104883109, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8371992208104883109, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8371992208104883109, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8371992208104883109, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8371992208104883109, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8371992208104883109, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8371992208104883109, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8371992208104883109, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8371992208104883109, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8371992208104883109, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1e9c97519ef89434b98110574301a63f, type: 3}
 --- !u!1 &991589223
 GameObject:
   m_ObjectHideFlags: 0
@@ -9011,6 +9072,37 @@ MonoBehaviour:
   originalTextColor: {r: 1, g: 1, b: 1, a: 1}
   originalScale: {x: 1, y: 1, z: 1}
   originalRotation: {x: 0, y: 0, z: 0}
+--- !u!1 &1018899937
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1018899938}
+  m_Layer: 0
+  m_Name: ~~~~~~~~~~~~~Component Suite~~~~~~~~~~~~~
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1018899938
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018899937}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1032685951
 GameObject:
   m_ObjectHideFlags: 0
@@ -11758,6 +11850,37 @@ MonoBehaviour:
   originalTextColor: {r: 1, g: 1, b: 1, a: 1}
   originalScale: {x: 1, y: 1, z: 1}
   originalRotation: {x: 0, y: 0, z: 0}
+--- !u!1 &1389422269
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1389422270}
+  m_Layer: 0
+  m_Name: ~~~~~~~~~Don't Destroy On Load Suite~~~~~~~~~
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1389422270
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389422269}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1389548512
 GameObject:
   m_ObjectHideFlags: 0
@@ -19985,7 +20108,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: m_PresetReference
-      value: 7624152294953582716
+      value: 7624152327822508122
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: 'managedReferences[7624152294953582705]'
@@ -20005,6 +20128,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: 'managedReferences[7624152294953582716]'
+      value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: 'managedReferences[7624152327822508122]'
       value: Unity.Multiplayer.Tools.NetworkSimulator.Runtime Unity.Multiplayer.Tools.NetworkSimulator.Runtime.NetworkSimulatorPreset
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -20028,6 +20155,10 @@ PrefabInstance:
       value: None
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[7624152327822508122].<Name>k__BackingField
+      value: None
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[7624152294953582705].<Description>k__BackingField
       value: 
       objectReference: {fileID: 0}
@@ -20045,6 +20176,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[7624152294953582716].<Description>k__BackingField
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[7624152327822508122].<Description>k__BackingField
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -20068,6 +20203,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[7624152327822508122].<PacketDelayMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[7624152294953582705].<PacketJitterMs>k__BackingField
       value: 0
       objectReference: {fileID: 0}
@@ -20085,6 +20224,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[7624152294953582716].<PacketJitterMs>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[7624152327822508122].<PacketJitterMs>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
@@ -20108,6 +20251,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[7624152327822508122].<PacketLossPercent>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[7624152294953582705].<PacketLossInterval>k__BackingField
       value: 0
       objectReference: {fileID: 0}
@@ -20125,6 +20272,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
       propertyPath: managedReferences[7624152294953582716].<PacketLossInterval>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3081233137692295269, guid: 080a0928850697841a224d0668ba8285, type: 3}
+      propertyPath: managedReferences[7624152327822508122].<PacketLossInterval>k__BackingField
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -20238,14 +20389,17 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1986768497}
+  - {fileID: 1389422270}
   - {fileID: 6487176769308566082}
-  - {fileID: 1466531709}
   - {fileID: 1693683383}
   - {fileID: 4087615254367197223}
   - {fileID: 56072408262612657}
   - {fileID: 2991617619638524379}
   - {fileID: 1492196979817925026}
-  - {fileID: 6045052547400024765}
-  - {fileID: 1477972338}
   - {fileID: 9059382647361267831}
+  - {fileID: 957098535}
+  - {fileID: 6045052547400024765}
+  - {fileID: 1018899938}
+  - {fileID: 1466531709}
+  - {fileID: 1477972338}
   - {fileID: 1075049788}
