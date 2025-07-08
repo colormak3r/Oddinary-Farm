@@ -48,6 +48,8 @@ public class PlayerStatus : EntityStatus
                 PlayerName.Value = SteamClient.Name;
 
             timeSinceLastDeath = Time.time;
+
+            PetManager.Main.InitializeOnLocalClient(gameObject);
         }
     }
 

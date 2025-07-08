@@ -34,6 +34,7 @@ public class Chest : NetworkBehaviour, IInteractable
 
     private NetworkVariable<ChestState> CurrentState = new NetworkVariable<ChestState>(global::ChestState.Unopened);
     public ChestState CurrentStateValue => CurrentState.Value;
+    public bool IsHoldInteractable => false;
 
     private AudioElement audioElement;
 
@@ -100,5 +101,15 @@ public class Chest : NetworkBehaviour, IInteractable
         {
             GetComponent<LootGenerator>()?.DropLootOnServer(sourceObject);
         }
+    }
+
+    public void InteractionStart(Transform source)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void InteractionEnd(Transform source)
+    {
+        throw new NotImplementedException();
     }
 }
