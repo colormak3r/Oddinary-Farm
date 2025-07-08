@@ -80,6 +80,12 @@ public class PetManager : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void RequestRescueChihuahuaSequenceRpc()
     {
+        StartCoroutine(WaitGameManager());
+    }
+
+    private IEnumerator WaitGameManager()
+    {
+        yield return new WaitUntil(() => GameManager.Main.IsInitialized);
         var rescueObj = Instantiate(chihuahuaRescuePrefab, WorldGenerator.Main.RandomChihuahuaRescuePosition, Quaternion.identity);
         rescueObj.GetComponent<NetworkObject>().Spawn();
     }
