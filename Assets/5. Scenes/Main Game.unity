@@ -19461,6 +19461,9 @@ MonoBehaviour:
   damageableLayer:
     serializedVersion: 2
     m_Bits: 2147486720
+  movementBlockerLayer:
+    serializedVersion: 2
+    m_Bits: 268435456
 --- !u!1 &1209257261
 GameObject:
   m_ObjectHideFlags: 0
@@ -36582,7 +36585,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4811648832319133184, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: hourOffset
-      value: 18
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4811648832319133184, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: minuteOffset
@@ -36598,7 +36601,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4811648832319133184, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: overrideSettings
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4811648832319133184, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: canSpawnResources
@@ -36606,11 +36609,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4811648832319133184, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: realMinutesPerInGameDay
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4811648832319133184, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: CurrentScenario.m_InternalValue
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6277954611948190113, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: m_Name
