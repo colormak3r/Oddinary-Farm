@@ -195,7 +195,7 @@ MonoBehaviour:
   raycastTarget: 1
   detectRange: 7
   escapeRange: 10
-  penaltyRange: 2
+  penaltyRange: 3
   activeTime: 2
   targetHostility: 0
   targetMask:

@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    07/09/2025
+ * Last Modified:   07/09/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -28,6 +35,7 @@ public class PetManager : NetworkBehaviour
     private bool canSpawnPet = true;
     [SerializeField]
     private PetData[] petDataEntries;
+    public PetData[] PetDataEntries => petDataEntries;
     [SerializeField]
     private GameObject chihuahuaRescuePrefab;
 
@@ -156,7 +164,7 @@ public class PetManager : NetworkBehaviour
     }
 
     [ContextMenu("Reset Collection Data")]
-    private void ResetCollectionData()
+    public void ResetCollectionData()
     {
         foreach (var petData in petDataEntries)
         {
@@ -164,5 +172,10 @@ public class PetManager : NetworkBehaviour
             petCollectionStatus[petData.petType] = false;
             if (showDebugs) Debug.Log($"Pet {petData.petType} collection status reset.");
         }
+    }
+
+    public void SetPetToSpawn(PetData petToSpawn)
+    {
+        this.petToSpawn = petToSpawn;
     }
 }

@@ -36,8 +36,6 @@ public class MainMenuUI : UIBehaviour
                 yield return null;
             }
         }
-
-        Debug.Log($"ControllerElementCoroutine exited");
     }
 
     public void PlayButtonClicked()

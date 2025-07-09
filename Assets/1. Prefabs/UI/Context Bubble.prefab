@@ -312,7 +312,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &7118073773193723016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,12 +343,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   container: {fileID: 5062958839507079924}
+  firstElement: {fileID: 0}
   fadeDuration: 0.25
   delayShow: 0
   delayShowFadeFirstObjects: []
   ignoreObjects: []
   excludeFromUIManager: 0
   background: {fileID: 0}
+  showDebugs: 0
   isShowing: 0
   isAnimating: 0
   OnVisibilityChanged:

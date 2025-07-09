@@ -36585,7 +36585,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4811648832319133184, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: hourOffset
-      value: 7
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 4811648832319133184, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: minuteOffset
@@ -36609,7 +36609,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4811648832319133184, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: realMinutesPerInGameDay
-      value: 2
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 4811648832319133184, guid: ea821617601e9524d932f4ebc1a936a9, type: 3}
       propertyPath: CurrentScenario.m_InternalValue
