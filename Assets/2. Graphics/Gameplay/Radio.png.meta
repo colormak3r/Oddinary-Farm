@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 93f9e51ff57940142aa5adaea773a3b4
+guid: 2d76e645cc8b7ad4395fbeb09c95be32
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5549723762099846576
-    second: Studio-Logo_0
+      213: -8070686850402279387
+    second: Radio_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Studio-Logo_0
+      name: Radio_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 6
         y: 0
-        width: 220
-        height: 220
+        width: 21
+        height: 19
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0bd7181ab54940d40800000000000000
-      internalID: 5549723762099846576
+      spriteID: 5202b54e1192fff80800000000000000
+      internalID: -8070686850402279387
       vertices: []
       indices: 
       edges: []
@@ -134,8 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Studio-Logo_0: 5549723762099846576
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
