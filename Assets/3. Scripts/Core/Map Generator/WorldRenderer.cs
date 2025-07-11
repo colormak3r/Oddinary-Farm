@@ -27,7 +27,7 @@ public class WorldRenderer : MonoBehaviour
         if (position_cached != currentPosition)
         {
             position_cached = currentPosition;
-            StartCoroutine(worldGenerator.BuildWorld(currentPosition));
+            worldGenerator.BuildWorld(currentPosition);
         }
     }
 }

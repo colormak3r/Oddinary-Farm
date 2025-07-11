@@ -39,7 +39,7 @@ public class LocalObjectPooling : MonoBehaviour
         return obj;
     }
 
-    public void Despawn(GameObject obj)
+    public void Despawn(GameObject obj, bool instant = false)
     {
         if (!obj.TryGetComponent<LocalObjectController>(out var controller))
         {
@@ -47,7 +47,7 @@ public class LocalObjectPooling : MonoBehaviour
             return;
         }
 
-        controller.LocalDespawn(false);
+        controller.LocalDespawn(instant);
         obj.transform.SetParent(controller?.Pool);
     }
 

@@ -10,4 +10,14 @@ public struct MinMaxFloat
         this.min = min;
         this.max = max;
     }
+
+    public bool IsInRange(float value)
+    {
+        return value > min && value <= max;
+    }
+
+    public bool IsZero()
+    {
+        return min == 0 && max == 0;
+    }
 }

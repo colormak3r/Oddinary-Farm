@@ -8,12 +8,6 @@ using UnityEngine.UIElements;
 public class Shovel : Tool
 {
     private ShovelProperty shovelProperty;
-    private WorldGenerator worldGenerator;
-
-    private void Start()
-    {
-        worldGenerator = WorldGenerator.Main;
-    }
 
     public override void Initialize(ItemProperty baseProperty)
     {
@@ -26,26 +20,10 @@ public class Shovel : Tool
         position = position.SnapToGrid();
         if (!ItemSystem.IsInRange(position, shovelProperty.Range)) return false;
 
-        var invalid = Physics2D.OverlapPoint(position, shovelProperty.UndiggableLayer);
-        if (invalid)
+        var hit = Physics2D.OverlapPoint(position, LayerManager.Main.DiggableLayer);
+        if (hit && hit.TryGetComponent(out IDiggable diggable))
         {
-            if (showDebug) Debug.Log($"Not Diggable at {position}, invalid terrain unit", invalid.gameObject);
-            return false;
-        }
-
-        var hit = Physics2D.OverlapPoint(position, shovelProperty.DiggableLayer);
-        if (hit && hit.TryGetComponent(out TerrainUnit terrainUnit))
-        {
-            if (terrainUnit.Property.IsAccessible)
-            {
-                return true;
-            }
-            else
-            {
-                if (showDebug) Debug.Log($"Not Diggable at {position}, terrain unit is not accessible", hit?.gameObject);
-                return false;
-            }
-
+            return true;
         }
         else
         {
@@ -58,25 +36,6 @@ public class Shovel : Tool
     {
         position = position.SnapToGrid();
         base.OnPrimaryAction(position);
-        ShovelPrimaryRpc(position);
-    }
-
-    [Rpc(SendTo.Server)]
-    private void ShovelPrimaryRpc(Vector2 position)
-    {
-        // Get the terrain unit
-        var hit = Physics2D.OverlapPoint(position, shovelProperty.DiggableLayer);
-        if (!hit)
-        {
-            if (showDebug) Debug.Log($"No terrain unit found at {position} on Server");
-            return;
-        }
-
-        // Spawn terrain item
-        var blockProperty = hit.GetComponent<TerrainUnit>().Property.BlockProperty;
-        AssetManager.Main.SpawnItem(blockProperty, position);
-
-        // Destroy the terrain unit
-        //worldGenerator.RemoveBlock(position);
+        ItemSystem.Dig(position);
     }
 }

@@ -94,8 +94,11 @@ public class PetManager : NetworkBehaviour
     private IEnumerator WaitGameManager()
     {
         yield return new WaitUntil(() => GameManager.Main.IsInitialized);
-        var rescueObj = Instantiate(chihuahuaRescuePrefab, WorldGenerator.Main.RandomChihuahuaRescuePosition, Quaternion.identity);
+        var position = WorldGenerator.Main.RandomChihuahuaRescuePosition;
+        var rescueObj = Instantiate(chihuahuaRescuePrefab, position, Quaternion.identity);
         rescueObj.GetComponent<NetworkObject>().Spawn();
+        //if (showDebugs)
+        Debug.Log($"Chihuahua rescue sequence started at {position}.");
     }
 
     public void SpawnPet(PetType petType, Vector2 position, GameObject owner)

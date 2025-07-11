@@ -49,6 +49,10 @@ public class LayerManager : MonoBehaviour
     public LayerMask DamageableLayer => damageableLayer;
 
     [SerializeField]
+    private LayerMask diggableLayer;
+    public LayerMask DiggableLayer => diggableLayer;
+
+    [SerializeField]
     private LayerMask movementBlockerLayer;
     public LayerMask MovementBlockerLayer => movementBlockerLayer;
 }

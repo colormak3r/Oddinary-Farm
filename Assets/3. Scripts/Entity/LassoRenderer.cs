@@ -49,6 +49,7 @@ public class LassoRenderer : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!renderLine) return;
         Simulate();
     }
 
@@ -158,6 +159,11 @@ public class LassoRenderer : MonoBehaviour
 
     public void SetRenderLine(bool render)
     {
+        bool previousRenderLine = renderLine;
         renderLine = render;
+        if (renderLine && !previousRenderLine)
+        {
+            Simulate(); // Force simulate immidiately when enabling rendering
+        }
     }
 }
