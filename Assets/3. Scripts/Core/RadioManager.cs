@@ -1,8 +1,22 @@
 using UnityEngine;
 using Unity.Netcode;
+using System;
+using System.Collections.Generic;
+
+[Serializable]
+public class RadioEvent
+{
+    public int day;
+    public int hour;
+    [TextArea]
+    public string message;
+}
 
 public class RadioManager : NetworkBehaviour
 {
+    [SerializeField]
+    private List<RadioEvent> radioEvents = new List<RadioEvent>();
+
     public static RadioManager Main;
 
     private void Awake()
@@ -18,28 +32,77 @@ public class RadioManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         IsActivated.OnValueChanged += HandleIsActivatedChanged;
+
+        if (IsActivated.Value)
+        {
+            SubscribeToTimeManager();
+        }
     }
     public override void OnNetworkDespawn()
     {
         IsActivated.OnValueChanged -= HandleIsActivatedChanged;
+        UnsubscribeFromTimeManager();
     }
 
     private void HandleIsActivatedChanged(bool oldValue, bool newValue)
     {
         if (newValue)
         {
+            SubscribeToTimeManager();
+        }
+        else
+        {
+            UnsubscribeFromTimeManager();
+        }
+    }
+
+    private void SubscribeToTimeManager()
+    {
+        if (TimeManager.Main != null)
+        {
+            TimeManager.Main.OnHourChanged.RemoveListener(HandleOnHourChanged);
             TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
+        }
+    }
+
+    private void UnsubscribeFromTimeManager()
+    {
+        if (TimeManager.Main != null)
+        {
+            TimeManager.Main.OnHourChanged.RemoveListener(HandleOnHourChanged);
         }
     }
 
     private void HandleOnHourChanged(int currentHour)
     {
-        Debug.Log($"Current hour is {currentHour}");
+        int currentDay = TimeManager.Main.CurrentDate;
+
+        foreach (var radioEvent in radioEvents)
+        {
+            if (radioEvent.day == currentDay && radioEvent.hour == currentHour)
+            {
+
+                if (RadioUI.Main != null)
+                {
+                    RadioUI.Main.DisplayMessage(radioEvent.message);
+                }
+
+                break;
+                //one message per hour
+            }
+        }
     }
 
     public void SetActivated()
     {
-        SetActivatedRpc();
+        if (IsServer)
+        {
+            IsActivated.Value = true;
+        }
+        else
+        {
+            SetActivatedRpc();
+        }
     }
 
     [Rpc(SendTo.Server)]
