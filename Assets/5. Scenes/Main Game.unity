@@ -2570,14 +2570,35 @@ MonoBehaviour:
     hour: 13
     message: 'Today''s forecast: Sun all around.'
   - day: 1
-    hour: 17
-    message: Night is approaching soon, get ready to put up a fight...
+    hour: 16
+    message: The night is approaching very soon, stay alert...
   - day: 2
     hour: 6
     message: Good morning! Nice job surviving your first day.
   - day: 2
-    hour: 12
-    message: Prepare to see some rain today.
+    hour: 13
+    message: 'Today''s forecast: Clear skies and sunshine.'
+  - day: 3
+    hour: 7
+    message: 'Today''s forecast: Rain all day.'
+  - day: 4
+    hour: 7
+    message: 'Today''s forecast: Uninterrupted sunlight.'
+  - day: 5
+    hour: 6
+    message: "Good morning! You\u2019re adapting quickly. That\u2019s... good."
+  - day: 5
+    hour: 13
+    message: 'Today''s forecast: Quiet skies.'
+  - day: 6
+    hour: 16
+    message: 'Today''s forecast: Cold rain. When will it stop?'
+  - day: 7
+    hour: 13
+    message: 'Today''s forecast: Same as yesterday, but colder.'
+  - day: 8
+    hour: 6
+    message: "Good morning. Sun\u2019s finally back up. So are they."
   IsActivated:
     m_InternalValue: 0
 --- !u!4 &182215776
