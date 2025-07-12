@@ -27,7 +27,8 @@ public class RadioManager : NetworkBehaviour
             Destroy(gameObject);
     }
 
-    private NetworkVariable<bool> IsActivated = new NetworkVariable<bool>();
+    private bool hasShownActivationMessage = false;
+    public NetworkVariable<bool> IsActivated = new NetworkVariable<bool>();
 
     public override void OnNetworkSpawn()
     {
@@ -49,10 +50,14 @@ public class RadioManager : NetworkBehaviour
         if (newValue)
         {
             SubscribeToTimeManager();
-        }
-        else
-        {
-            UnsubscribeFromTimeManager();
+
+            if (!hasShownActivationMessage && IsClient)
+            {
+                hasShownActivationMessage = true;
+                RadioUI.Main?.DisplayMessage("Radio activated. Signal is live.");
+            }
+
+            RadioUI.Main?.SetRadioColor(Color.white);
         }
     }
 
