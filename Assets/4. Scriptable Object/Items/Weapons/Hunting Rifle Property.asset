@@ -18,13 +18,17 @@ MonoBehaviour:
   isConsummable: 0
   maxStack: 1
   isSellable: 1
-  price: 3200
+  price: 1600
   range: 20
   primaryCdr: 1
   secondaryCdr: 0.25
   itemContext: 'LMB: Shoot
 
     X  : Drop'
+  description: 'One shot, one kill.
+
+
+    5 DPS'
   pickupSound: {fileID: 8300000, guid: 3de01322027a78f42b26ff6d744afa63, type: 3}
   selectSound: {fileID: 8300000, guid: 6ce54c813b495d042865c29252815a8d, type: 3}
   primarySound: {fileID: 8300000, guid: 3c2fe1104b8b78a488a85545b175b46e, type: 3}

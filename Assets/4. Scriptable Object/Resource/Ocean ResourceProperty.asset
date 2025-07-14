@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Ocean ResourceProperty
   m_EditorClassIdentifier: 
   prefabs:
-  - prefab: {fileID: 5216256005733728383, guid: e04932c12abd5f94fa33a48e8622b1d3, type: 3}
-    chance: 1
+  - prefab: {fileID: 1003939520116215196, guid: c473d012bd5d86a449a8338275a567cc, type: 3}
+    chance: 10
     maxCount: 0
   - prefab: {fileID: 4294250761585886378, guid: f528fcfc7a6cb204dabc654ef9ef4c8e, type: 3}
     chance: 1

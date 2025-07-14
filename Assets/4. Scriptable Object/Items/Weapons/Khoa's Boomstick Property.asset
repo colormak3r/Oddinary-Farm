@@ -25,6 +25,10 @@ MonoBehaviour:
   itemContext: 'LMB: Shoot
 
     X  : Drop'
+  description: 'Khoa''s secret weapon.
+
+
+    5 x 4DPS'
   pickupSound: {fileID: 8300000, guid: 3572055f962185946b3a5674f5f1c0cc, type: 3}
   selectSound: {fileID: 8300000, guid: 3572055f962185946b3a5674f5f1c0cc, type: 3}
   primarySound: {fileID: 8300000, guid: 3149f4d7f0f352248ba525360f1dd2d2, type: 3}

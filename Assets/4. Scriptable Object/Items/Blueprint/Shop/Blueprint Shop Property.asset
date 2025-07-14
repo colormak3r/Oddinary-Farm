@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d80ae4708320ff14fbb054f6f1d4d8f6, type: 3}
-  m_Name: Seed Shop Property
+  m_Name: Blueprint Shop Property
   m_EditorClassIdentifier: 
-  iconSprite: {fileID: 117439493, guid: 8ceadfd081e64d647a843992361bc3c5, type: 3}
+  iconSprite: {fileID: 1073595741, guid: 8ceadfd081e64d647a843992361bc3c5, type: 3}
   objectSprite: {fileID: 0}
   prefab: {fileID: 949117059081605438, guid: 43faad68a0f5c3f46864295e4caf8f6c, type: 3}
   isConsummable: 1
@@ -27,6 +27,7 @@ MonoBehaviour:
     RMB: Remove
 
     X  : Drop'
+  description: Give access to structures.
   pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
   selectSound: {fileID: 0}
   primarySound: {fileID: 8300000, guid: 9fb1b755bafa7744f8e21ba3bfd68a2a, type: 3}
@@ -46,6 +47,6 @@ MonoBehaviour:
   previewIconOffset: {x: 0, y: 0}
   previewValidColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
   previewInvalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}
-  prefabToSpawn: {fileID: 6003204490996619993, guid: 33ff9480222144742a078d64960ed12d, type: 3}
+  prefabToSpawn: {fileID: 2843391503052374053, guid: 007598b9c7f88b44182213340542feda, type: 3}
   spawnOffset: {x: 0, y: -1.5}
   clearFoliage: 1

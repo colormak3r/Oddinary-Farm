@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Outer Grass ResourceProperty
   m_EditorClassIdentifier: 
   prefabs:
-  - prefab: {fileID: 1003939520116215196, guid: c473d012bd5d86a449a8338275a567cc, type: 3}
-    chance: 4
-    maxCount: 0
   - prefab: {fileID: 5216256005733728383, guid: e04932c12abd5f94fa33a48e8622b1d3, type: 3}
-    chance: 4
+    chance: 20
     maxCount: 0
+  - prefab: {fileID: 3468929716973301665, guid: 0cc76aabe54f93142b30fce48a096139, type: 3}
+    chance: 10
+    maxCount: 1
   - prefab: {fileID: 3569705655780300392, guid: a008f1d31971c044aad2e8c334c34f00, type: 3}
-    chance: 2
+    chance: 10
     maxCount: 0
   - prefab: {fileID: 8327819289072149800, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
     chance: 1
@@ -48,7 +48,7 @@ MonoBehaviour:
     maxCount: 0
   elevation:
     min: 0.55
-    max: 0.7
+    max: 0.65
   moisture:
     min: 0
     max: 0

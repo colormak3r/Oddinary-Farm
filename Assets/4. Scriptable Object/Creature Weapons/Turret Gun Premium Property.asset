@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17df9f3208bdf30459bd463744a4bd16, type: 3}
+  m_Name: Turret Gun Premium Property
+  m_EditorClassIdentifier: 
+  iconSprite: {fileID: 0}
+  objectSprite: {fileID: 0}
+  prefab: {fileID: 6493089648266601401, guid: 485f96db894dc62428366905bf64fda6, type: 3}
+  isConsummable: 0
+  maxStack: 1
+  isSellable: 1
+  price: 100
+  range: 7
+  primaryCdr: 0.35
+  secondaryCdr: 0.25
+  itemContext: 'LMB: Place
+
+    RMB: Remove
+
+    X  : Drop'
+  description: 
+  pickupSound: {fileID: 8300000, guid: 428102ee1ab4f6e4380eb9b37d3e9c20, type: 3}
+  selectSound: {fileID: 8300000, guid: 428102ee1ab4f6e4380eb9b37d3e9c20, type: 3}
+  primarySound: {fileID: 8300000, guid: 47c406a4ab071f443b822a5d22933400, type: 3}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}
+  projectileProperty: {fileID: 11400000, guid: 07c6658205c79364b982de7ca6733a97, type: 2}
+  projectileCount: 1
+  projectileSpread: 0
+  spreadEvenly: 0
+  muzzleOffset: {x: 0, y: 0}

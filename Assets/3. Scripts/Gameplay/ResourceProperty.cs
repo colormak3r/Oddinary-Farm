@@ -46,12 +46,12 @@ public class ResourceProperty : ScriptableObject
         }
     }
 
-    public GameObject GetNot(GameObject notThisPrefab)
+    public GameObject GetNotLimitedPrefab()
     {
         List<GameObject> validPrefabs = new List<GameObject>();
         foreach (var prefabChance in Prefabs)
         {
-            if (prefabChance.prefab != notThisPrefab)
+            if (prefabChance.maxCount == 0)
             {
                 validPrefabs.Add(prefabChance.prefab);
             }

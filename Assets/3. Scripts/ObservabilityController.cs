@@ -22,7 +22,7 @@ public class ObservabilityController : MonoBehaviour
     {
         status.isSpawned = false;
         status.controller = null;
-        Destroy(gameObject);
+        if (gameObject) Destroy(gameObject);
     }
 
     // Used by EntityStatus on death to despawn only

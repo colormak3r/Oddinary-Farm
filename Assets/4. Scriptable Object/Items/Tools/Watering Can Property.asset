@@ -23,6 +23,9 @@ MonoBehaviour:
   primaryCdr: 0.5
   secondaryCdr: 0.25
   itemContext: "LMB: Water\r\r\nX  : Drop"
+  description: 'Standard issue watering bucket.
+
+    Size: 3x3'
   pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
   selectSound: {fileID: 0}
   primarySound: {fileID: 8300000, guid: 12b7c02430364d14ca762f9d5d5e77f9, type: 3}

@@ -58,7 +58,7 @@ public class UpgradeUI : UIBehaviour
         var multiplier = (ulong)NetworkManager.Singleton.ConnectedClients.Count;
         var cost = currentStages.GetStage(currentStage + 1).cost * multiplier;
         costText.text = cost.ToString();
-        upgradeButton.interactable = WalletManager.Main.LocalWallet > cost;
+        upgradeButton.interactable = WalletManager.Main.LocalWalletValue > cost;
     }
 
     public void OnUpgradeButtonClicked()

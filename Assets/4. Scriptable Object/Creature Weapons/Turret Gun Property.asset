@@ -20,8 +20,14 @@ MonoBehaviour:
   isSellable: 1
   price: 100
   range: 5
-  primaryCdr: 0.5
+  primaryCdr: 0.75
   secondaryCdr: 0.25
+  itemContext: 'LMB: Place
+
+    RMB: Remove
+
+    X  : Drop'
+  description: 
   pickupSound: {fileID: 8300000, guid: 428102ee1ab4f6e4380eb9b37d3e9c20, type: 3}
   selectSound: {fileID: 8300000, guid: 428102ee1ab4f6e4380eb9b37d3e9c20, type: 3}
   primarySound: {fileID: 8300000, guid: 47c406a4ab071f443b822a5d22933400, type: 3}
@@ -31,3 +37,4 @@ MonoBehaviour:
   projectileCount: 1
   projectileSpread: 0
   spreadEvenly: 0
+  muzzleOffset: {x: 0, y: 0}

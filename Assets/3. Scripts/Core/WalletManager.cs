@@ -1,4 +1,5 @@
 using System;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
 public class WalletManager : NetworkBehaviour
@@ -26,36 +27,41 @@ public class WalletManager : NetworkBehaviour
 
     [Header("Debugs")]
     [SerializeField]
-    private NetworkVariable<ulong> currentGlobalWallet = new NetworkVariable<ulong>(10);
+    private NetworkVariable<ulong> GlobalWallet = new NetworkVariable<ulong>(10);
     [SerializeField]
     private ulong localSpending = 0;
-    public ulong LocalWallet => currentGlobalWallet.Value - localSpending;
+    public ulong LocalWalletValue => GlobalWallet.Value - localSpending;
+    public ulong GlobalWalletValue => GlobalWallet.Value;
     [SerializeField]
     private uint pendingAdd = 0;
     private float nextFlushTime = 0f;
 
+    public Action<ulong> OnLocalWalletChanged;
+    public Action<ulong> OnGlobalWalletChanged;
+
     public override void OnNetworkSpawn()
     {
-        currentGlobalWallet.OnValueChanged += OnGlobalWalletChanged;
-        OnGlobalWalletChanged(0, currentGlobalWallet.Value);
+        GlobalWallet.OnValueChanged += HandleGlobalWalletChanged;
+        HandleGlobalWalletChanged(0, GlobalWallet.Value);
     }
 
     public override void OnNetworkDespawn()
     {
-        currentGlobalWallet.OnValueChanged -= OnGlobalWalletChanged;
+        GlobalWallet.OnValueChanged -= HandleGlobalWalletChanged;
     }
 
-    private void OnGlobalWalletChanged(ulong previousValue, ulong newValue)
+    private void HandleGlobalWalletChanged(ulong previousValue, ulong newValue)
     {
-        InventoryUI.Main.UpdateWallet(newValue - localSpending);
         StatisticsManager.Main.UpdateStat(StatisticType.GlobalCoinsCollected, newValue);
+        OnLocalWalletChanged?.Invoke(newValue - localSpending);
+        OnGlobalWalletChanged?.Invoke(newValue);
     }
 
     public void InitializeOnServer()
     {
         if (!IsServer) return;
 
-        currentGlobalWallet.Value += initialGlobalWallet;
+        GlobalWallet.Value += initialGlobalWallet;
     }
 
     public void AddToWallet(uint amount)
@@ -81,21 +87,21 @@ public class WalletManager : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void AddToWalletRpc(uint amount)
     {
-        currentGlobalWallet.Value += amount;
+        GlobalWallet.Value += amount;
     }
 
     public void RemoveFromWallet(uint amount)
     {
-        if (amount > currentGlobalWallet.Value)
+        if (amount > GlobalWallet.Value)
         {
             Debug.LogWarning("Attempted to remove more from wallet than available. Setting local spending equal too global wallet (LocalWallet now = 0)");
-            localSpending = currentGlobalWallet.Value;
+            localSpending = GlobalWallet.Value;
         }
         else
         {
             localSpending += amount;
         }
 
-        InventoryUI.Main.UpdateWallet(LocalWallet);
+        OnLocalWalletChanged?.Invoke(GlobalWallet.Value - localSpending);
     }
 }

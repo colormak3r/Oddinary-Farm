@@ -348,6 +348,95 @@ public class WorldGenerator : NetworkBehaviour
     private Dictionary<GameObject, int> prefabCount = new Dictionary<GameObject, int>();
     private void GenerateResources()
     {
+        // 1. Initialise the full map
+        resourceStatusMap = new Offset2DArray<ObservablePrefabStatus>(
+            -trueHalfMapSize.x, trueHalfMapSize.x,
+            -trueHalfMapSize.y, trueHalfMapSize.y);
+
+        // 2. Fast-fill the padding strip once
+        for (int x = -trueHalfMapSize.x; x <= trueHalfMapSize.x; x++)
+            for (int y = -trueHalfMapSize.y; y <= trueHalfMapSize.y; y++)
+                if (x < -halfMapSize.x || x >= halfMapSize.x
+                 || y < -halfMapSize.y || y >= halfMapSize.y)
+                    resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false);
+
+        // 3. Collect all playable tiles and sort by distance to (0,0)
+        var tiles = new List<Vector2Int>((halfMapSize.x * 2 + 1) * (halfMapSize.y * 2 + 1));
+
+        for (int x = -halfMapSize.x; x < halfMapSize.x; x++)
+            for (int y = -halfMapSize.y; y < halfMapSize.y; y++)
+                tiles.Add(new Vector2Int(x, y));
+
+        tiles.Sort((a, b) =>
+        {
+            int da = a.x * a.x + a.y * a.y;
+            int db = b.x * b.x + b.y * b.y;
+            return da.CompareTo(db);          // inner-first, outer-last
+        });
+
+        int noResSq = noResourceZoneSize * noResourceZoneSize;
+
+        // 4. Apply existing prefab-matching logic in the new order
+        foreach (var pos in tiles)
+        {
+            int x = pos.x;
+            int y = pos.y;
+
+            int distSq = x * x + y * y;
+            if (terrainMap[x, y] == voidUnitProperty)
+            {
+                resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false);
+                continue;       // water
+            }
+
+            if (distSq <= noResSq)
+            {
+                resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false);
+                continue;       // origin-spawn zone
+            }
+
+            var elevation = elevationMap.RawMap[x, y];
+            var moisture = moistureMap.RawMap[x, y];
+            var resource = resourceMap.RawMap[x, y];
+
+            bool matched = false;
+
+            foreach (var property in resourceProperties)
+            {
+                if (!property.Match(elevation, moisture, resource, out var prefab, out var maxCount))
+                    continue;
+
+                if (maxCount > 0 &&
+                    prefabCount.TryGetValue(prefab, out int cnt) &&
+                    cnt >= maxCount)
+                {
+                    var fallback = property.GetNotLimitedPrefab();
+                    resourceStatusMap[x, y] = new ObservablePrefabStatus(fallback, fallback != null);
+                }
+                else
+                {
+                    resourceStatusMap[x, y] = new ObservablePrefabStatus(prefab, true);
+                    prefabCount[prefab] = prefabCount.TryGetValue(prefab, out int c) ? c + 1 : 1;
+
+                    if (maxCount > 0) Debug.Log($" Spawning resource {prefab.name} at ({x}, {y}), count: {prefabCount[prefab]}");
+                }
+
+                matched = true;
+                break;
+            }
+
+            if (!matched)
+                resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false);
+        }
+
+        // 5. Optional: log counts
+        foreach (var kvp in prefabCount)
+            Debug.Log($"Resource {kvp.Key.name} spawned {kvp.Value} times.");
+    }
+
+
+    /*private void GenerateResources()
+    {
         resourceStatusMap = new Offset2DArray<ObservablePrefabStatus>(-trueHalfMapSize.x, trueHalfMapSize.x, -trueHalfMapSize.y, trueHalfMapSize.y);
 
         for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x + 1; x++)
@@ -436,7 +525,7 @@ public class WorldGenerator : NetworkBehaviour
         {
             Debug.Log($"Resource {prefab.name} has been spawned {prefabCount[prefab]} times.");
         }
-    }
+    }*/
     #endregion
 
     #region Generate Folliage

@@ -1,6 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Netcode;
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/12/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
 
 public class VendingMachine : Structure, IInteractable

@@ -32,6 +32,9 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     [TextArea(3, 10)]
     [SerializeField]
     private string itemContext = "LMB: Place\r\nRMB: Remove\r\nX  : Drop";
+    [TextArea(1, 3)]
+    [SerializeField]
+    private string description = "";
 
     [Header("Item Audio")]
     [SerializeField]
@@ -58,6 +61,7 @@ public class ItemProperty : ScriptableObject, IEquatable<ItemProperty>
     public float SecondaryCdr => secondaryCdr;
 
     public string ItemContext => Name + "\n" + itemContext;
+    public string Description => description;
 
     public AudioClip PickupSound => pickupSound;
     public AudioClip SelectSound => selectSound;

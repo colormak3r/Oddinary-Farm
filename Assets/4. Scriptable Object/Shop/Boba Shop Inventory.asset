@@ -15,5 +15,37 @@ MonoBehaviour:
   shopName: Purple Boba
   saleMultiplier: 0.9
   penaltyMultiplier: 0.7
+  shopTierBaseCost: 0000000000000000
+  shopTierItems:
+  - itemProperties:
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+    - {fileID: 11400000, guid: 5ab8ad29cacfa1e4e9b28e46964c96f2, type: 2}
   itemProperties:
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
+  - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
   - {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
