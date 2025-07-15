@@ -1,8 +1,11 @@
+using System;
 using UnityEngine;
 
 [System.Serializable]
-public struct ShopTierItem
+public struct ShopTier
 {
+    public ulong netIncome;
+    public ulong upgradeCost;
     public ItemProperty[] itemProperties;
 }
 
@@ -16,16 +19,14 @@ public class ShopInventory : ScriptableObject
     [SerializeField]
     private float penaltyMultiplier = 0.7f;
     [SerializeField]
-    private ulong[] shopTierBaseCost;
+    private ShopTier[] tiers;
     [SerializeField]
-    private ShopTierItem[] shopTierItems;
-    [SerializeField]
-    private ItemProperty[] itemProperties;
+    private ItemProperty[] itemProperties;  // Obsolete, use ItemByTier instead
 
     public string ShopName => shopName;
     public float SaleMultiplier => saleMultiplier;
     public float PenaltyMultiplier => penaltyMultiplier;
-    public ulong[] ShopTierBaseCost => shopTierBaseCost;
-    public ShopTierItem[] ShopTierItems => shopTierItems;
-    public ItemProperty[] ItemProperties => itemProperties;
+    public ShopTier[] Tiers => tiers;
+    [Obsolete("Use ShopTier instead")]
+    public ItemProperty[] ItemProperties => itemProperties; // Obsolete, use ItemByTier instead
 }

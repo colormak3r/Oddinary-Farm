@@ -24,10 +24,12 @@ public class ShopButton : MonoBehaviour
     private Button quickActionButton;
     [SerializeField]
     private TMP_Text quickActionText;
+    [SerializeField]
+    private GameObject newTextObject;
 
     private ItemProperty itemProperty;
 
-    public void SetShopEntry(ItemProperty itemProperty, ShopUI shopUI, ShopMode shopMode, float multiplier, int index, uint amount)
+    public void SetShopEntry(ItemProperty itemProperty, ShopUI shopUI, ShopMode shopMode, float multiplier, int index, uint amount, bool isNew)
     {
         this.itemProperty = itemProperty;
 
@@ -40,11 +42,17 @@ public class ShopButton : MonoBehaviour
 
         shopButton.onClick.AddListener(() => shopUI.HandleShopButtonClicked(itemProperty, this, index));
         quickActionButton.onClick.AddListener(() => shopUI.HandleQuickActionClicked(itemProperty, this, index));
+        newTextObject.SetActive(isNew);
     }
 
     public void UpdateEntry(uint amount)
     {
         amountText.text = amount == 0 ? "" : amount.ToString();
+    }
+
+    public void UpdateIsNew(bool isNew)
+    {
+        newTextObject.SetActive(isNew);
     }
 
     public void Remove()

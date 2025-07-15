@@ -15,13 +15,18 @@ MonoBehaviour:
   shopName: Khoa's Stash
   saleMultiplier: 0.9
   penaltyMultiplier: 0.7
-  shopTierBaseCost: 00000000000000007017000000000000204e0000000000007011010000000000
-  shopTierItems:
-  - itemProperties:
+  tiers:
+  - netIncome: 0
+    upgradeCost: 0
+    itemProperties:
     - {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
-  - itemProperties:
+  - netIncome: 10000
+    upgradeCost: 100
+    itemProperties:
     - {fileID: 11400000, guid: 2eb94a222f58a1940b7fff8b4e7e2964, type: 2}
-  - itemProperties:
+  - netIncome: 80000
+    upgradeCost: 200
+    itemProperties:
     - {fileID: 11400000, guid: 1af873cf199f4484cadfbd292f70a465, type: 2}
   itemProperties:
   - {fileID: 11400000, guid: 1af873cf199f4484cadfbd292f70a465, type: 2}

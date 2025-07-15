@@ -16,7 +16,7 @@ MonoBehaviour:
   objectSprite: {fileID: 21300000, guid: 16d25d0185cf4414ea68834ff506b9e7, type: 3}
   prefab: {fileID: 1836459442795043625, guid: ce09f270fe606004eb8da482f8776d1f, type: 3}
   isConsummable: 1
-  maxStack: 5
+  maxStack: 20
   isSellable: 1
   price: 25
   range: 5

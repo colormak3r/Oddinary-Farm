@@ -12,7 +12,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using ColorMak3r.Utility;
 using System.Collections.Generic;
-using static UnityEngine.Rendering.DebugUI;
 
 public enum ShopMode
 {
@@ -34,6 +33,16 @@ public class ShopUI : UIBehaviour
         {
             Destroy(gameObject);
         }
+
+        foreach (var item in hideInBuild)
+        {
+            item.SetActive(Application.isEditor);
+        }
+
+        foreach (var item in visitedItemPreset)
+        {
+            visitedItemProperties.Add(item);
+        }
     }
 
     [Header("Shop UI Settings")]
@@ -49,6 +58,8 @@ public class ShopUI : UIBehaviour
     private CanvasRenderer coinUI;
     [SerializeField]
     private GameObject itemDropPrefab;
+    [SerializeField]
+    private ItemProperty[] visitedItemPreset;
 
     [Header("Item Info Settings")]
     [SerializeField]
@@ -77,6 +88,8 @@ public class ShopUI : UIBehaviour
     private GameObject upgradePanel;
     [SerializeField]
     private GameObject upgradeButton;
+    [SerializeField]
+    private TMP_Text upgradeButtonText;
     [SerializeField]
     private TMP_Text upgradeText;
     [SerializeField]
@@ -107,6 +120,8 @@ public class ShopUI : UIBehaviour
     private bool showDebug;
     [SerializeField]
     private ShopMode shopMode = ShopMode.Buy;
+    [SerializeField]
+    private GameObject[] hideInBuild;
 
     private ShopButton currentShopButton;
     [SerializeField]
@@ -119,10 +134,13 @@ public class ShopUI : UIBehaviour
     private PlayerInventory playerInventory;
     private ShopInventory shopInventory;
     private Transform shopTransform;
-
     private Coroutine dropItemCoroutine;
+    private Dictionary<ShopInventory, int> shopInventoryToCurrentTier = new Dictionary<ShopInventory, int>();
+    private Dictionary<ShopInventory, int> shopTierDictionary_cached = new Dictionary<ShopInventory, int>();
+    private HashSet<ItemProperty> visitedItemProperties = new HashSet<ItemProperty>();
+    private List<ItemProperty> itemsToSpawn = new List<ItemProperty>();
 
-    private Dictionary<ShopInventory, int> ShopTierDictionary = new Dictionary<ShopInventory, int>();
+    private bool recentlyOpened;
 
     public void OpenShop(PlayerInventory playerInventory, ShopInventory shopInventory, Transform shopTransform)
     {
@@ -134,6 +152,7 @@ public class ShopUI : UIBehaviour
         this.shopTransform = shopTransform;
         this.playerInventory = playerInventory;
         shopNameText.text = shopInventory.ShopName;
+        recentlyOpened = true;
 
         UpdateUpgradePanel();
 
@@ -158,13 +177,15 @@ public class ShopUI : UIBehaviour
 
     public void ShopModeBuy()
     {
-        if (dropItemCoroutine != null) StopCoroutine(dropItemCoroutine);
+        // Stop eye candy coroutines if they are running
+        StopEyeCandyCoroutines();
 
         // Clear the selected item property when switching to buy mode
         ClearItemReference();
         itemPanel.SetActive(false);
         displayPanel.SetActive(true);
 
+        // Buy mode initialization & UI update
         shopMode = ShopMode.Buy;
         buyImage.sprite = selectedSprite;
         sellImage.sprite = unselectedSprite;
@@ -174,34 +195,76 @@ public class ShopUI : UIBehaviour
 
         ClearChild();
 
-        if (!ShopTierDictionary.TryGetValue(shopInventory, out int currentTier))
+        // Determine if shop tier has changed
+        if (!shopInventoryToCurrentTier.TryGetValue(shopInventory, out int currentTier))
         {
-            ShopTierDictionary[shopInventory] = 0;
+            shopInventoryToCurrentTier[shopInventory] = 0;
             currentTier = 0;
         }
-
-        for (int i = 0; i <= currentTier; i++)
+        if (!shopTierDictionary_cached.TryGetValue(shopInventory, out int currentTier_cached))
         {
-            if (shopInventory.ShopTierItems.Length > i)
+            shopTierDictionary_cached[shopInventory] = 0;
+            currentTier_cached = 0;
+        }
+
+        // Old items spawn in bulk
+        for (int i = 0; i <= currentTier_cached; i++)
+        {
+            if (shopInventory.Tiers.Length > i)
             {
-                foreach (var entry in shopInventory.ShopTierItems[i].itemProperties)
+                foreach (var entry in shopInventory.Tiers[i].itemProperties)
                 {
                     var shopButton = Instantiate(shopButtonPrefab, contentContainer);
-                    shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, playerCount, -1, 0);
+                    var isNew = !visitedItemProperties.Contains(entry);
+                    shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, playerCount, -1, 0, isNew);
                 }
+            }
+        }
+
+        // Debug.Log($"Shop Mode Buy: {shopInventory.ShopName} - Current Tier: {currentTier} (Cached: {currentTier_cached})");
+        // New items spawn in coroutine
+        if (currentTier != currentTier_cached)
+        {
+            if (shopInventory.Tiers.Length > currentTier)
+            {
+                itemsToSpawn.Clear();
+                foreach (var entry in shopInventory.Tiers[currentTier].itemProperties)
+                    itemsToSpawn.Add(entry);
+
+                if (shopButtonBuyCoroutine != null) StopCoroutine(shopButtonBuyCoroutine);
+                shopButtonBuyCoroutine = StartCoroutine(ShopButtonBuyCoroutine(playerCount));
+
+                // Update cache
+                shopTierDictionary_cached[shopInventory] = currentTier;
             }
         }
     }
 
+    private Coroutine shopButtonBuyCoroutine;
+    private IEnumerator ShopButtonBuyCoroutine(int playerCount)
+    {
+        foreach (var entry in itemsToSpawn)
+        {
+            var shopButton = Instantiate(shopButtonPrefab, contentContainer);
+            shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, playerCount, -1, 0, true);
+            AudioManager.Main.PlaySoundIncreasePitch(buySound);
+            yield return shopButton.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f);
+            yield return new WaitForSeconds(0.1f); // Slight delay between button instantiation
+        }
+        AudioManager.Main.ResetPitch();
+    }
+
     public void ShopModeSell()
     {
-        if (dropItemCoroutine != null) StopCoroutine(dropItemCoroutine);
+        // Stop eye candy coroutines if they are running
+        StopEyeCandyCoroutines();
 
         // Clear the selected item property when switching to sell mode
         ClearItemReference();
         itemPanel.SetActive(false);
         displayPanel.SetActive(true);
 
+        // Sell mode initialization & UI update
         shopMode = ShopMode.Sell;
         buyImage.sprite = unselectedSprite;
         sellImage.sprite = selectedSprite;
@@ -217,7 +280,8 @@ public class ShopUI : UIBehaviour
             if (!slot.IsEmpty && slot.Property.IsSellable)
             {
                 var shopButton = Instantiate(shopButtonPrefab, contentContainer);
-                shopButton.GetComponent<ShopButton>().SetShopEntry(slot.Property, this, shopMode, playerCount * shopInventory.PenaltyMultiplier, index, slot.Count);
+                shopButton.GetComponent<ShopButton>().SetShopEntry(slot.Property, this, shopMode, playerCount * shopInventory.PenaltyMultiplier, index, slot.Count, false);
+                shopButton.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f);
             }
             index++;
         }
@@ -225,61 +289,85 @@ public class ShopUI : UIBehaviour
 
     public void OnUpgradeClicked()
     {
-        if (ShopTierDictionary[shopInventory] < shopInventory.ShopTierBaseCost.Length - 1)
-            ShopTierDictionary[shopInventory]++;
-
-        StartCoroutine(tierText.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f));
-
-        UpdateUpgradePanel();
-
-        if (shopMode == ShopMode.Buy)
-            ShopModeBuy();
+        var currentTier = shopInventoryToCurrentTier[shopInventory];
+        var upgradeCost = (uint)shopInventory.Tiers[currentTier + 1].upgradeCost;
+        if (WalletManager.Main.LocalWalletValue < upgradeCost)
+        {
+            // Not enough coins to upgrade
+            if (showDebug) Debug.Log($"Cannot afford upgrade {shopInventory.ShopName}: ${upgradeCost}");
+            StartCoroutine(coinText.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f));
+            AudioManager.Main.PlayOneShot(errorSound);
+        }
         else
-            ShopModeSell();
+        {
+            if (shopInventoryToCurrentTier[shopInventory] < shopInventory.Tiers.Length - 1)
+                shopInventoryToCurrentTier[shopInventory]++;
+
+            StartCoroutine(tierText.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f));
+
+            // Upgrade the shop inventory
+            playerInventory.ConsumeCoinsOnClient(upgradeCost);
+
+            UpdateUpgradePanel();
+
+            if (shopMode == ShopMode.Buy)
+                ShopModeBuy();
+            else
+                ShopModeSell();
+        }
     }
 
     private void UpdateUpgradePanel()
     {
         if (!shopInventory) return;
 
-        if (shopInventory.ShopTierBaseCost != null && shopInventory.ShopTierBaseCost.Length > 0)
+        var shopTierLength = shopInventory.Tiers.Length;
+        if (shopTierLength > 1)
         {
             upgradePanel.SetActive(true);
             var playerCount = (uint)NetworkManager.Singleton.ConnectedClients.Count;
 
             // Find the current tier based on the global wallet value
             int globalTier = 0;
-            for (int i = 0; i < shopInventory.ShopTierBaseCost.Length; i++)
+            for (int i = 0; i < shopTierLength; i++)
             {
-                if (WalletManager.Main.GlobalWalletValue >= shopInventory.ShopTierBaseCost[i] * playerCount)
+                var netIncomeNeeded = shopInventory.Tiers[i].netIncome * playerCount;
+                if (WalletManager.Main.GlobalWalletValue >= netIncomeNeeded)
                     globalTier = i;
                 else
                     break;
             }
 
-            if (!ShopTierDictionary.TryGetValue(shopInventory, out int currentTier))
+            // Get the current tier, default to 0 if entry not exist
+            if (!shopInventoryToCurrentTier.TryGetValue(shopInventory, out int currentTier))
             {
-                ShopTierDictionary[shopInventory] = 0;
+                shopInventoryToCurrentTier[shopInventory] = 0;
                 currentTier = 0;
             }
 
+            // Update UI
             tierText.text = $"Tier {currentTier}";
-
             if (currentTier < globalTier)
             {
+                // The player can upgrade
                 upgradeButton.SetActive(true);
+                upgradeButtonText.text = $"<u>UPGRADE</u>\n${shopInventory.Tiers[currentTier + 1].upgradeCost}";
+                StartCoroutine(WaitShopLoad());
                 upgradeText.gameObject.SetActive(false);
             }
             else
             {
-                if (currentTier + 1 < shopInventory.ShopTierBaseCost.Length)
+                if (currentTier + 1 < shopTierLength)
                 {
+                    // Show how much until next tier
                     upgradeButton.SetActive(false);
                     upgradeText.gameObject.SetActive(true);
-                    upgradeText.text = $"Earn ${shopInventory.ShopTierBaseCost[currentTier + 1] * playerCount - WalletManager.Main.GlobalWalletValue} more\nto unlock next Tier";
+                    var netIncomeNeeded = shopInventory.Tiers[currentTier + 1].netIncome * playerCount;
+                    upgradeText.text = $"Earn ${netIncomeNeeded - WalletManager.Main.GlobalWalletValue} more\nto unlock next Tier";
                 }
                 else
                 {
+                    // Max Tier
                     tierText.text = "Max Tier";
                     upgradeButton.SetActive(false);
                     upgradeText.gameObject.SetActive(false);
@@ -288,6 +376,7 @@ public class ShopUI : UIBehaviour
         }
         else
         {
+            // Some shop doesn't have upgrade tiers, disable upgrade panel
             upgradePanel.SetActive(false);
         }
     }
@@ -308,10 +397,11 @@ public class ShopUI : UIBehaviour
         // Switch UI input map back to gameplay
         InputManager.Main.SwitchMap(InputMap.Gameplay);
 
+        // Stop eye candy coroutines if they are running
+        StopEyeCandyCoroutines();
+
         AudioManager.Main.PlayClickSound();
         StartCoroutine(CloseShopCoroutine());
-
-        if (dropItemCoroutine != null) StopCoroutine(dropItemCoroutine);
     }
 
     public void HandleShopButtonClicked(ItemProperty itemProperty, ShopButton button, int index)
@@ -335,10 +425,15 @@ public class ShopUI : UIBehaviour
         // Set default multiplier to 5
         currentMultiplier = 5;
 
+        // Play Audio
+        AudioManager.Main.PlayClickSound();
+
         if (shopMode == ShopMode.Buy)
         {
             stackActionText.text = $"Buy A Stack\n{itemProperty.MaxStack} for ${itemProperty.MaxStack * itemProperty.Price * playerCount}";
             multiplierActionText.text = $"Buy 5 for ${5 * itemProperty.Price * playerCount}";
+            visitedItemProperties.Add(itemProperty);
+            button.UpdateIsNew(false);
         }
         else
         {
@@ -392,6 +487,8 @@ public class ShopUI : UIBehaviour
 
             // Update UI
             ownedText.text = $"Owned: {playerInventory.GetItemCount(itemProperty)}";
+            visitedItemProperties.Add(itemProperty);
+            button.UpdateIsNew(false);
 
             if (showDebug) Debug.Log($"Bought 1x{itemProperty.Name} for {price}");
         }
@@ -495,14 +592,16 @@ public class ShopUI : UIBehaviour
         for (int i = 0; i < count; i++)
         {
             if (shopMode == ShopMode.Buy)
-                AudioManager.Main.PlayOneShot(buySound);
+                AudioManager.Main.PlaySoundIncreasePitch(buySound);
             else
-                AudioManager.Main.PlayOneShot(sellSound);
+                AudioManager.Main.PlaySoundIncreasePitch(sellSound);
 
             var itemDrop = Instantiate(itemDropPrefab, position, Quaternion.identity, contentContainer);
             itemDrop.GetComponent<Image>().sprite = sprite;
             yield return new WaitForSeconds(0.1f); // Slight delay between drops
         }
+
+        AudioManager.Main.ResetPitch();
     }
 
     private Coroutine popCoroutine;
@@ -510,8 +609,15 @@ public class ShopUI : UIBehaviour
     {
         coinText.text = "$" + value;
 
-        if (popCoroutine != null) StopCoroutine(popCoroutine);
-        popCoroutine = StartCoroutine(coinUI.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f));
+        if (recentlyOpened)
+        {
+            recentlyOpened = false;
+        }
+        else
+        {
+            if (popCoroutine != null) StopCoroutine(popCoroutine);
+            popCoroutine = StartCoroutine(coinUI.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f));
+        }
     }
 
     private void HandleGlobalWalletChanged(ulong newValue)
@@ -540,6 +646,31 @@ public class ShopUI : UIBehaviour
     public void Add100()
     {
         playerInventory.AddCoinsOnClient(100);
+    }
+
+    public void Add1000()
+    {
+        playerInventory.AddCoinsOnClient(1000);
+    }
+
+    public void Add10000()
+    {
+        playerInventory.AddCoinsOnClient(10000);
+    }
+
+    private void StopEyeCandyCoroutines()
+    {
+        // Stop eye candy coroutines if they are running
+        if (dropItemCoroutine != null) StopCoroutine(dropItemCoroutine);
+        if (shopButtonBuyCoroutine != null) StopCoroutine(shopButtonBuyCoroutine);
+
+        AudioManager.Main.ResetPitch();
+    }
+
+    private IEnumerator WaitShopLoad()
+    {
+        yield return new WaitUntil(() => !IsAnimating);
+        yield return upgradeButton.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f);
     }
 
     #endregion Utility

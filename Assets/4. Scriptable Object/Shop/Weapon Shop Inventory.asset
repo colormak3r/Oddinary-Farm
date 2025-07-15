@@ -15,19 +15,27 @@ MonoBehaviour:
   shopName: '!!! BOOM !!! '
   saleMultiplier: 0.9
   penaltyMultiplier: 0.7
-  shopTierBaseCost: 00000000000000007017000000000000204e0000000000007011010000000000
-  shopTierItems:
-  - itemProperties:
+  tiers:
+  - netIncome: 0
+    upgradeCost: 0
+    itemProperties:
+    - {fileID: 11400000, guid: b48705ea45197984890949b39fbc67f0, type: 2}
     - {fileID: 11400000, guid: 12c97f6d640590f41acf4e752260d02f, type: 2}
-  - itemProperties:
-    - {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
     - {fileID: 11400000, guid: acf5787fae590e74ca10497b40091a27, type: 2}
-  - itemProperties:
-    - {fileID: 11400000, guid: 54b7435c2ddd6cb4a9643f72a0b9b98f, type: 2}
+  - netIncome: 10000
+    upgradeCost: 500
+    itemProperties:
+    - {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
     - {fileID: 11400000, guid: 082775721ddde0e4eb730a842401d7a5, type: 2}
-  - itemProperties:
-    - {fileID: 11400000, guid: 7a48c8ce935c5ab458934245237b8c49, type: 2}
+  - netIncome: 80000
+    upgradeCost: 1500
+    itemProperties:
     - {fileID: 11400000, guid: 2eb94a222f58a1940b7fff8b4e7e2964, type: 2}
+    - {fileID: 11400000, guid: 54b7435c2ddd6cb4a9643f72a0b9b98f, type: 2}
+  - netIncome: 160000
+    upgradeCost: 6000
+    itemProperties:
+    - {fileID: 11400000, guid: 7a48c8ce935c5ab458934245237b8c49, type: 2}
   itemProperties:
   - {fileID: 11400000, guid: b48705ea45197984890949b39fbc67f0, type: 2}
   - {fileID: 11400000, guid: 12c97f6d640590f41acf4e752260d02f, type: 2}
