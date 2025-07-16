@@ -485,6 +485,7 @@ GameObject:
   - component: {fileID: 9206805659951327959}
   - component: {fileID: 1154542970121647842}
   - component: {fileID: 3343459701264752313}
+  - component: {fileID: 6225032561855773504}
   m_Layer: 31
   m_Name: Player
   m_TagString: Untagged
@@ -1217,6 +1218,25 @@ MonoBehaviour:
   segmentCount: 30
   segmentLength: 0.1
   renderLine: 1
+--- !u!114 &6225032561855773504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5447349809502746784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f73ad13c2f45be843a3dd8af2a0d769c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  drownController: {fileID: 4142363607695392232}
+  drownGraphic: {fileID: 9089012222026432931}
+  spriteRenderer: {fileID: 5195975373052726653}
+  rigidbody2D: {fileID: 2546670360964751076}
+  IsControlled:
+    m_InternalValue: 0
 --- !u!1 &6026101150664435241
 GameObject:
   m_ObjectHideFlags: 0
@@ -1612,6 +1632,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2746253684418572068}
     m_Modifications:
+    - target: {fileID: 2506938444932282741, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506938444932282741, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506938444932282741, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2506938444932282741, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_SortingLayerID
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4284115393529965016, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1660,6 +1696,10 @@ PrefabInstance:
       propertyPath: playerController
       value: 
       objectReference: {fileID: 6332147781516178474}
+    - target: {fileID: 8976677318413009245, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_Name
+      value: Hot Air Balloon
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1738,6 +1778,11 @@ SpriteRenderer:
 --- !u!95 &4780399004627203737 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2920264091579073169, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+  m_PrefabInstance: {fileID: 7697143422033409032}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &5195975373052726653 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 2506938444932282741, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
   m_PrefabInstance: {fileID: 7697143422033409032}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5462536194489437288 stripped

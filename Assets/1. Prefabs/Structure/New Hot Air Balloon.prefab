@@ -279,6 +279,7 @@ MonoBehaviour:
   takeOffHour: 22
   upgradeStages: {fileID: 11400000, guid: 3b0c73b5f2dc8654292082cc4fbeb893, type: 2}
   spriteRenderer: {fileID: 6487843671388318122}
+  physicCollider: {fileID: 5682155175358053918}
 --- !u!114 &654695408242344894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,6 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   debug: 1
+  physicCollider: {fileID: 5682155175358053918}
 --- !u!1 &2707789027467210874
 GameObject:
   m_ObjectHideFlags: 0

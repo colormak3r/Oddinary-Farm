@@ -56,10 +56,10 @@ public class MountInteraction : NetworkBehaviour, IInteractable
     /// <param name="source">Player's transform.</param>
     public void Interact(Transform source)
     {
-        if (_debug) Debug.Log("Attempting Mount...");
-
         if (!CanMount)
             return;
+
+        if (_debug) Debug.Log("Attempting Mount...");
 
         // Try getting a network object comp from the source
         if (!source.gameObject.TryGetComponent<NetworkObject>(out var sourceNetObj))

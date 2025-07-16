@@ -1,3 +1,9 @@
+/*
+ * Created By:      Ryan Carpenter
+ * Date Created:    06/23/2025
+ * Last Modified:   06/27/2025 (Ryan)
+ * Notes:           Handles the mounting and movement of the hot air balloon
+*/
 using UnityEngine;
 
 public class HotAirBalloonMountController : MountController
@@ -26,6 +32,6 @@ public class HotAirBalloonMountController : MountController
     public override void Move(Vector2 direction)
     {
         Debug.Log($"Player is Moving Balloon = {direction}");
-        movement.SetDirection(direction);
+        //movement.SetDirection(direction);
     }
 }

@@ -34,6 +34,9 @@ public abstract class MountController : NetworkBehaviour
 
     protected virtual void HandleOnMount(Transform source)
     {
+        movement.SetDirection(Vector2.zero);
+        movement.SetSpeedMultiplier(1);
+
         if (source.TryGetComponent<PlayerController>(out var pc))
         {
             pc.SetIsMounting(true, this);
@@ -47,6 +50,9 @@ public abstract class MountController : NetworkBehaviour
 
     protected virtual void HandleOnDismount(Transform source)
     {
+        movement.SetDirection(Vector2.zero);
+        movement.SetSpeedMultiplier(1);
+
         if (source.TryGetComponent<PlayerController>(out var pc))
         {
             pc.SetIsMounting(false, null);

@@ -13,6 +13,8 @@ public class HotAirBalloon : Structure, IInteractable
     private UpgradeStages upgradeStages;
     [SerializeField]
     private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private Collider2D physicCollider;
 
     private NetworkVariable<int> CurrentStage = new NetworkVariable<int>();
     private NetworkVariable<bool> CanTakeOff = new NetworkVariable<bool>();
@@ -21,6 +23,8 @@ public class HotAirBalloon : Structure, IInteractable
 
     private MountInteraction mountInteraction;
     private MountController mountController;
+
+    private bool isMounted;
 
     public override void OnNetworkSpawn()
     {
@@ -36,6 +40,7 @@ public class HotAirBalloon : Structure, IInteractable
         // Set mount values to false on init
         mountInteraction.SetCanMount(false);
         mountInteraction.OnMount += TakeOff;
+        isMounted = false;
 
         CurrentStage.OnValueChanged += HandleCurrentStageChanged;
         HandleCurrentStageChanged(0, CurrentStage.Value);
@@ -124,7 +129,16 @@ public class HotAirBalloon : Structure, IInteractable
             UpgradeUI.Main.Initialize(source.GetComponent<PlayerInventory>(), upgradeStages, CurrentStageValue, UpgradeBalloon);
         else                                              // Player can mount balloon now
         {
+            isMounted = !isMounted;
             mountInteraction.SetCanMount(true);
+            physicCollider.enabled = !isMounted;
+            
+            // Disable colliders/control of player
+            if (source.TryGetComponent<PlayerMountHandler>(out var controller))
+            {
+                controller.SetControl(!isMounted);
+            }
+
             mountInteraction.Interact(source);
         }
     }

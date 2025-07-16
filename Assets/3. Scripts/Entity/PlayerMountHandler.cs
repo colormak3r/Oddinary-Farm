@@ -1,22 +1,19 @@
 using System;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
 
-public class HotAirBalloonController : NetworkBehaviour
+public class PlayerMountHandler : NetworkBehaviour
 {
     [Header("Settings")]
-    [SerializeField]
-    private Collider2D physicCollider;
-    [SerializeField]
-    private MoveableController moveableController;
-    [SerializeField]
-    private EntityMovement entityMovement;
     [SerializeField]
     private DrownController drownController;
     [SerializeField]
     private DrownGraphic drownGraphic;
     [SerializeField]
     private SpriteRenderer spriteRenderer;
+    [SerializeField]
+    private Rigidbody2D rigidbody2D;
 
     [Header("Debugs")]
     [SerializeField]
@@ -35,7 +32,7 @@ public class HotAirBalloonController : NetworkBehaviour
 
     private void HandleIsControlledChanged(bool previousValue, bool newValue)
     {
-        spriteRenderer.enabled = newValue;
+        //spriteRenderer.enabled = newValue;
     }
 
     public void SetControl(bool isControlled)
@@ -58,10 +55,13 @@ public class HotAirBalloonController : NetworkBehaviour
 
     private void SetControlInternal(bool isControlled)
     {
-        physicCollider.enabled = !isControlled;
-        moveableController.SetMoveable(!isControlled);
-        entityMovement.SetCanBeKnockback(!isControlled);
-        drownController.SetCanBeDrowned(!isControlled);
-        drownGraphic.SetCanBeWet(!isControlled);
+        spriteRenderer.enabled = !isControlled;
+        drownController.SetCanBeDrowned(isControlled);
+        drownGraphic.SetCanBeWet(isControlled);
+
+        if (isControlled)
+            rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
+        else
+            rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
     }
 }
