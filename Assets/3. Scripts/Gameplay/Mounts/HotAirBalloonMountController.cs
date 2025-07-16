@@ -35,8 +35,8 @@ public class HotAirBalloonMountController : MountController
             return;
 
         // Player can only move horizontally while in the hot air balloon
-        Vector2 horizontalDir = new Vector2(direction.x, 0);
-        movement.SetDirection(horizontalDir);
-        Debug.Log($"Player is Moving Balloon = {horizontalDir}");
+        Vector2 totalDir = new Vector2(direction.x, 1f);
+        movement.SetDirection(totalDir);
+        Debug.Log($"Player is Moving Balloon = {totalDir}");
     }
 }

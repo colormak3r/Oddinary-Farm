@@ -75,12 +75,13 @@ public class HotAirBalloon : Structure, IInteractable
         if (!CanTakeOff.Value)      // Take off only if conditions are met
             return;
 
-        if (source == null)
-            return;
+        Debug.Log("Hot Air Balloon has taken off.");
 
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
 
+        // Enable movement and start movement
         mountController.CanMove = true;
+        mountController.Move(Vector2.zero);
 
         // Change sorting order
         var sortingGroups = GetComponentsInChildren<SortingGroup>();
@@ -165,6 +166,7 @@ public class HotAirBalloon : Structure, IInteractable
         if (!IsServer)
             return;
 
+        CanTakeOff.Value = true;
         TakeOff(null);
     }
 }
