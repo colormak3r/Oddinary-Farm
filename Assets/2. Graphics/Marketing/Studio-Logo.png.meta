@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Studio-Logo_0: 5549723762099846576
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
