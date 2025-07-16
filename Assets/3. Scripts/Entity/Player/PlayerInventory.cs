@@ -1,8 +1,13 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/16/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using Unity.Netcode;
 using System;
 using UnityEngine;
-using UnityEngine.Events;
-using static UnityEngine.Rendering.DebugUI;
 
 [System.Serializable]
 public class ItemStack

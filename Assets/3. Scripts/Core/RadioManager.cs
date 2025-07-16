@@ -10,6 +10,7 @@ public class RadioEvent
     public int hour;
     [TextArea]
     public string message;
+    public AudioClip audioClip;
 }
 
 public class RadioManager : NetworkBehaviour
