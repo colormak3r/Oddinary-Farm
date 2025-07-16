@@ -19,7 +19,7 @@ MonoBehaviour:
   maxStack: 1
   isSellable: 1
   price: 100
-  range: 5
+  range: 6
   primaryCdr: 0.75
   secondaryCdr: 0.25
   itemContext: 'LMB: Place

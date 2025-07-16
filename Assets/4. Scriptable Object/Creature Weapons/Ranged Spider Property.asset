@@ -19,7 +19,7 @@ MonoBehaviour:
   maxStack: 1
   isSellable: 0
   price: 1
-  range: 10
+  range: 8
   primaryCdr: 3
   secondaryCdr: 3
   itemContext: 'LMB: Place
@@ -27,6 +27,7 @@ MonoBehaviour:
     RMB: Remove
 
     X  : Drop'
+  description: 
   pickupSound: {fileID: 0}
   selectSound: {fileID: 0}
   primarySound: {fileID: 8300000, guid: 8a96721ac9b272e4897cfe7a525216bb, type: 3}

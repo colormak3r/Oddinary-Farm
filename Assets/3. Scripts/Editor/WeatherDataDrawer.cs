@@ -1,32 +1,72 @@
-using UnityEngine;
+// Put this in the same file or in an Editor folder
+// Make sure WeatherData is the class you store in the array
 using UnityEditor;
+using UnityEngine;
 
+[CustomPropertyDrawer(typeof(WeatherData))]
 public class WeatherDataDrawer : PropertyDrawer
 {
+    // ---------- GUI ---------- //
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        EditorGUI.BeginProperty(position, label, property);
-        position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+        // Extract the array index:  "weatherList.Array.data[3]"  3
+        int index = GetArrayIndex(property);
 
-        float totalWidth = position.width;
-        float boolWidth = totalWidth * 0.3f;
-        float durationWidth = totalWidth - boolWidth;
+        // Change the header text
+        label = new GUIContent($"Day {index + 1}");
 
-        Rect boolRect = new Rect(position.x, position.y, boolWidth, EditorGUIUtility.singleLineHeight);
-        Rect durationRect = new Rect(position.x + boolWidth + 4, position.y, durationWidth - 4, EditorGUIUtility.singleLineHeight);
+        // Draw the fold-out header
+        Rect foldoutRect = new Rect(position.x,
+                                    position.y,
+                                    position.width,
+                                    EditorGUIUtility.singleLineHeight);
 
-        SerializedProperty isThunderStormProp = property.FindPropertyRelative("IsThunderStorm");
-        SerializedProperty rainDurationProp = property.FindPropertyRelative("RainDuration");
+        property.isExpanded = EditorGUI.Foldout(foldoutRect, property.isExpanded, label, true);
 
-        EditorGUI.PropertyField(boolRect, isThunderStormProp, GUIContent.none);
-        EditorGUI.PropertyField(durationRect, rainDurationProp, GUIContent.none);
+        if (!property.isExpanded)
+            return;                     // collapsed  nothing else to draw
 
-        EditorGUI.EndProperty();
+        // Start drawing the inside, indented
+        EditorGUI.indentLevel++;
+
+        // Line spacing helper
+        float lineH = EditorGUIUtility.singleLineHeight;
+        float spacing = 2f;
+        Rect line = new Rect(position.x,
+                             position.y + lineH + spacing,
+                             position.width,
+                             lineH);
+
+        // Field 1 – IsThunderStorm (checkbox)
+        SerializedProperty isThunderStorm = property.FindPropertyRelative("IsThunderStorm");
+        EditorGUI.PropertyField(line, isThunderStorm);
+
+        // Field 2 – RainDuration (MinMaxInt or int / slider, whatever you use)
+        line.y += lineH + spacing;
+        SerializedProperty rainDuration = property.FindPropertyRelative("RainDuration");
+        EditorGUI.PropertyField(line, rainDuration);
+
+        EditorGUI.indentLevel--;
     }
 
+    // ---------- height ---------- //
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        // Ensure enough space if MinMaxInt is drawn on multiple lines
-        return EditorGUI.GetPropertyHeight(property.FindPropertyRelative("RainDuration")) + 2;
+        float lineH = EditorGUIUtility.singleLineHeight;
+        float spacing = 2f;
+
+        // One line if collapsed, three lines (header + 2 fields + spacing) if expanded
+        return property.isExpanded
+               ? lineH * 3 + spacing * 2
+               : lineH;
+    }
+
+    // ---------- helper ---------- //
+    private int GetArrayIndex(SerializedProperty property)
+    {
+        var match = System.Text.RegularExpressions.Regex.Match(property.propertyPath, @"\[(\d+)\]");
+        if (match.Success && int.TryParse(match.Groups[1].Value, out int i))
+            return i;
+        return -1;
     }
 }

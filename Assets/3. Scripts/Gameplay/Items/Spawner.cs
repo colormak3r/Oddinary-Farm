@@ -18,14 +18,14 @@ public class Spawner : Tool
         position = position.SnapToGrid(spawnerProperty.Size);
         if (!ItemSystem.IsInRange(position, spawnerProperty.Range))
         {
-            if (showDebug) Debug.Log($"Cannot spawn {spawnerProperty.Name} at {position}, out of range");
+            if (showDebug) Debug.Log($"Cannot spawn {spawnerProperty.ItemName} at {position}, out of range");
             return false;
         }
 
         var invalid = ItemSystem.OverlapArea(spawnerProperty.Size, position, spawnerProperty.InvalidLayers);
         if (invalid != null)
         {
-            if (showDebug) Debug.Log($"Cannot spawn {spawnerProperty.Name} at {position}, {invalid.name} is blocking");
+            if (showDebug) Debug.Log($"Cannot spawn {spawnerProperty.ItemName} at {position}, {invalid.name} is blocking");
             return false;
         }
 

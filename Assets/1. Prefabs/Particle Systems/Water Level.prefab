@@ -124,5 +124,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alwaysFlood: 1
+  floodVertical: 0
+  floodDuration: 3
   spriteRenderer: {fileID: 2880358351934188392}
   alphaRenderer: []
+  elevation: 0
+  previousWaterLevel: 0
+  previousDepth: 0

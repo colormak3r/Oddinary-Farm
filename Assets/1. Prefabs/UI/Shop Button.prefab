@@ -101,6 +101,10 @@ MonoBehaviour:
   quickActionButton: {fileID: 1007546327735345519}
   quickActionText: {fileID: 1933286881860129384}
   newTextObject: {fileID: 5325569203325589592}
+  minAngle: -3
+  maxAngle: 3
+  minPeriod: 1
+  maxPeriod: 3
 --- !u!114 &8607513316321820017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -568,7 +572,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 2.5}
+  m_AnchoredPosition: {x: 8, y: -1.5}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &5185736396219533048
@@ -633,8 +637,8 @@ MonoBehaviour:
   m_fontSizeMin: 1
   m_fontSizeMax: 12
   m_fontStyle: 3
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0

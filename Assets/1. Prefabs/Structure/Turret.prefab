@@ -55,7 +55,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9409c18c87099014f9e69b5e44cca0a8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -975,8 +975,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c08a32213073e44996dd553fede6e6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundEffects: []
   ignoreWarnings: 0
+  playOnAwake: 0
+  soundEffects: []
 --- !u!114 &-6368999011962406436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1034,7 +1035,6 @@ MonoBehaviour:
   color: {r: 0.1882353, g: 0.17254902, b: 0.18039216, a: 1}
   defaultHeatValue: 0.5
   heatDecayPerDay: 0
-  minHeat: 0.5
   showGizmos: 0
   CurrentHeat:
     m_InternalValue: 0

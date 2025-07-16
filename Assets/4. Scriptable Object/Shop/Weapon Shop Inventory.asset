@@ -27,7 +27,7 @@ MonoBehaviour:
     itemProperties:
     - {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
     - {fileID: 11400000, guid: 082775721ddde0e4eb730a842401d7a5, type: 2}
-  - netIncome: 80000
+  - netIncome: 60000
     upgradeCost: 1500
     itemProperties:
     - {fileID: 11400000, guid: 2eb94a222f58a1940b7fff8b4e7e2964, type: 2}

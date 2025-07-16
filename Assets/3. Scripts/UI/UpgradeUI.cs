@@ -49,14 +49,14 @@ public class UpgradeUI : UIBehaviour
         Show();
     }
 
-    private void UpdateStage(UpgradeStages currentStages, int currentStage)
+    private void UpdateStage(UpgradeStages upgradeStages, int currentStage)
     {
-        currentStageImage.sprite = currentStages.GetStage(currentStage).sprite;
-        nextStageImage.sprite = currentStages.GetStage(currentStage + 1).sprite;
-        promptText.text = currentStages.GetStage(currentStage + 1).prompt;
+        currentStageImage.sprite = upgradeStages.GetStage(currentStage).sprite;
+        nextStageImage.sprite = upgradeStages.GetStage(currentStage + 1).sprite;
+        promptText.text = upgradeStages.GetStage(currentStage + 1).prompt + $" ({currentStage + 1}/{upgradeStages.GetStageCount() - 1})";
 
         var multiplier = (ulong)NetworkManager.Singleton.ConnectedClients.Count;
-        var cost = currentStages.GetStage(currentStage + 1).cost * multiplier;
+        var cost = upgradeStages.GetStage(currentStage + 1).cost * multiplier;
         costText.text = cost.ToString();
         upgradeButton.interactable = WalletManager.Main.LocalWalletValue > cost;
     }

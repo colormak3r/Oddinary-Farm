@@ -249,7 +249,6 @@ public class ShopUI : UIBehaviour
             shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, playerCount, -1, 0, true);
             AudioManager.Main.PlaySoundIncreasePitch(buySound);
             yield return shopButton.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f);
-            yield return new WaitForSeconds(0.1f); // Slight delay between button instantiation
         }
         AudioManager.Main.ResetPitch();
     }
@@ -413,7 +412,7 @@ public class ShopUI : UIBehaviour
 
         // Update UI
         itemImage.sprite = itemProperty.IconSprite;
-        itemNameText.text = itemProperty.Name;
+        itemNameText.text = itemProperty.ItemName;
         itemDescriptionText.text = itemProperty.Description;
         ownedText.text = $"Owned: {playerInventory.GetItemCount(itemProperty)}";
 
@@ -464,7 +463,7 @@ public class ShopUI : UIBehaviour
         if (WalletManager.Main.LocalWalletValue < price)
         {
             // Not enough coins to buy the item
-            if (showDebug) Debug.Log($"Cannot afford x{count} {itemProperty.Name}");
+            if (showDebug) Debug.Log($"Cannot afford x{count} {itemProperty.ItemName}");
             AudioManager.Main.PlayOneShot(errorSound);
         }
         else
@@ -490,7 +489,7 @@ public class ShopUI : UIBehaviour
             visitedItemProperties.Add(itemProperty);
             button.UpdateIsNew(false);
 
-            if (showDebug) Debug.Log($"Bought 1x{itemProperty.Name} for {price}");
+            if (showDebug) Debug.Log($"Bought 1x{itemProperty.ItemName} for {price}");
         }
     }
 
@@ -499,7 +498,7 @@ public class ShopUI : UIBehaviour
         if (playerInventory.Inventory[index].Count == 0 || playerInventory.Inventory[index].Count < count)
         {
             // Not enough items to sell
-            if (showDebug) Debug.Log($"Cannot sell x{count} {itemProperty.Name}");
+            if (showDebug) Debug.Log($"Cannot sell x{count} {itemProperty.ItemName}");
             AudioManager.Main.PlayOneShot(errorSound);
             return;
         }
@@ -526,7 +525,7 @@ public class ShopUI : UIBehaviour
         {
             button.Remove();
 
-            if (showDebug) Debug.Log($"No more {itemProperty.Name} to sell");
+            if (showDebug) Debug.Log($"No more {itemProperty.ItemName} to sell");
 
             // If no more items of this type, clear the selected item
             ClearItemReference();
