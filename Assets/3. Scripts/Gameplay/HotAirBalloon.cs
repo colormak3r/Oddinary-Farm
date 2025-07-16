@@ -42,6 +42,8 @@ public class HotAirBalloon : Structure, IInteractable
         mountInteraction.OnMount += TakeOff;
         isMounted = false;
 
+        mountController.CanMove = false;
+
         CurrentStage.OnValueChanged += HandleCurrentStageChanged;
         HandleCurrentStageChanged(0, CurrentStage.Value);
 
@@ -77,6 +79,8 @@ public class HotAirBalloon : Structure, IInteractable
             return;
 
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        mountController.CanMove = true;
 
         // Change sorting order
         var sortingGroups = GetComponentsInChildren<SortingGroup>();

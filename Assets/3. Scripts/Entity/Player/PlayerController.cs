@@ -1,7 +1,7 @@
 /*
  * Created By:      Khoa Nguyen
  * Date Created:    --/--/----
- * Last Modified:   05/16/2025 (Khoa)
+ * Last Modified:   07/16/2025 (Ryan)
  * Notes:           <write here>
 */
 
@@ -857,6 +857,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         isMounted = value;
         this.mountController = mountController;
 
+        // Stop player movment upon mount but do not disable movement
         StopMovement();
 
         Debug.Log($"Player Controller: isMounting = {isMounted}, mountController = {mountController}");

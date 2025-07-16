@@ -31,7 +31,12 @@ public class HotAirBalloonMountController : MountController
 
     public override void Move(Vector2 direction)
     {
-        Debug.Log($"Player is Moving Balloon = {direction}");
-        //movement.SetDirection(direction);
+        if (!CanMove)
+            return;
+
+        // Player can only move horizontally while in the hot air balloon
+        Vector2 horizontalDir = new Vector2(direction.x, 0);
+        movement.SetDirection(horizontalDir);
+        Debug.Log($"Player is Moving Balloon = {horizontalDir}");
     }
 }

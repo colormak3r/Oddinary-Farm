@@ -308,6 +308,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  speedMultiplier: 0.1
   debug: 1
   physicCollider: {fileID: 5682155175358053918}
 --- !u!1 &2707789027467210874
