@@ -55,7 +55,7 @@ public class ShopUI : UIBehaviour
     [SerializeField]
     private TMP_Text coinText;
     [SerializeField]
-    private CanvasRenderer coinUI;
+    private GameObject coinPanel;
     [SerializeField]
     private GameObject itemDropPrefab;
     [SerializeField]
@@ -73,9 +73,9 @@ public class ShopUI : UIBehaviour
     [SerializeField]
     private TMP_Text stackActionText;
     [SerializeField]
-    private GameObject buyMultiplierButton;
+    private TMP_Text singleActionText;
     [SerializeField]
-    private TMP_Text multiplierActionText;
+    private TMP_Text fiveActionText;
     [SerializeField]
     private TMP_Text ownedText;
     [SerializeField]
@@ -99,11 +99,15 @@ public class ShopUI : UIBehaviour
     [SerializeField]
     private Image buyImage;
     [SerializeField]
+    private TMP_Text buyText;
+    [SerializeField]
     private Image sellImage;
     [SerializeField]
-    private Sprite selectedSprite;
+    private TMP_Text sellText;
     [SerializeField]
-    private Sprite unselectedSprite;
+    private Color selectedColor;
+    [SerializeField]
+    private Color unselectedColor;
 
     [Header("Shop Audio")]
     [SerializeField]
@@ -187,8 +191,10 @@ public class ShopUI : UIBehaviour
 
         // Buy mode initialization & UI update
         shopMode = ShopMode.Buy;
-        buyImage.sprite = selectedSprite;
-        sellImage.sprite = unselectedSprite;
+        buyImage.color = selectedColor;
+        buyText.text = $"<b><u>BUY";
+        sellImage.color = unselectedColor;
+        sellText.text = "SELL";
         var playerCount = NetworkManager.Singleton.ConnectedClients.Count;
 
         AudioManager.Main.PlayOneShot(openShopSound);
@@ -265,8 +271,10 @@ public class ShopUI : UIBehaviour
 
         // Sell mode initialization & UI update
         shopMode = ShopMode.Sell;
-        buyImage.sprite = unselectedSprite;
-        sellImage.sprite = selectedSprite;
+        buyImage.color = unselectedColor;
+        buyText.text = "BUY";
+        sellImage.color = selectedColor;
+        sellText.text = $"<b><u>SELL";
         var playerCount = NetworkManager.Singleton.ConnectedClients.Count;
 
         AudioManager.Main.PlayOneShot(openShopSound);
@@ -294,7 +302,7 @@ public class ShopUI : UIBehaviour
         {
             // Not enough coins to upgrade
             if (showDebug) Debug.Log($"Cannot afford upgrade {shopInventory.ShopName}: ${upgradeCost}");
-            StartCoroutine(coinText.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f));
+            StartCoroutine(coinPanel.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f));
             AudioManager.Main.PlayOneShot(errorSound);
         }
         else
@@ -362,7 +370,7 @@ public class ShopUI : UIBehaviour
                     upgradeButton.SetActive(false);
                     upgradeText.gameObject.SetActive(true);
                     var netIncomeNeeded = shopInventory.Tiers[currentTier + 1].netIncome * playerCount;
-                    upgradeText.text = $"Earn ${netIncomeNeeded - WalletManager.Main.GlobalWalletValue} more\nto unlock next Tier";
+                    upgradeText.text = $"Earn ${netIncomeNeeded - WalletManager.Main.GlobalWalletValue} more to unlock next Tier ({currentTier + 1}/{shopTierLength - 1})";
                 }
                 else
                 {
@@ -429,16 +437,18 @@ public class ShopUI : UIBehaviour
 
         if (shopMode == ShopMode.Buy)
         {
-            stackActionText.text = $"Buy A Stack\n{itemProperty.MaxStack} for ${itemProperty.MaxStack * itemProperty.Price * playerCount}";
-            multiplierActionText.text = $"Buy 5 for ${5 * itemProperty.Price * playerCount}";
+            stackActionText.text = $"Buy A Stack\n{itemProperty.MaxStack} for <color=#AE2334><b>${itemProperty.MaxStack * itemProperty.Price * playerCount}";
+            singleActionText.text = $"Buy 1\n<color=#AE2334><b>${itemProperty.Price * playerCount}";
+            fiveActionText.text = $"Buy 5\n<color=#AE2334><b>${itemProperty.Price * 5 * playerCount}";
             visitedItemProperties.Add(itemProperty);
             button.UpdateIsNew(false);
         }
         else
         {
             var itemCount = playerInventory.Inventory[index].Count;
-            stackActionText.text = $"Sell All\n{itemCount} for ${itemCount * itemProperty.Price * playerCount}";
-            multiplierActionText.text = $"Sell {currentMultiplier} for ${currentMultiplier * itemProperty.Price * playerCount}";
+            stackActionText.text = $"Sell All\n{itemCount} for <color=#239063><b>${itemCount * itemProperty.Price * playerCount}";
+            singleActionText.text = $"Sell 1\n<color=#239063><b>${itemProperty.Price * playerCount}";
+            fiveActionText.text = $"Sell 5\n<color=#239063><b>${itemProperty.Price * 5 * playerCount}";
         }
     }
 
@@ -464,6 +474,7 @@ public class ShopUI : UIBehaviour
         {
             // Not enough coins to buy the item
             if (showDebug) Debug.Log($"Cannot afford x{count} {itemProperty.ItemName}");
+            StartCoroutine(coinPanel.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f));
             AudioManager.Main.PlayOneShot(errorSound);
         }
         else
@@ -536,8 +547,6 @@ public class ShopUI : UIBehaviour
         {
             var itemCount = (int)playerInventory.Inventory[index].Count;
             stackActionText.text = $"Sell All\n{itemCount} for ${itemCount * itemProperty.Price * playerCount}";
-            ClampMultiplier();
-            multiplierActionText.text = $"Sell {currentMultiplier} for ${currentMultiplier * itemProperty.Price * playerCount}";
         }
     }
 
@@ -559,7 +568,7 @@ public class ShopUI : UIBehaviour
         }
     }
 
-    public void OnMultiplierActionClicked()
+    public void OnSingleActionButtonClicked()
     {
         if (currentItemProperty == null)
         {
@@ -569,11 +578,29 @@ public class ShopUI : UIBehaviour
 
         if (shopMode == ShopMode.Buy)
         {
-            BuyItem(currentItemProperty, currentMultiplier, currentShopButton);
+            BuyItem(currentItemProperty, 1, currentShopButton);
         }
         else
         {
-            SellItem(currentItemProperty, currentMultiplier, currentShopButton, currentItemIndex);
+            SellItem(currentItemProperty, 1, currentShopButton, currentItemIndex);
+        }
+    }
+
+    public void OnFiveActionButtonClicked()
+    {
+        if (currentItemProperty == null)
+        {
+            if (showDebug) Debug.Log("No item selected");
+            return;
+        }
+
+        if (shopMode == ShopMode.Buy)
+        {
+            BuyItem(currentItemProperty, 5, currentShopButton);
+        }
+        else
+        {
+            SellItem(currentItemProperty, 5, currentShopButton, currentItemIndex);
         }
     }
 
@@ -615,7 +642,7 @@ public class ShopUI : UIBehaviour
         else
         {
             if (popCoroutine != null) StopCoroutine(popCoroutine);
-            popCoroutine = StartCoroutine(coinUI.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f));
+            popCoroutine = StartCoroutine(coinText.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f));
         }
     }
 
@@ -673,65 +700,4 @@ public class ShopUI : UIBehaviour
     }
 
     #endregion Utility
-
-    #region Multiplier
-    public void OnNeg5Clicked()
-    {
-        UpdateMultiplier(-5);
-    }
-
-    public void OnNeg1Clicked()
-    {
-        UpdateMultiplier(-1);
-    }
-
-    public void OnPos1Clicked()
-    {
-        UpdateMultiplier(1);
-    }
-
-    public void OnPos5Clicked()
-    {
-        UpdateMultiplier(5);
-    }
-
-    private void UpdateMultiplier(int count)
-    {
-        if (currentItemProperty == null) return;
-
-        currentMultiplier += count;
-        ClampMultiplier();
-
-        var playerCount = (uint)NetworkManager.Singleton.ConnectedClients.Count;
-        multiplierActionText.text = $"{(shopMode == ShopMode.Buy ? "Buy" : "Sell")} {currentMultiplier} for ${currentMultiplier * currentItemProperty.Price * playerCount}";
-    }
-
-    private void ClampMultiplier()
-    {
-        // Ensure the multiplier does not go below 1       
-        if (currentMultiplier < 1)
-        {
-            currentMultiplier = 1;
-        }
-
-        // Ensure the multiplier does not exceed the item count in the player's inventory
-        if (currentItemIndex <= 0)
-        {
-            if (currentItemProperty == null) return;
-            var itemCount = (int)currentItemProperty.MaxStack;
-            if (currentMultiplier > itemCount)
-            {
-                currentMultiplier = itemCount;
-            }
-        }
-        else
-        {
-            var itemCount = (int)playerInventory.Inventory[currentItemIndex].Count;
-            if (currentMultiplier > itemCount)
-            {
-                currentMultiplier = itemCount;
-            }
-        }
-    }
-    #endregion
 }

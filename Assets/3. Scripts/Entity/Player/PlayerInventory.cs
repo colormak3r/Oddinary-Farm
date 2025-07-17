@@ -152,6 +152,26 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         OnCurrentItemPropertyChanged?.Invoke(newValue);
     }
 
+    public bool CanAddItem(ItemProperty property)
+    {
+        if (property is CurrencyProperty)
+        {
+            return true;    // Currency can always be added
+        }
+        else if (property.MaxStack > 1 && FindPartialSlot(property, out var partialIndex))
+        {
+            return true;    // Found a stack that is not full
+        }
+        else if (FindEmptySlot(out var emptyIndex))
+        {
+            return true;    // Found an empty slot
+        }
+        else
+        {
+            return false;   // No space in inventory
+        }
+    }
+
     public bool AddItem(ItemProperty property, bool playSound = true)
     {
         if (showDebug) Debug.Log($"Adding {property.ItemName} to inventory on client {OwnerClientId}");

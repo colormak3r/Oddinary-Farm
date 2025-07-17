@@ -1,11 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/16/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 
 public class StructureNetworkTransform : NetworkTransform
 {
+    /*[Header("Debugs")]
+    [SerializeField]
+    private bool showDebugs;*/
+
     private SpriteBlender spriteBlender;
     private Collider2D hitBox;
 
@@ -41,15 +50,20 @@ public class StructureNetworkTransform : NetworkTransform
         if (spriteBlender) spriteBlender.Blend(true);
     }
 
-    protected override void OnBeforeUpdateTransformState()
+    // Temporarily remove due to performance impact
+    // TODO: add position cache to avoid unnecessary updates
+    // TODO: rework hammer, adapt to new transform system
+    /*protected override void OnBeforeUpdateTransformState()
     {
         base.OnBeforeUpdateTransformState();
+        Debug.Log($"OnBeforeUpdateTransformState: {transform.position}");
         PreMove();
     }
 
     protected override void OnTransformUpdated()
     {
         base.OnTransformUpdated();
+        Debug.Log($"OnTransformUpdated: {transform.position}");
         PostMove();
-    }
+    }*/
 }

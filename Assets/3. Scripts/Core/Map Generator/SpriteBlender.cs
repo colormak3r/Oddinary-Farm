@@ -157,9 +157,16 @@ public class SpriteBlender : MonoBehaviour
         }
     }*/
 
+
+    private float timeSincelastReblend = 0f;
     [ContextMenu("ReblendNeighbors")]
     public void ReblendNeighbors()
     {
+        if (timeSincelastReblend != 0 && Time.time - timeSincelastReblend < 0.1f)
+        {
+            Debug.LogWarning($"ReblendNeighbors called too frequently: {transform.root.name}/{name}", this);
+        }
+
         // Centre of this tile in world space
         position = (Vector2)transform.position + offset;
 

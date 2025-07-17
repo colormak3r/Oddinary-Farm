@@ -51,7 +51,7 @@ public class NetworkObjectPool : MonoBehaviour
 
         var obj = pool[0];
         pool.RemoveAt(0);
-        obj.GetComponent<NetworkTransform>().Teleport(position, Quaternion.identity, Vector3.one);
+        if(obj.TryGetComponent<NetworkTransform>(out var netTransform)) netTransform.Teleport(position, Quaternion.identity, Vector3.one);
         obj.GetComponent<NetworkObjectPoolController>().NetworkSpawn();
         return obj;
     }
