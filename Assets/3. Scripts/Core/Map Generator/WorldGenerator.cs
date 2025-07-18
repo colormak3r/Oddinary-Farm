@@ -430,8 +430,9 @@ public class WorldGenerator : NetworkBehaviour
         }
 
         // 5. Optional: log counts
-        foreach (var kvp in prefabCount)
-            Debug.Log($"Resource {kvp.Key.name} spawned {kvp.Value} times.");
+        if (showDebugs)
+            foreach (var kvp in prefabCount)
+                Debug.Log($"Resource {kvp.Key.name} spawned {kvp.Value} times.");
     }
 
 
