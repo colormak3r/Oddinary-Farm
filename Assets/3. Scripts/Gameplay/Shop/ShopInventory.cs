@@ -1,6 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+
+[System.Serializable]
+public struct ShopTier
+{
+    public ulong netIncome;
+    public ulong upgradeCost;
+    public ItemProperty[] itemProperties;
+}
 
 [CreateAssetMenu(fileName = "Shop Inventory", menuName = "Scriptable Objects/Shop Inventory")]
 public class ShopInventory : ScriptableObject
@@ -12,10 +19,14 @@ public class ShopInventory : ScriptableObject
     [SerializeField]
     private float penaltyMultiplier = 0.7f;
     [SerializeField]
-    private ItemProperty[] itemProperties;
+    private ShopTier[] tiers;
+    [SerializeField]
+    private ItemProperty[] itemProperties;  // Obsolete, use ItemByTier instead
 
     public string ShopName => shopName;
     public float SaleMultiplier => saleMultiplier;
     public float PenaltyMultiplier => penaltyMultiplier;
-    public ItemProperty[] ItemProperties => itemProperties;
+    public ShopTier[] Tiers => tiers;
+    [Obsolete("Use ShopTier instead")]
+    public ItemProperty[] ItemProperties => itemProperties; // Obsolete, use ItemByTier instead
 }

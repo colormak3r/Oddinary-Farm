@@ -36,7 +36,7 @@ MonoBehaviour:
   damage: 5
   damageType: 2
   hostility: 2
-  knockbackForce: 200
+  knockbackForce: 100
   damageableLayer:
     serializedVersion: 2
     m_Bits: 2147487232

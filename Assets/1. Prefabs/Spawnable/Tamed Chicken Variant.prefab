@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6497021208862346944}
     m_Modifications:
+    - target: {fileID: 2047204541432354909, guid: cfc2e2de3c4d5c94c91db01b760ef2a3, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -435341045, guid: 14aaa6ce58837d4428746490f98f4296, type: 3}
     - target: {fileID: 4058234367665695159, guid: cfc2e2de3c4d5c94c91db01b760ef2a3, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -38,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4058234367665695159, guid: cfc2e2de3c4d5c94c91db01b760ef2a3, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 15
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 4058234367665695159, guid: cfc2e2de3c4d5c94c91db01b760ef2a3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -87,6 +91,14 @@ PrefabInstance:
     - target: {fileID: 4058234367665695159, guid: cfc2e2de3c4d5c94c91db01b760ef2a3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5062958839507079924, guid: cfc2e2de3c4d5c94c91db01b760ef2a3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6902223266145957591, guid: cfc2e2de3c4d5c94c91db01b760ef2a3, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8834698550598861727, guid: cfc2e2de3c4d5c94c91db01b760ef2a3, type: 3}
       propertyPath: m_Name
@@ -249,6 +261,7 @@ MonoBehaviour:
   graphicTransform: {fileID: 4644328530611537964}
   spriteFacingRight: 1
   roamRadius: 5
+  itemProperty: {fileID: 0}
   showDebug: 0
   destination: {x: 0, y: 0}
   OnDestinationReached:

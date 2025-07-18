@@ -38,7 +38,7 @@ public class StatUI : UIBehaviour
         if (data.itemsUsed.Count > 0)
         {
             var mostUsed = data.itemsUsed.Max();
-            statText.text += $"\nItems Most Used: {mostUsed.Key.Name} - {mostUsed.Value} used";
+            statText.text += $"\nItems Most Used: {mostUsed.Key.ItemName} - {mostUsed.Value} used";
         }
         else
         {
@@ -48,7 +48,7 @@ public class StatUI : UIBehaviour
         if (data.itemsCollected.Count > 0)
         {
             var mostCollected = data.itemsCollected.Max();
-            statText.text += $"\nItems Most Collected: {mostCollected.Key.Name} - {mostCollected.Value} collected";
+            statText.text += $"\nItems Most Collected: {mostCollected.Key.ItemName} - {mostCollected.Value} collected";
         }
         else
         {

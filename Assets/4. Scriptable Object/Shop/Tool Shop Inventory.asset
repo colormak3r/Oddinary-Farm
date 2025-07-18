@@ -15,6 +15,23 @@ MonoBehaviour:
   shopName: Hopper Hardware
   saleMultiplier: 0.9
   penaltyMultiplier: 0.7
+  tiers:
+  - netIncome: 0
+    upgradeCost: 0
+    itemProperties:
+    - {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
+    - {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
+    - {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
+    - {fileID: 11400000, guid: 17cd4711bcc2ce542a3f7398cbd92307, type: 2}
+  - netIncome: 10000
+    upgradeCost: 500
+    itemProperties:
+    - {fileID: 11400000, guid: 620e17e93689e024aae505237d752525, type: 2}
+    - {fileID: 11400000, guid: 451f0ecb909c3f54d89bb0dbc9960fd6, type: 2}
+  - netIncome: 60000
+    upgradeCost: 1500
+    itemProperties:
+    - {fileID: 11400000, guid: 4e1333dbc18242842a3696103d4c73cc, type: 2}
   itemProperties:
   - {fileID: 11400000, guid: db4e05bb5adcb8c46b80921284060e6a, type: 2}
   - {fileID: 11400000, guid: 6a5b0eef5648d9d4ab90c198a61e2413, type: 2}
@@ -22,3 +39,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 620e17e93689e024aae505237d752525, type: 2}
   - {fileID: 11400000, guid: b8752e684c81d2145b4c5c9e000246c8, type: 2}
   - {fileID: 11400000, guid: 451f0ecb909c3f54d89bb0dbc9960fd6, type: 2}
+  - {fileID: 11400000, guid: 4e1333dbc18242842a3696103d4c73cc, type: 2}

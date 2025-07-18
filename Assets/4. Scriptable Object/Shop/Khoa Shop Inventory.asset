@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e84fa230aa18ab449a5f359e550e2296, type: 3}
+  m_Name: Khoa Shop Inventory
+  m_EditorClassIdentifier: 
+  shopName: Khoa's Stash
+  saleMultiplier: 0.9
+  penaltyMultiplier: 0.7
+  tiers:
+  - netIncome: 0
+    upgradeCost: 0
+    itemProperties:
+    - {fileID: 11400000, guid: dc1f4729872bec247892e8489b38c1ee, type: 2}
+  - netIncome: 10000
+    upgradeCost: 100
+    itemProperties:
+    - {fileID: 11400000, guid: 2eb94a222f58a1940b7fff8b4e7e2964, type: 2}
+  - netIncome: 60000
+    upgradeCost: 200
+    itemProperties:
+    - {fileID: 11400000, guid: 1af873cf199f4484cadfbd292f70a465, type: 2}
+  itemProperties:
+  - {fileID: 11400000, guid: 1af873cf199f4484cadfbd292f70a465, type: 2}

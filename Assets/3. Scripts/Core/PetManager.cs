@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    07/09/2025
+ * Last Modified:   07/09/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -28,6 +35,7 @@ public class PetManager : NetworkBehaviour
     private bool canSpawnPet = true;
     [SerializeField]
     private PetData[] petDataEntries;
+    public PetData[] PetDataEntries => petDataEntries;
     [SerializeField]
     private GameObject chihuahuaRescuePrefab;
 
@@ -86,8 +94,11 @@ public class PetManager : NetworkBehaviour
     private IEnumerator WaitGameManager()
     {
         yield return new WaitUntil(() => GameManager.Main.IsInitialized);
-        var rescueObj = Instantiate(chihuahuaRescuePrefab, WorldGenerator.Main.RandomChihuahuaRescuePosition, Quaternion.identity);
+        var position = WorldGenerator.Main.RandomChihuahuaRescuePosition;
+        var rescueObj = Instantiate(chihuahuaRescuePrefab, position, Quaternion.identity);
         rescueObj.GetComponent<NetworkObject>().Spawn();
+        //if (showDebugs)
+        Debug.Log($"Chihuahua rescue sequence started at {position}.");
     }
 
     public void SpawnPet(PetType petType, Vector2 position, GameObject owner)
@@ -156,7 +167,7 @@ public class PetManager : NetworkBehaviour
     }
 
     [ContextMenu("Reset Collection Data")]
-    private void ResetCollectionData()
+    public void ResetCollectionData()
     {
         foreach (var petData in petDataEntries)
         {
@@ -164,5 +175,10 @@ public class PetManager : NetworkBehaviour
             petCollectionStatus[petData.petType] = false;
             if (showDebugs) Debug.Log($"Pet {petData.petType} collection status reset.");
         }
+    }
+
+    public void SetPetToSpawn(PetData petToSpawn)
+    {
+        this.petToSpawn = petToSpawn;
     }
 }

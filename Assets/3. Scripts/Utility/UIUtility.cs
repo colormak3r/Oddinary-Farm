@@ -65,13 +65,18 @@ namespace ColorMak3r.Utility
 
         public static IEnumerator UIPopCoroutine(this CanvasRenderer renderer, Vector3 originalSize, Vector3 targetSize, float duration = 0.25f)
         {
+            yield return UIPopCoroutine(renderer.transform, originalSize, targetSize, duration);
+        }
+
+        public static IEnumerator UIPopCoroutine(this Transform transform, Vector3 originalSize, Vector3 targetSize, float duration = 0.25f)
+        {
             float elapsedTime = 0f;
 
             while (elapsedTime < duration)
             {
                 elapsedTime += Time.deltaTime;
 
-                renderer.transform.localScale = Vector3.Lerp(originalSize, targetSize, elapsedTime / duration);
+                transform.localScale = Vector3.Lerp(originalSize, targetSize, elapsedTime / duration);
 
                 yield return null;
             }
@@ -82,12 +87,12 @@ namespace ColorMak3r.Utility
             {
                 elapsedTime += Time.deltaTime;
 
-                renderer.transform.localScale = Vector3.Lerp(targetSize, originalSize, elapsedTime / duration);
+                transform.localScale = Vector3.Lerp(targetSize, originalSize, elapsedTime / duration);
 
                 yield return null;
             }
 
-            renderer.transform.localScale = originalSize;
+            transform.localScale = originalSize;
         }
     }
 }

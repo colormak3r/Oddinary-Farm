@@ -54,6 +54,12 @@ public class AssetManager : NetworkBehaviour
         FetchAssets();
 #endif
         BuildAssetDictionary();
+
+        string builder = "";
+        foreach (var item in itemIds)
+        {
+            builder += item.itemProperty.ItemName + "\n";
+        }
     }
 
     [Header("Settings")]
@@ -102,7 +108,7 @@ public class AssetManager : NetworkBehaviour
     private bool showDebugs;
 
 #if UNITY_EDITOR
-[ContextMenu("Fetch Assets")]
+    [ContextMenu("Fetch Assets")]
     public void FetchAssets()
     {
         scriptableObjectList.Clear();
@@ -222,7 +228,7 @@ public class AssetManager : NetworkBehaviour
         for (int i = 0; i < itemIds.Count; i++)
         {
             string paddedId = itemIds[i].id.ToString().PadLeft(4, '0');
-            sb.AppendLine($"{paddedId} - {itemIds[i].itemProperty.Name}");
+            sb.AppendLine($"{paddedId} - {itemIds[i].itemProperty.ItemName}");
         }
 
         Debug.Log(sb.ToString());
@@ -296,7 +302,7 @@ public class AssetManager : NetworkBehaviour
                 {
                     SpawnItem(property, position, default, default, randomRange, randomForce);
                 }
-                if (log) Debug.Log("Spawned " + count + " " + property.Name + " around " + position);
+                if (log) Debug.Log("Spawned " + count + " " + property.ItemName + " around " + position);
             }
             else
             {

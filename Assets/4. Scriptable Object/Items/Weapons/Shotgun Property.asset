@@ -18,13 +18,17 @@ MonoBehaviour:
   isConsummable: 0
   maxStack: 1
   isSellable: 1
-  price: 800
+  price: 1600
   range: 20
   primaryCdr: 0.75
   secondaryCdr: 0.25
   itemContext: 'LMB: Shoot
 
     X  : Drop'
+  description: 'Crazy? I Was Crazy Once.
+
+
+    5 x 1.3 DPS'
   pickupSound: {fileID: 8300000, guid: 3572055f962185946b3a5674f5f1c0cc, type: 3}
   selectSound: {fileID: 8300000, guid: 3572055f962185946b3a5674f5f1c0cc, type: 3}
   primarySound: {fileID: 8300000, guid: 3149f4d7f0f352248ba525360f1dd2d2, type: 3}

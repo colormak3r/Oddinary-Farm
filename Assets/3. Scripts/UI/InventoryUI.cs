@@ -1,7 +1,4 @@
 using ColorMak3r.Utility;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -62,6 +59,7 @@ public class InventoryUI : UIBehaviour
             walletText.text = amount.ToString();
         }
 
+        if (ShopUI.Main.IsShowing) return;
         if (popCoroutine != null) StopCoroutine(popCoroutine);
         popCoroutine = StartCoroutine(walletUI.UIPopCoroutine(Vector3.one, ONE_POINT_ONE_VECTOR, 0.1f));
     }

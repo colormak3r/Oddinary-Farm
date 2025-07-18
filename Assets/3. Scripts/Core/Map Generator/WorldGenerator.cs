@@ -5,35 +5,13 @@ using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
-public class Chunk
+public struct TileData          // one grid cell
 {
-    public Vector2 position;
-    public int size;
-    public Transform transform;
-
-    public bool isBuilt;
-    public bool isBuilding;
-    public bool isRemoving;
-
-    public List<GameObject> terrainUnits;
-    public List<GameObject> foliages;
-
-    public Chunk(Vector2 position, int size, Transform transform)
-    {
-        this.position = position;
-        this.size = size;
-        this.transform = transform;
-
-        isBuilt = false;
-        isBuilding = false;
-        isRemoving = false;
-
-        terrainUnits = new List<GameObject>();
-        terrainUnits.Capacity = size * size;
-        foliages = new List<GameObject>();
-        foliages.Capacity = size * size;
-    }
+    public GameObject terrain;  // never null
+    public GameObject foliage;  // null if none spawned
 }
 
 public class Offset2DArray<T> : IEnumerable<T>
@@ -133,6 +111,8 @@ public class WorldGenerator : NetworkBehaviour
     private int renderDistance = 3;
     [SerializeField]
     private int renderXOffset = 4;
+    [SerializeField]
+    private int tileStep = 10;
 
     [Header("Terrain Settings")]
     [SerializeField]
@@ -156,7 +136,7 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private bool canSpawnResources = true;
     [SerializeField]
-    private GameObject[] resourcePrefabs;
+    private ResourceProperty[] resourceProperties;
     [SerializeField]
     private int noResourceZoneSize = 15; // Size of no resource zone around the player spawn point
     [SerializeField]
@@ -193,7 +173,7 @@ public class WorldGenerator : NetworkBehaviour
 
     private Offset2DArray<ObservablePrefabStatus> resourceStatusMap;
 
-    private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
+    //private Dictionary<Vector2, Chunk> positionToChunk = new Dictionary<Vector2, Chunk>();
 
     [Header("Debugs")]
     [SerializeField]
@@ -214,7 +194,8 @@ public class WorldGenerator : NetworkBehaviour
     {
         yield return GenerateWorld();
         FloodManager.Main.Initialize(HighestElevationValue);
-        yield return BuildWorld(HighestElevationPoint);
+        BuildWorld(HighestElevationPoint);
+        yield return new WaitUntil(() => !isGenerating);
         StartCoroutine(UnloadResourceCoroutine());
         isInitialized = true;
     }
@@ -364,10 +345,100 @@ public class WorldGenerator : NetworkBehaviour
     #endregion
 
     #region Resource Generation
+    private Dictionary<GameObject, int> prefabCount = new Dictionary<GameObject, int>();
     private void GenerateResources()
     {
+        // 1. Initialise the full map
+        resourceStatusMap = new Offset2DArray<ObservablePrefabStatus>(
+            -trueHalfMapSize.x, trueHalfMapSize.x,
+            -trueHalfMapSize.y, trueHalfMapSize.y);
+
+        // 2. Fast-fill the padding strip once
+        for (int x = -trueHalfMapSize.x; x <= trueHalfMapSize.x; x++)
+            for (int y = -trueHalfMapSize.y; y <= trueHalfMapSize.y; y++)
+                if (x < -halfMapSize.x || x >= halfMapSize.x
+                 || y < -halfMapSize.y || y >= halfMapSize.y)
+                    resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false);
+
+        // 3. Collect all playable tiles and sort by distance to (0,0)
+        var tiles = new List<Vector2Int>((halfMapSize.x * 2 + 1) * (halfMapSize.y * 2 + 1));
+
+        for (int x = -halfMapSize.x; x < halfMapSize.x; x++)
+            for (int y = -halfMapSize.y; y < halfMapSize.y; y++)
+                tiles.Add(new Vector2Int(x, y));
+
+        tiles.Sort((a, b) =>
+        {
+            int da = a.x * a.x + a.y * a.y;
+            int db = b.x * b.x + b.y * b.y;
+            return da.CompareTo(db);          // inner-first, outer-last
+        });
+
+        int noResSq = noResourceZoneSize * noResourceZoneSize;
+
+        // 4. Apply existing prefab-matching logic in the new order
+        foreach (var pos in tiles)
+        {
+            int x = pos.x;
+            int y = pos.y;
+
+            int distSq = x * x + y * y;
+            if (terrainMap[x, y] == voidUnitProperty)
+            {
+                resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false);
+                continue;       // water
+            }
+
+            if (distSq <= noResSq)
+            {
+                resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false);
+                continue;       // origin-spawn zone
+            }
+
+            var elevation = elevationMap.RawMap[x, y];
+            var moisture = moistureMap.RawMap[x, y];
+            var resource = resourceMap.RawMap[x, y];
+
+            bool matched = false;
+
+            foreach (var property in resourceProperties)
+            {
+                if (!property.Match(elevation, moisture, resource, out var prefab, out var maxCount))
+                    continue;
+
+                if (maxCount > 0 &&
+                    prefabCount.TryGetValue(prefab, out int cnt) &&
+                    cnt >= maxCount)
+                {
+                    var fallback = property.GetNotLimitedPrefab();
+                    resourceStatusMap[x, y] = new ObservablePrefabStatus(fallback, fallback != null);
+                }
+                else
+                {
+                    resourceStatusMap[x, y] = new ObservablePrefabStatus(prefab, true);
+                    prefabCount[prefab] = prefabCount.TryGetValue(prefab, out int c) ? c + 1 : 1;
+
+                    if (maxCount > 0) Debug.Log($" Spawning resource {prefab.name} at ({x}, {y}), count: {prefabCount[prefab]}");
+                }
+
+                matched = true;
+                break;
+            }
+
+            if (!matched)
+                resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false);
+        }
+
+        // 5. Optional: log counts
+        if (showDebugs)
+            foreach (var kvp in prefabCount)
+                Debug.Log($"Resource {kvp.Key.name} spawned {kvp.Value} times.");
+    }
+
+
+    /*private void GenerateResources()
+    {
         resourceStatusMap = new Offset2DArray<ObservablePrefabStatus>(-trueHalfMapSize.x, trueHalfMapSize.x, -trueHalfMapSize.y, trueHalfMapSize.y);
-        var prefabLength = resourcePrefabs.Length;
 
         for (int x = -trueHalfMapSize.x; x < trueHalfMapSize.x + 1; x++)
         {
@@ -382,21 +453,80 @@ public class WorldGenerator : NetworkBehaviour
                 {
                     var dx = x - HighestElevationPoint.x;
                     var dy = y - HighestElevationPoint.y;
-                    if (terrainMap[x, y] != voidUnitProperty                                        // No resources in water
-                        && resourceMap.RawMap[x, y] >= 0.99f                                        // Resource threshold
-                        && terrainMap[x, y].Elevation.min > FloodManager.Main.CurrentSafeLevel      // Not flooded
-                        && dx * dx + dy * dy > noResourceZoneSize * noResourceZoneSize)             // Outside of no resource zone (around player spawn point)
+                    if (terrainMap[x, y] != voidUnitProperty                            // No resources in water
+                        && dx * dx + dy * dy > noResourceZoneSize * noResourceZoneSize) // Outside of no resource zone (around player spawn point)
                     {
-                        resourceStatusMap[x, y] = new ObservablePrefabStatus(resourcePrefabs.GetRandomElement(), true);
+                        var elevation = elevationMap.RawMap[x, y];
+                        var moisture = moistureMap.RawMap[x, y];
+                        var resource = resourceMap.RawMap[x, y];
+
+                        var matched = false;
+                        foreach (var property in resourceProperties)
+                        {
+                            if (property.Match(elevation, moisture, resource, out var prefab, out var maxCount))
+                            {
+                                if (maxCount > 0)
+                                {
+                                    // If the prefab has maxCount > 0, we need to track how many times it has been spawned
+                                    if (prefabCount.ContainsKey(prefab))
+                                    {
+                                        if (prefabCount[prefab] >= maxCount)
+                                        {
+                                            // If the prefab count exceeds maxCount, we need to fallback to a different prefab
+                                            var fallbackPrefab = property.GetNot(prefab);
+                                            if (fallbackPrefab != null)
+                                                resourceStatusMap[x, y] = new ObservablePrefabStatus(fallbackPrefab, true); // Fallback                                            
+                                            else
+                                                resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false); // No resource, this should not happen 
+                                        }
+                                        else
+                                        {
+                                            // If the prefab count is within the limit, we can spawn it
+                                            resourceStatusMap[x, y] = new ObservablePrefabStatus(prefab, true);
+                                            prefabCount[prefab]++;  // Increment count
+                                            Debug.Log($" Spawning resource {prefab.name} at ({x}, {y}), count: {prefabCount[prefab]}");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // If the prefab is not in the count dictionary, we can spawn it
+                                        resourceStatusMap[x, y] = new ObservablePrefabStatus(prefab, true);
+                                        prefabCount[prefab] = 1; // Initialize count
+                                        Debug.Log($" Spawning resource {prefab.name} at ({x}, {y}), count: {prefabCount[prefab]}");
+                                    }
+                                }
+                                else
+                                {
+                                    // If the prefab has maxCount == 0, we can spawn it without tracking count
+                                    resourceStatusMap[x, y] = new ObservablePrefabStatus(prefab, true);
+                                    if (prefabCount.ContainsKey(prefab))
+                                        prefabCount[prefab]++;
+                                    else
+                                        prefabCount[prefab] = 1; // Initialize count
+                                }
+                                matched = true; // We found a matching property
+                                continue;
+                            }
+                        }
+
+                        // If no property matched, we set it to no resource
+                        if (!matched) resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false); // No resource
                     }
                     else
                     {
                         resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false); // No resource                    
                     }
+
+                    Debug.Assert(resourceStatusMap[x, y] != null, $"Missing assignment at {x}, {y}");
                 }
             }
         }
-    }
+
+        foreach (var prefab in prefabCount.Keys)
+        {
+            Debug.Log($"Resource {prefab.name} has been spawned {prefabCount[prefab]} times.");
+        }
+    }*/
     #endregion
 
     #region Generate Folliage
@@ -446,12 +576,18 @@ public class WorldGenerator : NetworkBehaviour
 
     #region World Building
     private Vector2 closetChunkPosition_cached = Vector2.one;
+    [SerializeField]
     private bool isGenerating = false;
     public bool IsGenerating => isGenerating;
     private Vector2 cached_position;
     private float traveledDistance = 0;
 
-    public IEnumerator BuildWorld(Vector2 position)
+    private Coroutine buildTerrainCoroutine;
+    private Coroutine removeTerrainCoroutine;
+
+    private readonly Dictionary<Vector2Int, TileData> tiles = new Dictionary<Vector2Int, TileData>();
+
+    public void BuildWorld(Vector2 position)
     {
         // Update the cached position
         if (cached_position != position)
@@ -474,125 +610,155 @@ public class WorldGenerator : NetworkBehaviour
         // Update the audio elevation for biome music context switcher
         AudioManager.Main.OnElevationUpdated(elevation);
 
-        // Build the terrain at the snapped position
-        yield return BuildTerrain(position);
+        // If BuildTerrainCoroutine not started, start it
+        if (buildTerrainCoroutine == null) buildTerrainCoroutine = StartCoroutine(BuildTerrain());
     }
 
-    public IEnumerator BuildTerrain(Vector2 position)
+    public IEnumerator BuildTerrain()
     {
         // Assume the position has been snapped in BuildWorld
         // position = position.SnapToGrid();
 
-        var closetChunkPosition = position.SnapToGrid(chunkSize, true);
-        if (closetChunkPosition_cached != closetChunkPosition)
-            closetChunkPosition_cached = closetChunkPosition;
-        else
-            yield break;
+        while (true)
+        {
+            yield return null;
+            var closetChunkPosition = cached_position.SnapToGrid(chunkSize, true).ToInt();
+            if (closetChunkPosition_cached != closetChunkPosition)
+            {
+                closetChunkPosition_cached = closetChunkPosition;
+            }
+            else
+            {
+                continue; // If the position has not changed, skip the generation
+            }
 
-        if (isGenerating) yield break;
-        isGenerating = true;
+            if (isGenerating) continue; // If already generating, skip the generation
+            isGenerating = true;
 
-        yield return BuildChunkGrid(closetChunkPosition);
+            GetActiveArea(closetChunkPosition, out int xMin, out int xMax, out int yMin, out int yMax);
 
-        yield return RemoveExcessChunks(closetChunkPosition);
+            yield return BuildTerrainInternal(xMin, xMax, yMin, yMax, closetChunkPosition);
 
-        isGenerating = false;
+            isGenerating = false;
+
+            if (removeTerrainCoroutine != null) StopCoroutine(removeTerrainCoroutine);
+            removeTerrainCoroutine = StartCoroutine(RemoveTerrainCoroutine(xMin, xMax, yMin, yMax));
+        }
 
         //if (showDebug) Debug.Log("Child count = " + transform.childCount);
     }
 
-    private IEnumerator BuildChunkGrid(Vector2 closetChunkPosition)
+    /// <summary>
+    /// Pre-computes the inclusive bounds of the area that should stay loaded.
+    /// </summary>
+    private void GetActiveArea(Vector2Int closestChunkPos,
+                               out int xMin, out int xMax,
+                               out int yMin, out int yMax)
     {
-        //var coroutines = new List<Coroutine>();
-        for (int i = -(renderDistance + renderXOffset); i < renderDistance + 1 + renderXOffset; i++)
-        {
-            for (int j = -renderDistance + 1; j < renderDistance; j++)
-            {
-                var chunkPos = new Vector2(closetChunkPosition.x + i * chunkSize, closetChunkPosition.y + j * chunkSize);
+        xMin = closestChunkPos.x - (renderDistance + renderXOffset) * chunkSize;
+        xMax = closestChunkPos.x + (renderDistance + renderXOffset) * chunkSize;
+        yMin = closestChunkPos.y - renderDistance * chunkSize;
+        yMax = closestChunkPos.y + renderDistance * chunkSize;
+    }
 
-                if (!positionToChunk.ContainsKey(chunkPos))
-                {
-                    //coroutines.Add(StartCoroutine());
-                    yield return BuildChunk(chunkPos, chunkSize, positionToChunk);
-                }
+    private IEnumerator BuildTerrainInternal(int xMin, int xMax, int yMin, int yMax, Vector2Int center)
+    {
+        int step = 0;
+        int maxRadius = Mathf.Max(center.x - xMin,  // distance to each edge
+                                  xMax - center.x,
+                                  center.y - yMin,
+                                  yMax - center.y);
+
+        // r = 0 handles the centre tile; r > 0 walks the square "ring" at radius r
+        for (int r = 0; r <= maxRadius; r++)
+        {
+            int left = center.x - r;
+            int right = center.x + r;
+            int bottom = center.y - r;
+            int top = center.y + r;
+
+            // Top & bottom rows
+            for (int x = left; x <= right; x++)
+            {
+                var built = false;
+                built = TryBuild(new Vector2Int(x, bottom), xMin, xMax, yMin, yMax);            // bottom
+                if (r > 0) built = TryBuild(new Vector2Int(x, top), xMin, xMax, yMin, yMax);    // top (skip duplicate when r == 0)
+                if (built && (showStep || (++step >= 10))) { step = 0; yield return null; }
+            }
+
+            // Left & right columns (excluding corners already done)
+            for (int y = bottom + 1; y <= top - 1; y++)
+            {
+                var built = false;
+                TryBuild(new Vector2Int(left, y), xMin, xMax, yMin, yMax);              // left
+                if (r > 0) TryBuild(new Vector2Int(right, y), xMin, xMax, yMin, yMax);  // right
+                if (built && (showStep || (++step >= 10))) { step = 0; yield return null; }
             }
         }
-
-        /*foreach (var coroutine in coroutines)
-        {
-            yield return coroutine;
-        }*/
     }
 
-    private IEnumerator BuildChunk(Vector2 position, int chunkSize, Dictionary<Vector2, Chunk> positionToChunk)
+    private bool TryBuild(Vector2Int pos, int xMin, int xMax, int yMin, int yMax)
     {
-        var chunkObj = new GameObject("Chunk");
-        chunkObj.transform.parent = transform;
-        chunkObj.transform.position = position;
-        Chunk chunk = new Chunk(position, chunkSize, chunkObj.transform);
-        int halfChunkSize = chunkSize / 2;
-        int lowerLimit = -halfChunkSize;
-        int upperLimit = (chunkSize % 2 == 0) ? halfChunkSize : halfChunkSize + 1;
+        // Outside the allowed rectangle?  Bail early.
+        if (pos.x < xMin || pos.x > xMax || pos.y < yMin || pos.y > yMax)
+            return false;
 
-        for (int i = lowerLimit; i < upperLimit; i++)
+        // Already built?
+        if (tiles.ContainsKey(pos))
+            return false;
+
+        // Terrain
+        var property = GetMappedProperty(pos.x, pos.y);
+        var terrainGO = SpawnTerrainUnit(pos, property);
+
+        // Foliage (optional)
+        GameObject foliageGO = null;
+        folliageMap.GetElementSafe(pos.x, pos.y, out var validFoliage);
+        if (canSpawnFoliage && validFoliage &&
+            !invalidFoliagePositionHashSet.Contains(pos) &&
+            resourceMap.RawMap[pos.x, pos.y] < 0.99f)
         {
-            for (int j = lowerLimit; j < upperLimit; j++)
-            {
-                var terrainPos = new Vector2Int((int)position.x + i, (int)position.y + j);
-                var property = GetMappedProperty(terrainPos.x, terrainPos.y);
-                var terrainUnit = SpawnTerrainUnit(terrainPos, property);
-                chunk.terrainUnits.Add(terrainUnit);
-
-                // Spawn Foliage
-                folliageMap.GetElementSafe(terrainPos.x, terrainPos.y, out var validFoliagePosition);
-                if (canSpawnFoliage && validFoliagePosition && !invalidFoliagePositionHashSet.Contains(terrainPos) && resourceMap.RawMap[terrainPos.x, terrainPos.y] < 0.99f)
-                    chunk.foliages.Add(SpawnFoliage(terrainPos, foliagePrefabs.GetRandomElement()));
-
-
-                if (showStep) yield return null;
-            }
+            foliageGO = SpawnFoliage(pos, foliagePrefabs.GetRandomElement());
         }
 
-        positionToChunk.Add(position, chunk);
-        yield return null;
+        // Commit to the dictionary
+        tiles[pos] = new TileData { terrain = terrainGO, foliage = foliageGO };
+        return true;
     }
 
-    private IEnumerator RemoveExcessChunks(Vector2 closetChunkPosition)
+    private readonly List<Vector2Int> keysBuffer = new List<Vector2Int>();
+    private IEnumerator RemoveTerrainCoroutine(int xMin, int xMax, int yMin, int yMax)
     {
-        List<Vector2> positionsToRemove = positionToChunk.Keys.Where(pos =>
-        Mathf.Abs(pos.x - closetChunkPosition.x) > (renderDistance + renderXOffset + 1) * chunkSize ||
-        Mathf.Abs(pos.y - closetChunkPosition.y) > (renderDistance + 1) * chunkSize).ToList();
-
-        // Remove the identified chunks
-        foreach (var pos in positionsToRemove)
+        int step = 0;
+        // Collect keys that fall outside the active rectangle
+        keysBuffer.Clear();
+        foreach (var kv in tiles)
         {
-            var chunk = positionToChunk[pos];
-            yield return RemoveChunk(chunk);
+            var p = kv.Key;
+            if (p.x < xMin || p.x > xMax || p.y < yMin || p.y > yMax)
+                keysBuffer.Add(p);
+        }
+
+        // Despawn & delete
+        for (int i = 0; i < keysBuffer.Count; i++)
+        {
+            var key = keysBuffer[i];
+            var tile = tiles[key];
+
+            if (tile.terrain) LocalObjectPooling.Main.Despawn(tile.terrain, true);
+            if (tile.foliage) LocalObjectPooling.Main.Despawn(tile.foliage, true);
+
+            tiles.Remove(key);
+
+            // showStep: Yield every frame may slow down generation, but useful for debugging
+            // normal: Yield every 10 iterations to prevent freezing the main thread
+            if (showStep || (++step >= tileStep)) { step = 0; yield return null; }
         }
     }
+    #endregion
 
-    private IEnumerator RemoveChunk(Chunk chunk)
-    {
-        foreach (var terrainUnit in chunk.terrainUnits)
-        {
-            LocalObjectPooling.Main.Despawn(terrainUnit);
-            if (showStep) yield return null;
-        }
-        chunk.terrainUnits.Clear();
-
-        foreach (var folliage in chunk.foliages)
-        {
-            LocalObjectPooling.Main.Despawn(folliage);
-            if (showStep) yield return null;
-        }
-
-        positionToChunk.Remove(chunk.position);
-        Destroy(chunk.transform.gameObject);
-        yield return null;
-    }
-
+    #region Resource Building
     private Dictionary<Vector2Int, ObservablePrefabStatus> spawnedResources = new Dictionary<Vector2Int, ObservablePrefabStatus>();
-
     public void BuildResourceOnServer(Vector2 position)
     {
         if (!IsServer) return;
@@ -629,7 +795,6 @@ public class WorldGenerator : NetworkBehaviour
             }
         }
     }
-
     private IEnumerator UnloadResourceCoroutine()
     {
         while (true)
@@ -676,7 +841,9 @@ public class WorldGenerator : NetworkBehaviour
             }
         }
     }
+    #endregion
 
+    #region Spawn Methods
     private GameObject SpawnTerrainUnit(Vector2 position, TerrainUnitProperty property)
     {
         var terrainObj = LocalObjectPooling.Main.Spawn(terrainUnitPrefab);
@@ -707,7 +874,6 @@ public class WorldGenerator : NetworkBehaviour
 
         return resObj;
     }
-
     #endregion
 
     #region Utility
@@ -757,17 +923,20 @@ public class WorldGenerator : NetworkBehaviour
 
     public void RemoveFoliage(Vector2 position)
     {
-        var chunkPosition = position.SnapToGrid(chunkSize, true);
-        if (positionToChunk.ContainsKey(chunkPosition))
+        // Snap position to cell position
+        var positionInt = position.SnapToGrid().ToInt();
+
+        // Tile look up
+        if (!tiles.TryGetValue(positionInt, out var tile)) return;
+
+        // Verify & despawn
+        if (tile.foliage != null)
         {
-            var chunk = positionToChunk[chunkPosition];
-            position -= TransformUtility.HALF_UNIT_Y_V2;
-            var folliage = chunk.foliages.Find(f => (Vector2)f.transform.position == position);
-            if (folliage != null)
-            {
-                chunk.foliages.Remove(folliage);
-                LocalObjectPooling.Main.Despawn(folliage);
-            }
+            LocalObjectPooling.Main.Despawn(tile.foliage);
+            tile.foliage = null;                    // clear the reference
+
+            // TilePair is a *struct*, so write it back
+            tiles[positionInt] = tile;
         }
     }
 
@@ -784,16 +953,6 @@ public class WorldGenerator : NetworkBehaviour
     private void OnDrawGizmos()
     {
         if (!showGizmos) return;
-
-        Gizmos.color = Color.blue;
-
-        foreach (var chunk in positionToChunk.Values)
-        {
-            if (chunk == null) continue;
-            Gizmos.DrawWireCube(chunk.position, Vector3.one * chunk.size);
-            Gizmos.DrawSphere(chunk.position, 0.1f);
-            //Handles.Label(chunk.position + Vector2.one * 0.1f, $"({chunk.position.x},{chunk.position.y})");
-        }
 
         if (chihuahuaRescuePositions != null && chihuahuaRescuePositions.Count > 0)
         {

@@ -1,11 +1,10 @@
 /*
  * Created By:      Khoa Nguyen
  * Date Created:    --/--/----
- * Last Modified:   07/02/2025 (Khoa)
+ * Last Modified:   07/16/2025 (Khoa)
  * Notes:           <write here>
 */
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +27,7 @@ public class SpriteBlender : MonoBehaviour
     [Header("Settings")]
     [SerializeField]
     private BlendRules rules;
+    public BlendRules Rules => rules;
     [SerializeField]
     private Vector2 offset;
     [SerializeField]
@@ -44,10 +44,9 @@ public class SpriteBlender : MonoBehaviour
     private bool showDebugs;
 
     private Vector2 position;
-
-    public BlendRules Rules => rules;
-
+    private bool firstBlend = true;
     private List<Vector2> scannedPosition = new List<Vector2>();
+    private float timeSinceLastBlend;
 
     private void Awake()
     {
@@ -62,9 +61,16 @@ public class SpriteBlender : MonoBehaviour
 
     public void Blend(bool reblendNeighbor = false)
     {
+        // Extra logging. TODO: Remove in production
+        if (timeSinceLastBlend != 0 && Time.time - timeSinceLastBlend < 0.1f)
+        {
+            Debug.LogWarning($"Blend called too frequently: {transform.root.name}/{name}", this);
+        }
+        timeSinceLastBlend = Time.time;
+
+        // Initialize variables
         IBool[] neighbors = new IBool[9];
         SpriteBlender[] neighborBlenders = new SpriteBlender[9];
-
         position = (Vector2)transform.position + offset;
 
         if (showGizmos) scannedPosition.Clear();
@@ -103,51 +109,41 @@ public class SpriteBlender : MonoBehaviour
         // Debug logging (optional)
         if (showDebugs)
         {
-            var builder = position + "\nNeighbor Actual:\n";
-            for (int i = 0; i < neighbors.Length; i++)
-            {
-                builder += neighbors[i].ToSymbol(true) + " ";
-                if (i == 2 || i == 5) builder += "\n";
-            }
-            Debug.Log(builder);
+            Debug.Log(PrintNeighbor(neighbors));
         }
 
         // Match sprite
-        spriteRenderer.sprite = rules.GetMatchingSprite(neighbors);
-
-        if (spriteRenderer.sprite == null && showDebugs)
-            Debug.Log("Cannot find matching sprite", this);
+        var sprite_cached = spriteRenderer.sprite;
+        var sprite = rules.GetMatchingSprite(neighbors);
+        if (sprite == null) Debug.LogError("Cannot find matching sprite:\n" + PrintNeighbor(neighbors), this);
+        spriteRenderer.sprite = sprite;
 
         // Reblend neighbors if needed
         if (reblendNeighbor)
         {
             if (showDebugs) Debug.Log("Reblending neighbors", this);
-            StartCoroutine(DelayBlendNeighbor(neighborBlenders));
+            foreach (var neighbor in neighborBlenders)
+            {
+                if (neighbor != null) neighbor.RequestReblend();
+            }
         }
 
         // Collider reshaping
-        if (movementBlocker && spriteRenderer.sprite)
+        if (movementBlocker && (sprite != sprite_cached || firstBlend))
         {
             if (showDebugs) Debug.Log("Reshaping collider", this);
-            ReshapeCollider();
+            ReshapeCollider(sprite);
         }
     }
 
-    private IEnumerator DelayBlendNeighbor(SpriteBlender[] neigborBlenders)
-    {
-        yield return null;
+    // Request a reblend of this sprite
+    // Sent to SpriteBlenderManager to handle blending in a single pass
+    public void RequestReblend() => SpriteBlenderManager.RequestBlend(this);
 
-        foreach (var neighbor in neigborBlenders)
-        {
-            if (neighbor != null) neighbor.Blend(false);
-        }
-    }
-
-    [ContextMenu("ReblendNeighbors")]
+    /*[ContextMenu("ReblendNeighbors")]
     public void ReblendNeighbors()
     {
-        SpriteBlender[] neigborBlenders = new SpriteBlender[9];
-
+        // Use when a structure get removed => Neighbors need to be reblended
         for (int i = 0; i < SCAN_POSITION.Length; i++)
         {
             if (i == 4) continue;
@@ -156,17 +152,66 @@ public class SpriteBlender : MonoBehaviour
             if (hit)
             {
                 var neighbor = hit.GetComponentInChildren<SpriteBlender>();
-                if (neighbor != null && neighbor.Rules == rules) neighbor.Blend();
+                if (neighbor != null && neighbor.Rules == rules) neighbor.Blend(false);
             }
+        }
+    }*/
+
+
+    private float timeSincelastReblend = 0f;
+    [ContextMenu("ReblendNeighbors")]
+    public void ReblendNeighbors()
+    {
+        if (timeSincelastReblend != 0 && Time.time - timeSincelastReblend < 0.1f)
+        {
+            Debug.LogWarning($"ReblendNeighbors called too frequently: {transform.root.name}/{name}", this);
+        }
+
+        // Centre of this tile in world space
+        position = (Vector2)transform.position + offset;
+
+        // Grab every collider in a 3×3 neighbourhood with one call
+        const float radius = 1.5f;                           // covers ±1 tile at default scale
+        Collider2D[] hits = Physics2D.OverlapCircleAll(position, radius, blendLayer);
+
+        foreach (var hit in hits)
+        {
+            // Skip self and anything that is not a SpriteBlender of the same rule set
+            var neighbor = hit.GetComponentInChildren<SpriteBlender>();
+            if (neighbor == null || neighbor == this || neighbor.Rules != rules) continue;
+
+            // Filter out colliders that are outside the 3×3 grid (OverlapCircle can pick up extras)
+            Vector2 delta = (Vector2)neighbor.transform.position + neighbor.offset - position;
+            if (Mathf.Abs(delta.x) > 1 || Mathf.Abs(delta.y) > 1) continue;
+
+            neighbor.RequestReblend();
         }
     }
 
+
+    private static readonly Dictionary<Sprite, Vector2[]> shapeCache = new Dictionary<Sprite, Vector2[]>();
+    private List<Vector2> physicsShape = new List<Vector2>();
     [ContextMenu("Reshape Collider")]
-    private void ReshapeCollider()
+    private void ReshapeCollider(Sprite sprite)
     {
-        List<Vector2> physicsShape = new List<Vector2>();
-        spriteRenderer.sprite.GetPhysicsShape(0, physicsShape);
-        movementBlocker.SetPath(0, physicsShape);
+        if (!shapeCache.TryGetValue(sprite, out var verts))
+        {
+            physicsShape.Clear();
+            sprite.GetPhysicsShape(0, physicsShape);
+            verts = physicsShape.ToArray();
+        }
+        movementBlocker.SetPath(0, verts);
+    }
+
+    private string PrintNeighbor(IBool[] neighbors)
+    {
+        var builder = position + "\nNeighbor Actual:\n";
+        for (int i = 0; i < neighbors.Length; i++)
+        {
+            builder += neighbors[i].ToSymbol(true) + " ";
+            if (i == 2 || i == 5) builder += "\n";
+        }
+        return builder;
     }
 
     private void OnDrawGizmos()

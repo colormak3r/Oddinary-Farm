@@ -18,18 +18,26 @@ MonoBehaviour:
   foodColor: 4
   stages:
   - sprite: {fileID: -1708265602, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
-    duration: 2
+    duration: 1
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: 1188134214, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
-    duration: 2
+    duration: 1
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: -380925659, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
-    duration: 2
+    duration: 1
     isHarvestStage: 0
     stageIncrement: 1
   - sprite: {fileID: 1012679333, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
+    duration: 1
+    isHarvestStage: 0
+    stageIncrement: 1
+  - sprite: {fileID: 393756610, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
+    duration: 2
+    isHarvestStage: 0
+    stageIncrement: 1
+  - sprite: {fileID: 1224036705, guid: 15671ad695c922a44a510af8a3189a2b, type: 3}
     duration: 2
     isHarvestStage: 1
     stageIncrement: -1

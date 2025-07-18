@@ -62,6 +62,7 @@ public class HungerStimulus : NetworkBehaviour
 
     private float nextHunger;
     private float nextDeath;
+    private float nextScan;
     const float StallDelay = 0.1f;
     private float stallStart = -1f;
 
@@ -105,15 +106,17 @@ public class HungerStimulus : NetworkBehaviour
             GetComponent<EntityStatus>().TakeDamage(100, DamageType.Blunt, Hostility.Absolute, transform);
         }
 
-        if (isHungry && targetFood == null)
+        if (isHungry && targetFood == null && Time.time > nextScan)
         {
+            nextScan = Time.time + 1f;
             targetFood = ScanForFood();
         }
 
         if (targetFood != null && targetFood.Transform != null)
         {
             targetFoodTransform = targetFood.Transform;
-            if (Vector2.Distance(transform.position, targetFood.Transform.position) < foodConsumptionRadius)
+            var direction = transform.position - targetFood.Transform.position;
+            if (direction.sqrMagnitude < foodConsumptionRadius * foodConsumptionRadius)
             {
                 if (targetFood.Consume())
                 {
@@ -156,13 +159,22 @@ public class HungerStimulus : NetworkBehaviour
         {
             if (hit.TryGetComponent(out IConsummable consummable))
             {
-                if (consummable.FoodType.HasFlag(foodType) && consummable.FoodColor.HasFlag(foodColor) && consummable.CanBeConsumed)
+                if (consummable.Transform != null && consummable.FoodType.HasFlag(foodType) && consummable.FoodColor.HasFlag(foodColor) && consummable.CanBeConsumed)
                 {
-                    if (showDebugs) Debug.Log($"Found food: {consummable.Transform.name}", this);
-                    return consummable;
+                    var raycast = Physics2D.Raycast(transform.position, consummable.Transform.position - transform.position, foodDetectionRadius, LayerManager.Main.MovementBlockerLayer);
+                    if (raycast && (raycast.transform.position - transform.position).sqrMagnitude < (consummable.Transform.position - transform.position).sqrMagnitude)
+                    {
+                        if (showDebugs) Debug.Log($"Food {consummable.Transform.name} is obstructed by {raycast.transform.name}", this);
+                    }
+                    else
+                    {
+                        if (showDebugs) Debug.Log($"Found food: {consummable.Transform.name}", this);
+                        return consummable;
+                    }
                 }
             }
         }
+
         return null;
     }
 

@@ -464,6 +464,30 @@ public class ItemSystem : NetworkBehaviour
 
     #endregion
 
+    #region Shovel/Digging
+
+    public void Dig(Vector2 position)
+    {
+        DigRpc(position);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void DigRpc(Vector2 position)
+    {
+        var diggableCollider = Physics2D.OverlapPoint(position, LayerManager.Main.DiggableLayer);
+        if (diggableCollider && diggableCollider.TryGetComponent<IDiggable>(out var diggable))
+        {
+            diggable.Dig(transform);
+            if (showDebugs) Debug.Log($"Digging at {position} with {diggableCollider.gameObject.name}");
+        }
+        else
+        {
+            if (showDebugs) Debug.LogWarning($"No diggable object found at {position}");
+        }
+    }
+
+    #endregion
+
     #region Asset Spawn Preset
 
     private void RecordPrefabSpawn(GameObject prefab, Vector2 position)

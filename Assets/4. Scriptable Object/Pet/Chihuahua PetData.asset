@@ -14,4 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   petType: 0
   petIcon: {fileID: 21300000, guid: aab5a10cc3885ab4ca77b6de5218c3e6, type: 3}
+  collectedSprites:
+  - {fileID: -980753077341434885, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
+  - {fileID: 3386365879141071930, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
+  - {fileID: -1177086538807243239, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
+  - {fileID: 7892223166591955376, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
+  - {fileID: 6107963908194466946, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
+  hiddenSprites:
+  - {fileID: -6268708466229976089, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
+  - {fileID: -5907217071822564664, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
+  - {fileID: -8965756544613429038, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
+  - {fileID: -5742126489071540409, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
+  - {fileID: 4104011631525205410, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
   petPrefab: {fileID: 875170009560843256, guid: db68934e500d2cb489bcaecea9f0d8be, type: 3}
