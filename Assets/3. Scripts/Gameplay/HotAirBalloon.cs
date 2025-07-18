@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class HotAirBalloon : Structure, IInteractable
 {
@@ -39,7 +40,7 @@ public class HotAirBalloon : Structure, IInteractable
 
         // Set mount values to false on init
         mountInteraction.SetCanMount(false);
-        mountInteraction.OnMount += TakeOff;
+        mountInteraction.OnMount += TakeOff;        // Take off if a player mounts
         isMounted = false;
 
         mountController.CanMove = false;
@@ -72,16 +73,20 @@ public class HotAirBalloon : Structure, IInteractable
 
     private void TakeOff(Transform source)
     {
+        Debug.Log("Attempting take off...");
+
         if (!CanTakeOff.Value)      // Take off only if conditions are met
             return;
 
         Debug.Log("Hot Air Balloon has taken off.");
 
-        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-
-        // Enable movement and start movement
-        mountController.CanMove = true;
+        mountInteraction.SetCanMount(false);    // Player cannot dismount from balloon
+        mountController.CanMove = true;         // Enable movement and start movement
         mountController.Move(Vector2.zero);
+
+        GetComponent<Collider2D>().enabled = false;
+        GetComponent<SelectorModifier>().SetCanBeSelected(false);
+        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
 
         // Change sorting order
         var sortingGroups = GetComponentsInChildren<SortingGroup>();
@@ -97,30 +102,47 @@ public class HotAirBalloon : Structure, IInteractable
         {
             collider.enabled = false;
         }
-
-        // Move the hot air balloon
-        if (IsOwner)
-        {
-            // TODO: Take Off From Mount Controller
-            mountInteraction.SetCanMount(false);    // Player cannot dismount from balloon
-        }
     }
 
     private void HandleOnHourChanged(int currentHour)
     {
+        Debug.Log($"Handling Hour Change: Date = {TimeManager.Main.CurrentDate}, Hour = {currentHour}");
+
         if (CanTakeOff.Value)
             return;
 
-        if (currentHour == takeOffHour)
+        if (!IsServer)
+            return;
+
+        if (CheckTakeOff(currentHour))
         {
-            if (TimeManager.Main.CurrentDate == takeOffDate)
+            Debug.Log("Player can now take off");
+
+            CanTakeOff.Value = true;
+
+            if (isMounted)          // Take off if a player is already mounted
+                TakeOff(null);
+        }
+        else
+        {
+            Debug.Log("Player can not take off yet");
+        }
+    }
+
+    private bool CheckTakeOff(int currentHour)
+    {
+        if (TimeManager.Main.CurrentDate > takeOffDate)
+        {
+            return true;
+        }
+        else if (TimeManager.Main.CurrentDate >= takeOffDate)
+        {
+            if (currentHour >= takeOffHour)
             {
-                if (IsServer)
-                {
-                    CanTakeOff.Value = true;
-                }
+                return true;
             }
         }
+        return false;
     }
 
     private void HandleCurrentStageChanged(int previousValue, int newValue)
