@@ -833,7 +833,7 @@ public class WorldGenerator : NetworkBehaviour
             if (showDebugs) Debug.Log($"Unloading {positionsToRemove.Count} objects");
             foreach (var item in positionsToRemove)
             {
-                if (spawnedResources[item].isSpawned)
+                if (spawnedResources[item] != null && spawnedResources[item].isSpawned && spawnedResources[item].controller != null)
                 {
                     spawnedResources[item].controller.UnloadOnServer();
                     spawnedResources.Remove(item);

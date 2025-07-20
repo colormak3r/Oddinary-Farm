@@ -38,7 +38,7 @@ MonoBehaviour:
     m_Bits: 0
   invalidLayers:
     serializedVersion: 2
-    m_Bits: 268436480
+    m_Bits: 1024
   previewIconSprite: {fileID: 609075896, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
   previewIconOffset: {x: 0, y: 0}
   previewValidColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
