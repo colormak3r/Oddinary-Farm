@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/18/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using ColorMak3r.Utility;
 using System;
 using System.Collections;
@@ -18,6 +25,11 @@ public class ItemSystem : NetworkBehaviour
     private GameObject muzzleFlash;
     [SerializeField]
     private Transform recoilTransform;
+    [SerializeField]
+    private Transform graphicTransform;
+    [SerializeField]
+    private GameObject meleeAnimationObject;
+    private Animator meleeAnimationAnimator;
 
     [Header("Asset Spawn Preset")]
     [SerializeField]
@@ -32,6 +44,8 @@ public class ItemSystem : NetworkBehaviour
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs = false;
+    [SerializeField]
+    private bool showGizmos = false;
 
     private Vector2 ObjectPosition => (Vector2)transform.position + offset;
 
@@ -46,6 +60,10 @@ public class ItemSystem : NetworkBehaviour
         entityStatus = GetComponent<EntityStatus>();
         lassoController = GetComponent<LassoController>();
         animator = GetComponent<Animator>();
+        if (meleeAnimationObject)
+            meleeAnimationAnimator = meleeAnimationObject.GetComponent<Animator>();
+        else
+            Debug.LogWarning($"Melee Animation Object is not set, melee animations of {name} will not play.", this);
 
         if (recoilTransform) recoilDefaultPosition = recoilTransform.localPosition;
     }
@@ -83,9 +101,24 @@ public class ItemSystem : NetworkBehaviour
     }
     #endregion
 
+    float debug_radius;
+    Vector2 debug_meleePosition;
     #region Melee Weapon
     public void DealDamage(Vector2 position, MeleeWeaponProperty meleeWeaponProperty)
     {
+        // Play the melee animation on all clients
+        var direction = (position - ObjectPosition);
+        float distance = direction.magnitude;
+        if (distance > meleeWeaponProperty.Range)
+            direction = direction.normalized * meleeWeaponProperty.Range;
+        else
+            direction = direction.normalized * distance;
+        var clampedPosition = ObjectPosition + direction;
+        debug_meleePosition = clampedPosition;
+        debug_radius = meleeWeaponProperty.Radius;
+        PlayMeleeAnimationRpc(position, meleeWeaponProperty.Range, meleeWeaponProperty.Radius);
+
+        // Check if the melee weapon has a valid radius and range
         var hits = Physics2D.CircleCastAll(transform.position, meleeWeaponProperty.Radius, position - (Vector2)transform.position, meleeWeaponProperty.Range, meleeWeaponProperty.DamageableLayer);
         if (hits.Length > 0)
         {
@@ -121,11 +154,37 @@ public class ItemSystem : NetworkBehaviour
                         }
                     }
                 }
-
-
             }
         }
     }
+
+    [Rpc(SendTo.Everyone)]
+    private void PlayMeleeAnimationRpc(Vector2 position, float maxRange, float radius)
+    {
+        if (meleeAnimationObject != null && meleeAnimationAnimator != null)
+        {
+            var direction = (position - ObjectPosition);
+
+            // Clamp the direction to the max range
+            float distance = direction.magnitude;
+            if (distance > maxRange)
+                direction = direction.normalized * maxRange;
+            else
+                direction = direction.normalized * distance;
+            var clampedPosition = ObjectPosition + direction;
+
+            // Set the angle of the melee animation object
+            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            var org = angle;
+            if (graphicTransform.localScale.x < 0) angle -= 180f;
+
+            meleeAnimationObject.transform.localScale = new Vector2(radius, radius);
+            meleeAnimationObject.transform.rotation = Quaternion.Euler(0, 0, angle);
+            meleeAnimationObject.transform.position = clampedPosition;
+            meleeAnimationAnimator.SetTrigger("Play");
+        }
+    }
+
     #endregion
 
     #region Ranged Weapon
@@ -624,5 +683,17 @@ public class ItemSystem : NetworkBehaviour
     {
         if (muzzleTransform) muzzleTransform.localPosition = offset;
         if (muzzleFlash) muzzleFlash.transform.localPosition = offset + new Vector2(.3125f, 0);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (showGizmos)
+        {
+            if (debug_meleePosition != Vector2.zero)
+            {
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawWireSphere(debug_meleePosition, debug_radius);
+            }
+        }
     }
 }

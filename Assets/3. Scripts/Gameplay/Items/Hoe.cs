@@ -82,7 +82,6 @@ public class Hoe : Tool
 
     public override void OnSecondaryAction(Vector2 position)
     {
-        position = position.SnapToGrid();
         base.OnSecondaryAction(position);
         ItemSystem.RemoveFarmPlot(position);
         ItemSystem.RemovePlant(position, transform.root.gameObject);

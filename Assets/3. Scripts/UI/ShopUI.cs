@@ -132,8 +132,6 @@ public class ShopUI : UIBehaviour
     private ItemProperty currentItemProperty;
     [SerializeField]
     private int currentItemIndex = -1;
-    [SerializeField]
-    private int currentMultiplier = 5;
 
     private PlayerInventory playerInventory;
     private ShopInventory shopInventory;
@@ -428,9 +426,6 @@ public class ShopUI : UIBehaviour
         currentItemProperty = itemProperty;
         currentShopButton = button;
         currentItemIndex = index;
-
-        // Set default multiplier to 5
-        currentMultiplier = 5;
 
         // Play Audio
         AudioManager.Main.PlayClickSound();
