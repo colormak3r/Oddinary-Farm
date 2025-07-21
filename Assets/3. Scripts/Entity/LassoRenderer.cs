@@ -1,5 +1,11 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/21/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class LassoRenderer : MonoBehaviour

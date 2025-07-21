@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/21/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections;
 using UnityEngine;
 
@@ -5,7 +12,7 @@ public class RangeIndicator : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField]
-    private bool showCircle = true;
+    private bool showRange = true;
     [SerializeField]
     private Transform circleTransform;
 
@@ -19,9 +26,34 @@ public class RangeIndicator : MonoBehaviour
         spriteRenderer.color = Color.clear;
     }
 
+    private void Start()
+    {
+        if (GameplayUI.Main == null)
+        {
+            Debug.LogError("GameplayUI.Main is not initialized. Ensure GameplayUI is loaded before RangeIndicator.");
+            return;
+        }
+
+        showRange = GameplayUI.Main.ShowItemRange; // Get the initial value from GameplayUI
+        GameplayUI.Main.OnShowItemRangeChanged += SetShowRange;
+    }
+
+    private void OnDestroy()
+    {
+        if (GameplayUI.Main != null)
+        {
+            GameplayUI.Main.OnShowItemRangeChanged -= SetShowRange;
+        }
+    }
+
+    private void SetShowRange(bool showRange)
+    {
+        this.showRange = showRange;
+    }
+
     public void Show(float range, float tweenDuration = 1f, float showDuration = 1f)
     {
-        if (!showCircle) return;
+        if (!showRange) return;
         if (showCoroutine != null) StopCoroutine(showCoroutine);
         showCoroutine = StartCoroutine(ShowCoroutine(range, tweenDuration, showDuration));
     }

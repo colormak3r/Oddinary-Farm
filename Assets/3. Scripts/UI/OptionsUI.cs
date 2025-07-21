@@ -62,6 +62,13 @@ public class OptionsUI : UIBehaviour
         AudioManager.Main.PlayClickSound();
     }
 
+    public void GameplayButtonClicked()
+    {
+        HideNoFade();
+        GameplayUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
+    }
+
     public void LeaveButtonClicked()
     {
         Hide();

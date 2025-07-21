@@ -909,6 +909,8 @@ MonoBehaviour:
   showDebugs: 0
   speedMultiplier: 1
   velocity: 0
+  CanBeKnockback:
+    m_InternalValue: 1
 --- !u!114 &5505243102094532865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1038,7 +1040,7 @@ MonoBehaviour:
   interactionOffset: {x: 0, y: 0.75, z: 0}
   interactableLayer:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 536871936
   showGizmos: 0
   cachedcolliders: []
 --- !u!114 &4905420985265829973
@@ -1328,6 +1330,7 @@ MonoBehaviour:
   targetTransform: {fileID: 940778661305221230}
   segmentCount: 20
   segmentLength: 0.1
+  simulationIterations: 50
   renderLine: 1
 --- !u!114 &3343459701264752313
 MonoBehaviour:
@@ -1346,6 +1349,7 @@ MonoBehaviour:
   targetTransform: {fileID: 0}
   segmentCount: 30
   segmentLength: 0.1
+  simulationIterations: 50
   renderLine: 1
 --- !u!1 &6026101150664435241
 GameObject:

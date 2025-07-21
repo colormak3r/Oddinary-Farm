@@ -5,8 +5,6 @@ using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
 
 public struct TileData          // one grid cell
 {
@@ -233,8 +231,7 @@ public class WorldGenerator : NetworkBehaviour
                 {
                     miniMapTexture.SetPixel(i + halfMapSize.x, j + halfMapSize.y, floodColor);
                     var position = new Vector2(i, j);
-                    InvalidateFolliageOnClient(position);
-                    RemoveFoliage(position);
+                    RemoveFoliageOnClient(position);
                     yield return null; // Yield to prevent freezing the main thread
                 }
             }
@@ -921,7 +918,7 @@ public class WorldGenerator : NetworkBehaviour
         invalidFoliagePositionHashSet.Add(position);
     }
 
-    public void RemoveFoliage(Vector2 position)
+    public void RemoveFoliageOnClient(Vector2 position)
     {
         // Snap position to cell position
         var positionInt = position.SnapToGrid().ToInt();
@@ -938,6 +935,9 @@ public class WorldGenerator : NetworkBehaviour
             // TilePair is a *struct*, so write it back
             tiles[positionInt] = tile;
         }
+
+        // Remove from invalid foliage positions
+        InvalidateFolliageOnClient(position);
     }
 
     public void SetCanSpawnResources(bool value)

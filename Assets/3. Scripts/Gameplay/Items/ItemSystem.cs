@@ -280,8 +280,7 @@ public class ItemSystem : NetworkBehaviour
                 Vector2 offset = new Vector2(x, y);
                 Vector2 gridPos = (position + offset).SnapToGrid();
 
-                WorldGenerator.Main.InvalidateFolliageOnClient(gridPos);
-                WorldGenerator.Main.RemoveFoliage(gridPos);
+                WorldGenerator.Main.RemoveFoliageOnClient(gridPos);
             }
         }
     }
