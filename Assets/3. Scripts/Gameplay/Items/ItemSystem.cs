@@ -146,7 +146,7 @@ public class ItemSystem : NetworkBehaviour
                     else
                     {
                         // Check if the object is already dead
-                        if (damageable.CurrentHealth == 0) continue;
+                        if (damageable.CurrentHealthValue == 0) continue;
 
                         if (collider.TryGetComponent<EntityMovement>(out var movement))
                         {
@@ -368,7 +368,7 @@ public class ItemSystem : NetworkBehaviour
 
             if (structureHit.TryGetComponent(out EntityStatus entityStatus))
             {
-                if (entityStatus.CurrentHealth == entityStatus.MaxHealth)
+                if (entityStatus.CurrentHealthValue == entityStatus.MaxHealth)
                 {
                     structure.RemoveStructure();
                 }

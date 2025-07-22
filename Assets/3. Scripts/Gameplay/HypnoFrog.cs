@@ -26,7 +26,8 @@ public class HypnoFrog : NetworkBehaviour, IInteractable
 
     public void Interact(Transform source)
     {
-
+        if (source.TryGetComponent(out PlayerStatus playerStatus) && playerStatus.CurrentCurse == PlayerCurse.None)
+            FrogUI.Main.Show();
     }
 
     public void InteractionEnd(Transform source)

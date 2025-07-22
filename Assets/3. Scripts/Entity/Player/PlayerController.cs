@@ -1,7 +1,7 @@
 /*
  * Created By:      Khoa Nguyen
  * Date Created:    --/--/----
- * Last Modified:   05/16/2025 (Khoa)
+ * Last Modified:   07/21/2025 (Khoa)
  * Notes:           <write here>
 */
 
@@ -69,11 +69,12 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     [SerializeField]
     private Vector2 lookPosition;
     public static Vector2 LookPosition { get; private set; }
-
     [SerializeField]
     private Vector2 screenMousePos;
     [SerializeField]
     private Vector2 controllerDirection;
+    [SerializeField]
+    private float primaryCdrModifier = 1f; // Used to modify the primary cooldown factor
 
     private EntityMovement movement;
     private PlayerInventory inventory;
@@ -500,7 +501,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (currentItem is LaserWeapon laserWeapon)
         {
-            if (Time.time - primaryStarted > laserWeapon.BaseProperty.PrimaryCdr)
+            if (Time.time - primaryStarted > laserWeapon.BaseProperty.PrimaryCdr * primaryCdrModifier)
             {
                 SetTriggerRpc("Shoot");
                 SyncArmRotationRpc(lookPosition);
@@ -520,7 +521,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             if (Time.time >= nextPrimary)
             {
                 var itemProperty = currentItem.BaseProperty;
-                nextPrimary = Time.time + itemProperty.PrimaryCdr;
+                nextPrimary = Time.time + itemProperty.PrimaryCdr * primaryCdrModifier;
 
                 if (currentItem is RangedWeapon)
                 {
@@ -600,146 +601,6 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     {
         animator.SetTrigger(animation.ToString());
     }
-
-    /*private Vector2? primaryPosition;
-    private Vector2? secondaryPosition;
-
-    private Coroutine primaryCoroutine;
-    private bool isPrimaryCoroutineRunning;
-    private bool firstCallIgnored;
-    public void OnPrimary(InputAction.CallbackContext context)
-    {
-        if (!isControllable || isPointerOverUI) return;
-
-        if (context.performed)
-        {
-            if (!isPrimaryCoroutineRunning)
-            {
-                isPrimaryCoroutineRunning = true;
-                firstCallIgnored = false;
-                primaryCoroutine = StartCoroutine(PrimaryActionCoroutine());
-            }
-        }
-        else if (context.canceled)
-        {
-            OnPrimaryCanceled();
-        }
-    }
-
-    private void OnPrimaryCanceled()
-    {
-        if (primaryCoroutine != null)
-        {
-            laserChargeTime = 0;
-            currentItem.OnPrimaryCancel();
-            isPrimaryCoroutineRunning = false;
-            StopCoroutine(primaryCoroutine);
-        }
-    }
-
-    private float laserChargeTime = 0;
-
-    private IEnumerator PrimaryActionCoroutine()
-    {
-        while (true)
-        {
-            if (currentItem != null && Time.time > nextPrimary)
-            {
-                var itemProperty = currentItem.BaseProperty;
-                nextPrimary = Time.time + itemProperty.PrimaryCdr;
-
-                if (currentItem is RangedWeapon)
-                {
-                    SetTriggerRpc("Shoot");
-                    currentItem.OnPrimaryAction(lookPosition);
-                    SyncArmRotationRpc(lookPosition);
-                }
-                if (currentItem is LaserWeapon laserWeapon)
-                {
-                    laserChargeTime += Time.deltaTime;
-                    if (laserChargeTime > 0f)
-                    {
-
-                    }
-
-
-                    SyncArmRotationRpc(lookPosition);
-                }
-                else
-                {
-                    if (currentItem.CanPrimaryAction(lookPosition))
-                    {
-                        primaryPosition = lookPosition;
-                        animationController.ChopAnimationMode = AnimationMode.Primary;
-                        SetTriggerRpc("Chop");
-                    }
-                    else
-                    {
-                        AudioManager.Main.PlaySoundEffect(SoundEffect.UIError);
-                    }
-                }
-            }
-            yield return new WaitUntil(() => Time.time > nextPrimary);
-            firstCallIgnored = true;
-        }
-    }
-
-    [Rpc(SendTo.NotMe)]
-    private void SyncArmRotationRpc(Vector2 lookPosition)
-    {
-        RotateArm(lookPosition);
-    }
-
-    [Rpc(SendTo.Everyone)]
-    private void SetTriggerRpc(FixedString32Bytes animation)
-    {
-        animator.SetTrigger(animation.ToString());
-    }
-
-    public void Chop(AnimationMode mode)
-    {
-        if (!IsOwner) return;
-
-        if (!isPrimaryCoroutineRunning && firstCallIgnored) return;
-
-        var itemProperty = currentItem.BaseProperty;
-        switch (mode)
-        {
-            case AnimationMode.Primary:
-                if (!primaryPosition.HasValue)
-                {
-                    Debug.LogError("Primary position is null");
-                    break;
-                }
-                if (itemProperty.IsConsummable)
-                {
-                    if (inventory.CanConsumeItemOnClient(inventory.CurrentHotbarIndex))
-                    {
-                        currentItem.OnPrimaryAction(primaryPosition.Value);
-                        inventory.ConsumeItemOnClient(inventory.CurrentHotbarIndex);
-                    }
-                    else
-                    {
-                        Debug.Log("Cannot consume item");
-                    }
-                }
-                else
-                {
-                    currentItem.OnPrimaryAction(primaryPosition.Value);
-                }
-
-                Preview(lookPosition);
-                break;
-            case AnimationMode.Secondary:
-                currentItem.OnSecondaryAction(lookPosition);
-                break;
-            case AnimationMode.Alternative:
-                currentItem.OnAlternativeAction(lookPosition);
-                break;
-        }
-    }
-    */
-
     #endregion
 
     #region Hotbar
@@ -867,12 +728,24 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
     }
 
+    public void SetPrimaryCdrModifier(float modifier)
+    {
+        SetPrimaryCdrModifierRpc(modifier);
+    }
+
+    [Rpc(SendTo.Owner)]
+    private void SetPrimaryCdrModifierRpc(float modifier)
+    {
+        if (showDebugs) Debug.Log($"Primary CDR Modifier set to {primaryCdrModifier} for {gameObject.name}.");
+        primaryCdrModifier = modifier;
+    }
+
     private void OnDrawGizmos()
     {
         if (!showGizmos) return;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(PlayerController.LookPosition.SnapToGrid(), Vector3.one);
+        Gizmos.DrawWireCube(LookPosition.SnapToGrid(), Vector3.one);
     }
     #endregion
 }

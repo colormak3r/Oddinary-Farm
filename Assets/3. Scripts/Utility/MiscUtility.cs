@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/22/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -209,10 +216,33 @@ namespace ColorMak3r.Utility
         public static T GetRandomElement<T>(this IEnumerable<T> collection)
         {
             if (collection == null || !collection.Any())
-                return default(T);
+                return default;
 
             int count = collection.Count();
             return collection.ElementAt(Random.Range(0, count));
+        }
+
+        public static T GetRandomElementNot<T>(this IEnumerable<T> collection, T notElement)
+        {
+            if (collection == null || !collection.Any())
+                return default;
+
+            T selected = default;
+            int count = 0;
+
+            var comparer = EqualityComparer<T>.Default;
+
+            foreach (var item in collection)
+            {
+                if (comparer.Equals(item, notElement))
+                    continue;
+
+                count++;
+                if (Random.Range(0, count) == 0)
+                    selected = item;
+            }
+
+            return count == 0 ? default : selected;
         }
 
         public static double RoundToNextPowerOf10(this double x)

@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/22/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using ColorMak3r.Utility;
 using System;
 using System.Collections;
@@ -9,6 +16,10 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
     [Header("Settings")]
     [SerializeField]
     private PlantProperty mockProperty;
+    [SerializeField]
+    private PlantProperty goldenCarrotProperty;
+    [SerializeField]
+    private CurrencyProperty copperCoinProperty;
     [SerializeField]
     private LayerMask farmPlotLayer;
 
@@ -186,15 +197,36 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
 
     public void GetHarvested(Transform harvester)
     {
-        GetHarvestedRpc(harvester.gameObject);
+        if (harvester.TryGetComponent(out PlayerStatus playerStatus))
+        {
+            if (playerStatus.CurrentCurse == PlayerCurse.GoldenCarrot)
+            {
+                // If player has Golden Carrot effect, they get a bad harvest if the plant is not a golden carrot
+                GetHarvestedRpc(harvester.gameObject, Property.Value != goldenCarrotProperty);
+            }
+            else
+            {
+
+                // If player does not have Golden Carrot effect, they get a bad harvest if the plant is a golden carrot
+                GetHarvestedRpc(harvester.gameObject, Property.Value == goldenCarrotProperty);
+            }
+        }
+        else
+        {
+            GetHarvestedRpc(harvester.gameObject, false);
+        }
     }
 
     [Rpc(SendTo.Server)]
-    private void GetHarvestedRpc(NetworkObjectReference harvester)
+    private void GetHarvestedRpc(NetworkObjectReference harvester, bool badHarvest)
     {
         if (!IsHarvestable) return;
 
-        lootGenerator.DropLootOnServer(harvester);
+        if (badHarvest)
+            AssetManager.Main.SpawnItem(copperCoinProperty, transform.position, harvester);
+        else
+            lootGenerator.DropLootOnServer(harvester);
+
         GetHarvestedOnServer();
     }
 

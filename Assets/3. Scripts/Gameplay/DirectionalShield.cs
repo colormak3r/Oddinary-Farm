@@ -10,7 +10,7 @@ public class DirectionalShield : NetworkBehaviour, IDamageable
     public Hostility Hostility => hostility;
     [SerializeField]
     private float recoilDistance = 0.25f;
-    public uint CurrentHealth => 999; // Shield is invincible, this value should not be changed
+    public uint CurrentHealthValue => 999; // Shield is invincible, this value should not be changed
 
     private Vector2 startPosition;
 

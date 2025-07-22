@@ -363,6 +363,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   mockProperty: {fileID: 0}
+  goldenCarrotProperty: {fileID: 11400000, guid: 1c6ff62baf885eb42933e2d1f05dbc8b, type: 2}
+  copperCoinProperty: {fileID: 11400000, guid: 4861b0c465e13f24585f6b10f6cfe85d, type: 2}
   farmPlotLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -408,7 +410,9 @@ MonoBehaviour:
   damagedSound: {fileID: 8300000, guid: 92242034659cf4e4ba523495d8b88aad, type: 3}
   deathSound: {fileID: 8300000, guid: fc1bf534e2ad6644a9857cdb21412e65, type: 3}
   showDebugs: 0
-  NetworkCurrentHealth:
+  CanBeHealed:
+    m_InternalValue: 0
+  CurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
     m_PersistentCalls:
@@ -523,8 +527,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c08a32213073e44996dd553fede6e6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundEffects: []
   ignoreWarnings: 0
+  playOnAwake: 0
+  soundEffects: []
 --- !u!114 &2381061234703857880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -579,7 +584,6 @@ MonoBehaviour:
   color: {r: 0.7137255, g: 0.8352941, b: 0.23529412, a: 1}
   defaultHeatValue: 1
   heatDecayPerDay: 0.1
-  minHeat: 0.5
   showGizmos: 0
   CurrentHeat:
     m_InternalValue: 0

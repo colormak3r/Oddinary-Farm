@@ -1234,7 +1234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06a0555143022e4469f71d221ab8820f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showCircle: 0
+  showRange: 1
   circleTransform: {fileID: 2381770749817415326}
 --- !u!114 &4142363607695392232
 MonoBehaviour:

@@ -92,6 +92,14 @@ public class AssetManager : NetworkBehaviour
     private Material waterMaterial;
     public Material WaterMaterial => waterMaterial;
 
+    [Header("Common Properties")]
+    [SerializeField]
+    private ItemProperty goldenCarrotProperty;
+    public ItemProperty GoldenCarrotProperty => goldenCarrotProperty;
+    [SerializeField]
+    private ItemProperty carrotProperty;
+    public ItemProperty CarrotProperty => carrotProperty;
+
     [Header("Scriptable Object Assets")]
     [SerializeField]
     private List<ScriptableObject> scriptableObjectList = new List<ScriptableObject>();
