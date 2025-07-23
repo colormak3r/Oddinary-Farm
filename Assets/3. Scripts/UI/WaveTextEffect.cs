@@ -11,20 +11,28 @@ using UnityEngine;
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class WaveTextEffect : MonoBehaviour
 {
-    public float amplitude = 5f;     // Height of the wave
-    public float frequency = 2f;     // Speed of the wave
-    public float waveSpeed = 1f;     // How fast the wave moves
-
+    [Header("Wave Text Effect Settings")]
+    [SerializeField]
+    private float amplitude = 5f;     // Height of the wave
+    [SerializeField]
+    private float frequency = 2f;     // Speed of the wave
+    [SerializeField]
+    private float waveSpeed = 1f;     // How fast the wave moves
+    [SerializeField]
     private TMP_Text textComponent;
+
     private TMP_TextInfo textInfo;
     private Vector3[][] originalVertices;
 
-    void Awake()
+    private void Awake()
     {
-        textComponent = GetComponent<TMP_Text>();
+        if (textComponent == null)
+        {
+            textComponent = GetComponent<TMP_Text>();
+        }
     }
 
-    void Start()
+    private void OnEnable()
     {
         HandleTextChanged();
     }
@@ -44,6 +52,8 @@ public class WaveTextEffect : MonoBehaviour
 
     void Update()
     {
+        if (!gameObject.activeInHierarchy) return;
+
         textComponent.ForceMeshUpdate();
         textInfo = textComponent.textInfo;
 

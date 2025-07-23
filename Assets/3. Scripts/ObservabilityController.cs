@@ -9,16 +9,21 @@ using UnityEngine;
 
 public class ObservabilityController : MonoBehaviour
 {
+    [Header("Settings")]
+    [SerializeField]
+    private Vector2 spawnOffset;
+    public Vector2 SpawnOffset => spawnOffset;
+
     private ObservablePrefabStatus status;
 
-    public void InitializeOnServer(ObservablePrefabStatus status)
+    public virtual void InitializeOnServer(ObservablePrefabStatus status)
     {
         this.status = status;
         status.controller = this;
     }
 
     // Used by the WorldGenerator to unload only
-    public void UnloadOnServer()
+    public virtual void UnloadOnServer()
     {
         status.isSpawned = false;
         status.controller = null;
@@ -26,7 +31,7 @@ public class ObservabilityController : MonoBehaviour
     }
 
     // Used by EntityStatus on death to despawn only
-    public void DespawnOnServer()
+    public virtual void DespawnOnServer()
     {
         status.isSpawned = false;
         status.controller = null;
@@ -35,7 +40,7 @@ public class ObservabilityController : MonoBehaviour
     }
 
     // Used when object doesn't need to get destroyed right away
-    public void EndObservabilityOnServer()
+    public virtual void EndObservabilityOnServer()
     {
         status.isObservable = false;
     }

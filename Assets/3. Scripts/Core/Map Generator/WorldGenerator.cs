@@ -130,6 +130,10 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private MinMaxFloat chihuahuaElevation;
 
+    [Header("HypnoFrog Settings")]
+    [SerializeField]
+    private GameObject hypnoFrogPrefab;
+
     [Header("Resource Settings")]
     [SerializeField]
     private bool canSpawnResources = true;
@@ -424,6 +428,9 @@ public class WorldGenerator : NetworkBehaviour
 
             if (!matched)
                 resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false);
+
+            if (resourceStatusMap[x, y].prefab == hypnoFrogPrefab)
+                HypnoFrogManager.Main.RequestAddToList(new Vector2(x, y));
         }
 
         // 5. Optional: log counts
@@ -781,7 +788,8 @@ public class WorldGenerator : NetworkBehaviour
                     if (resourceStatus.isObservable && !resourceStatus.isSpawned)
                     {
                         //TODO: Handle resource spawning logic with buffer
-                        var resObj = SpawnResource(resourcePos, resourceStatus.prefab);
+                        var offset = resourceStatus.prefab.GetComponent<ObservabilityController>().SpawnOffset;
+                        var resObj = SpawnResource(resourcePos + offset, resourceStatus.prefab);
                         resObj.GetComponent<ObservabilityController>().InitializeOnServer(resourceStatus);
                         resourceStatus.isSpawned = true;
                         spawnedResources[resourcePos] = resourceStatus;

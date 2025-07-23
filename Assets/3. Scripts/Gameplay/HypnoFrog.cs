@@ -5,13 +5,29 @@
  * Notes:           <write here>
 */
 
-using System.Collections.Generic;
+using System;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class HypnoFrog : NetworkBehaviour, IInteractable
 {
+    [Header("Hypno Frog Settings")]
+    [SerializeField]
+    private NetworkVariable<bool> HasFrog = new NetworkVariable<bool>();
+
+    private Animator animator;
+    private Collider2D interactionCollider;
+    private Light2D light2D;
+
     public bool IsHoldInteractable => false;
+
+    private void Awake()
+    {
+        animator = GetComponentInChildren<Animator>();
+        interactionCollider = GetComponent<Collider2D>();
+        light2D = GetComponentInChildren<Light2D>();
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -22,12 +38,47 @@ public class HypnoFrog : NetworkBehaviour, IInteractable
                 WorldGenerator.Main.RemoveFoliageOnClient(new Vector2(x, y));
             }
         }
+
+        HasFrog.OnValueChanged += HandleOnValueChanged;
+        HandleOnValueChanged(false, HasFrog.Value);
+
+        TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
+        HandleOnHourChanged(TimeManager.Main.CurrentHour);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        HasFrog.OnValueChanged -= HandleOnValueChanged;
+        TimeManager.Main.OnHourChanged.RemoveListener(HandleOnHourChanged);
+    }
+
+    private void HandleOnHourChanged(int currentHour)
+    {
+        if (IsServer)
+        {
+            if (currentHour >= HypnoFrogManager.Main.AppearanceHour || currentHour <= HypnoFrogManager.Main.DisappearanceHour)
+            {
+                HasFrog.Value = HypnoFrogManager.Main.GetHasFrog(transform.position);
+            }
+            else
+            {
+                HasFrog.Value = false;
+            }
+        }
+
+        light2D.enabled = TimeManager.Main.IsNight;
+    }
+
+    private void HandleOnValueChanged(bool previousValue, bool newValue)
+    {
+        animator.SetBool("HasFrog", newValue);
+        interactionCollider.enabled = newValue;
     }
 
     public void Interact(Transform source)
     {
         if (source.TryGetComponent(out PlayerStatus playerStatus) && playerStatus.CurrentCurse == PlayerCurse.None)
-            FrogUI.Main.Show();
+            HypnoFrogUI.Main.Show();
     }
 
     public void InteractionEnd(Transform source)
