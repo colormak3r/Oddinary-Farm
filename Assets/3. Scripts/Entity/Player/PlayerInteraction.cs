@@ -26,20 +26,20 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
     private Vector3 interactablePosition_cached;
 
     private bool isControllable = true;
+    private float nextScan;
 
     private void Start()
     {
         distanceComparer = new DistanceComparer(transform, interactionOffset);
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        if (IsOwner) ScanClosetInteractable();
-
-        if (!isControllable) return;
-
-        // Run on the server only
-        // ScanItemPickupOnServer();
+        if (IsOwner && Time.time > nextScan)
+        {
+            nextScan = Time.time + 0.1f; // Scan every 0.1 seconds
+            ScanClosetInteractable();
+        }
     }
 
     public void InteractionStart()
@@ -117,6 +117,10 @@ public class PlayerInteraction : NetworkBehaviour, IControllable
             currentInteractable = null;
             Selector.Main.Show(false);
         }
+    }
+    public void ClearCurrentInteractable()
+    {
+        currentInteractable = null;
     }
 
 #if UNITY_EDITOR

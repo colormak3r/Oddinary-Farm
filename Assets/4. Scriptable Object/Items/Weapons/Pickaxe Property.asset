@@ -20,7 +20,7 @@ MonoBehaviour:
   isSellable: 1
   price: 1600
   range: 3
-  primaryCdr: 0.65
+  primaryCdr: 0.25
   secondaryCdr: 0.25
   itemContext: 'LMB: Swing
 

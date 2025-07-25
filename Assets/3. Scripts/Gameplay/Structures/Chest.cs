@@ -11,41 +11,57 @@ using UnityEngine;
 
 public enum ChestState
 {
+    Buried,
     Unopened,
     Opened,
     Empty
 }
 
-public class Chest : NetworkBehaviour, IInteractable
+public class Chest : NetworkBehaviour, IInteractable, IDiggable
 {
     [Header("Chest Settings")]
+    [SerializeField]
+    private ChestState defaultState = ChestState.Unopened;
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
+
+    [Header("Chest Sprites")]
+    [SerializeField]
+    private Sprite buriedSprite;
     [SerializeField]
     private Sprite unopenedSprite;
     [SerializeField]
     private Sprite openedSprite;
     [SerializeField]
     private Sprite emptySprite;
+
+    [Header("Chest Audio")]
+    [SerializeField]
+    private AudioClip digSound;
     [SerializeField]
     private AudioClip openSound;
     [SerializeField]
     private AudioClip collectSound;
-    [SerializeField]
-    private SpriteRenderer spriteRenderer;
 
-    private NetworkVariable<ChestState> CurrentState = new NetworkVariable<ChestState>(global::ChestState.Unopened);
+    [Header("Chest Debugs")]
+    [SerializeField]
+    private NetworkVariable<ChestState> CurrentState = new NetworkVariable<ChestState>();
     public ChestState CurrentStateValue => CurrentState.Value;
     public bool IsHoldInteractable => false;
 
     private AudioElement audioElement;
+    private SelectorModifier selectorModifier;
 
     private void Awake()
     {
         audioElement = GetComponent<AudioElement>();
+        selectorModifier = GetComponent<SelectorModifier>();
     }
 
     public override void OnNetworkSpawn()
     {
         CurrentState.OnValueChanged += OnChestStateChanged;
+        if (IsServer) CurrentState.Value = defaultState;
         OnChestStateChanged(ChestState.Unopened, CurrentStateValue);
     }
 
@@ -58,17 +74,25 @@ public class Chest : NetworkBehaviour, IInteractable
     {
         switch (newValue)
         {
+            case ChestState.Buried:
+                spriteRenderer.sprite = buriedSprite;
+                selectorModifier.SetCanBeSelected(false);
+                break;
             case ChestState.Unopened:
                 spriteRenderer.sprite = unopenedSprite;
+                selectorModifier.SetCanBeSelected(true);
+                if (previousValue == ChestState.Buried)
+                    audioElement.PlayOneShot(digSound);
                 break;
             case ChestState.Opened:
                 spriteRenderer.sprite = openedSprite;
+                selectorModifier.SetCanBeSelected(true);
                 audioElement.PlayOneShot(openSound);
                 break;
             case ChestState.Empty:
                 spriteRenderer.sprite = emptySprite;
                 audioElement.PlayOneShot(collectSound);
-                GetComponent<SelectorModifier>().SetCanBeSelected(false);
+                selectorModifier.SetCanBeSelected(false);
                 if (IsServer && TryGetComponent<ObservabilityController>(out var controller))
                     controller.EndObservabilityOnServer();
                 break;
@@ -77,7 +101,12 @@ public class Chest : NetworkBehaviour, IInteractable
 
     public void Interact(Transform source)
     {
-        if (CurrentStateValue == ChestState.Unopened)
+        if (CurrentStateValue == ChestState.Buried)
+        {
+            // Do nothing, cannot interact with a buried chest
+            // Need to use shovel to dig it up first
+        }
+        else if (CurrentStateValue == ChestState.Unopened)
         {
             UpdateStateRpc(ChestState.Opened);
         }
@@ -111,5 +140,16 @@ public class Chest : NetworkBehaviour, IInteractable
     public void InteractionEnd(Transform source)
     {
         throw new NotImplementedException();
+    }
+
+    public void Dig(Transform source)
+    {
+        if (CurrentStateValue == ChestState.Buried)
+        {
+            UpdateStateRpc(ChestState.Unopened);
+            selectorModifier.SetCanBeSelected(true);
+            if (source.TryGetComponent(out PlayerInteraction playerInteraction))
+                playerInteraction.ClearCurrentInteractable();
+        }
     }
 }

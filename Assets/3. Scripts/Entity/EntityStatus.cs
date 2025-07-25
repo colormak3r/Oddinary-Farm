@@ -35,7 +35,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     [SerializeField]
     protected bool showDebugs;
     [SerializeField]
-    private NetworkVariable<bool> CanBeHealed = new NetworkVariable<bool>();
+    private NetworkVariable<bool> CanBeHealed = new NetworkVariable<bool>(true);
     public bool CanBeHealedValue => CanBeHealed.Value;
     [SerializeField]
     private NetworkVariable<uint> CurrentHealth = new NetworkVariable<uint>();

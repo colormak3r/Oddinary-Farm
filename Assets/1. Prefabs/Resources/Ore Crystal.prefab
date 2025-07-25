@@ -448,8 +448,8 @@ MonoBehaviour:
   isInvincible: 0
   damagedEffectPrefab: {fileID: 3303192038522874649, guid: eaa16f0896e08a04684297aa24c4a3ba, type: 3}
   deathEffectPrefab: {fileID: 2017998240076956080, guid: 903b72d91589cde4e9657311c38725ea, type: 3}
-  damagedSound: {fileID: 8300000, guid: bbc702d6a8defbd46b7bb8a8ea372a31, type: 3}
-  deathSound: {fileID: 8300000, guid: f43709536b3a99c4ca15ba33bd1d5ac5, type: 3}
+  damagedSound: {fileID: 8300000, guid: d8878580919b4824d9b2c998f046f7ea, type: 3}
+  deathSound: {fileID: 8300000, guid: fae4c48b34d44f34ab34f1c3c8009fd0, type: 3}
   showDebugs: 0
   CanBeHealed:
     m_InternalValue: 0
