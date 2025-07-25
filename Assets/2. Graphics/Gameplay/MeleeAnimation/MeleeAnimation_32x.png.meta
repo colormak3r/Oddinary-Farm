@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1321a658b71195740bf08d1254606a5f
+guid: 11f26b667101b484b8d7451ae3969e8f
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -146,6 +146,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: MeleeAnimation_32x_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fbeba55154baf34a8f870eddfab2542
+      internalID: 790453326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -162,6 +184,7 @@ TextureImporter:
     nameFileIdTable:
       MeleeAnimation_32x_0: 2205998953556652982
       MeleeAnimation_32x_1: 5164565191826808591
+      MeleeAnimation_32x_2: 790453326
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

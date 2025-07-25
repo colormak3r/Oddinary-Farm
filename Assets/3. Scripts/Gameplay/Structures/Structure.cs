@@ -1,4 +1,10 @@
-using System.Collections;
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/24/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using Unity.Netcode;
 using UnityEngine;
 
@@ -20,6 +26,8 @@ public class Structure : NetworkBehaviour
         networkTransform = GetComponent<StructureNetworkTransform>();
     }
 
+    #region Move To
+    // TODO: Handle spriteblender reblending when moving
     public void MoveTo(Vector2 position)
     {
         if (!isMovable) return;
@@ -35,38 +43,24 @@ public class Structure : NetworkBehaviour
     {
         transform.position = position;
     }
+    #endregion
 
+    #region Remove Structure
+    /// <summary>
+    /// Removes the structure from the game. Should be triggered by the player ItemSystem 
+    /// only since this will drop the structure's blueprint.
+    /// </summary>
     public void RemoveStructure()
     {
         if (!isRemovable) return;
         RemoveRpc();
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Server)]
     private void RemoveRpc()
     {
-        if (IsServer)
-        {
-            RemoveOnServer();
-        }
-
-        StartCoroutine(RemoveCoroutine());
-    }
-
-    private IEnumerator RemoveCoroutine()
-    {
-        yield return new WaitUntil(() => !NetworkObject.IsSpawned);
-        RemoveOnClient();
-    }
-
-    protected virtual void RemoveOnClient()
-    {
+        AssetManager.Main.SpawnItem(property.BlueprintProperty, transform.position);
         Destroy(gameObject);
     }
-
-    protected virtual void RemoveOnServer()
-    {
-        AssetManager.Main.SpawnItem(property.BlueprintProperty, transform.position);
-        NetworkObject.Despawn(false);
-    }
+    #endregion
 }

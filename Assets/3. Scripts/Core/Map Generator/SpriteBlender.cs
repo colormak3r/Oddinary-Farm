@@ -1,14 +1,15 @@
 /*
  * Created By:      Khoa Nguyen
  * Date Created:    --/--/----
- * Last Modified:   07/16/2025 (Khoa)
+ * Last Modified:   07/24/2025 (Khoa)
  * Notes:           <write here>
 */
 
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-[ExecuteInEditMode]
+// [ExecuteInEditMode]
 public class SpriteBlender : MonoBehaviour
 {
     private static Vector2[] SCAN_POSITION = new Vector2[]
@@ -53,6 +54,16 @@ public class SpriteBlender : MonoBehaviour
         scannedPosition.Capacity = SCAN_POSITION.Length;
     }
 
+    private void Start()
+    {
+        Blend(true);
+    }
+
+    private void OnDestroy()
+    {
+        ReblendNeighbors();
+    }
+
     [ContextMenu("Blend")]
     private void Blend()
     {
@@ -62,7 +73,7 @@ public class SpriteBlender : MonoBehaviour
     public void Blend(bool reblendNeighbor = false)
     {
         // Extra logging. TODO: Remove in production
-        if (timeSinceLastBlend != 0 && Time.time - timeSinceLastBlend < 0.1f)
+        if (timeSinceLastBlend != 0 && Time.time - timeSinceLastBlend < 0.1f && reblendNeighbor)
         {
             Debug.LogWarning($"Blend called too frequently: {transform.root.name}/{name}", this);
         }

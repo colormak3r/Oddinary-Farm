@@ -1,20 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/24/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
 
 public class StructureStatus : EntityStatus
 {
-    private SpriteBlender spriteBlender;
-
-    protected override void Awake()
-    {
-        base.Awake();
-        spriteBlender = GetComponentInChildren<SpriteBlender>();
-    }
-
-    protected override IEnumerator DeathOnClientCoroutine()
-    {
-        if (spriteBlender) spriteBlender.ReblendNeighbors();
-        yield return base.DeathOnClientCoroutine();
-    }
+    // SpriteBlender now handle sprite blending logic to simplified the structure code
+    // This script is kept for compatibility with existing structures and maybe future development
 }

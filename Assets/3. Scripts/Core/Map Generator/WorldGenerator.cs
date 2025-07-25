@@ -159,6 +159,8 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private MoistureMap moistureMap;
     [SerializeField]
+    private OreMap oreMap;
+    [SerializeField]
     private TMP_Text elevationText;
 
     private Vector2Int halfMapSize;
@@ -171,7 +173,7 @@ public class WorldGenerator : NetworkBehaviour
     private Texture2D miniMapTexture;
 
     private Offset2DArray<bool> folliageMap;
-    private HashSet<Vector2> invalidFoliagePositionHashSet = new HashSet<Vector2>();
+    private HashSet<Vector2Int> invalidFoliagePositionHashSet = new HashSet<Vector2Int>();
 
     private Offset2DArray<ObservablePrefabStatus> resourceStatusMap;
 
@@ -286,6 +288,7 @@ public class WorldGenerator : NetworkBehaviour
         elevationMap.GenerateMap(mapSize);
         resourceMap.GenerateMap(mapSize);
         moistureMap.GenerateMap(mapSize);
+        oreMap.GenerateMap(mapSize);
 
         // Generate data from the maps
         GenerateTerrain();
@@ -399,12 +402,13 @@ public class WorldGenerator : NetworkBehaviour
             var elevation = elevationMap.RawMap[x, y];
             var moisture = moistureMap.RawMap[x, y];
             var resource = resourceMap.RawMap[x, y];
+            var ore = oreMap.RawMap[x, y];
 
             bool matched = false;
 
             foreach (var property in resourceProperties)
             {
-                if (!property.Match(elevation, moisture, resource, out var prefab, out var maxCount))
+                if (!property.Match(elevation, moisture, resource, ore, out var prefab, out var maxCount))
                     continue;
 
                 if (maxCount > 0 &&
@@ -720,7 +724,8 @@ public class WorldGenerator : NetworkBehaviour
         folliageMap.GetElementSafe(pos.x, pos.y, out var validFoliage);
         if (canSpawnFoliage && validFoliage &&
             !invalidFoliagePositionHashSet.Contains(pos) &&
-            resourceMap.RawMap[pos.x, pos.y] < 0.99f)
+            resourceMap.RawMap[pos.x, pos.y] < 0.99f
+            && oreMap.RawMap[pos.x, pos.y] < 0.99f)
         {
             foliageGO = SpawnFoliage(pos, foliagePrefabs.GetRandomElement());
         }
@@ -923,13 +928,17 @@ public class WorldGenerator : NetworkBehaviour
 
     public void InvalidateFolliageOnClient(Vector2 position)
     {
-        invalidFoliagePositionHashSet.Add(position);
+        var snappedPosition = position.SnapToGrid().ToInt();
+        invalidFoliagePositionHashSet.Add(snappedPosition);
     }
 
     public void RemoveFoliageOnClient(Vector2 position)
     {
         // Snap position to cell position
         var positionInt = position.SnapToGrid().ToInt();
+
+        // Remove from invalid foliage positions
+        InvalidateFolliageOnClient(position);
 
         // Tile look up
         if (!tiles.TryGetValue(positionInt, out var tile)) return;
@@ -943,9 +952,6 @@ public class WorldGenerator : NetworkBehaviour
             // TilePair is a *struct*, so write it back
             tiles[positionInt] = tile;
         }
-
-        // Remove from invalid foliage positions
-        InvalidateFolliageOnClient(position);
     }
 
     public void SetCanSpawnResources(bool value)

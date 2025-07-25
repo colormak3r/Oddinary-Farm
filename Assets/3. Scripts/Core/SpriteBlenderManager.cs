@@ -1,7 +1,7 @@
 /*
  * Created By:      Khoa Nguyen
  * Date Created:    07/16/2025
- * Last Modified:   07/16/2025 (Khoa)
+ * Last Modified:   07/24/2025 (Khoa)
  * Notes:           <write here>
 */
 
@@ -16,6 +16,13 @@ public class SpriteBlenderManager : MonoBehaviour
 
     private static HashSet<SpriteBlender> reblendQueue = new();
     public static void RequestBlend(SpriteBlender sb) => reblendQueue.Add(sb);
+
+    private void Awake()
+    {
+        // Clear the reblend queue at the start to avoid any stale references
+        // Effective in editor only
+        reblendQueue.Clear();
+    }
 
     private void LateUpdate()
     {

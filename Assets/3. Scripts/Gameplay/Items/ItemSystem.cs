@@ -1,7 +1,7 @@
 /*
  * Created By:      Khoa Nguyen
  * Date Created:    --/--/----
- * Last Modified:   07/18/2025 (Khoa)
+ * Last Modified:   07/24/2025 (Khoa)
  * Notes:           <write here>
 */
 
@@ -29,7 +29,6 @@ public class ItemSystem : NetworkBehaviour
     private Transform graphicTransform;
     [SerializeField]
     private GameObject meleeAnimationObject;
-    private Animator meleeAnimationAnimator;
 
     [Header("Asset Spawn Preset")]
     [SerializeField]
@@ -52,6 +51,7 @@ public class ItemSystem : NetworkBehaviour
     private EntityStatus entityStatus;
     private Animator animator;
     private LassoController lassoController;
+    private Animator meleeAnimationAnimator;
 
     private Vector2 recoilDefaultPosition;
 
@@ -60,10 +60,7 @@ public class ItemSystem : NetworkBehaviour
         entityStatus = GetComponent<EntityStatus>();
         lassoController = GetComponent<LassoController>();
         animator = GetComponent<Animator>();
-        if (meleeAnimationObject)
-            meleeAnimationAnimator = meleeAnimationObject.GetComponent<Animator>();
-        else
-            Debug.LogWarning($"Melee Animation Object is not set, melee animations of {name} will not play.", this);
+        if (meleeAnimationObject) meleeAnimationAnimator = meleeAnimationObject.GetComponent<Animator>();
 
         if (recoilTransform) recoilDefaultPosition = recoilTransform.localPosition;
     }
@@ -116,7 +113,11 @@ public class ItemSystem : NetworkBehaviour
         var clampedPosition = ObjectPosition + direction;
         debug_meleePosition = clampedPosition;
         debug_radius = meleeWeaponProperty.Radius;
-        PlayMeleeAnimationRpc(position, meleeWeaponProperty.Range, meleeWeaponProperty.Radius);
+
+        if (meleeAnimationObject != null && meleeAnimationAnimator != null)
+            PlayMeleeAnimationRpc(position, meleeWeaponProperty.Range, meleeWeaponProperty.Radius);
+        else
+            Debug.LogWarning("Melee animation object or animator is not set.", this);
 
         // Check if the melee weapon has a valid radius and range
         var hits = Physics2D.CircleCastAll(transform.position, meleeWeaponProperty.Radius, position - (Vector2)transform.position, meleeWeaponProperty.Range, meleeWeaponProperty.DamageableLayer);
@@ -368,6 +369,8 @@ public class ItemSystem : NetworkBehaviour
 
             if (structureHit.TryGetComponent(out EntityStatus entityStatus))
             {
+                // Block remove structure if it's not full health
+                // Only applicable to structures with EntityStatus
                 if (entityStatus.CurrentHealthValue == entityStatus.MaxHealth)
                 {
                     structure.RemoveStructure();
@@ -673,6 +676,25 @@ public class ItemSystem : NetworkBehaviour
             elapsed += Time.deltaTime;
 
             yield return null;
+        }
+    }
+
+    #endregion
+
+    #region Mining
+
+    public void Mine(Vector2 position)
+    {
+        MineRpc(position);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void MineRpc(Vector2 position)
+    {
+        var hit = Physics2D.OverlapPoint(position, LayerManager.Main.MineableLayer);
+        if (hit && hit.TryGetComponent(out EntityStatus entityStatus))
+        {
+            entityStatus.TakeDamage(1, DamageType.Pierce, Hostility.Neutral, transform.root);
         }
     }
 

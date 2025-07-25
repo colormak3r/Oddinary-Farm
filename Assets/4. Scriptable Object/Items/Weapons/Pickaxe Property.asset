@@ -18,9 +18,9 @@ MonoBehaviour:
   isConsummable: 0
   maxStack: 1
   isSellable: 1
-  price: 200
+  price: 1600
   range: 3
-  primaryCdr: 0.35
+  primaryCdr: 0.65
   secondaryCdr: 0.25
   itemContext: 'LMB: Swing
 
@@ -37,7 +37,7 @@ MonoBehaviour:
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
   radius: 0.5
-  damage: 2
+  damage: 3
   damageType: 1
   hostility: 0
   knockbackForce: 200
@@ -45,3 +45,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 7680
   canHarvest: 0
+  size: {x: 1, y: 1}
+  previewIconSprite: {fileID: -209246431, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
+  previewIconOffset: {x: 0, y: 0}
+  previewValidColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
+  previewInvalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}

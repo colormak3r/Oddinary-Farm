@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 11f26b667101b484b8d7451ae3969e8f
+guid: e785705042b38a249bd3146053f3e7e3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2205998953556652982
-    second: MeleeAnimation_32x_0
-  - first:
-      213: 5164565191826808591
-    second: MeleeAnimation_32x_1
+      213: -3095991630914465091
+    second: Ore_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MeleeAnimation_32x_0
+      name: Ore_0
       rect:
         serializedVersion: 2
-        x: 10
+        x: 0
         y: 0
-        width: 23
-        height: 32
+        width: 400
+        height: 400
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,30 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6b3b0a14c584d9e10800000000000000
-      internalID: 2205998953556652982
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: MeleeAnimation_32x_1
-      rect:
-        serializedVersion: 2
-        x: 41
-        y: 0
-        width: 22
-        height: 13
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: f0f1f2ecda83ca740800000000000000
-      internalID: 5164565191826808591
+      spriteID: db2d2c3d304d805d0800000000000000
+      internalID: -3095991630914465091
       vertices: []
       indices: 
       edges: []
@@ -159,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Ore_0: -3095991630914465091
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

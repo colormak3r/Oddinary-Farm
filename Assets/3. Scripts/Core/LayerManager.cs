@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/24/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
 
 public class LayerManager : MonoBehaviour
@@ -51,6 +58,10 @@ public class LayerManager : MonoBehaviour
     [SerializeField]
     private LayerMask diggableLayer;
     public LayerMask DiggableLayer => diggableLayer;
+
+    [SerializeField]
+    private LayerMask mineableLayer;
+    public LayerMask MineableLayer => mineableLayer;
 
     [SerializeField]
     private LayerMask movementBlockerLayer;

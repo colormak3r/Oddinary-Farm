@@ -31,19 +31,22 @@ public class HypnoFrog : NetworkBehaviour, IInteractable
 
     public override void OnNetworkSpawn()
     {
-        for (int x = -6; x < 6; x++)
-        {
-            for (int y = -5; y < 5; y++)
-            {
-                WorldGenerator.Main.RemoveFoliageOnClient(new Vector2(x, y));
-            }
-        }
-
         HasFrog.OnValueChanged += HandleOnValueChanged;
         HandleOnValueChanged(false, HasFrog.Value);
 
         TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
         HandleOnHourChanged(TimeManager.Main.CurrentHour);
+    }
+
+    protected override void OnNetworkPostSpawn()
+    {
+        for (int x = -6; x <= 6; x++)
+        {
+            for (int y = -5; y <= 5; y++)
+            {
+                WorldGenerator.Main.RemoveFoliageOnClient(transform.position + new Vector3(x, y));
+            }
+        }
     }
 
     public override void OnNetworkDespawn()
