@@ -16,6 +16,9 @@ public class RadioUI : UIBehaviour
 
     public static RadioUI Main;
 
+    // Moved object state such as activated/inactivated color to the actual object (Radio.cs)
+    // UI script should only do UI-related tasks
+
     private void Awake()
     {
         if (Main == null)
@@ -24,6 +27,8 @@ public class RadioUI : UIBehaviour
             Destroy(gameObject);
     }
 
+    // Use coroutine instead of invoke
+    // Invoke is usually not recommended for performance reasons
     private Coroutine displayMessageCoroutine;
     public void DisplayMessage(string message)
     {
@@ -33,8 +38,11 @@ public class RadioUI : UIBehaviour
 
     private IEnumerator DisplayMessageCoroutine(string message)
     {
-        Show();
+        // Use Show instead of ShowNoFade for smoother transitions and bring attention to the text
+        // Our eyes can detect motion better than static images
+        Show(); 
 
+        // Scrolling text effect
         string currentText;
         for (int i = 0; i < message.Length; i++)
         {

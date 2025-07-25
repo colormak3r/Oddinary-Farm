@@ -24,6 +24,8 @@ public class Radio : Structure, IInteractable
     private SpriteRenderer spriteRenderer;
     private Light2D light2D;
     private AudioElement audioElement;
+
+    // Client authoritative variable
     private NetworkVariable<bool> PlaySoundTracks = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     protected override void Awake()
@@ -35,26 +37,33 @@ public class Radio : Structure, IInteractable
 
     public override void OnNetworkSpawn()
     {
+        // The radio object will handle playing soundtracks locally 
         PlaySoundTracks.OnValueChanged += HandlePlaySoundTracksChanged;
         HandlePlaySoundTracksChanged(false, PlaySoundTracks.Value);
-        SetIsRemoveable(RadioManager.Main.IsActivatedValue);
-        TimeManager.Main.OnHourChanged.AddListener(OnHourChanged);
 
+        // The radio is only removeable if it is activated
+        SetIsRemoveable(RadioManager.Main.IsActivatedValue);
+
+        // Play music every 5 hours if is turned on
+        TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
+
+        // Play proximity cue sound (radio static) to get player attention if it's not activated
         StartCoroutine(CueCoroutine());
     }
 
     public override void OnNetworkDespawn()
     {
         PlaySoundTracks.OnValueChanged -= HandlePlaySoundTracksChanged;
-        TimeManager.Main.OnHourChanged.RemoveListener(OnHourChanged);
+        TimeManager.Main.OnHourChanged.RemoveListener(HandleOnHourChanged);
     }
 
     private int hourCounter = 0;
-    private void OnHourChanged(int arg0)
+    private void HandleOnHourChanged(int arg0)
     {
+        // Play music every 5 hours if is turned on
         if (PlaySoundTracks.Value)
         {
-            if (hourCounter >= 4)
+            if (hourCounter >= 5)
             {
                 hourCounter = 0;
                 PlayRandomSoundTrack();
@@ -66,20 +75,21 @@ public class Radio : Structure, IInteractable
         }
     }
 
-    private void HandleIsRemoveableChanged(bool previousValue, bool newValue)
-    {
-        SetIsRemoveable(newValue);
-    }
-
     private void HandlePlaySoundTracksChanged(bool previousValue, bool newValue)
     {
+        // Anything in callback subcribed to OnValueChanged is always executed on the server and all clients
+        // If you want to execute something only on the server, use IsServer check
+        // If you want to execute something only on the client, use IsClient check
+
         if (newValue)
         {
+            // If the radio is turned on, play the power on sound then start playing music
             if (turnOnCoroutine != null) StopCoroutine(turnOnCoroutine);
             turnOnCoroutine = StartCoroutine(TurnOnCoroutine());
         }
         else
         {
+            // Turn off radio immidiately
             audioElement.Stop();
             audioElement.PlayOneShot(powerOffSfx);
             light2D.enabled = false;
@@ -151,8 +161,10 @@ public class Radio : Structure, IInteractable
     [Rpc(SendTo.Everyone)]
     private void OnRadioActivatedRpc()
     {
-        // Mark this object as no longer observable (not respawn by procedural generation)
+        // Mark this object as no longer observable (cannot be respawned by procedural generation)
         if (IsServer) GetComponent<ObservabilityController>().EndObservabilityOnServer();
+
+        // Set the radio as removeable on all clients
         SetIsRemoveable(true);
     }
 

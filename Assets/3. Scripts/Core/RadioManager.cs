@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using Unity.Netcode;
 using System;
@@ -15,9 +16,7 @@ public class RadioEvent
 
 public class RadioManager : NetworkBehaviour
 {
-    [SerializeField]
-    private List<RadioEvent> radioEvents = new List<RadioEvent>();
-
+    // I usually keep static declarations and awake method at the top of the class for easy access.
     public static RadioManager Main;
 
     private void Awake()
@@ -28,7 +27,18 @@ public class RadioManager : NetworkBehaviour
             Destroy(gameObject);
     }
 
+    [Header("Radio Events")]
+    [SerializeField]
+    private List<RadioEvent> radioEvents = new List<RadioEvent>();
+
+    [Header("Radio Debugs")]
+    [SerializeField]
     private bool hasShownActivationMessage = false;
+
+    // Try not to expose NetworkVariables directly unless necessary.
+    // Usually objects should only read from the manager and not set them
+    // Use concrete method such as SetActivated() to change the state if neccessary.
+    // => Easy debugging and swapping of implementation later on.
     private NetworkVariable<bool> IsActivated = new NetworkVariable<bool>();
     public bool IsActivatedValue => IsActivated.Value;
 
@@ -62,14 +72,14 @@ public class RadioManager : NetworkBehaviour
         {
             if (radioEvent.day == currentDay && radioEvent.hour == currentHour)
             {
-
-                RadioUI.Main.DisplayMessage(radioEvent.message);
+                RadioUI.Main?.DisplayMessage(radioEvent.message);
                 break;
                 //one message per hour
             }
         }
     }
 
+    // If method is called on the server, it use no bandwith. No need to check IsServer
     public void SetActivated()
     {
         SetActivatedRpc();
