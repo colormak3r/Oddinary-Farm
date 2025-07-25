@@ -46,13 +46,13 @@ MonoBehaviour:
   - item: {fileID: 11400000, guid: 8dd2be67a005b44409834c3b76ffa615, type: 2}
     probability: 1
     minMaxCount:
-      min: 5
-      max: 7
+      min: 3
+      max: 5
   - item: {fileID: 11400000, guid: 73db1c966832a4141a69a3fc10eeff50, type: 2}
     probability: 1
     minMaxCount:
-      min: 2
-      max: 4
+      min: 3
+      max: 5
   - item: {fileID: 11400000, guid: f28c0764952b3e742a0e63f054948212, type: 2}
     probability: 0.7
     minMaxCount:

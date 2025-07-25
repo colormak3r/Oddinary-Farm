@@ -16,6 +16,9 @@ MonoBehaviour:
   - prefab: {fileID: 3569705655780300392, guid: a008f1d31971c044aad2e8c334c34f00, type: 3}
     chance: 10
     maxCount: 0
+  - prefab: {fileID: 2393666993314806188, guid: a366071419893bd47ab1db48251cdd40, type: 3}
+    chance: 10
+    maxCount: 1
   - prefab: {fileID: 1682487815208620944, guid: a8793324d6e6c354888763f61fa1101b, type: 3}
     chance: 5
     maxCount: 0

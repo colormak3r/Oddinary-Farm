@@ -63,4 +63,9 @@ public class Structure : NetworkBehaviour
         Destroy(gameObject);
     }
     #endregion
+
+    protected void SetIsRemoveable(bool value)
+    {
+        isRemovable = value;
+    }
 }

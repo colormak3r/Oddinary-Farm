@@ -86,4 +86,15 @@ public class AudioElement : MonoBehaviour
     {
         audioSource.PlayOneShot(soundEffects[index]);
     }
+
+    public void Stop()
+    {
+        audioSource.Stop();
+    }
+
+    public void SetRange(float minRange, float maxRange)
+    {
+        audioSource.minDistance = minRange;
+        audioSource.maxDistance = maxRange;
+    }
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d80ae4708320ff14fbb054f6f1d4d8f6, type: 3}
   m_Name: Radio
   m_EditorClassIdentifier: 
-  iconSprite: {fileID: 21300000, guid: 723e071b764026c4484259181814846a, type: 3}
+  iconSprite: {fileID: 160267858, guid: 473cc50d187042a4b83ebe63138273d5, type: 3}
   objectSprite: {fileID: 0}
   prefab: {fileID: 949117059081605438, guid: 43faad68a0f5c3f46864295e4caf8f6c, type: 3}
   isConsummable: 1

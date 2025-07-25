@@ -29,58 +29,33 @@ public class RadioManager : NetworkBehaviour
     }
 
     private bool hasShownActivationMessage = false;
-    public NetworkVariable<bool> IsActivated = new NetworkVariable<bool>();
+    private NetworkVariable<bool> IsActivated = new NetworkVariable<bool>();
+    public bool IsActivatedValue => IsActivated.Value;
 
     public override void OnNetworkSpawn()
     {
         IsActivated.OnValueChanged += HandleIsActivatedChanged;
-
-        if (IsActivated.Value)
-        {
-            SubscribeToTimeManager();
-        }
+        TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
     }
     public override void OnNetworkDespawn()
     {
         IsActivated.OnValueChanged -= HandleIsActivatedChanged;
-        UnsubscribeFromTimeManager();
+        TimeManager.Main.OnHourChanged.RemoveListener(HandleOnHourChanged);
     }
 
     private void HandleIsActivatedChanged(bool oldValue, bool newValue)
     {
-        if (newValue)
+        if (newValue && !hasShownActivationMessage)
         {
-            SubscribeToTimeManager();
-
-            if (!hasShownActivationMessage && IsClient)
-            {
-                hasShownActivationMessage = true;
-                RadioUI.Main?.DisplayMessage("Radio activated. Signal is live.");
-            }
-
-            RadioUI.Main?.SetRadioColor(Color.white);
-        }
-    }
-
-    private void SubscribeToTimeManager()
-    {
-        if (TimeManager.Main != null)
-        {
-            TimeManager.Main.OnHourChanged.RemoveListener(HandleOnHourChanged);
-            TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
-        }
-    }
-
-    private void UnsubscribeFromTimeManager()
-    {
-        if (TimeManager.Main != null)
-        {
-            TimeManager.Main.OnHourChanged.RemoveListener(HandleOnHourChanged);
+            hasShownActivationMessage = true;
+            RadioUI.Main?.DisplayMessage("Radio activated. Signal is live.");
         }
     }
 
     private void HandleOnHourChanged(int currentHour)
     {
+        if (!IsActivatedValue) return;
+
         int currentDay = TimeManager.Main.CurrentDate;
 
         foreach (var radioEvent in radioEvents)
@@ -88,11 +63,7 @@ public class RadioManager : NetworkBehaviour
             if (radioEvent.day == currentDay && radioEvent.hour == currentHour)
             {
 
-                if (RadioUI.Main != null)
-                {
-                    RadioUI.Main.DisplayMessage(radioEvent.message);
-                }
-
+                RadioUI.Main.DisplayMessage(radioEvent.message);
                 break;
                 //one message per hour
             }
@@ -101,14 +72,7 @@ public class RadioManager : NetworkBehaviour
 
     public void SetActivated()
     {
-        if (IsServer)
-        {
-            IsActivated.Value = true;
-        }
-        else
-        {
-            SetActivatedRpc();
-        }
+        SetActivatedRpc();
     }
 
     [Rpc(SendTo.Server)]

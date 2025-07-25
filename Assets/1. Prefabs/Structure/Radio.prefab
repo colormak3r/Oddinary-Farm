@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1369781380893440270}
   - component: {fileID: 1128303773290736457}
   - component: {fileID: 8016297350306997977}
+  - component: {fileID: 1568793456495257403}
   m_Layer: 10
   m_Name: Radio
   m_TagString: Untagged
@@ -52,7 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3938356186
+  GlobalObjectIdHash: 3300939613
   InScenePlacedSourceGlobalObjectIdHash: 3300939613
   DeferredDespawnTick: 0
   Ownership: 1
@@ -97,10 +98,10 @@ MonoBehaviour:
   SyncPositionZ: 0
   SyncRotAngleX: 0
   SyncRotAngleY: 0
-  SyncRotAngleZ: 1
+  SyncRotAngleZ: 0
   SyncScaleX: 0
   SyncScaleY: 0
-  SyncScaleZ: 1
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -145,7 +146,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.5}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -186,9 +187,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   isMovable: 1
-  isRemovable: 1
+  isRemovable: 0
   property: {fileID: 11400000, guid: f019880a1142e654f8f0426cc7865277, type: 2}
-  interactClip: {fileID: 8300000, guid: 84bacd0086f6f5544b3ab945a2da63f7, type: 3}
+  cueSfx: {fileID: 8300000, guid: 04fd76130eb9e5144b0fadb5577ff4c2, type: 3}
+  powerOnSfx: {fileID: 8300000, guid: 57a82964b98b055408874faf1329e8a9, type: 3}
+  powerOffSfx: {fileID: 8300000, guid: 257da77fcd0ff834a90f26559ea4b7c3, type: 3}
+  soundTracks:
+  - {fileID: 8300000, guid: d858414df4d775a4997418d0b76e1078, type: 3}
+  activeColor: {r: 1, g: 1, b: 1, a: 1}
+  inactiveColor: {r: 0.50980395, g: 0.44705883, b: 0.4392157, a: 1}
 --- !u!82 &1128303773290736457
 AudioSource:
   m_ObjectHideFlags: 0
@@ -211,7 +218,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 10
-  MaxDistance: 25
+  MaxDistance: 35
   Pan2D: 0
   rolloffMode: 1
   BypassEffects: 0
@@ -298,9 +305,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c08a32213073e44996dd553fede6e6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ignoreWarnings: 0
+  ignoreWarnings: 1
   playOnAwake: 0
   soundEffects: []
+--- !u!114 &1568793456495257403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2393666993314806188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41d12d51f692f7e4ca9d556e77f73877, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnOffset: {x: 0, y: 0.5}
 --- !u!1 &3959413514451585286
 GameObject:
   m_ObjectHideFlags: 0
