@@ -22,7 +22,11 @@ public class ObservabilityController : MonoBehaviour
         status.controller = this;
     }
 
-    // Used by the WorldGenerator to unload only
+    /// <summary>
+    /// Called by the WorldGenerator to unload this object. 
+    /// The object will be CLEANED UP by the WorldGenerator when it goes out of view, 
+    /// and it WILL be spawned again through procedural generation.
+    /// </summary>
     public virtual void UnloadOnServer()
     {
         status.isSpawned = false;
@@ -30,16 +34,24 @@ public class ObservabilityController : MonoBehaviour
         if (gameObject) Destroy(gameObject);
     }
 
-    // Used by EntityStatus on death to despawn only
+    /// <summary>
+    /// Called when the object needs to be despawned with custom logic. 
+    /// The object will NOT be cleaned up by the WorldGenerator when out of view, 
+    /// and it will NOT be spawned again through procedural generation.
+    /// </summary>
     public virtual void DespawnOnServer()
     {
         status.isSpawned = false;
         status.controller = null;
         status.isObservable = false;
-        // Use entity on death logic instead
+        // Destroy logic should be handled by Entity Status or caller
     }
 
-    // Used when object doesn't need to get destroyed right away
+    /// <summary>
+    /// Called when the object should remain in the world for now, but no longer be observable. 
+    /// The object will be cleaned up by the WorldGenerator when it goes out of view, 
+    /// and it will NOT be spawned again through procedural generation.
+    /// </summary>
     public virtual void EndObservabilityOnServer()
     {
         status.isObservable = false;

@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fd40b3b8aeddc7468a5899e36c25878, type: 3}
+  m_Name: Hamster PetData
+  m_EditorClassIdentifier: 
+  petType: 1
+  petIcon: {fileID: -8680216518235983974, guid: e3d83bdb7c97e694ba0578c78c6df470, type: 3}
+  collectedSprites:
+  - {fileID: -8680216518235983974, guid: e3d83bdb7c97e694ba0578c78c6df470, type: 3}
+  - {fileID: 453071235776830604, guid: e3d83bdb7c97e694ba0578c78c6df470, type: 3}
+  - {fileID: 3756809345616245518, guid: e3d83bdb7c97e694ba0578c78c6df470, type: 3}
+  - {fileID: -2645286724441186833, guid: e3d83bdb7c97e694ba0578c78c6df470, type: 3}
+  hiddenSprites:
+  - {fileID: 4452111294397025366, guid: e3d83bdb7c97e694ba0578c78c6df470, type: 3}
+  - {fileID: -1621714244425713735, guid: e3d83bdb7c97e694ba0578c78c6df470, type: 3}
+  - {fileID: 1166352115, guid: e3d83bdb7c97e694ba0578c78c6df470, type: 3}
+  - {fileID: 994583232, guid: e3d83bdb7c97e694ba0578c78c6df470, type: 3}
+  petPrefab: {fileID: 767809605169140300, guid: b32ce0fbf3f8b8d418bf4ca53b73b1ea, type: 3}
+  petHint: Complete the game at least once.
+  petDescription: 'Super star at harvesting crops.
+
+'

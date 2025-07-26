@@ -36,7 +36,7 @@ public abstract class Animal : NetworkBehaviour
     private float roamRadius = 5f;
     [SerializeField]
     private ItemProperty itemProperty;
-    protected ItemProperty ItemProperty => itemProperty;
+    public ItemProperty ItemProperty => itemProperty;
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
 

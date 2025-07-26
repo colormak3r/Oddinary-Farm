@@ -6,6 +6,7 @@
 */
 
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PetSelectionUI : UIBehaviour
@@ -19,6 +20,8 @@ public class PetSelectionUI : UIBehaviour
     private GameObject petSelectionButtonPrefab;
     [SerializeField]
     private PetSelectionButton noneButton;
+    [SerializeField]
+    private TMP_Text descriptionText;
 
     private List<PetSelectionButton> buttons = new List<PetSelectionButton>();
 
@@ -77,29 +80,50 @@ public class PetSelectionUI : UIBehaviour
         AudioManager.Main.PlayClickSound();
 
         PlayerPrefs.SetString(SELECTED_PET_KEY, string.Empty);
+        descriptionText.text = "Select a pet to spawn. " +
+            "You can collect pets by playing the game and completing challenges. ";
     }
 
     private void OnPetSelected(PetData petData, PetSelectionButton button)
     {
-        if (!PetManager.Main.IsPetCollected(petData.petType)) return;
-
-        PetManager.Main.SetPetToSpawn(petData);
-
-        // Deselect all buttons
-        foreach (var b in buttons)
+        if (!PetManager.Main.IsPetCollected(petData.petType))
         {
-            b.SetSelected(false);
+            descriptionText.text = petData.petHint;
         }
-        button.SetSelected(true);
+        else
+        {
+            PetManager.Main.SetPetToSpawn(petData);
 
-        AudioManager.Main.PlayClickSound();
+            // Deselect all buttons
+            foreach (var b in buttons)
+            {
+                b.SetSelected(false);
+            }
+            button.SetSelected(true);
 
-        PlayerPrefs.SetString(SELECTED_PET_KEY, petData.petType.ToString());
+            AudioManager.Main.PlayClickSound();
+
+            PlayerPrefs.SetString(SELECTED_PET_KEY, petData.petType.ToString());
+
+            descriptionText.text = petData.petDescription;
+        }
     }
 
-    public void ResetCollectionDataClicked()
+    public void OnResetCollectionDataClicked()
     {
         PetManager.Main.ResetCollectionData();
+        AudioManager.Main.PlayClickSound();
+        OnNoneClicked();
+        foreach (var b in buttons)
+        {
+            if (b == noneButton) continue;
+            b.Initialze(b.PetData, OnPetSelected);
+        }
+    }
+
+    public void OnUnlockAllClicked()
+    {
+        PetManager.Main.UnlockAllPets();
         AudioManager.Main.PlayClickSound();
         OnNoneClicked();
         foreach (var b in buttons)

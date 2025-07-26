@@ -9,13 +9,13 @@ public class SittingState : BehaviourState
     public override void EnterState()
     {
         base.EnterState();
-        animal.Animator.SetBool(Animal.ANIMATOR_IS_SITTING, true);
-        animal.Animator.SetBool(Animal.ANIMATOR_IS_MOVING, false);
+        Animal.Animator.SetBool(Animal.ANIMATOR_IS_SITTING, true);
+        Animal.Animator.SetBool(Animal.ANIMATOR_IS_MOVING, false);
     }
 
     public override void ExitState()
     {
         base.ExitState();
-        animal.Animator.SetBool(Animal.ANIMATOR_IS_SITTING, false);
+        Animal.Animator.SetBool(Animal.ANIMATOR_IS_SITTING, false);
     }
 }

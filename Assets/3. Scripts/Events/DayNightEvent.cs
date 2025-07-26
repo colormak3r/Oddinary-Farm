@@ -14,7 +14,7 @@ public class DayNightEvent : NetworkBehaviour
     {
         TimeManager.Main.OnDayStart.AddListener(HandleOnDayStarted);
         TimeManager.Main.OnNightStart.AddListener(HandleOnNightStarted);
-
+        UpdateStatus();
     }
 
     [ContextMenu("Update Status")]

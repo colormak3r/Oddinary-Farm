@@ -74,6 +74,7 @@ MonoBehaviour:
   canSpawnPet: 1
   petDataEntries:
   - {fileID: 11400000, guid: d9c1881dfe017434da6c21191e779852, type: 2}
+  - {fileID: 11400000, guid: 02674e755cdfccb458fd908001aa356c, type: 2}
   chihuahuaRescuePrefab: {fileID: 499131916628630805, guid: d1bdb721e2af81d4ea780322ba841e4d, type: 3}
   showDebugs: 1
   petSpawned: 0

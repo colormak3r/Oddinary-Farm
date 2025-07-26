@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2745308554
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 3767492963
+  InScenePlacedSourceGlobalObjectIdHash: 1030621906
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -74,39 +74,64 @@ MonoBehaviour:
   radioEvents:
   - day: 1
     hour: 10
-    message: Movement was detected near the coastline...
+    message: Welcome back to Oddinary Farm, folk ... Grab some popcorns and ...
   - day: 1
-    hour: 13
+    hour: 12
     message: 'Today''s forecast: Sun all around.'
   - day: 1
-    hour: 16
+    hour: 18
     message: The night is approaching very soon, stay alert...
   - day: 2
-    hour: 6
-    message: Good morning! Nice job surviving your first day.
+    hour: 0
+    message: ... and they survived their first night...
   - day: 2
-    hour: 13
-    message: 'Today''s forecast: Clear skies and sunshine.'
+    hour: 6
+    message: 'Today''s forecast: Scattered showers through the day.'
+  - day: 2
+    hour: 12
+    message: ... This year's contenders show great promise ... if they can make it
+      through the flood, that is ...
+  - day: 2
+    hour: 18
+    message: Don't stay to far from the farm. Night is coming!
   - day: 3
-    hour: 7
-    message: 'Today''s forecast: Rain all day.'
+    hour: 6
+    message: 'Today''s forecast: Dry all day. Perfect for catching chickens'
   - day: 4
-    hour: 7
+    hour: 6
     message: 'Today''s forecast: Uninterrupted sunlight.'
+  - day: 4
+    hour: 12
+    message: ... Perfect day to stroll around on the beach ... Keep your ears open
+      for a new friend ...
   - day: 5
     hour: 6
-    message: "Good morning! You\u2019re adapting quickly. That\u2019s... good."
+    message: 'Today''s forecast: Heavy rain later this afternoon.'
   - day: 5
-    hour: 13
-    message: 'Today''s forecast: Quiet skies.'
+    hour: 12
+    message: ... new creatures reported joinning the show ... they better gear up
+      ...
   - day: 6
-    hour: 16
-    message: 'Today''s forecast: Cold rain. When will it stop?'
+    hour: 6
+    message: "Today\u2019s forecast: The heaviest storm has passed. No more rain
+      expected in the coming days... or so we think."
   - day: 7
-    hour: 13
-    message: 'Today''s forecast: Same as yesterday, but colder.'
+    hour: 6
+    message: 'Today''s forecast: Same as yesterday, but a bit chilly.'
   - day: 8
     hour: 6
-    message: "Good morning. Sun\u2019s finally back up. So are they."
-  IsActivated:
-    m_InternalValue: 0
+    message: 'Today''s forecast: Still no rain, but something is brewing on the horizon.'
+  - day: 9
+    hour: 6
+    message: 'Today''s forecast:  Storm is coming.'
+  - day: 9
+    hour: 12
+    message: ... the end is near ... escape ... escape ... escape ...
+  - day: 9
+    hour: 18
+    message: ... Oh I'm so excited for tonight ... Usually this is where everyone
+      die ...
+  - day: 10
+    hour: 6
+    message: 'Today''s forecast: Heavy rain. Water raising rapidly.'
+  hasShownActivationMessage: 0

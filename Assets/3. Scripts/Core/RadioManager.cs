@@ -5,13 +5,12 @@ using System;
 using System.Collections.Generic;
 
 [Serializable]
-public class RadioEvent
+public struct RadioEvent
 {
     public int day;
     public int hour;
-    [TextArea]
+    [TextArea(2, 5)]
     public string message;
-    public AudioClip audioClip;
 }
 
 public class RadioManager : NetworkBehaviour

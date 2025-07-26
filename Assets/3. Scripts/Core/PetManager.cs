@@ -26,7 +26,7 @@ public class PetManager : NetworkBehaviour
         }
 
         // TODO: PetManagerUI
-        //DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);
         FetchCollectedPet();
     }
 
@@ -146,7 +146,7 @@ public class PetManager : NetworkBehaviour
     #endregion
 
     #region Pet Collection
-    public void CollectPet(PetType petType)
+    public void UnlockPet(PetType petType)
     {
         if (petCollectionStatus.ContainsKey(petType) && !petCollectionStatus[petType])
         {
@@ -191,5 +191,15 @@ public class PetManager : NetworkBehaviour
     public void SetPetToSpawn(PetData petToSpawn)
     {
         this.petToSpawn = petToSpawn;
+    }
+
+    [ContextMenu("Unlock All Pets")]
+    public void UnlockAllPets()
+    {
+        foreach (var petData in petDataEntries)
+        {
+            UnlockPet(petData.petType);
+        }
+        if (showDebugs) Debug.Log("All pets unlocked.");
     }
 }

@@ -13,11 +13,11 @@ public class AttackPrimaryState : BehaviourState
     public override void ExecuteState()
     {
         base.ExecuteState();
-        if (Time.time > nextAction && animal.TargetDetector.CurrentTarget != null && animal.NetworkObject.IsSpawned)
+        if (Time.time > nextAction && Animal.TargetDetector.CurrentTarget != null && Animal.NetworkObject.IsSpawned)
         {
-            animal.CurrentItem.OnPrimaryAction(animal.TargetDetector.CurrentTarget.position);
-            nextAction = Time.time + animal.CurrentItem.BaseProperty.PrimaryCdr;
-            animal.NetworkAnimator.SetTrigger(Animal.ANIMATOR_PRIMARY_ACTION);
+            Animal.CurrentItem.OnPrimaryAction(Animal.TargetDetector.CurrentTarget.position);
+            nextAction = Time.time + Animal.CurrentItem.BaseProperty.PrimaryCdr;
+            Animal.NetworkAnimator.SetTrigger(Animal.ANIMATOR_PRIMARY_ACTION);
         }
     }
 }

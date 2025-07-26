@@ -13,16 +13,16 @@ public class RoamingState : BehaviourState
     public override void EnterState()
     {
         base.EnterState();
-        animal.Animator.SetBool("IsMoving", true);
-        animal.MoveTo(animal.GetRandomPointInRange());
-        animal.OnDestinationReached.AddListener(HandleOnDestinationReached);
+        Animal.Animator.SetBool("IsMoving", true);
+        Animal.MoveTo(Animal.GetRandomPointInRange());
+        Animal.OnDestinationReached.AddListener(HandleOnDestinationReached);
     }
 
     const float StallDelay = 0.1f;
     private float stallStart = -1f;
     public override void ExecuteState()
     {
-        var velocity = animal.Rbody.linearVelocity;
+        var velocity = Animal.Rbody.linearVelocity;
 
         if ((velocity.x == 0 || velocity.y == 0) && stallStart < 0f)
             stallStart = Time.time;
@@ -31,7 +31,7 @@ public class RoamingState : BehaviourState
 
         if (stallStart >= 0f && Time.time - stallStart > StallDelay)
         {
-            animal.MoveTo(animal.GetRandomPointInRange());
+            Animal.MoveTo(Animal.GetRandomPointInRange());
             stallStart = -1f;
         }
     }
@@ -39,14 +39,14 @@ public class RoamingState : BehaviourState
     public override void ExitState()
     {
         base.ExitState();
-        animal.Animator.SetBool("IsMoving", false);
-        animal.StopMovement();
-        animal.OnDestinationReached.RemoveListener(HandleOnDestinationReached);
+        Animal.Animator.SetBool("IsMoving", false);
+        Animal.StopMovement();
+        Animal.OnDestinationReached.RemoveListener(HandleOnDestinationReached);
     }
 
     private void HandleOnDestinationReached()
     {
-        animal.MoveTo(animal.GetRandomPointInRange());
+        Animal.MoveTo(Animal.GetRandomPointInRange());
     }
 }
 

@@ -44,9 +44,6 @@ public class Radio : Structure, IInteractable
         // The radio is only removeable if it is activated
         SetIsRemoveable(RadioManager.Main.IsActivatedValue);
 
-        // Play music every 5 hours if is turned on
-        TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
-
         // Play proximity cue sound (radio static) to get player attention if it's not activated
         StartCoroutine(CueCoroutine());
     }
@@ -54,25 +51,6 @@ public class Radio : Structure, IInteractable
     public override void OnNetworkDespawn()
     {
         PlaySoundTracks.OnValueChanged -= HandlePlaySoundTracksChanged;
-        TimeManager.Main.OnHourChanged.RemoveListener(HandleOnHourChanged);
-    }
-
-    private int hourCounter = 0;
-    private void HandleOnHourChanged(int arg0)
-    {
-        // Play music every 5 hours if is turned on
-        if (PlaySoundTracks.Value)
-        {
-            if (hourCounter >= 5)
-            {
-                hourCounter = 0;
-                PlayRandomSoundTrack();
-            }
-            else
-            {
-                hourCounter++;
-            }
-        }
     }
 
     private void HandlePlaySoundTracksChanged(bool previousValue, bool newValue)
@@ -84,8 +62,8 @@ public class Radio : Structure, IInteractable
         if (newValue)
         {
             // If the radio is turned on, play the power on sound then start playing music
-            if (turnOnCoroutine != null) StopCoroutine(turnOnCoroutine);
-            turnOnCoroutine = StartCoroutine(TurnOnCoroutine());
+            if (playRadioCoroutine != null) StopCoroutine(playRadioCoroutine);
+            playRadioCoroutine = StartCoroutine(PlayRadioCoroutine());
         }
         else
         {
@@ -118,16 +96,35 @@ public class Radio : Structure, IInteractable
         }
     }
 
-    private Coroutine turnOnCoroutine;
-    private IEnumerator TurnOnCoroutine()
+    private Coroutine playRadioCoroutine;
+    private IEnumerator PlayRadioCoroutine()
     {
         light2D.enabled = true;
         spriteRenderer.color = activeColor;
+
+        /// Play the power-on SFX
         audioElement.Stop();
         audioElement.PlayOneShot(powerOnSfx);
         yield return new WaitForSeconds(powerOnSfx.length);
-        hourCounter = 0;
-        PlayRandomSoundTrack();
+
+        // Loop while PlaySoundTracks is true
+        while (PlaySoundTracks.Value == true)
+        {
+            var clip = PlayRandomSoundTrack();
+            var duration = clip.length;
+            float elapsed = 0f;
+            while (elapsed < clip.length)
+            {
+                if (!PlaySoundTracks.Value)
+                {
+                    audioElement.Stop();
+                    yield break; // Exit the coroutine immediately
+                }
+
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+        }
     }
 
     public bool IsHoldInteractable => false;
@@ -161,8 +158,8 @@ public class Radio : Structure, IInteractable
     [Rpc(SendTo.Everyone)]
     private void OnRadioActivatedRpc()
     {
-        // Mark this object as no longer observable (cannot be respawned by procedural generation)
-        if (IsServer) GetComponent<ObservabilityController>().EndObservabilityOnServer();
+        // Mark this object as despawned (cannot be respawned by procedural generation)
+        if (IsServer) GetComponent<ObservabilityController>().DespawnOnServer();
 
         // Set the radio as removeable on all clients
         SetIsRemoveable(true);
@@ -170,8 +167,10 @@ public class Radio : Structure, IInteractable
 
 
     [ContextMenu("Play Random Sound Track")]
-    private void PlayRandomSoundTrack()
+    private AudioClip PlayRandomSoundTrack()
     {
-        audioElement.PlayOneShot(soundTracks.GetRandomElement());
+        var clip = soundTracks.GetRandomElement();
+        audioElement.PlayOneShot(clip);
+        return clip;
     }
 }

@@ -101,7 +101,7 @@ public class ChihuahuaRescue : NetworkBehaviour, IInteractable
     [Rpc(SendTo.Everyone)]
     public void ConfirmRescueRpc(ulong id)
     {
-        if (NetworkManager.Singleton.LocalClientId == id) PetManager.Main.CollectPet(PetType.Chihuahua);
+        if (NetworkManager.Singleton.LocalClientId == id) PetManager.Main.UnlockPet(PetType.Chihuahua);
         Instantiate(confettiPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
     }
 

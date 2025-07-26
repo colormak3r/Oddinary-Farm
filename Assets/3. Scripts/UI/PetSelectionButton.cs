@@ -47,9 +47,10 @@ public class PetSelectionButton : MonoBehaviour
 
     public void OnClick()
     {
+        OnSelectedCallback?.Invoke(petData, this);
         if (PetManager.Main.IsPetCollected(petData.petType))
         {
-            OnSelectedCallback?.Invoke(petData, this);
+
         }
         else
         {

@@ -12,14 +12,14 @@ public class BurrowingState : BehaviourState
     public override void EnterState()
     {
         base.EnterState();
-        animal.Animator.SetBool("IsBurrowing", true);
-        animal.Movement.SetCanBeKnockback(false);
+        Animal.Animator.SetBool("IsBurrowing", true);
+        Animal.Movement.SetCanBeKnockback(false);
     }
 
     public override void ExitState()
     {
         base.ExitState();
-        animal.Animator.SetBool("IsBurrowing", false);
-        animal.Movement.SetCanBeKnockback(true);
+        Animal.Animator.SetBool("IsBurrowing", false);
+        Animal.Movement.SetCanBeKnockback(true);
     }
 }

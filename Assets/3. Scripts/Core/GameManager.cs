@@ -188,6 +188,9 @@ public class GameManager : NetworkBehaviour
         Debug.Log($"Game Over: {escaped}");
         GameOverUI.Main.SetGameoverText(escaped);
         gameOverCoroutine = StartCoroutine(GameOverCoroutine());
+
+        // TODO: make UI showing hamster unlocked;
+        if (escaped) PetManager.Main.UnlockPet(PetType.Hamster);
     }
 
     public IEnumerator GameOverCoroutine()
