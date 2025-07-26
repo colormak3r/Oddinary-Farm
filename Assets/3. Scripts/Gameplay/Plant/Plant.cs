@@ -225,7 +225,7 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
         if (badHarvest)
             AssetManager.Main.SpawnItem(copperCoinProperty, transform.position, harvester);
         else
-            lootGenerator.DropLootOnServer(harvester);
+            lootGenerator.DropLoot(harvester);
 
         GetHarvestedOnServer();
     }

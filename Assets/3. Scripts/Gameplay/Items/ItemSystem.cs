@@ -694,7 +694,7 @@ public class ItemSystem : NetworkBehaviour
         var hit = Physics2D.OverlapPoint(position, LayerManager.Main.MineableLayer);
         if (hit && hit.TryGetComponent(out EntityStatus entityStatus))
         {
-            entityStatus.TakeDamage(1, DamageType.Pierce, Hostility.Neutral, transform.root);
+            entityStatus.TakeDamage(1, DamageType.Absolute, Hostility.Absolute, transform.root);
         }
     }
 

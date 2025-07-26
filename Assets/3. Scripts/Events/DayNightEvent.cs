@@ -10,6 +10,10 @@ public class DayNightEvent : NetworkBehaviour
     [SerializeField]
     private UnityEvent OnNightStart;
 
+    [Header("Debugs")]
+    [SerializeField]
+    private bool showDebugs;
+
     public override void OnNetworkSpawn()
     {
         TimeManager.Main.OnDayStart.AddListener(HandleOnDayStarted);
@@ -22,12 +26,12 @@ public class DayNightEvent : NetworkBehaviour
     {
         if (TimeManager.Main.IsDay)
         {
-            Debug.Log("Day started, invoking OnDayStart event.");
+            if (showDebugs) Debug.Log("Day started, invoking OnDayStart event.");
             HandleOnDayStarted();
         }
         else
         {
-            Debug.Log("Night started, invoking OnNightStart event.");
+            if (showDebugs) Debug.Log("Night started, invoking OnNightStart event.");
             HandleOnNightStarted();
         }
     }

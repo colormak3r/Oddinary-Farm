@@ -128,7 +128,7 @@ public class Chest : NetworkBehaviour, IInteractable, IDiggable
 
         if (newState == ChestState.Empty && sourceRef.TryGet(out NetworkObject sourceObject))
         {
-            GetComponent<LootGenerator>()?.DropLootOnServer(sourceObject);
+            GetComponent<LootGenerator>()?.DropLoot(sourceObject.gameObject);
         }
     }
 

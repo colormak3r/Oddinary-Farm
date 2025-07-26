@@ -8,6 +8,7 @@ public enum DamageType
     Slash,
     Water,
     Laser,
+    Absolute,
 }
 
 [System.Serializable]

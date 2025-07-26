@@ -415,6 +415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 032e7984a7dc3cf4696e7d8d29647e33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   lootTable: {fileID: 11400000, guid: bcad375afb6b130468b2b693736053e4, type: 2}
 --- !u!114 &4846478977026604155
 MonoBehaviour:
@@ -429,6 +430,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  crystalSnailChance: 0.1
+  crystalSnailPrefab: {fileID: 5898066058655423694, guid: 0cbe68b2b8d02d24fa2fb9f524e99ba5, type: 3}
 --- !u!114 &2858829350358786603
 MonoBehaviour:
   m_ObjectHideFlags: 0
