@@ -204,8 +204,7 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     public void IgnorePickerOnServer(Transform ignore)
     {
         serverIgnorePicker = ignore;
-        //if (showDebugs) 
-        Debug.Log($"Ignoring picker {ignore.name}", this);
+        if (showDebugs) Debug.Log($"Ignoring picker {ignore.name}", this);
     }
 
     private GameObject ScanForPlayer()

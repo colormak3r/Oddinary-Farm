@@ -140,7 +140,7 @@ MonoBehaviour:
   deathSound: {fileID: 8300000, guid: 6daade3a6970eb54fbfe49ca74bba5ec, type: 3}
   showDebugs: 0
   CanBeHealed:
-    m_InternalValue: 0
+    m_InternalValue: 1
   CurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:

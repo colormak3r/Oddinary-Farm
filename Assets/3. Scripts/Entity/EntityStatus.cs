@@ -167,7 +167,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     public bool TakeDamage(uint damage, DamageType damageType, Hostility attackerHostility, Transform attacker)
     {
-        if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {damageType}, hostility = {attackerHostility}, from {attacker.gameObject} to {gameObject}", this);
+        if (showDebugs) Debug.Log($"GetDamaged: Damage = {damage}, type = {damageType}, hostility = {attackerHostility}, from {attacker} to {gameObject}", this);
 
         // Check if the attacker is hostile towards this entity
         // If the attacker is neutral, it will also damage neutral entities

@@ -261,23 +261,26 @@ public class AssetManager : NetworkBehaviour
     #endregion
 
     #region Item Spawning
-    public void SpawnItem(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef = default, NetworkObjectReference ignoreRef = default, float randomRange = 0f, bool randomForce = true)
+    public void SpawnItem(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef = default, NetworkObjectReference ignoreRef = default, float randomRange = 0f, bool randomForce = true, int count = 1)
     {
-        SpawnItemRpc(itemProperty, position, preferRef, ignoreRef, randomRange, randomForce);
+        SpawnItemRpc(itemProperty, position, preferRef, ignoreRef, randomRange, randomForce, count);
     }
 
     [Rpc(SendTo.Server)]
-    public void SpawnItemRpc(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef, NetworkObjectReference ignoreRef, float randomRange, bool randomForce)
+    public void SpawnItemRpc(ItemProperty itemProperty, Vector2 position, NetworkObjectReference preferRef, NetworkObjectReference ignoreRef, float randomRange, bool randomForce, int count)
     {
-        var itemReplica = SpawnItemOnServer(itemProperty, position, randomRange, randomForce);
+        for (int i = 0; i < count; i++)
+        {
+            var itemReplica = SpawnItemOnServer(itemProperty, position, randomRange, randomForce);
 
-        if (preferRef.TryGet(out var preferNetObj))
-        {
-            itemReplica.PreferPickerOnServer(preferNetObj.transform);
-        }
-        else if (ignoreRef.TryGet(out var ignoreNetObj))
-        {
-            itemReplica.IgnorePickerOnServer(ignoreNetObj.transform);
+            if (preferRef.TryGet(out var preferNetObj))
+            {
+                itemReplica.PreferPickerOnServer(preferNetObj.transform);
+            }
+            else if (ignoreRef.TryGet(out var ignoreNetObj))
+            {
+                itemReplica.IgnorePickerOnServer(ignoreNetObj.transform);
+            }
         }
     }
 

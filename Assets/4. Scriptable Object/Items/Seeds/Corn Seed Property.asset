@@ -20,7 +20,7 @@ MonoBehaviour:
   isSellable: 1
   price: 400
   range: 10
-  primaryCdr: 0.25
+  primaryCdr: 0.1
   secondaryCdr: 0.25
   itemContext: "LMB: Place\r\r\nX  : Drop"
   description: Have you had buttered corns?

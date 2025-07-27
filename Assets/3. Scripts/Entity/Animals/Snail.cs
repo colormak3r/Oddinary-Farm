@@ -10,9 +10,6 @@ using ColorMak3r.Utility;
 
 public class Snail : Animal
 {
-    [Header(" Snail Settings")]
-    [SerializeField]
-    private float harvestRange = 1f;
     private BehaviourState thinkingState;
     private BehaviourState followingState;
     private BehaviourState chasingState;

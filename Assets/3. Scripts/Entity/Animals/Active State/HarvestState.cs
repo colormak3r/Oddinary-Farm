@@ -14,11 +14,11 @@ public class HarvestState : BehaviourState
             if (Animal.TargetDetector.CurrentTarget.TryGetComponent<Plant>(out var plant) && plant.IsHarvestable)
             {
                 plant.GetHarvested(Animal.FollowStimulus.Owner);
-                Animal.TargetDetector.DeselectTarget($"Harvested by {Animal.name}");
+                Animal.TargetDetector.DeselectTarget($"HarvestState: Harvested by {Animal.name}");
             }
             else
             {
-                Animal.TargetDetector.DeselectTarget($"Invalid object or plant is not harvestable");
+                Animal.TargetDetector.DeselectTarget($"HarvestState: Invalid object {Animal.TargetDetector.CurrentTarget}");
             }
         }
     }

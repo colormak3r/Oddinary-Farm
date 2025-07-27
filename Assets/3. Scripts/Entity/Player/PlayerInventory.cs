@@ -284,21 +284,53 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     public void SwapItem(int index1, int index2)
     {
-        var temp = inventory[index1];
-        inventory[index1] = inventory[index2];
-        inventory[index2] = temp;
+        if (index1 == index2) return;   // same slot? nothing to do
+
+        // 1. Try to merge if they hold the same item and neither is empty
+        if (!inventory[index1].IsEmpty &&
+        !inventory[index2].IsEmpty &&
+        inventory[index1].Property == inventory[index2].Property)
+        {
+            var maxStack = inventory[index1].Property.MaxStack;
+            if (inventory[index1].Count + inventory[index2].Count > maxStack)
+            {
+                var toMove = maxStack - inventory[index1].Count;
+                inventory[index1].Count = maxStack;
+                inventory[index2].Count -= toMove;
+            }
+            else
+            {
+                inventory[index1].Count += inventory[index2].Count;
+                ClearInventorySlot(index2);
+            }
+        }
+        else
+        {
+            // 2. Swap the items in the inventory
+            var temp = inventory[index1];
+            inventory[index1] = inventory[index2];
+            inventory[index2] = temp;
+        }
 
         if (!inventory[index1].IsEmpty)
             inventoryUI.UpdateSlot(index1, inventory[index1].Property.IconSprite, (int)inventory[index1].Count);
         else
-            inventoryUI.UpdateSlot(index1, null, 0);
+            ClearInventorySlot(index1);
 
         if (!inventory[index2].IsEmpty)
             inventoryUI.UpdateSlot(index2, inventory[index2].Property.IconSprite, (int)inventory[index2].Count);
         else
-            inventoryUI.UpdateSlot(index2, null, 0);
+            ClearInventorySlot(index2);
 
         ChangeHotBarIndex(currentHotbarIndex);
+    }
+
+    public void DropStack(int index)
+    {
+        var count = (int)inventory[index].Count;
+        var property = inventory[index].Property;
+        ClearInventorySlot(index);
+        AssetManager.Main.SpawnItem(property, transform.position, default, gameObject, default, default, count);
     }
 
     #region Search Algorithms

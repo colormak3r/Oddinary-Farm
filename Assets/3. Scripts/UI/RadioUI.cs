@@ -9,10 +9,6 @@ public class RadioUI : UIBehaviour
     private float messageDisplayTime = 5f;
     [SerializeField]
     private TMP_Text radioMessageText;
-    [SerializeField]
-    private TMP_Text primaryShadowText;
-    [SerializeField]
-    private TMP_Text secondaryShadowText;
 
     public static RadioUI Main;
 
@@ -40,7 +36,7 @@ public class RadioUI : UIBehaviour
     {
         // Use Show instead of ShowNoFade for smoother transitions and bring attention to the text
         // Our eyes can detect motion better than static images
-        Show(); 
+        Show();
 
         // Scrolling text effect
         string currentText;
@@ -58,7 +54,5 @@ public class RadioUI : UIBehaviour
     private void SetRadioMessage(string message)
     {
         radioMessageText.text = message;
-        primaryShadowText.text = message;
-        secondaryShadowText.text = message;
     }
 }

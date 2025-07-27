@@ -19,13 +19,13 @@ public class WarningUI : UIBehaviour
         }
     }
 
-    public void ShowWarning(string message)
+    public void ShowWarning()
     {
         StopAllCoroutines();
-        StartCoroutine(ShowWarningCoroutine(message));
+        StartCoroutine(ShowWarningCoroutine());
     }
 
-    private IEnumerator ShowWarningCoroutine(string message)
+    private IEnumerator ShowWarningCoroutine()
     {
         for (int i = 0; i < 3; i++)
         {
@@ -39,6 +39,6 @@ public class WarningUI : UIBehaviour
     [ContextMenu("Show Warning")]
     private void ShowBreachDetected()
     {
-        ShowWarning("Breach Detected");
+        ShowWarning();
     }
 }

@@ -55,10 +55,11 @@ public class HungerStimulus : NetworkBehaviour
     [SerializeField]
     private bool isDying = false;
     public bool IsDying => isDying;
-    [SerializeField]
-    private Transform targetFoodTransform;
-    private IConsummable targetFood;
-    public IConsummable TargetFood => targetFood;
+
+    private GameObject targetFood;
+    public GameObject TargetFood => targetFood;
+    private IConsummable targetConsummable;
+    public IConsummable TargetConsummable => targetConsummable;
 
     private float nextHunger;
     private float nextDeath;
@@ -106,21 +107,24 @@ public class HungerStimulus : NetworkBehaviour
             GetComponent<EntityStatus>().TakeDamage(100, DamageType.Blunt, Hostility.Absolute, transform);
         }
 
+
         if (isHungry && targetFood == null && Time.time > nextScan)
         {
             nextScan = Time.time + 1f;
-            targetFood = ScanForFood();
+            ScanForFood();
         }
 
-        if (targetFood != null && targetFood.Transform != null)
+        if (targetFood != null)
         {
-            targetFoodTransform = targetFood.Transform;
-            var direction = transform.position - targetFood.Transform.position;
+            targetConsummable.AddToHunterList(this);
+            var direction = transform.position - targetFood.transform.position;
             if (direction.sqrMagnitude < foodConsumptionRadius * foodConsumptionRadius)
             {
-                if (targetFood.Consume())
+                targetConsummable.RemoveFromHunterList(this);
+                if (targetConsummable.Consume())
                 {
                     targetFood = null;
+                    targetConsummable = null;
                     isHungry = false;
                     isDying = false;
                     nextHunger = Time.time + hourTilHunger * TimeManager.Main.HourDuration;
@@ -130,6 +134,7 @@ public class HungerStimulus : NetworkBehaviour
                 else
                 {
                     targetFood = null;
+                    targetConsummable = null;
                 }
             }
 
@@ -141,41 +146,46 @@ public class HungerStimulus : NetworkBehaviour
 
             if (stallStart >= 0f && Time.time - stallStart > StallDelay)
             {
-                targetFood = ScanForFood();
-                if (targetFood != null) targetFoodTransform = targetFood.Transform;
+                ScanForFood();
                 stallStart = -1f;
             }
         }
-        else
-        {
-            targetFoodTransform = null;
-        }
     }
 
-    private IConsummable ScanForFood()
+    private void ScanForFood()
     {
         var hits = Physics2D.OverlapCircleAll(transform.position, foodDetectionRadius, foodLayer);
         foreach (var hit in hits)
         {
             if (hit.TryGetComponent(out IConsummable consummable))
             {
-                if (consummable.Transform != null && consummable.FoodType.HasFlag(foodType) && consummable.FoodColor.HasFlag(foodColor) && consummable.CanBeConsumed)
+                if (consummable.GameObject != null && consummable.FoodType.HasFlag(foodType) && consummable.FoodColor.HasFlag(foodColor) && consummable.CanBeConsumed)
                 {
-                    var raycast = Physics2D.Raycast(transform.position, consummable.Transform.position - transform.position, foodDetectionRadius, LayerManager.Main.MovementBlockerLayer);
-                    if (raycast && (raycast.transform.position - transform.position).sqrMagnitude < (consummable.Transform.position - transform.position).sqrMagnitude)
+                    var consummableTransform = consummable.GameObject.transform;
+                    var raycast = Physics2D.Raycast(transform.position, consummableTransform.position - transform.position, foodDetectionRadius, LayerManager.Main.MovementBlockerLayer);
+                    if (raycast && (raycast.transform.position - transform.position).sqrMagnitude < (consummableTransform.position - transform.position).sqrMagnitude)
                     {
-                        if (showDebugs) Debug.Log($"Food {consummable.Transform.name} is obstructed by {raycast.transform.name}", this);
+                        if (showDebugs) Debug.Log($"Food {consummable.GameObject.name} is obstructed by {raycast.transform.name}", this);
                     }
                     else
                     {
-                        if (showDebugs) Debug.Log($"Found food: {consummable.Transform.name}", this);
-                        return consummable;
+                        if (showDebugs) Debug.Log($"Found food: {consummable.GameObject.name}", consummable.GameObject);
+                        if (targetFood) targetConsummable.RemoveFromHunterList(this);
+                        targetFood = consummable.GameObject;
+                        targetConsummable = consummable;
+                        targetConsummable.AddToHunterList(this);
+                        break;
                     }
                 }
+                else
+                {
+                    if (showDebugs) Debug.LogWarning($"Food {hit.name} does not match the required type or color or cannot be consumed", this);
+                }
             }
-        }
 
-        return null;
+            targetFood = null;
+            targetConsummable = null;
+        }
     }
 
     [Rpc(SendTo.Everyone)]
@@ -200,9 +210,9 @@ public class HungerStimulus : NetworkBehaviour
         if (targetFood != null)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(targetFood.Transform.position, foodConsumptionRadius);
+            Gizmos.DrawWireSphere(targetFood.transform.position, foodConsumptionRadius);
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, targetFood.Transform.position);
+            Gizmos.DrawLine(transform.position, targetFood.transform.position);
         }
     }
 }

@@ -23,6 +23,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
+    private DropSlot dropSlot;
 
     private void Awake()
     {
@@ -33,10 +34,11 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         originalPosition = rectTransform.anchoredPosition;
     }
 
-    public void Initialize(int index, bool isInteractable)
+    public void Initialize(int index, bool isInteractable, DropSlot dropSlot)
     {
         this.index = index;
         this.isInteractable = isInteractable;
+        this.dropSlot = dropSlot;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -45,6 +47,7 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         canvasGroup.blocksRaycasts = false;
         transform.SetParent(transform.root);
+        dropSlot.gameObject.SetActive(true);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -60,7 +63,8 @@ public class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         canvasGroup.blocksRaycasts = true;
         transform.SetParent(originalParent);
-        rectTransform.anchoredPosition = originalPosition;        
+        rectTransform.anchoredPosition = originalPosition;
+        dropSlot.gameObject.SetActive(false);
     }
 
     public void UpdateImage(Sprite sprite)

@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 906312249135965744, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: moveSpeed
-      value: 4500
+      value: 2500
       objectReference: {fileID: 0}
     - target: {fileID: 1713903147799318877, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: itemProperty
@@ -89,12 +89,17 @@ PrefabInstance:
       value: Hamster Variant
       objectReference: {fileID: 0}
     - target: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6444526639934246005, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
     - {fileID: 5862499223730954318, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+    - {fileID: 3114174111768081107, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
     m_RemovedGameObjects:
     - {fileID: 3034646669894491093, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
     - {fileID: 7494723142825039976, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
@@ -104,6 +109,9 @@ PrefabInstance:
       addedObject: {fileID: 1057723577764495248}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      insertIndex: 10
+      addedObject: {fileID: 4647858647314064663}
+    - targetCorrespondingSourceObject: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5908950654231218779}
   m_SourcePrefab: {fileID: 100100000, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
@@ -112,6 +120,38 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7918673031090584114, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
   m_PrefabInstance: {fileID: 7440801927784556670}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4647858647314064663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767809605169140300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3351725c1e6faac419d544320764dc69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  raycastTarget: 1
+  detectRange: 10
+  escapeRange: 15
+  penaltyRange: 2
+  activeTime: 0
+  targetHostility: 0
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 512
+  showDebugs: 0
+  showGizmos: 0
+  currentTarget: {fileID: 0}
+  distanceToTarget: 0
+  OnTargetDetected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTargetEscaped:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &5908950654231218779
 MonoBehaviour:
   m_ObjectHideFlags: 0

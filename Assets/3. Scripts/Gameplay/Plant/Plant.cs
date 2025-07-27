@@ -8,6 +8,7 @@
 using ColorMak3r.Utility;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -44,8 +45,13 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
     public ItemProperty Seed => Property.Value.SeedProperty;
     public FoodColor FoodColor => Property.Value.FoodColor;
     public FoodType FoodType => Property.Value.FoodType;
-    public Transform Transform => transform;
+    public GameObject GameObject => gameObject;
     public bool CanBeConsumed => IsHarvestable;
+
+    private HashSet<HungerStimulus> hunters = new HashSet<HungerStimulus>();
+    public HashSet<HungerStimulus> Hunters => hunters;
+    public void AddToHunterList(HungerStimulus hungerStimulus) => hunters.Add(hungerStimulus);
+    public void RemoveFromHunterList(HungerStimulus hungerStimulus) => hunters.Remove(hungerStimulus);
 
     public Action<Plant> OnHarvested;
 
@@ -284,4 +290,5 @@ public class Plant : NetworkBehaviour, IWaterable, IItemInitable, IConsummable
     {
         CurrentStage.Value = Property.Value.Stages.Length - 1;
     }
+
 }
