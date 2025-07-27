@@ -22,7 +22,7 @@ public class Spawner : Tool
             return false;
         }
 
-        var invalid = ItemSystem.OverlapArea(spawnerProperty.Size, position, spawnerProperty.InvalidLayers);
+        var invalid = ItemSystem.OverlapArea(position, spawnerProperty.Size, spawnerProperty.InvalidLayers);
         if (invalid != null)
         {
             if (showDebug) Debug.Log($"Cannot spawn {spawnerProperty.ItemName} at {position}, {invalid.name} is blocking");

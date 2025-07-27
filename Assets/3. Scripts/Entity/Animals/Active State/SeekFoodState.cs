@@ -10,23 +10,23 @@ public class SeekFoodState : BehaviourState
     public override void EnterState()
     {
         base.EnterState();
-        Animal.Animator.SetBool(Animal.ANIMATOR_IS_MOVING, true);
+        AnimalBase.Animator.SetBool(Animal.ANIMATOR_IS_MOVING, true);
     }
 
     public override void ExecuteState()
     {
         base.ExecuteState();
 
-        if (Animal.HungerStimulus != null && Animal.HungerStimulus.TargetFood != null)
+        if (AnimalBase.HungerStimulus != null && AnimalBase.HungerStimulus.TargetFood != null)
         {
-            Animal.MoveDirection((Animal.HungerStimulus.TargetFood.transform.position - Animal.transform.position).normalized);
+            AnimalBase.MoveDirection((AnimalBase.HungerStimulus.TargetFood.transform.position - AnimalBase.transform.position).normalized);
         }
     }
 
     public override void ExitState()
     {
         base.ExitState();
-        Animal.Animator.SetBool(Animal.ANIMATOR_IS_MOVING, false);
-        Animal.StopMovement();
+        AnimalBase.Animator.SetBool(Animal.ANIMATOR_IS_MOVING, false);
+        AnimalBase.StopMovement();
     }
 }

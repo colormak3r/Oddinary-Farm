@@ -63,7 +63,7 @@ public class Hammer : Tool
     {
         position = position.SnapToGrid();
         base.OnPrimaryAction(position);
-        ItemSystem.FixStructure(position, hammerProperty.StructureLayer);
+        ItemSystem.FixStructure(position, hammerProperty.Size, hammerProperty.StructureLayer);
     }
 
 

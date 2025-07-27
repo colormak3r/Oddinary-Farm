@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f1c9856834107549a5a755e56ca40f7, type: 3}
+  m_Name: Pro Hammer Property
+  m_EditorClassIdentifier: 
+  iconSprite: {fileID: -1077466193, guid: 0cefbb5fdff3c5740b36113fa3e01276, type: 3}
+  objectSprite: {fileID: 0}
+  prefab: {fileID: 5102719620840585883, guid: b11c04e161743884cad931cdca292f60, type: 3}
+  isConsummable: 0
+  maxStack: 1
+  isSellable: 1
+  price: 3200
+  range: 10
+  primaryCdr: 0.25
+  secondaryCdr: 0.25
+  itemContext: 'LMB: Repair
+
+    RMB: Remove
+
+    X  : Drop'
+  description: Can fix and remove structures.
+  pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
+  selectSound: {fileID: 0}
+  primarySound: {fileID: 8300000, guid: 9240bc06e6fa0eb41a9c7c9c93ae22ce, type: 3}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}
+  size: {x: 3, y: 3}
+  terrainLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  validLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  invalidLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  previewIconSprite: {fileID: -977736870, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
+  previewIconOffset: {x: 0, y: 0}
+  previewValidColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
+  previewInvalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}
+  structures:
+  - {fileID: 737704494243597508, guid: 58d1e43469accaf44b026616ebaafe4b, type: 3}
+  structureLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  fixIconSprite: {fileID: 1542392611, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
+  moveIconSprite: {fileID: -344225714, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}
+  removeIconSprite: {fileID: -640705075, guid: 27146d03c6366a447b2d4486f6d409ac, type: 3}

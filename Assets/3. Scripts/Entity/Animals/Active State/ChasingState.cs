@@ -22,7 +22,7 @@ public class ChasingState : BehaviourState
     public override void EnterState()
     {
         base.EnterState();
-        Animal.Animator.SetBool("IsMoving", true);
+        AnimalBase.Animator.SetBool("IsMoving", true);
         isDodging = false;
         nextDodge = Time.time + dodgeCooldown;
     }
@@ -30,9 +30,9 @@ public class ChasingState : BehaviourState
     public override void ExecuteState()
     {
         base.ExecuteState();
-        if (Animal.TargetDetector.CurrentTarget == null) return;
+        if (AnimalBase.TargetDetector.CurrentTarget == null) return;
 
-        Vector2 direction = Animal.TargetDetector.CurrentTarget.transform.position - Animal.transform.position;
+        Vector2 direction = AnimalBase.TargetDetector.CurrentTarget.transform.position - AnimalBase.transform.position;
         var side = Vector2.Perpendicular(direction).normalized * (Random.value < 0.5f ? 1f : -1f);
         dodgeDirection = (direction.normalized * (1f - dodgeStrength) + side * dodgeStrength).normalized;
 
@@ -48,13 +48,13 @@ public class ChasingState : BehaviourState
             nextDodge = Time.time + dodgeCooldown;
         }
 
-        Animal.MoveDirection(isDodging ? dodgeDirection : direction);
+        AnimalBase.MoveDirection(isDodging ? dodgeDirection : direction);
     }
 
     public override void ExitState()
     {
         base.ExitState();
-        Animal.Animator.SetBool("IsMoving", false);
-        Animal.StopMovement();
+        AnimalBase.Animator.SetBool("IsMoving", false);
+        AnimalBase.StopMovement();
     }
 }

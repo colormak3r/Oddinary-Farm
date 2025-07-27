@@ -13,8 +13,8 @@ public class NibblingState : BehaviourState
     public override void EnterState()
     {
         base.EnterState();
-        Animal.Animator.SetBool(Animal.ANIMATOR_IS_NIBBLING, true);
-        Animal.SetFacing(Random.value > 0.5f);
+        AnimalBase.Animator.SetBool(Animal.ANIMATOR_IS_NIBBLING, true);
+        AnimalBase.SetFacing(Random.value > 0.5f);
     }
 
     private float nextNibbleTime;
@@ -24,14 +24,14 @@ public class NibblingState : BehaviourState
         if (Time.time > nextNibbleTime)
         {
             nextNibbleTime = Time.time + Random.Range(1, 3f);
-            Animal.Animator.SetBool(Animal.ANIMATOR_IS_NIBBLING, Random.value > 0.5f);
-            Animal.SetFacing(Random.value > 0.5f);
+            AnimalBase.Animator.SetBool(Animal.ANIMATOR_IS_NIBBLING, Random.value > 0.5f);
+            AnimalBase.SetFacing(Random.value > 0.5f);
         }
     }
 
     public override void ExitState()
     {
         base.ExitState();
-        Animal.Animator.SetBool(Animal.ANIMATOR_IS_NIBBLING, false);
+        AnimalBase.Animator.SetBool(Animal.ANIMATOR_IS_NIBBLING, false);
     }
 }

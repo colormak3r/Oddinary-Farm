@@ -43,6 +43,9 @@ public abstract class Animal : NetworkBehaviour
     private Animator animator;
     public Animator Animator => animator;
 
+    private AudioElement audioElement;
+    public AudioElement AudioElement => audioElement;
+
     private NetworkAnimator networkAnimator;
     public NetworkAnimator NetworkAnimator => networkAnimator;
 
@@ -93,6 +96,7 @@ public abstract class Animal : NetworkBehaviour
     protected virtual void Awake()
     {
         animator = GetComponentInChildren<Animator>();
+        audioElement = GetComponentInChildren<AudioElement>();
         networkAnimator = GetComponent<NetworkAnimator>();
         movement = GetComponent<EntityMovement>();
         status = GetComponent<EntityStatus>();
@@ -230,6 +234,26 @@ public abstract class Animal : NetworkBehaviour
     public void SetFacing(bool isFacingRight)
     {
         IsFacingRight.Value = isFacingRight;
+    }
+    #endregion
+
+    #region Audio
+
+    public void PlaySoundEffect(int index, bool randomPitch = true)
+    {
+        if (audioElement == null)
+        {
+            Debug.LogWarning("AudioElement is not assigned in Animal script.");
+            return;
+        }
+
+        PlaySoundEffectRpc(index, randomPitch);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void PlaySoundEffectRpc(int index, bool randomPitch = true)
+    {
+        audioElement.PlaySoundEffect(index, randomPitch);
     }
 
     #endregion

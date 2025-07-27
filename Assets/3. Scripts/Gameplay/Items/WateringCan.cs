@@ -27,7 +27,7 @@ public class WateringCan : Tool
     [Rpc(SendTo.Server)]
     private void WaterRpc(Vector2 position)
     {
-        var hits = ItemSystem.OverlapAreaAll(wateringCanProperty.Size, position, wateringCanProperty.WaterableLayer);
+        var hits = ItemSystem.OverlapAreaAll(position, wateringCanProperty.Size, wateringCanProperty.WaterableLayer);
         foreach (var hit in hits)
         {
             if (hit.TryGetComponent<IWaterable>(out var waterable))

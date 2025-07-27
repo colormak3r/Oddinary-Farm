@@ -12,6 +12,14 @@ PrefabInstance:
       propertyPath: moveSpeed
       value: 2500
       objectReference: {fileID: 0}
+    - target: {fileID: 1692760775041396902, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: soundEffects.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1692760775041396902, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
+      propertyPath: 'soundEffects.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: ce540d1cc35e0664d8a1c761d76754cf, type: 3}
     - target: {fileID: 1713903147799318877, guid: ea0457dc4d910f54fa197497e09a39ad, type: 3}
       propertyPath: itemProperty
       value: 

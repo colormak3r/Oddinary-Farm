@@ -71,7 +71,7 @@ public class ItemSystem : NetworkBehaviour
         return ((Vector2)transform.position - position).magnitude < range;
     }
 
-    public Collider2D OverlapArea(Vector2 size, Vector2 position, LayerMask layers, float precision = 0.9f)
+    public Collider2D OverlapArea(Vector2 position, Vector2 size, LayerMask layers, float precision = 0.9f)
     {
         // Calculate the scaled half-size based on the given precision
         Vector2 scaledHalfSize = size * 0.5f * precision;
@@ -84,7 +84,7 @@ public class ItemSystem : NetworkBehaviour
         return Physics2D.OverlapArea(pointA, pointB, layers);
     }
 
-    public Collider2D[] OverlapAreaAll(Vector2 size, Vector2 position, LayerMask layers, float precision = 0.9f)
+    public Collider2D[] OverlapAreaAll(Vector2 position, Vector2 size, LayerMask layers, float precision = 0.9f)
     {
         // Calculate the scaled half-size based on the given precision
         Vector2 scaledHalfSize = size * 0.5f * precision;
@@ -98,9 +98,10 @@ public class ItemSystem : NetworkBehaviour
     }
     #endregion
 
+    #region Melee Weapon
+
     float debug_radius;
     Vector2 debug_meleePosition;
-    #region Melee Weapon
     public void DealDamage(Vector2 position, MeleeWeaponProperty meleeWeaponProperty)
     {
         // Play the melee animation on all clients
@@ -348,12 +349,15 @@ public class ItemSystem : NetworkBehaviour
     #endregion
 
     #region Structure
-    public void FixStructure(Vector2 position, LayerMask structureLayer)
+    public void FixStructure(Vector2 position, Vector2 size, LayerMask structureLayer)
     {
-        var structureHit = Physics2D.OverlapPoint(position, structureLayer);
-        if (structureHit && structureHit.TryGetComponent(out StructureStatus structureStatus))
+        var hits = OverlapAreaAll(position, size, structureLayer);
+        foreach (var hit in hits)
         {
-            structureStatus.GetHealed(1);
+            if (hit.TryGetComponent(out StructureStatus structureStatus))
+            {
+                structureStatus.GetHealed(1);
+            }
         }
     }
 

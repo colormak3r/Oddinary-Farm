@@ -4,11 +4,11 @@ using UnityEngine;
 
 public abstract class BehaviourState
 {
-    protected Animal Animal { get; private set; }
+    protected Animal AnimalBase { get; private set; }
 
     public BehaviourState(Animal animal)
     {
-        Animal = animal;
+        AnimalBase = animal;
     }
 
     public virtual void EnterState() { }

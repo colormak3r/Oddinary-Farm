@@ -9,21 +9,21 @@ public class MoveTowardState : BehaviourState
     public override void EnterState()
     {
         base.EnterState();
-        Animal.Animator.SetBool(Animal.ANIMATOR_IS_MOVING, true);
+        AnimalBase.Animator.SetBool(Animal.ANIMATOR_IS_MOVING, true);
     }
 
     public override void ExecuteState()
     {
         base.ExecuteState();
 
-        Vector2 directionToTarget = Animal.MoveTowardStimulus.TargetPosition - (Vector2)Animal.transform.position;
-        Animal.MoveDirection(directionToTarget.normalized);
+        Vector2 directionToTarget = AnimalBase.MoveTowardStimulus.TargetPosition - (Vector2)AnimalBase.transform.position;
+        AnimalBase.MoveDirection(directionToTarget.normalized);
     }
 
     public override void ExitState()
     {
         base.ExitState();
-        Animal.Animator.SetBool(Animal.ANIMATOR_IS_MOVING, false);
-        Animal.StopMovement();
+        AnimalBase.Animator.SetBool(Animal.ANIMATOR_IS_MOVING, false);
+        AnimalBase.StopMovement();
     }
 }
