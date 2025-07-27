@@ -85,6 +85,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private PlayerAnimationController animationController;
     private LassoController lassoController;
     private ItemSystem itemSystem;
+    private MountController mountController;
 
     private bool isOwner;
     private bool isInitialized;
@@ -95,6 +96,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private bool rotateArm = false;
     private bool isPointerOverUI;
+
+    private bool isMounted = false;
 
     private Item currentItem;
     private Camera mainCamera;
@@ -327,8 +330,17 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (!isControllable || !isMoveable) return;
 
         var direction = context.ReadValue<Vector2>().normalized;
-        movement.SetDirection(direction);
-        animator.SetBool("IsMoving", direction != Vector2.zero);
+
+        if (isMounted)
+        {
+            mountController?.Move(direction);
+            // TODO: Set mount animation
+        }
+        else
+        {
+            movement.SetDirection(direction);
+            animator.SetBool("IsMoving", direction != Vector2.zero);
+        }
     }
 
     public void OnLookPosition(InputAction.CallbackContext context)
@@ -721,10 +733,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         isMoveable = value;
         if (!isMoveable)
         {
-            movement.SetDirection(Vector2.zero);
-            animator.SetBool("IsMoving", false);
-            rbody.linearVelocity = Vector2.zero;
-            OnPrimaryCanceled();
+            StopMovement();
         }
     }
 
@@ -738,6 +747,25 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     {
         if (showDebugs) Debug.Log($"Primary CDR Modifier set to {primaryCdrModifier} for {gameObject.name}.");
         primaryCdrModifier = modifier;
+    }
+    
+    public void SetIsMounting(bool value, MountController mountController)
+    {
+        isMounted = value;
+        this.mountController = mountController;
+
+        // Stop player movment upon mount but do not disable movement
+        StopMovement();
+
+        Debug.Log($"Player Controller: isMounting = {isMounted}, mountController = {mountController}");
+    }
+
+    private void StopMovement()
+    {
+        movement.SetDirection(Vector2.zero);
+        animator.SetBool("IsMoving", false);
+        rbody.linearVelocity = Vector2.zero;
+        OnPrimaryCanceled();
     }
 
     private void OnDrawGizmos()

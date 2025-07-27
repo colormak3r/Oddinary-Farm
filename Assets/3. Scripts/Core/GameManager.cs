@@ -97,6 +97,7 @@ public class GameManager : NetworkBehaviour
         if (FloodManager.Main.CurrentFloodLevelValue >= WorldGenerator.Main.HighestElevationValue)
         {
             var localPlayer = NetworkManager.Singleton.LocalClient.PlayerObject;
+            var escaped = localPlayer.GetComponent<PlayerMountHandler>().IsControlledValue;
             localPlayer.GetComponent<ControllableController>().SetControl(false);
             GameOver(true);
         }
