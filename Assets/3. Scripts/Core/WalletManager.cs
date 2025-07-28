@@ -31,7 +31,7 @@ public class WalletManager : NetworkBehaviour
     [SerializeField]
     private bool showDebugs;
     [SerializeField]
-    private NetworkVariable<ulong> GlobalWallet = new NetworkVariable<ulong>(10);
+    private NetworkVariable<ulong> GlobalWallet = new NetworkVariable<ulong>(0);
     [SerializeField]
     private ulong localSpending = 0;
     public ulong LocalWalletValue => GlobalWallet.Value - localSpending;
