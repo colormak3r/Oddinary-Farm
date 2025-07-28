@@ -43,6 +43,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     [HideInInspector]
     public UnityEvent OnDeathOnServer;
+    public UnityEvent OnDeathOnClient;
     public Action<int> OnAttackerListCountChange;
     [SerializeField]
     private List<Transform> attackerList = new List<Transform>();
@@ -162,7 +163,13 @@ public class EntityStatus : NetworkBehaviour, IDamageable
     [ContextMenu("Take Damage")]
     private void TakeDamage()
     {
-        TakeDamage(1, DamageType.Slash, Hostility.Absolute, null);
+        TakeDamage(1, DamageType.Absolute, Hostility.Absolute, null);
+    }
+
+    [ContextMenu("Insta Kill")]
+    private void InstaKill()
+    {
+        TakeDamage(CurrentHealthValue, DamageType.Absolute, Hostility.Absolute, null);
     }
 
     public bool TakeDamage(uint damage, DamageType damageType, Hostility attackerHostility, Transform attacker)
@@ -271,6 +278,9 @@ public class EntityStatus : NetworkBehaviour, IDamageable
                 isInvincible = true;
                 OnEntityDeathOnServer();
             }
+
+            OnDeathOnClient?.Invoke();
+            OnDeathOnClient.RemoveAllListeners();
 
             // Update stat on kill
             // Check if the attacker is the local player

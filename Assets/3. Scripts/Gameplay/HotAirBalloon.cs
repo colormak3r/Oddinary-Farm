@@ -40,7 +40,7 @@ public class HotAirBalloon : Structure, IInteractable
 
         // Set mount values to false on init
         mountInteraction.SetCanMount(false);
-        mountInteraction.OnMount += TakeOff;        // Take off if a player mounts
+        mountInteraction.OnMountOnClient += TakeOff;        // Take off if a player mounts
         isMounted = false;
 
         mountController.CanMove = false;
@@ -71,39 +71,6 @@ public class HotAirBalloon : Structure, IInteractable
         }
     }
 
-    private void TakeOff(Transform source)
-    {
-        Debug.Log("Attempting take off...");
-
-        if (!CanTakeOff.Value)      // Take off only if conditions are met
-            return;
-
-        Debug.Log("Hot Air Balloon has taken off.");
-
-        mountInteraction.SetCanMount(false);    // Player cannot dismount from balloon
-        mountController.CanMove = true;         // Enable movement and start movement
-        mountController.Move(Vector2.zero);
-
-        GetComponent<Collider2D>().enabled = false;
-        GetComponent<SelectorModifier>().SetCanBeSelected(false);
-        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-
-        // Change sorting order
-        var sortingGroups = GetComponentsInChildren<SortingGroup>();
-        foreach (var sortingGroup in sortingGroups)
-        {
-            sortingGroup.sortingLayerName = "UI";
-            sortingGroup.sortingOrder = 99;
-        }
-
-        // Disable the collider of the hot air balloon
-        var colliders = GetComponentsInChildren<Collider2D>();
-        foreach (var collider in colliders)
-        {
-            collider.enabled = false;
-        }
-    }
-
     private void HandleOnHourChanged(int currentHour)
     {
         Debug.Log($"Handling Hour Change: Date = {TimeManager.Main.CurrentDate}, Hour = {currentHour}");
@@ -129,6 +96,43 @@ public class HotAirBalloon : Structure, IInteractable
         }
     }
 
+    private void HandleCurrentStageChanged(int previousValue, int newValue)
+    {
+        spriteRenderer.sprite = upgradeStages.GetStage(newValue).sprite;
+    }
+
+    #region Take Off
+    private void TakeOff(Transform source)
+    {
+        Debug.Log("Attempting take off...");
+
+        if (!CanTakeOff.Value)      // Take off only if conditions are met
+            return;
+
+        Debug.Log("Hot Air Balloon has taken off.");
+
+        mountInteraction.SetCanMount(false);    // Player cannot dismount from balloon
+        mountController.CanMove = true;         // Enable movement and start movement
+        mountController.Move(Vector2.zero);
+
+        GetComponent<Collider2D>().enabled = false;
+        GetComponent<SelectorModifier>().SetCanBeSelected(false);
+        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        // Change sorting order of the hot air balloon
+        // This will also affect the player since the player is a child of the hot air balloon
+        var sortingGroup = GetComponent<SortingGroup>();
+        sortingGroup.sortingLayerName = "UI";
+        sortingGroup.sortingOrder = 99;
+
+        // Disable the collider of the hot air balloon
+        var colliders = GetComponentsInChildren<Collider2D>();
+        foreach (var collider in colliders)
+        {
+            collider.enabled = false;
+        }
+    }
+
     private bool CheckTakeOff(int currentHour)
     {
         if (TimeManager.Main.CurrentDate > takeOffDate)
@@ -144,11 +148,7 @@ public class HotAirBalloon : Structure, IInteractable
         }
         return false;
     }
-
-    private void HandleCurrentStageChanged(int previousValue, int newValue)
-    {
-        spriteRenderer.sprite = upgradeStages.GetStage(newValue).sprite;
-    }
+    #endregion
 
     public void Interact(Transform source)
     {
@@ -159,7 +159,7 @@ public class HotAirBalloon : Structure, IInteractable
             isMounted = !isMounted;
             mountInteraction.SetCanMount(true);
             physicCollider.enabled = !isMounted;
-            
+
             // Disable colliders/control of player
             if (source.TryGetComponent<PlayerMountHandler>(out var controller))
             {
@@ -170,6 +170,7 @@ public class HotAirBalloon : Structure, IInteractable
         }
     }
 
+    #region Upgrade Balloon
     public void UpgradeBalloon()
     {
         UpgradeBalloonRpc();
@@ -181,6 +182,7 @@ public class HotAirBalloon : Structure, IInteractable
         if (CurrentStage.Value < upgradeStages.GetStageCount() - 1)
             CurrentStage.Value++;
     }
+    #endregion
 
     [ContextMenu("Take Off")]
     private void TakeOffDebug()

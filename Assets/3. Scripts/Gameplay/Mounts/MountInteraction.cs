@@ -9,6 +9,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
+using static Unity.VisualScripting.Member;
 
 /// <summary>
 /// Handles all interactions with a mount.
@@ -18,8 +19,8 @@ using UnityEngine.Events;
 public class MountInteraction : NetworkBehaviour, IInteractable
 {
     [Header("Events")]
-    [SerializeField] public Action<Transform> OnMount;       // Called when a player mounts; can be used to signal animal behaviors 
-    [SerializeField] public Action<Transform> OnDismount;    // Called when a player dismounts; can be used to signal animal behaviors 
+    [SerializeField] public Action<Transform> OnMountOnClient;       // Called when a player mounts; can be used to signal animal behaviors 
+    [SerializeField] public Action<Transform> OnDismountOnClient;    // Called when a player dismounts; can be used to signal animal behaviors 
 
     [Header("Settings")]
     [SerializeField] private Vector3 _mountOffset;     // Offset determines where the player stands relative to the mount
@@ -28,6 +29,8 @@ public class MountInteraction : NetworkBehaviour, IInteractable
     [SerializeField] private bool _debug = false;
 
     public bool CanMount { get; set; } = true;
+
+    public bool IsHoldInteractable => false;
 
     private NetworkVariable<NetworkObjectReference> CurrentOwner = new NetworkVariable<NetworkObjectReference>();
     private Coroutine _mountingTransformCo;
@@ -75,7 +78,7 @@ public class MountInteraction : NetworkBehaviour, IInteractable
             {
                 if (_debug) Debug.Log("Mount Interaction: Player has Unmounted");
                 SetCurrentOwnerRpc(default);        // Change CurrentOwner Network Variable
-                OnDismount?.Invoke(source);
+                OnDismountOnClient?.Invoke(source);
             }
             // Case 2
             else                                // Cannot mount because there's already a mounter
@@ -86,7 +89,7 @@ public class MountInteraction : NetworkBehaviour, IInteractable
         {
             if (_debug) Debug.Log("Mount Interaction: Player has Mounted");
             SetCurrentOwnerRpc(sourceNetObj);        // Change CurrentOwner Network Variable
-            OnMount?.Invoke(source);
+            OnMountOnClient?.Invoke(source);
             // TODO: Handle multiple seats; parent under new child objects
         }
     }
@@ -146,7 +149,7 @@ public class MountInteraction : NetworkBehaviour, IInteractable
             if (isMounting)         // Player is new owner
             {
                 // Mount the player
-                nextNetObj.transform.SetParent(transform);                  // Set parent on server
+                nextNetObj.transform.SetParent(transform);             // Set parent on server
                 NetworkObject.ChangeOwnership(nextNetObj.OwnerClientId);    // Owner is client
                 if (_debug) Debug.Log("Mount Interaction: Parent on Server.");
             }
@@ -214,6 +217,16 @@ public class MountInteraction : NetworkBehaviour, IInteractable
         transform.localPosition = _mountOffset;    // Reset player position
         _mountingTransformCo = null;        // Reset coroutine
         if (_debug) Debug.Log($"Mount Interaction: Parenting Done, player offset relative to parent = {transform.localPosition}");
+    }
+
+    public void InteractionStart(Transform source)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void InteractionEnd(Transform source)
+    {
+        throw new NotImplementedException();
     }
 }
 

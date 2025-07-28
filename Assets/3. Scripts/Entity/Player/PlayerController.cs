@@ -97,6 +97,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private bool rotateArm = false;
     private bool isPointerOverUI;
 
+    [SerializeField]
     private bool isMounted = false;
 
     private Item currentItem;

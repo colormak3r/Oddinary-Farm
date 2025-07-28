@@ -460,7 +460,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2746253684418572068}
-  - component: {fileID: 4681378391886280752}
   - component: {fileID: 8578118405527705988}
   - component: {fileID: 1641853395527306054}
   - component: {fileID: 2400018735863111474}
@@ -518,18 +517,6 @@ Transform:
   - {fileID: 1163948847803492089}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &4681378391886280752
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5447349809502746784}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_SortAtRoot: 0
 --- !u!114 &8578118405527705988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -733,6 +720,9 @@ MonoBehaviour:
   CurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeathOnClient:
     m_PersistentCalls:
       m_Calls: []
   attackerList: []
@@ -1095,12 +1085,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  physicCollider: {fileID: 1645639027840338568}
-  moveableController: {fileID: -7142879616327259524}
-  entityMovement: {fileID: 3602106504410570466}
-  drownController: {fileID: 4142363607695392232}
-  drownGraphic: {fileID: 9089012222026432931}
-  spriteRenderer: {fileID: 5195975373052726653}
+  sortingGroup: {fileID: 6541206622581381188}
   IsControlled:
     m_InternalValue: 0
 --- !u!114 &5784231218223123395
@@ -1702,6 +1687,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2506938444932282741, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4284115393529965016, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1790,8 +1779,13 @@ PrefabInstance:
       propertyPath: playerController
       value: 
       objectReference: {fileID: 6332147781516178474}
+    - target: {fileID: 8976677318413009245, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8976677318413009245, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4284115393529965016, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
       insertIndex: -1
@@ -1873,11 +1867,6 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 2920264091579073169, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
   m_PrefabInstance: {fileID: 7697143422033409032}
   m_PrefabAsset: {fileID: 0}
---- !u!212 &5195975373052726653 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 2506938444932282741, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
-  m_PrefabInstance: {fileID: 7697143422033409032}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5462536194489437288 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2386745706595022944, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
@@ -1886,6 +1875,11 @@ Transform:
 --- !u!4 &5883252978171502032 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4284115393529965016, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
+  m_PrefabInstance: {fileID: 7697143422033409032}
+  m_PrefabAsset: {fileID: 0}
+--- !u!210 &6541206622581381188 stripped
+SortingGroup:
+  m_CorrespondingSourceObject: {fileID: 3465159192026573900, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
   m_PrefabInstance: {fileID: 7697143422033409032}
   m_PrefabAsset: {fileID: 0}
 --- !u!120 &7270107616215014773 stripped

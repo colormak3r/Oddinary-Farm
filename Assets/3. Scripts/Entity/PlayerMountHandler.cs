@@ -2,23 +2,31 @@ using System;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerMountHandler : NetworkBehaviour
 {
     [Header("Settings")]
     [SerializeField]
+    private SortingGroup sortingGroup;
+
+    private Rigidbody2D rBody;
+    private PlayerStatus playerStatus;
     private DrownController drownController;
-    [SerializeField]
     private DrownGraphic drownGraphic;
-    [SerializeField]
-    private SpriteRenderer spriteRenderer;
-    [SerializeField]
-    private Rigidbody2D rigidbody2D;
 
     [Header("Debugs")]
     [SerializeField]
     private NetworkVariable<bool> IsControlled = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
     public bool IsControlledValue => IsControlled.Value;
+
+    private void Awake()
+    {
+        rBody = GetComponent<Rigidbody2D>();
+        playerStatus = GetComponent<PlayerStatus>();
+        drownController = GetComponent<DrownController>();
+        drownGraphic = GetComponent<DrownGraphic>();
+    }
 
     override public void OnNetworkSpawn()
     {
@@ -32,7 +40,7 @@ public class PlayerMountHandler : NetworkBehaviour
 
     private void HandleIsControlledChanged(bool previousValue, bool newValue)
     {
-        //spriteRenderer.enabled = newValue;
+
     }
 
     public void SetControl(bool isControlled)
@@ -55,13 +63,14 @@ public class PlayerMountHandler : NetworkBehaviour
 
     private void SetControlInternal(bool isControlled)
     {
-        spriteRenderer.enabled = !isControlled;
+        Debug.Log($"PlayerMountHandler: SetControlInternal called with isControlled: {isControlled}");
+        sortingGroup.enabled = isControlled;
         drownController.SetCanBeDrowned(isControlled);
         drownGraphic.SetCanBeWet(isControlled);
 
         if (isControlled)
-            rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
+            rBody.bodyType = RigidbodyType2D.Dynamic;
         else
-            rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
+            rBody.bodyType = RigidbodyType2D.Kinematic;
     }
 }

@@ -34,16 +34,16 @@ public abstract class MountController : NetworkBehaviour
         movement.SetDirection(Vector2.zero);
         movement.SetSpeedMultiplier(speedMultiplier);
 
-        mountInteraction.OnMount += HandleOnMount;
-        mountInteraction.OnDismount += HandleOnDismount;
+        mountInteraction.OnMountOnClient += HandleOnMount;
+        mountInteraction.OnDismountOnClient += HandleOnDismount;
     }
 
     protected virtual void HandleOnMount(Transform source)
     {
-        if (source.TryGetComponent<PlayerController>(out var pc))
+        if (source.TryGetComponent<PlayerController>(out var playerController))
         {
-            pc.SetIsMounting(true, this);
-            Debug.Log("Player Controller attached.");
+            playerController.SetIsMounting(true, this);
+            Debug.Log("MountController: Player Controller attached.");
         }
         else
         {
@@ -56,7 +56,7 @@ public abstract class MountController : NetworkBehaviour
         if (source.TryGetComponent<PlayerController>(out var pc))
         {
             pc.SetIsMounting(false, null);
-            Debug.Log("Player Controller released.");
+            Debug.Log("MountController: Player Controller released.");
         }
         else
         {

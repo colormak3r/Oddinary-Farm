@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class HotAirBalloonMountController : MountController
 {
-    [SerializeField] private Collider2D  physicCollider;
+    [SerializeField] private Collider2D physicCollider;
 
     private Rigidbody2D rb;
 
