@@ -11,7 +11,20 @@ using UnityEngine;
 
 public class PetSelectionUI : UIBehaviour
 {
+    public static PetSelectionUI Main { get; private set; }
     private static readonly string SELECTED_PET_KEY = "SelectedPet";
+
+    private void Awake()
+    {
+        if (Main == null)
+        {
+            Main = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     [Header("Components")]
     [SerializeField]
@@ -131,5 +144,11 @@ public class PetSelectionUI : UIBehaviour
             if (b == noneButton) continue;
             b.Initialze(b.PetData, OnPetSelected);
         }
+    }
+
+    public void OnBackButtonClicked()
+    {
+        Hide();
+        AudioManager.Main.PlayClickSound();
     }
 }

@@ -50,14 +50,14 @@ MonoBehaviour:
     chance: 1
     maxCount: 0
   elevation:
-    min: 0.4
-    max: 1
+    min: 0.5
+    max: 0.65
   moisture:
     min: 0
     max: 0
   resource:
-    min: 0
-    max: 0
-  ore:
     min: 0.9
     max: 1
+  ore:
+    min: 0
+    max: 0

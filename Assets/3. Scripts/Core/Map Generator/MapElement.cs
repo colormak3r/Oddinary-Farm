@@ -16,6 +16,8 @@ public class MapElement : NetworkBehaviour
 {
     [Header("Map Settings")]
     [SerializeField]
+    private bool resetMiniMapOnDespawn = true;
+    [SerializeField]
     private Vector2[] positions;
     [SerializeField]
     private Color color;
@@ -42,7 +44,7 @@ public class MapElement : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         UpdatePosition();
-        StartCoroutine(WaitGameManagerLoad());
+        UpdateMinimap();
         CurrentHeat.OnValueChanged += HandleOnCurrentHeatChanged;
 
         if (IsServer)
@@ -55,8 +57,7 @@ public class MapElement : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        UpdatePosition();
-        WorldGenerator.Main.ResetMinimap(snappedPositions);
+        if (resetMiniMapOnDespawn) WorldGenerator.Main.ResetMinimap(snappedPositions);
 
         if (IsServer)
         {
@@ -92,7 +93,13 @@ public class MapElement : NetworkBehaviour
         this.snappedPositions = snappedPositions.ToArray();
     }
 
-    private IEnumerator WaitGameManagerLoad()
+    [ContextMenu("Update Minimap")]
+    private void UpdateMinimap()
+    {
+        StartCoroutine(WaitGameManagerLoadCoroutine());
+    }
+
+    private IEnumerator WaitGameManagerLoadCoroutine()
     {
         yield return new WaitUntil(() => GameManager.Main.IsInitialized);
         UpdatePosition();

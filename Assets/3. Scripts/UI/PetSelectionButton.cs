@@ -47,6 +47,8 @@ public class PetSelectionButton : MonoBehaviour
 
     public void OnClick()
     {
+        AudioManager.Main.PlayClickSound();
+
         OnSelectedCallback?.Invoke(petData, this);
         if (PetManager.Main.IsPetCollected(petData.petType))
         {

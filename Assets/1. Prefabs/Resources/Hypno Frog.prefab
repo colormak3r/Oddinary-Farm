@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8549713484098931829}
   - component: {fileID: 3528178149946565850}
   - component: {fileID: 8125152832480535435}
+  - component: {fileID: 4193625865954427266}
   m_Layer: 29
   m_Name: Hypno Frog
   m_TagString: Untagged
@@ -152,7 +153,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41d12d51f692f7e4ca9d556e77f73877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnOffset: {x: 0.5, y: 0.51}
+  spawnOffset: {x: 0.5, y: 0.5}
+--- !u!114 &4193625865954427266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1740741346088160254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f527d404a7e0a640bd070de1353edb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  resetMiniMapOnDespawn: 0
+  positions:
+  - {x: 1.5, y: -1}
+  - {x: 1.5, y: 1}
+  - {x: 1.5, y: 0}
+  - {x: 0.5, y: -1}
+  - {x: 0.5, y: 1}
+  - {x: 0.5, y: 0}
+  - {x: -0.5, y: -1}
+  - {x: -0.5, y: 1}
+  - {x: -0.5, y: 0}
+  color: {r: 0.08627451, g: 0.3529412, b: 0.29803923, a: 1}
+  defaultHeatValue: 0
+  heatDecayPerDay: 0.1
+  showGizmos: 0
+  CurrentHeat:
+    m_InternalValue: 0
 --- !u!1 &2453007900906303915
 GameObject:
   m_ObjectHideFlags: 0

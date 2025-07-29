@@ -265,7 +265,8 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     private void ClearInventorySlot(int index)
     {
-        Destroy(inventory[index].Item.gameObject);
+        if (inventory[index].Item != null && inventory[index].Item.gameObject != null)
+            Destroy(inventory[index].Item.gameObject);
         inventory[index].Item = null;
         inventoryUI.UpdateSlot(index, null, 0);
 
@@ -301,7 +302,7 @@ public class PlayerInventory : NetworkBehaviour, IControllable
             else
             {
                 inventory[index1].Count += inventory[index2].Count;
-                ClearInventorySlot(index2);
+                inventory[index2].Count = 0;
             }
         }
         else

@@ -798,7 +798,6 @@ public class WorldGenerator : NetworkBehaviour
                         resObj.GetComponent<ObservabilityController>().InitializeOnServer(resourceStatus);
                         resourceStatus.isSpawned = true;
                         spawnedResources[resourcePos] = resourceStatus;
-
                         yield return null;
                     }
                 }

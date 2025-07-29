@@ -28,7 +28,7 @@ public class SpriteBlenderManager : MonoBehaviour
     {
         if (showDebugs && reblendQueue.Count > 0)
             Debug.Log($"Reblending {reblendQueue.Count} sprites");
-        foreach (var sb in reblendQueue) sb.Blend(false);
+        foreach (var sb in reblendQueue) if (sb != null) sb.Blend(false);
         reblendQueue.Clear();
     }
 }

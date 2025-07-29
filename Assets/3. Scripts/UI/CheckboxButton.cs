@@ -33,6 +33,11 @@ public class CheckboxButton : MonoBehaviour
         }
     }
 
+    public void OnCheckBoxClicked()
+    {
+        AudioManager.Main.PlayClickSound();
+    }
+
     private void Awake()
     {
         IsChecked = isChecked; // Initialize checkbox state

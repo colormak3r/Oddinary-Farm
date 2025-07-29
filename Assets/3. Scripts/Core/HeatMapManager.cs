@@ -6,8 +6,6 @@
 */
 
 using ColorMak3r.Utility;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class HeatMapManager : MonoBehaviour
@@ -27,8 +25,13 @@ public class HeatMapManager : MonoBehaviour
     private Color heatColor = Color.red;
     [SerializeField]
     private GameObject heatMapCenterObject;
+    [SerializeField]
+    private float heatMapExclusionDistance = 50f;
+
 
     [Header("Heat Map Debugs")]
+    [SerializeField]
+    private bool showDebugs = false;
     [SerializeField]
     private bool showHeatMapCenter = false;
     [SerializeField]
@@ -63,6 +66,11 @@ public class HeatMapManager : MonoBehaviour
 
         foreach (var position in positions)
         {
+            if ((position - heatCenter).sqrMagnitude > heatMapExclusionDistance * heatMapExclusionDistance && intensity != 0f)
+            {
+                if (showDebugs) Debug.Log($"Position {position} is too far from heat center {heatCenter}, skipping update.");
+                continue;
+            }
             heatMapTexture.SetPixel(position.x + halfMapSize.x, position.y + halfMapSize.y, heatColor.SetAlpha(intensity));
             heatMapData[position.y + halfMapSize.y, position.x + halfMapSize.x] = intensity; // Update heat map data
         }

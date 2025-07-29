@@ -31,6 +31,8 @@ public class InventoryUI : UIBehaviour
     [SerializeField]
     private DropSlot dropSlot;
     [SerializeField]
+    private UIBehaviour dropSlotBehaviour;
+    [SerializeField]
     private InventorySlotUI[] inventorySlots;
 
     private int selectedIndex;
@@ -42,7 +44,7 @@ public class InventoryUI : UIBehaviour
 
         for (int i = 0; i < inventorySlots.Length; i++)
         {
-            inventorySlots[i].Initialize(i, playerInventory, dropSlot);
+            inventorySlots[i].Initialize(i, playerInventory, dropSlotBehaviour);
         }
     }
 

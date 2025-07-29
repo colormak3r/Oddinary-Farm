@@ -8,7 +8,7 @@
 using ColorMak3r.Utility;
 using UnityEngine;
 
-public class PickAxe : MeleeWeapon
+public class PickAxe : Tool
 {
     private PickaxeProperty pickaxeProperty;
 

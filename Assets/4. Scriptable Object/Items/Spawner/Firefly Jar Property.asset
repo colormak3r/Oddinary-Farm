@@ -27,7 +27,7 @@ MonoBehaviour:
     RMB: Remove
 
     X  : Drop'
-  description: 
+  description: Very bright.
   pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
   selectSound: {fileID: 0}
   primarySound: {fileID: 8300000, guid: 9fb1b755bafa7744f8e21ba3bfd68a2a, type: 3}

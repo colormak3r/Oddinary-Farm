@@ -57,11 +57,13 @@ public class AppearanceRow : MonoBehaviour
 
     public void ButtonLeftClicked()
     {
+        AudioManager.Main.PlayClickSound();
         ui.HandleButtonClicked(leftData);
     }
 
     public void ButtonRightClicked()
     {
+        AudioManager.Main.PlayClickSound();
         ui.HandleButtonClicked(rightData);
     }
 }

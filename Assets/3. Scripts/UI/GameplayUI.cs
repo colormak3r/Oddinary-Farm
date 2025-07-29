@@ -100,11 +100,13 @@ public class GameplayUI : UIBehaviour
 
     public void OnResetTutorialClicked()
     {
+        AudioManager.Main.PlayClickSound();
         TutorialUI.Main.ResetTutorial();
     }
 
     public void OnResetPetCollectionClicked()
     {
+        AudioManager.Main.PlayClickSound();
         PetManager.Main.ResetCollectionData();
     }
 

@@ -17,7 +17,7 @@ MonoBehaviour:
     chance: 1
     maxCount: 0
   elevation:
-    min: 0.4
+    min: 0.55
     max: 1
   moisture:
     min: 0

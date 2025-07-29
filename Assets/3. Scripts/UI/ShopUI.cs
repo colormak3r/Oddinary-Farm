@@ -82,6 +82,8 @@ public class ShopUI : UIBehaviour
     private GameObject itemPanel;
     [SerializeField]
     private GameObject displayPanel;
+    [SerializeField]
+    private GameObject actionGroup;
 
     [Header("Upgrade Settings")]
     [SerializeField]
@@ -184,11 +186,14 @@ public class ShopUI : UIBehaviour
         ClearItemReference();
         itemPanel.SetActive(false);
         displayPanel.SetActive(true);
+        actionGroup.SetActive(false);
 
         // Buy mode initialization & UI update
         shopMode = ShopMode.Buy;
+        buyImage.transform.localScale = Vector3.one * 1.1f;
         buyImage.color = selectedColor;
         buyText.text = $"<b><u>BUY";
+        sellImage.transform.localScale = Vector3.one;
         sellImage.color = unselectedColor;
         sellText.text = "SELL";
         var playerCount = NetworkManager.Singleton.ConnectedClients.Count;
@@ -274,11 +279,14 @@ public class ShopUI : UIBehaviour
         ClearItemReference();
         itemPanel.SetActive(false);
         displayPanel.SetActive(true);
+        actionGroup.SetActive(false);
 
         // Sell mode initialization & UI update
         shopMode = ShopMode.Sell;
+        buyImage.transform.localScale = Vector3.one;
         buyImage.color = unselectedColor;
         buyText.text = "BUY";
+        sellImage.transform.localScale = Vector3.one * 1.1f;
         sellImage.color = selectedColor;
         sellText.text = $"<b><u>SELL";
         var playerCount = NetworkManager.Singleton.ConnectedClients.Count;
@@ -415,6 +423,7 @@ public class ShopUI : UIBehaviour
 
         itemPanel.SetActive(true);
         displayPanel.SetActive(false);
+        actionGroup.SetActive(true);
 
         // Update UI
         itemImage.sprite = itemProperty.IconSprite;

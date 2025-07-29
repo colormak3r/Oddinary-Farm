@@ -1,5 +1,11 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/28/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -7,6 +13,8 @@ using UnityEngine.InputSystem;
 public class MainMenuUI : UIBehaviour
 {
     public static MainMenuUI Main;
+    public static string FEEDBACK_URL = "https://forms.gle/DYbNmeGaRbPtMbmq8";
+    public static string CONTACT_LIST_URL = "https://forms.gle/nJ4gDUf7jzH5Rpba8";
 
     private void Awake()
     {
@@ -38,26 +46,42 @@ public class MainMenuUI : UIBehaviour
         }
     }
 
-    public void PlayButtonClicked()
+    public void OnPlayButtonClicked()
     {
         HideNoFade();
         PlayUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 
-    public void OptionsButtonClicked()
+    public void OnOptionsButtonClicked()
     {
         HideNoFade();
         OptionsUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 
-    public void CreditsButtonClicked()
+    public void OnCreditsButtonClicked()
     {
         HideNoFade();
         CreditsUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 
-    public void QuitButtonClicked()
+    public void OnContactListButtonClicked()
     {
+        AudioManager.Main.PlayClickSound();
+        Application.OpenURL(CONTACT_LIST_URL);
+    }
+
+    public void OnFeedbackButtonClicked()
+    {
+        AudioManager.Main.PlayClickSound();
+        Application.OpenURL(FEEDBACK_URL);
+    }
+
+    public void OnQuitButtonClicked()
+    {
+        AudioManager.Main.PlayClickSound();
         Application.Quit();
     }
 }

@@ -26,13 +26,11 @@ public class InventorySlotUI : MonoBehaviour, IDropHandler
 
     private int index;
     private PlayerInventory playerInventory;
-    private DropSlot dropSlot;
 
-    public void Initialize(int index, PlayerInventory playerInventory, DropSlot dropSlot)
+    public void Initialize(int index, PlayerInventory playerInventory, UIBehaviour dropSlot)
     {
         this.index = index;
         this.playerInventory = playerInventory;
-        this.dropSlot = dropSlot;
 
         itemIndex.text = index.ToString();
         itemUI.Initialize(index, isInteractable, dropSlot);
@@ -77,7 +75,5 @@ public class InventorySlotUI : MonoBehaviour, IDropHandler
                 playerInventory.SwapItem(index, item.Index);
             }
         }
-
-        //dropSlot.gameObject.SetActive(false);
     }
 }

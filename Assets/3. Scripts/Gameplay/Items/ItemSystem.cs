@@ -689,17 +689,30 @@ public class ItemSystem : NetworkBehaviour
 
     public void Mine(Vector2 position)
     {
-        MineRpc(position);
-    }
+        // TakeDamage can run on client
+        var hits = Physics2D.OverlapCircleAll(position, 0.5f, LayerManager.Main.MineableLayer);
 
-    [Rpc(SendTo.Server)]
-    private void MineRpc(Vector2 position)
-    {
-        var hit = Physics2D.OverlapPoint(position, LayerManager.Main.MineableLayer);
-        if (hit && hit.TryGetComponent(out EntityStatus entityStatus))
+        if (hits.Length == 0) return; // No mineable object found
+
+        // Find the closest hit to the position
+        var smallestSqrDistance = 999f;
+        var smallestIndex = 0;
+        for (int i = 0; i < hits.Length; i++)
+        {
+            var sqrDistance = ((Vector2)hits[i].transform.position - position).sqrMagnitude;
+            if (sqrDistance < smallestSqrDistance)
+            {
+                smallestSqrDistance = sqrDistance;
+                smallestIndex = i;
+            }
+        }
+
+        // Hit it
+        var hit = hits[smallestIndex];
+        if (hit != null && hit.TryGetComponent(out EntityStatus entityStatus))
         {
             entityStatus.TakeDamage(1, DamageType.Absolute, Hostility.Absolute, transform.root);
-        }
+        };
     }
 
     #endregion

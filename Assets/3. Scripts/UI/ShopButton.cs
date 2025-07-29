@@ -5,7 +5,7 @@
  * Notes:           <write here>
 */
 
-using System.Collections;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +28,10 @@ public class ShopButton : MonoBehaviour
     [SerializeField]
     private GameObject newTextObject;
 
+    [Header("Button Settings")]
+    [SerializeField]
+    private float doubleClickThreshold = 0.5f; // Time in seconds to consider a double click
+
     [Header("Occilate Settings")]
     [SerializeField]
     private float minAngle = -2f;
@@ -39,6 +43,8 @@ public class ShopButton : MonoBehaviour
     private float maxPeriod = 3f;
 
     private ItemProperty itemProperty;
+    private ShopUI shopUI;
+    private int index;
 
     // Oscillation variables
     private Transform oscillateTarget;
@@ -50,17 +56,33 @@ public class ShopButton : MonoBehaviour
     public void SetShopEntry(ItemProperty itemProperty, ShopUI shopUI, ShopMode shopMode, float multiplier, int index, uint amount, bool isNew)
     {
         this.itemProperty = itemProperty;
+        this.shopUI = shopUI;
+        this.index = index;
 
         displayImage.sprite = itemProperty.IconSprite;
         var value = (uint)Mathf.Max(Mathf.CeilToInt(itemProperty.Price * multiplier), 1);
         priceText.text = (shopMode == ShopMode.Buy ? "<color=#ae2334>" : " <color=#239063>")
             + (shopMode == ShopMode.Buy ? "-" : "+") + "$" + value;
-        quickActionText.text = (shopMode == ShopMode.Buy ? "Quick Buy" : "Quick Sell");
+        quickActionText.text = (shopMode == ShopMode.Buy ? "<color=#ae2334>" : " <color=#239063>")
+            + (shopMode == ShopMode.Buy ? "Buy Now!" : "$ Sell $");
         amountText.text = amount == 0 ? "" : amount.ToString();
 
-        shopButton.onClick.AddListener(() => shopUI.HandleShopButtonClicked(itemProperty, this, index));
-        quickActionButton.onClick.AddListener(() => shopUI.HandleQuickActionClicked(itemProperty, this, index));
         UpdateIsNew(isNew);
+    }
+
+    private float lastClicked = 0f;
+    public void OnShopButtonClicked()
+    {
+        if (Time.time - lastClicked < doubleClickThreshold)
+            shopUI.HandleQuickActionClicked(itemProperty, this, index);
+        else
+            shopUI.HandleShopButtonClicked(itemProperty, this, index);
+        lastClicked = Time.time;
+    }
+
+    public void OnQuickButtonClicked()
+    {
+        shopUI.HandleQuickActionClicked(itemProperty, this, index);
     }
 
     public void UpdateEntry(uint amount)
@@ -86,7 +108,7 @@ public class ShopButton : MonoBehaviour
         oscillateTarget = target;
         isOscillating = true;
         oscillateTime = 0f;
-        oscillatePeriod = Random.Range(minPeriod, maxPeriod);
+        oscillatePeriod = UnityEngine.Random.Range(minPeriod, maxPeriod);
         baseRotation = target.localRotation;
     }
 

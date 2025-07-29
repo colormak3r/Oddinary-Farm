@@ -460,6 +460,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2746253684418572068}
+  - component: {fileID: 2207013733290604528}
   - component: {fileID: 8578118405527705988}
   - component: {fileID: 1641853395527306054}
   - component: {fileID: 2400018735863111474}
@@ -517,6 +518,18 @@ Transform:
   - {fileID: 1163948847803492089}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &2207013733290604528
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5447349809502746784}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_SortAtRoot: 1
 --- !u!114 &8578118405527705988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -761,6 +774,7 @@ MonoBehaviour:
   screenMousePos: {x: 0, y: 0}
   controllerDirection: {x: 0, y: 0}
   primaryCdrModifier: 1
+  isMounted: 0
 --- !u!114 &3602106504410570466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -911,7 +925,7 @@ MonoBehaviour:
   interactionOffset: {x: 0, y: 0.75, z: 0}
   interactableLayer:
     serializedVersion: 2
-    m_Bits: 536871936
+    m_Bits: 536876032
   showGizmos: 0
   cachedcolliders: []
 --- !u!114 &4905420985265829973
@@ -1085,7 +1099,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  sortingGroup: {fileID: 6541206622581381188}
+  sortingGroup: {fileID: 2207013733290604528}
   IsControlled:
     m_InternalValue: 0
 --- !u!114 &5784231218223123395
@@ -1783,7 +1797,8 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3465159192026573900, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
     m_RemovedGameObjects:
     - {fileID: 8976677318413009245, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
     m_AddedGameObjects:
@@ -1875,11 +1890,6 @@ Transform:
 --- !u!4 &5883252978171502032 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4284115393529965016, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
-  m_PrefabInstance: {fileID: 7697143422033409032}
-  m_PrefabAsset: {fileID: 0}
---- !u!210 &6541206622581381188 stripped
-SortingGroup:
-  m_CorrespondingSourceObject: {fileID: 3465159192026573900, guid: 9caa862e4201c1547922de637fdb4a56, type: 3}
   m_PrefabInstance: {fileID: 7697143422033409032}
   m_PrefabAsset: {fileID: 0}
 --- !u!120 &7270107616215014773 stripped
