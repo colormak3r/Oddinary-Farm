@@ -1,10 +1,13 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    07/28/2025
+ * Last Modified:   07/28/2025 (Khoa)
+ * Notes:           <write here>
+*/
 
 public class PlayUI : UIBehaviour
 {
- public static PlayUI Main;
+    public static PlayUI Main;
 
     private void Awake()
     {
@@ -12,31 +15,33 @@ public class PlayUI : UIBehaviour
             Main = this;
         else
             Destroy(gameObject);
-
-        backButton.onClick.AddListener(BackButtonClicked);
     }
 
-    [Header("Options UI Settings")]
-    [SerializeField]
-    private Button backButton;
-    public void SinglePlayerButtonClicked()
+    public void OnSinglePlayerClicked()
     {
-        ConnectionManager.Main.StartGameSinglePlayer();
+        HideNoFade();
+        SinglePlayerUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 
-    public void MultiplayerOnlineHostButtonClicked()
+    public void OnMultiplayerOnlineClicked()
     {
-        ConnectionManager.Main.StartGameMultiplayerOnlineHost();
+        HideNoFade();
+        SteamMenuUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 
-    public void MultiplayerOnlineClientButtonClicked() 
-    { 
-        ConnectionManager.Main.StartGameMultiplayerOnlineClient();
+    public void OnMultiplayerLocalClicked()
+    {
+        HideNoFade();
+        LocalMenuUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 
-    public void BackButtonClicked()
+    public void OnBackButtonClicked()
     {
         HideNoFade();
         MainMenuUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
     }
 }

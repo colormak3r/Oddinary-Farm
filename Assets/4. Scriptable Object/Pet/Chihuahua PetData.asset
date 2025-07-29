@@ -27,3 +27,5 @@ MonoBehaviour:
   - {fileID: -5742126489071540409, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
   - {fileID: 4104011631525205410, guid: 975f358ceceb2764290bac2d9833a290, type: 3}
   petPrefab: {fileID: 875170009560843256, guid: db68934e500d2cb489bcaecea9f0d8be, type: 3}
+  petHint: Find this friend near the coastline.
+  petDescription: Help you defend the farm. Like cheese.

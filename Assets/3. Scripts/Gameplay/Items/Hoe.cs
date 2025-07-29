@@ -25,7 +25,7 @@ public class Hoe : Tool
         }
 
         // Check if there is any invalid object in the area
-        var invalid = ItemSystem.OverlapArea(hoeProperty.Size, position, hoeProperty.InvalidLayers);
+        var invalid = ItemSystem.OverlapArea(position, hoeProperty.Size, hoeProperty.InvalidLayers);
         if (invalid)
         {
             if (showDebug) Debug.Log($"Cannot hoe at {position}, {invalid.name} is blocking", invalid);
@@ -33,7 +33,7 @@ public class Hoe : Tool
         }
 
         // Check if the terrain is accessible
-        var terrainHits = ItemSystem.OverlapAreaAll(hoeProperty.Size, position, hoeProperty.TerrainLayer);
+        var terrainHits = ItemSystem.OverlapAreaAll(position, hoeProperty.Size, hoeProperty.TerrainLayer);
         foreach (var terrainHit in terrainHits)
         {
             if (terrainHit && terrainHit.TryGetComponent<TerrainUnit>(out var terrain))
@@ -82,7 +82,6 @@ public class Hoe : Tool
 
     public override void OnSecondaryAction(Vector2 position)
     {
-        position = position.SnapToGrid();
         base.OnSecondaryAction(position);
         ItemSystem.RemoveFarmPlot(position);
         ItemSystem.RemovePlant(position, transform.root.gameObject);

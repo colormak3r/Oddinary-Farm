@@ -29,6 +29,10 @@ public class InventoryUI : UIBehaviour
     [SerializeField]
     private CanvasRenderer walletUI;
     [SerializeField]
+    private DropSlot dropSlot;
+    [SerializeField]
+    private UIBehaviour dropSlotBehaviour;
+    [SerializeField]
     private InventorySlotUI[] inventorySlots;
 
     private int selectedIndex;
@@ -36,9 +40,11 @@ public class InventoryUI : UIBehaviour
 
     public void Initialize(PlayerInventory playerInventory)
     {
+        dropSlot.Initialize(playerInventory);
+
         for (int i = 0; i < inventorySlots.Length; i++)
         {
-            inventorySlots[i].Initialize(i, playerInventory);
+            inventorySlots[i].Initialize(i, playerInventory, dropSlotBehaviour);
         }
     }
 

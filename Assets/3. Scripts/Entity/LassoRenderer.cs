@@ -1,5 +1,11 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/21/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class LassoRenderer : MonoBehaviour
@@ -15,6 +21,8 @@ public class LassoRenderer : MonoBehaviour
     private int segmentCount = 35;
     [SerializeField]
     private float segmentLength = 0.25f;
+    [SerializeField]
+    private int simulationIterations = 50;
 
     [Header("Debugs")]
     [SerializeField]
@@ -42,19 +50,20 @@ public class LassoRenderer : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         DrawRope();
     }
 
     private void FixedUpdate()
     {
-        if (!renderLine) return;
         Simulate();
     }
 
     private void Simulate()
     {
+        if (!renderLine) return;
+
         // SIMULATION
         Vector2 forceGravity = new Vector2(0f, -1.5f);
 
@@ -69,7 +78,7 @@ public class LassoRenderer : MonoBehaviour
         }
 
         //CONSTRAINTS
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < simulationIterations; i++)
         {
             ApplyConstraint();
         }
@@ -159,11 +168,34 @@ public class LassoRenderer : MonoBehaviour
 
     public void SetRenderLine(bool render)
     {
-        bool previousRenderLine = renderLine;
+        bool wasRendering = renderLine;
         renderLine = render;
-        if (renderLine && !previousRenderLine)
+
+        // Only when turning ON
+        if (render && !wasRendering)
         {
-            Simulate(); // Force simulate immidiately when enabling rendering
+            ResetRopeToStraightLine();
+            for (int i = 0; i < simulationIterations; ++i)
+                ApplyConstraint();                // settle completely
+
+            DrawRope();                           // draw once immediately
+        }
+
+        lineRenderer.enabled = render;
+    }
+
+    private void ResetRopeToStraightLine()
+    {
+        ropeSegments.Clear();
+
+        Vector3 a = startTransform.position;
+        Vector3 b = targetTransform ? targetTransform.position : a + Vector3.down * segmentLength * (segmentCount - 1);
+        Vector3 dir = (b - a).normalized;
+
+        for (int i = 0; i < segmentCount; ++i)
+        {
+            Vector3 p = a + dir * segmentLength * i;
+            ropeSegments.Add(new RopeSegment(p));
         }
     }
 }

@@ -9,33 +9,50 @@ using UnityEngine;
 
 public class ObservabilityController : MonoBehaviour
 {
+    [Header("Settings")]
+    [SerializeField]
+    private Vector2 spawnOffset;
+    public Vector2 SpawnOffset => spawnOffset;
+
     private ObservablePrefabStatus status;
 
-    public void InitializeOnServer(ObservablePrefabStatus status)
+    public virtual void InitializeOnServer(ObservablePrefabStatus status)
     {
         this.status = status;
         status.controller = this;
     }
 
-    // Used by the WorldGenerator to unload only
-    public void UnloadOnServer()
+    /// <summary>
+    /// Called by the WorldGenerator to unload this object. 
+    /// The object will be CLEANED UP by the WorldGenerator when it goes out of view, 
+    /// and it WILL be spawned again through procedural generation.
+    /// </summary>
+    public virtual void UnloadOnServer()
     {
         status.isSpawned = false;
         status.controller = null;
         if (gameObject) Destroy(gameObject);
     }
 
-    // Used by EntityStatus on death to despawn only
-    public void DespawnOnServer()
+    /// <summary>
+    /// Called when the object needs to be despawned with custom logic. 
+    /// The object will NOT be cleaned up by the WorldGenerator when out of view, 
+    /// and it will NOT be spawned again through procedural generation.
+    /// </summary>
+    public virtual void DespawnOnServer()
     {
         status.isSpawned = false;
         status.controller = null;
         status.isObservable = false;
-        // Use entity on death logic instead
+        // Destroy logic should be handled by Entity Status or caller
     }
 
-    // Used when object doesn't need to get destroyed right away
-    public void EndObservabilityOnServer()
+    /// <summary>
+    /// Called when the object should remain in the world for now, but no longer be observable. 
+    /// The object will be cleaned up by the WorldGenerator when it goes out of view, 
+    /// and it will NOT be spawned again through procedural generation.
+    /// </summary>
+    public virtual void EndObservabilityOnServer()
     {
         status.isObservable = false;
     }

@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Ocean ResourceProperty
   m_EditorClassIdentifier: 
   prefabs:
-  - prefab: {fileID: 1003939520116215196, guid: c473d012bd5d86a449a8338275a567cc, type: 3}
+  - prefab: {fileID: 7068461952734743077, guid: be6db7d3a56059f47ad2ad5cd25f010a, type: 3}
     chance: 10
+    maxCount: 0
+  - prefab: {fileID: 439690425239331817, guid: 069397ae4764f314f9ecf12f2e021f61, type: 3}
+    chance: 5
     maxCount: 0
   - prefab: {fileID: 4294250761585886378, guid: f528fcfc7a6cb204dabc654ef9ef4c8e, type: 3}
     chance: 1
@@ -26,5 +29,8 @@ MonoBehaviour:
     min: 0
     max: 0
   resource:
-    min: 0
+    min: 0.9
     max: 1
+  ore:
+    min: 0
+    max: 0

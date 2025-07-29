@@ -33,7 +33,7 @@ MonoBehaviour:
   primarySound: {fileID: 8300000, guid: 38f2e2b821cbe004dac872e71ff3f692, type: 3}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
-  radius: 0.1
+  radius: 1
   damage: 1
   damageType: 2
   hostility: 2

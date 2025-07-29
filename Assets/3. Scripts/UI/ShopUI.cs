@@ -82,6 +82,8 @@ public class ShopUI : UIBehaviour
     private GameObject itemPanel;
     [SerializeField]
     private GameObject displayPanel;
+    [SerializeField]
+    private GameObject actionGroup;
 
     [Header("Upgrade Settings")]
     [SerializeField]
@@ -132,17 +134,13 @@ public class ShopUI : UIBehaviour
     private ItemProperty currentItemProperty;
     [SerializeField]
     private int currentItemIndex = -1;
-    [SerializeField]
-    private int currentMultiplier = 5;
 
     private PlayerInventory playerInventory;
     private ShopInventory shopInventory;
     private Transform shopTransform;
     private Coroutine dropItemCoroutine;
-    private Dictionary<ShopInventory, int> shopInventoryToCurrentTier = new Dictionary<ShopInventory, int>();
-    private Dictionary<ShopInventory, int> shopTierDictionary_cached = new Dictionary<ShopInventory, int>();
+
     private HashSet<ItemProperty> visitedItemProperties = new HashSet<ItemProperty>();
-    private List<ItemProperty> itemsToSpawn = new List<ItemProperty>();
 
     private bool recentlyOpened;
 
@@ -188,11 +186,14 @@ public class ShopUI : UIBehaviour
         ClearItemReference();
         itemPanel.SetActive(false);
         displayPanel.SetActive(true);
+        actionGroup.SetActive(false);
 
         // Buy mode initialization & UI update
         shopMode = ShopMode.Buy;
+        buyImage.transform.localScale = Vector3.one * 1.1f;
         buyImage.color = selectedColor;
         buyText.text = $"<b><u>BUY";
+        sellImage.transform.localScale = Vector3.one;
         sellImage.color = unselectedColor;
         sellText.text = "SELL";
         var playerCount = NetworkManager.Singleton.ConnectedClients.Count;
@@ -201,52 +202,62 @@ public class ShopUI : UIBehaviour
 
         ClearChild();
 
-        // Determine if shop tier has changed
-        if (!shopInventoryToCurrentTier.TryGetValue(shopInventory, out int currentTier))
-        {
-            shopInventoryToCurrentTier[shopInventory] = 0;
-            currentTier = 0;
-        }
-        if (!shopTierDictionary_cached.TryGetValue(shopInventory, out int currentTier_cached))
-        {
-            shopTierDictionary_cached[shopInventory] = 0;
-            currentTier_cached = 0;
-        }
+        var currentGlobalTier = ShopManager.Main.GetCurrentGlobalTier(shopInventory);
+        var currentLocalTier = ShopManager.Main.GetCurrentLocalTier(shopInventory);
 
-        // Old items spawn in bulk
-        for (int i = 0; i <= currentTier_cached; i++)
+        // Determine if shop tier has changed
+        if (ShopManager.Main.IsShopRecentlyUpgraded(shopInventory))
         {
-            if (shopInventory.Tiers.Length > i)
+            if (showDebugs) Debug.Log($"Shop {shopInventory.ShopName} is recently upgraded. Current Global Tier: {currentGlobalTier}, Local Tier: {currentLocalTier}");
+            // Shop is recently upgraded
+            // Spawn old items spawn in bulk (no animation)
+            for (int i = 0; i < currentLocalTier; i++)
             {
-                foreach (var entry in shopInventory.Tiers[i].itemProperties)
+                if (shopInventory.Tiers.Length > i) // safe check for tier length
                 {
-                    var shopButton = Instantiate(shopButtonPrefab, contentContainer);
-                    var isNew = !visitedItemProperties.Contains(entry);
-                    shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, playerCount, -1, 0, isNew);
+                    foreach (var entry in shopInventory.Tiers[i].itemProperties)
+                    {
+                        var shopButton = Instantiate(shopButtonPrefab, contentContainer);
+                        var isNew = !visitedItemProperties.Contains(entry);
+                        shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, playerCount, -1, 0, isNew);
+                    }
                 }
             }
-        }
 
-        // Debug.Log($"Shop Mode Buy: {shopInventory.ShopName} - Current Tier: {currentTier} (Cached: {currentTier_cached})");
-        // New items spawn in coroutine
-        if (currentTier != currentTier_cached)
-        {
-            if (shopInventory.Tiers.Length > currentTier)
+            // Spawn new items spawn in coroutine (poping animation)
+            if (shopInventory.Tiers.Length > currentLocalTier) // safe check for tier length
             {
+                // Clear previous items to spawn
                 itemsToSpawn.Clear();
-                foreach (var entry in shopInventory.Tiers[currentTier].itemProperties)
+                foreach (var entry in shopInventory.Tiers[currentLocalTier].itemProperties)
                     itemsToSpawn.Add(entry);
 
                 if (shopButtonBuyCoroutine != null) StopCoroutine(shopButtonBuyCoroutine);
                 shopButtonBuyCoroutine = StartCoroutine(ShopButtonBuyCoroutine(playerCount));
-
-                // Update cache
-                shopTierDictionary_cached[shopInventory] = currentTier;
+            }
+        }
+        else
+        {
+            if (showDebugs) Debug.Log($"Shop {shopInventory.ShopName} is not recently upgraded. Current Global Tier: {currentGlobalTier}, Local Tier: {currentLocalTier}");
+            // Shop is not recently upgraded
+            // Spawn all items spawn in bulk (no animation)
+            for (int i = 0; i <= currentLocalTier; i++)
+            {
+                if (shopInventory.Tiers.Length > i)
+                {
+                    foreach (var entry in shopInventory.Tiers[i].itemProperties)
+                    {
+                        var shopButton = Instantiate(shopButtonPrefab, contentContainer);
+                        var isNew = !visitedItemProperties.Contains(entry);
+                        shopButton.GetComponent<ShopButton>().SetShopEntry(entry, this, shopMode, playerCount, -1, 0, isNew);
+                    }
+                }
             }
         }
     }
 
     private Coroutine shopButtonBuyCoroutine;
+    private List<ItemProperty> itemsToSpawn = new List<ItemProperty>(); // Use by this coroutine only
     private IEnumerator ShopButtonBuyCoroutine(int playerCount)
     {
         foreach (var entry in itemsToSpawn)
@@ -268,11 +279,14 @@ public class ShopUI : UIBehaviour
         ClearItemReference();
         itemPanel.SetActive(false);
         displayPanel.SetActive(true);
+        actionGroup.SetActive(false);
 
         // Sell mode initialization & UI update
         shopMode = ShopMode.Sell;
+        buyImage.transform.localScale = Vector3.one;
         buyImage.color = unselectedColor;
         buyText.text = "BUY";
+        sellImage.transform.localScale = Vector3.one * 1.1f;
         sellImage.color = selectedColor;
         sellText.text = $"<b><u>SELL";
         var playerCount = NetworkManager.Singleton.ConnectedClients.Count;
@@ -296,8 +310,8 @@ public class ShopUI : UIBehaviour
 
     public void OnUpgradeClicked()
     {
-        var currentTier = shopInventoryToCurrentTier[shopInventory];
-        var upgradeCost = (uint)shopInventory.Tiers[currentTier + 1].upgradeCost;
+        var currentLocalTier = ShopManager.Main.GetCurrentLocalTier(shopInventory);
+        var upgradeCost = (uint)shopInventory.Tiers[currentLocalTier + 1].upgradeCost;
         if (WalletManager.Main.LocalWalletValue < upgradeCost)
         {
             // Not enough coins to upgrade
@@ -307,8 +321,7 @@ public class ShopUI : UIBehaviour
         }
         else
         {
-            if (shopInventoryToCurrentTier[shopInventory] < shopInventory.Tiers.Length - 1)
-                shopInventoryToCurrentTier[shopInventory]++;
+            ShopManager.Main.IncreaseLocalTier(shopInventory);
 
             StartCoroutine(tierText.transform.UIPopCoroutine(Vector3.one, Vector3.one * 1.1f, 0.1f));
 
@@ -335,46 +348,39 @@ public class ShopUI : UIBehaviour
             var playerCount = (uint)NetworkManager.Singleton.ConnectedClients.Count;
 
             // Find the current tier based on the global wallet value
-            int globalTier = 0;
-            for (int i = 0; i < shopTierLength; i++)
-            {
-                var netIncomeNeeded = shopInventory.Tiers[i].netIncome * playerCount;
-                if (WalletManager.Main.GlobalWalletValue >= netIncomeNeeded)
-                    globalTier = i;
-                else
-                    break;
-            }
-
-            // Get the current tier, default to 0 if entry not exist
-            if (!shopInventoryToCurrentTier.TryGetValue(shopInventory, out int currentTier))
-            {
-                shopInventoryToCurrentTier[shopInventory] = 0;
-                currentTier = 0;
-            }
+            int globalTier = ShopManager.Main.GetCurrentGlobalTier(shopInventory);
+            var localTier = ShopManager.Main.GetCurrentLocalTier(shopInventory);
 
             // Update UI
-            tierText.text = $"Tier {currentTier}";
-            if (currentTier < globalTier)
+            tierText.text = $"Tier {localTier}";
+            if (showDebug) Debug.Log($"ShopManager: Current Local Tier for {shopInventory.ShopName} is {localTier}, Global Tier is {globalTier}");
+            if (localTier < globalTier)
             {
+                if (showDebug) Debug.Log($"ShopManager: Upgrading {shopInventory.ShopName} to Tier {localTier + 1} (Global Tier: {globalTier})");
                 // The player can upgrade
                 upgradeButton.SetActive(true);
-                upgradeButtonText.text = $"<u>UPGRADE</u>\n${shopInventory.Tiers[currentTier + 1].upgradeCost}";
+                upgradeButtonText.text = $"<u>UPGRADE</u>\n${shopInventory.Tiers[localTier + 1].upgradeCost}";
                 StartCoroutine(WaitShopLoad());
                 upgradeText.gameObject.SetActive(false);
             }
             else
             {
-                if (currentTier + 1 < shopTierLength)
+                if (showDebug) Debug.Log($"ShopManager: Cannot upgrade {shopInventory.ShopName} (Local Tier: {localTier}, Global Tier: {globalTier})");
+                // The player cannot upgrade yet
+                if (localTier + 1 < shopTierLength)
                 {
+                    if (showDebug) Debug.Log($"ShopManager: {shopInventory.ShopName} is not max tier, showing upgrade info for Tier {localTier + 1}");
+                    // Not max tier, but cannot upgrade yet
                     // Show how much until next tier
                     upgradeButton.SetActive(false);
                     upgradeText.gameObject.SetActive(true);
-                    var netIncomeNeeded = shopInventory.Tiers[currentTier + 1].netIncome * playerCount;
-                    upgradeText.text = $"Earn ${netIncomeNeeded - WalletManager.Main.GlobalWalletValue} more to unlock next Tier ({currentTier + 1}/{shopTierLength - 1})";
+                    var netIncomeNeeded = shopInventory.Tiers[localTier + 1].netIncome * playerCount;
+                    upgradeText.text = $"Earn ${netIncomeNeeded - WalletManager.Main.GlobalWalletValue} more to unlock next Tier ({localTier + 1}/{shopTierLength - 1})";
                 }
                 else
                 {
-                    // Max Tier
+                    if (showDebug) Debug.Log($"ShopManager: {shopInventory.ShopName} is max tier, disabling upgrade button");
+                    // Max Tier, disable upgrade button
                     tierText.text = "Max Tier";
                     upgradeButton.SetActive(false);
                     upgradeText.gameObject.SetActive(false);
@@ -417,6 +423,7 @@ public class ShopUI : UIBehaviour
 
         itemPanel.SetActive(true);
         displayPanel.SetActive(false);
+        actionGroup.SetActive(true);
 
         // Update UI
         itemImage.sprite = itemProperty.IconSprite;
@@ -428,9 +435,6 @@ public class ShopUI : UIBehaviour
         currentItemProperty = itemProperty;
         currentShopButton = button;
         currentItemIndex = index;
-
-        // Set default multiplier to 5
-        currentMultiplier = 5;
 
         // Play Audio
         AudioManager.Main.PlayClickSound();

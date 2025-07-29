@@ -72,7 +72,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  currentScenario: 0
+  CurrentScenario:
+    m_InternalValue: 0
   cornFarmDemoPreset: {fileID: 11400000, guid: cda550f3e26fbeb4b81dd144dcc68d69, type: 2}
   midSizeFarmDemoPreset: {fileID: 11400000, guid: 0c9d18ab2afe89d4f91ee4f36163fd91, type: 2}
   chickenFarmDemoPreset: {fileID: 11400000, guid: 2ade236206abd0a4191350db59650f67, type: 2}
@@ -80,9 +81,9 @@ MonoBehaviour:
   overrideSettings: 0
   canSpawnEnemies: 0
   canSpawnResources: 0
-  realMinutesPerInGameDay: 10
+  realMinutesPerInGameDay: 5
   dayOffset: 1
-  hourOffset: 19
+  hourOffset: 7
   minuteOffset: 30
   woodenFence: {fileID: 11400000, guid: fc47428232be11d48b6b71b214db48c6, type: 2}
   cornSeed: {fileID: 11400000, guid: bedca58c8f753524a8ed52c4dd690a51, type: 2}
@@ -103,8 +104,11 @@ MonoBehaviour:
   muzzleTransform: {fileID: 0}
   muzzleFlash: {fileID: 0}
   recoilTransform: {fileID: 0}
+  graphicTransform: {fileID: 0}
+  meleeAnimationObject: {fileID: 0}
   recordPlantSpawns: 0
   recordFarmPlotSpawns: 0
   recordStructureSpawns: 0
   assetSpawnPreset: {fileID: 0}
   showDebugs: 1
+  showGizmos: 0

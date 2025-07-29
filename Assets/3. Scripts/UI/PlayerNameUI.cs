@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/21/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -22,6 +29,27 @@ public class PlayerNameUI : UIBehaviour
     private float nextScan;
     private Coroutine autoHideCoroutine;
     private HashSet<string> displayedPlayerNames = new HashSet<string>();
+
+    protected override void Start()
+    {
+        base.Start();
+        if(GameplayUI.Main == null)
+        {
+            Debug.LogError("GameplayUI.Main is not initialized. Ensure GameplayUI is loaded before PlayerNameUI.");
+            return;
+        }
+        showPlayerName = GameplayUI.Main.ShowPlayerName; // Get the initial value from GameplayUI
+        GameplayUI.Main.OnShowPlayerNameChanged += SetShowPlayerName;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (GameplayUI.Main != null)
+        {
+            GameplayUI.Main.OnShowPlayerNameChanged -= SetShowPlayerName;
+        }
+    }
 
     public void SetPlayerName(string playerName)
     {

@@ -4,25 +4,15 @@ using UnityEngine;
 
 public abstract class BehaviourState
 {
-    protected Animal animal;
+    protected Animal AnimalBase { get; private set; }
 
     public BehaviourState(Animal animal)
     {
-        this.animal = animal;
+        AnimalBase = animal;
     }
 
-    public virtual void EnterState()
-    {
-
-    }
-
-    public virtual void ExecuteState()
-    {
-
-    }
-
-    public virtual void ExitState()
-    {
-
-    }
+    public virtual void EnterState() { }
+    public virtual void ExecuteState() { }
+    public virtual void ExitState() { }
 }
+

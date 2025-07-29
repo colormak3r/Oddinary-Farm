@@ -1,5 +1,11 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/24/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class ElevationMap : PerlinNoiseGenerator
 {

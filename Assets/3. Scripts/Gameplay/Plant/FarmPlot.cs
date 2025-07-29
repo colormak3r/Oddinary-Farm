@@ -1,10 +1,13 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/24/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
-using Unity.Properties;
-using ColorMak3r.Utility;
-using System;
 
 public class FarmPlot : NetworkBehaviour, IWaterable
 {
@@ -41,12 +44,6 @@ public class FarmPlot : NetworkBehaviour, IWaterable
             WeatherManager.Main.OnRainStopped.AddListener(HandleRainStopped);
             if (WeatherManager.Main.IsRainning) HandleRainStarted();
         }
-    }
-
-    protected override void OnNetworkPostSpawn()
-    {
-        base.OnNetworkPostSpawn();
-        spriteBlender.Blend(true);
     }
 
     public override void OnNetworkDespawn()

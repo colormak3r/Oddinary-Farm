@@ -18,7 +18,8 @@ public class Lasso : Item
 
     public override void OnSecondaryAction(Vector2 position)
     {
-        base.OnSecondaryAction(position);
+        if (lassoProperty.SecondarySound) PlaySecondarySoundRpc();
+
         ItemSystem.LassoSecondary();
     }
 }

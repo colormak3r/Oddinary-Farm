@@ -147,7 +147,7 @@ public class DrownController : NetworkBehaviour
         }
         else
         {
-            while (entityStatus.CurrentHealth > 0)
+            while (entityStatus.CurrentHealthValue > 0)
             {
                 yield return new WaitForSeconds(drownTickRate);
                 entityStatus.TakeDamage(1, DamageType.Water, Hostility.Neutral, transform);

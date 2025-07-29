@@ -1,13 +1,15 @@
 /*
  * Created By:      Khoa Nguyen
  * Date Created:    --/--/----
- * Last Modified:   07/16/2025 (Khoa)
+ * Last Modified:   07/22/2025 (Khoa)
  * Notes:           <write here>
 */
 
 using Unity.Netcode;
 using System;
 using UnityEngine;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class ItemStack
@@ -176,6 +178,13 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     {
         if (showDebug) Debug.Log($"Adding {property.ItemName} to inventory on client {OwnerClientId}");
 
+        // Convert carrot to golden carrot
+        if (isGoldenCarrot && property == AssetManager.Main.CarrotProperty)
+        {
+            property = AssetManager.Main.GoldenCarrotProperty;
+            if (showDebug) Debug.Log("Converted carrot to golden carrot for inventory addition.");
+        }
+
         if (property is CurrencyProperty)
         {
             var currency = property as CurrencyProperty;
@@ -246,16 +255,23 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         inventory[index].Count--;
         if (inventory[index].Count == 0)
         {
-            Destroy(inventory[index].Item.gameObject);
-            inventory[index].Item = null;
-            inventoryUI.UpdateSlot(index, null, 0);
-            if (index == currentHotbarIndex)
-                ChangeHotBarIndex(currentHotbarIndex);
+            ClearInventorySlot(index);
         }
         else
         {
             inventoryUI.UpdateSlot(index, inventory[index].Property.IconSprite, (int)inventory[index].Count);
         }
+    }
+
+    private void ClearInventorySlot(int index)
+    {
+        if (inventory[index].Item != null && inventory[index].Item.gameObject != null)
+            Destroy(inventory[index].Item.gameObject);
+        inventory[index].Item = null;
+        inventoryUI.UpdateSlot(index, null, 0);
+
+        // Update the visual on player's hand if the current item is being cleared
+        if (index == currentHotbarIndex) ChangeHotBarIndex(currentHotbarIndex);
     }
 
     public void DropItem(int index)
@@ -269,21 +285,53 @@ public class PlayerInventory : NetworkBehaviour, IControllable
 
     public void SwapItem(int index1, int index2)
     {
-        var temp = inventory[index1];
-        inventory[index1] = inventory[index2];
-        inventory[index2] = temp;
+        if (index1 == index2) return;   // same slot? nothing to do
+
+        // 1. Try to merge if they hold the same item and neither is empty
+        if (!inventory[index1].IsEmpty &&
+        !inventory[index2].IsEmpty &&
+        inventory[index1].Property == inventory[index2].Property)
+        {
+            var maxStack = inventory[index1].Property.MaxStack;
+            if (inventory[index1].Count + inventory[index2].Count > maxStack)
+            {
+                var toMove = maxStack - inventory[index1].Count;
+                inventory[index1].Count = maxStack;
+                inventory[index2].Count -= toMove;
+            }
+            else
+            {
+                inventory[index1].Count += inventory[index2].Count;
+                inventory[index2].Count = 0;
+            }
+        }
+        else
+        {
+            // 2. Swap the items in the inventory
+            var temp = inventory[index1];
+            inventory[index1] = inventory[index2];
+            inventory[index2] = temp;
+        }
 
         if (!inventory[index1].IsEmpty)
             inventoryUI.UpdateSlot(index1, inventory[index1].Property.IconSprite, (int)inventory[index1].Count);
         else
-            inventoryUI.UpdateSlot(index1, null, 0);
+            ClearInventorySlot(index1);
 
         if (!inventory[index2].IsEmpty)
             inventoryUI.UpdateSlot(index2, inventory[index2].Property.IconSprite, (int)inventory[index2].Count);
         else
-            inventoryUI.UpdateSlot(index2, null, 0);
+            ClearInventorySlot(index2);
 
         ChangeHotBarIndex(currentHotbarIndex);
+    }
+
+    public void DropStack(int index)
+    {
+        var count = (int)inventory[index].Count;
+        var property = inventory[index].Property;
+        ClearInventorySlot(index);
+        AssetManager.Main.SpawnItem(property, transform.position, default, gameObject, default, default, count);
     }
 
     #region Search Algorithms
@@ -337,12 +385,9 @@ public class PlayerInventory : NetworkBehaviour, IControllable
     #endregion
 
     #region Currency
-    private ulong personalCoinsCollected = 0;
     public void AddCoinsOnClient(uint value)
     {
-        personalCoinsCollected += value;
         WalletManager.Main.AddToWallet(value);
-        StatisticsManager.Main.UpdateStat(StatisticType.PersonalCoinsCollected, personalCoinsCollected);
         if (showDebug) Debug.Log($"Added {value} coins to inventory. Total coins = {WalletManager.Main.LocalWalletValue}");
     }
 
@@ -387,6 +432,65 @@ public class PlayerInventory : NetworkBehaviour, IControllable
         rangeIndicator.Show(currentSlot.Property.Range);
         itemContextUI.SetItemContext(currentSlot.Property.ItemContext);
     }
+
+    #region Golden Carrot
+
+    private void ConvertCarrotToGolden()
+    {
+        var carrotProperty = AssetManager.Main.CarrotProperty;
+        var goldenCarrotProperty = AssetManager.Main.GoldenCarrotProperty;
+
+        List<int> convertedIndices = new List<int>();
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            if (inventory[i].Property == carrotProperty && inventory[i].Count > 0)
+                convertedIndices.Add(i);
+        }
+
+        foreach (var index in convertedIndices)
+        {
+            var count = inventory[index].Count;
+
+            // Clear the carrot
+            ClearInventorySlot(index);
+            if (showDebug) Debug.Log($"Converted carrot at index {index} to golden carrot. Count: {count}");
+
+            for (int i = 0; i < count; i++)
+            {
+                // Add the golden carrot
+                if (AddItem(goldenCarrotProperty, false))
+                {
+                    if (showDebug) Debug.Log($"Converted carrot at index {index} to golden carrot.");
+                }
+                else
+                {
+                    // This should rarely happen, but if we can't add the golden carrot, we log a warning and spawn it in the world
+                    Debug.LogWarning($"Failed to convert carrot at index {index} to golden carrot. No space in inventory.");
+                    AssetManager.Main.SpawnItem(goldenCarrotProperty, transform.position, default, gameObject);
+                }
+            }
+        }
+    }
+
+    private bool isGoldenCarrot;
+    public void SetGoldenCarrot(bool value)
+    {
+        isGoldenCarrot = value;
+
+        if (isGoldenCarrot)
+        {
+            // Convert all carrots to golden carrots
+            ConvertCarrotToGolden();
+        }
+        else
+        {
+            // If we are not golden carrot, we can do something else if needed
+            // For now, just log it
+            if (showDebug) Debug.Log("Switched back from Golden Carrot to regular Carrot.");
+        }
+    }
+
+    #endregion
 
     #region Utility
 

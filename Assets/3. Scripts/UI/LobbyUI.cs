@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/28/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using Steamworks;
 using Steamworks.Data;
 using TMPro;
@@ -148,11 +155,15 @@ public class LobbyUI : UIBehaviour
     #region Button Hooks
     public void InviteButtonClicked()
     {
+        AudioManager.Main.PlayClickSound();
+
         SteamFriends.OpenGameInviteOverlay(ConnectionManager.Main.CurrentLobby.Value.Id);
     }
 
     public void JoinRoomButtonClicked()
     {
+        AudioManager.Main.PlayClickSound();
+
         if (!ConnectionManager.Main.CurrentLobby.HasValue && lobbyIdInputField.text != "")
         {
             ConnectionManager.Main.JoinLobby(ulong.Parse(lobbyIdInputField.text));
@@ -165,6 +176,8 @@ public class LobbyUI : UIBehaviour
 
     public void StartGameButtonClicked()
     {
+        AudioManager.Main.PlayClickSound();
+
         if (!ConnectionManager.Main.CurrentLobby.HasValue) return;
 
         ConnectionManager.Main.StartGameMultiplayerOnlineHost();
@@ -172,6 +185,8 @@ public class LobbyUI : UIBehaviour
 
     public void JoinGameButtonClicked()
     {
+        AudioManager.Main.PlayClickSound();
+
         if (!ConnectionManager.Main.CurrentLobby.HasValue) return;
 
         if (ConnectionManager.Main.CurrentLobby?.GetData(ConnectionManager.LOBBY_STATUS_KEY) != ConnectionManager.LOBBY_INGAME_VAL)
@@ -186,14 +201,36 @@ public class LobbyUI : UIBehaviour
 
     public void CopyButtonClicked()
     {
+        AudioManager.Main.PlayClickSound();
         GUIUtility.systemCopyBuffer = lobbyIdInputField.text;
         copyButtonText.text = "Copied!";
     }
 
     public void PasteButtonClicked()
     {
+        AudioManager.Main.PlayClickSound();
         lobbyIdInputField.text = GUIUtility.systemCopyBuffer;
         pasteButtonText.text = "Pasted!";
+    }
+
+    public void OnAppearanceButtonClicked()
+    {
+        AppearanceUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
+    }
+
+    public void OnPetSelectionButtonClicked()
+    {
+        PetSelectionUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
+    }
+
+    public void OnBackButtonClicked()
+    {
+        HideNoFade();
+        SteamMenuUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
+        LeaveLobby();
     }
     #endregion
 
@@ -278,7 +315,9 @@ public class LobbyUI : UIBehaviour
 
     public void LeaveLobby()
     {
+        Debug.Log("LobbyUI: Leaving lobby...");
         ConnectionManager.Main.LeaveLobby();
     }
     #endregion
+
 }

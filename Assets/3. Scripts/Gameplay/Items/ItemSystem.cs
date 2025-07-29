@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/24/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using ColorMak3r.Utility;
 using System;
 using System.Collections;
@@ -18,6 +25,10 @@ public class ItemSystem : NetworkBehaviour
     private GameObject muzzleFlash;
     [SerializeField]
     private Transform recoilTransform;
+    [SerializeField]
+    private Transform graphicTransform;
+    [SerializeField]
+    private GameObject meleeAnimationObject;
 
     [Header("Asset Spawn Preset")]
     [SerializeField]
@@ -32,12 +43,15 @@ public class ItemSystem : NetworkBehaviour
     [Header("Debugs")]
     [SerializeField]
     private bool showDebugs = false;
+    [SerializeField]
+    private bool showGizmos = false;
 
     private Vector2 ObjectPosition => (Vector2)transform.position + offset;
 
     private EntityStatus entityStatus;
     private Animator animator;
     private LassoController lassoController;
+    private Animator meleeAnimationAnimator;
 
     private Vector2 recoilDefaultPosition;
 
@@ -46,6 +60,7 @@ public class ItemSystem : NetworkBehaviour
         entityStatus = GetComponent<EntityStatus>();
         lassoController = GetComponent<LassoController>();
         animator = GetComponent<Animator>();
+        if (meleeAnimationObject) meleeAnimationAnimator = meleeAnimationObject.GetComponent<Animator>();
 
         if (recoilTransform) recoilDefaultPosition = recoilTransform.localPosition;
     }
@@ -56,7 +71,7 @@ public class ItemSystem : NetworkBehaviour
         return ((Vector2)transform.position - position).magnitude < range;
     }
 
-    public Collider2D OverlapArea(Vector2 size, Vector2 position, LayerMask layers, float precision = 0.9f)
+    public Collider2D OverlapArea(Vector2 position, Vector2 size, LayerMask layers, float precision = 0.9f)
     {
         // Calculate the scaled half-size based on the given precision
         Vector2 scaledHalfSize = size * 0.5f * precision;
@@ -69,7 +84,7 @@ public class ItemSystem : NetworkBehaviour
         return Physics2D.OverlapArea(pointA, pointB, layers);
     }
 
-    public Collider2D[] OverlapAreaAll(Vector2 size, Vector2 position, LayerMask layers, float precision = 0.9f)
+    public Collider2D[] OverlapAreaAll(Vector2 position, Vector2 size, LayerMask layers, float precision = 0.9f)
     {
         // Calculate the scaled half-size based on the given precision
         Vector2 scaledHalfSize = size * 0.5f * precision;
@@ -84,8 +99,28 @@ public class ItemSystem : NetworkBehaviour
     #endregion
 
     #region Melee Weapon
+
+    float debug_radius;
+    Vector2 debug_meleePosition;
     public void DealDamage(Vector2 position, MeleeWeaponProperty meleeWeaponProperty)
     {
+        // Play the melee animation on all clients
+        var direction = (position - ObjectPosition);
+        float distance = direction.magnitude;
+        if (distance > meleeWeaponProperty.Range)
+            direction = direction.normalized * meleeWeaponProperty.Range;
+        else
+            direction = direction.normalized * distance;
+        var clampedPosition = ObjectPosition + direction;
+        debug_meleePosition = clampedPosition;
+        debug_radius = meleeWeaponProperty.Radius;
+
+        if (meleeAnimationObject != null && meleeAnimationAnimator != null)
+            PlayMeleeAnimationRpc(position, meleeWeaponProperty.Range, meleeWeaponProperty.Radius);
+        else
+            Debug.LogWarning("Melee animation object or animator is not set.", this);
+
+        // Check if the melee weapon has a valid radius and range
         var hits = Physics2D.CircleCastAll(transform.position, meleeWeaponProperty.Radius, position - (Vector2)transform.position, meleeWeaponProperty.Range, meleeWeaponProperty.DamageableLayer);
         if (hits.Length > 0)
         {
@@ -113,7 +148,7 @@ public class ItemSystem : NetworkBehaviour
                     else
                     {
                         // Check if the object is already dead
-                        if (damageable.CurrentHealth == 0) continue;
+                        if (damageable.CurrentHealthValue == 0) continue;
 
                         if (collider.TryGetComponent<EntityMovement>(out var movement))
                         {
@@ -121,11 +156,37 @@ public class ItemSystem : NetworkBehaviour
                         }
                     }
                 }
-
-
             }
         }
     }
+
+    [Rpc(SendTo.Everyone)]
+    private void PlayMeleeAnimationRpc(Vector2 position, float maxRange, float radius)
+    {
+        if (meleeAnimationObject != null && meleeAnimationAnimator != null)
+        {
+            var direction = (position - ObjectPosition);
+
+            // Clamp the direction to the max range
+            float distance = direction.magnitude;
+            if (distance > maxRange)
+                direction = direction.normalized * maxRange;
+            else
+                direction = direction.normalized * distance;
+            var clampedPosition = ObjectPosition + direction;
+
+            // Set the angle of the melee animation object
+            var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            var org = angle;
+            if (graphicTransform.localScale.x < 0) angle -= 180f;
+
+            meleeAnimationObject.transform.localScale = new Vector2(radius, radius);
+            meleeAnimationObject.transform.rotation = Quaternion.Euler(0, 0, angle);
+            meleeAnimationObject.transform.position = clampedPosition;
+            meleeAnimationAnimator.SetTrigger("Play");
+        }
+    }
+
     #endregion
 
     #region Ranged Weapon
@@ -221,8 +282,7 @@ public class ItemSystem : NetworkBehaviour
                 Vector2 offset = new Vector2(x, y);
                 Vector2 gridPos = (position + offset).SnapToGrid();
 
-                WorldGenerator.Main.InvalidateFolliageOnClient(gridPos);
-                WorldGenerator.Main.RemoveFoliage(gridPos);
+                WorldGenerator.Main.RemoveFoliageOnClient(gridPos);
             }
         }
     }
@@ -289,12 +349,15 @@ public class ItemSystem : NetworkBehaviour
     #endregion
 
     #region Structure
-    public void FixStructure(Vector2 position, LayerMask structureLayer)
+    public void FixStructure(Vector2 position, Vector2 size, LayerMask structureLayer)
     {
-        var structureHit = Physics2D.OverlapPoint(position, structureLayer);
-        if (structureHit && structureHit.TryGetComponent(out StructureStatus structureStatus))
+        var hits = OverlapAreaAll(position, size, structureLayer);
+        foreach (var hit in hits)
         {
-            structureStatus.GetHealed(1);
+            if (hit.TryGetComponent(out StructureStatus structureStatus))
+            {
+                structureStatus.GetHealed(1);
+            }
         }
     }
 
@@ -310,7 +373,9 @@ public class ItemSystem : NetworkBehaviour
 
             if (structureHit.TryGetComponent(out EntityStatus entityStatus))
             {
-                if (entityStatus.CurrentHealth == entityStatus.MaxHealth)
+                // Block remove structure if it's not full health
+                // Only applicable to structures with EntityStatus
+                if (entityStatus.CurrentHealthValue == entityStatus.MaxHealth)
                 {
                     structure.RemoveStructure();
                 }
@@ -620,9 +685,53 @@ public class ItemSystem : NetworkBehaviour
 
     #endregion
 
+    #region Mining
+
+    public void Mine(Vector2 position)
+    {
+        // TakeDamage can run on client
+        var hits = Physics2D.OverlapCircleAll(position, 0.5f, LayerManager.Main.MineableLayer);
+
+        if (hits.Length == 0) return; // No mineable object found
+
+        // Find the closest hit to the position
+        var smallestSqrDistance = 999f;
+        var smallestIndex = 0;
+        for (int i = 0; i < hits.Length; i++)
+        {
+            var sqrDistance = ((Vector2)hits[i].transform.position - position).sqrMagnitude;
+            if (sqrDistance < smallestSqrDistance)
+            {
+                smallestSqrDistance = sqrDistance;
+                smallestIndex = i;
+            }
+        }
+
+        // Hit it
+        var hit = hits[smallestIndex];
+        if (hit != null && hit.TryGetComponent(out EntityStatus entityStatus))
+        {
+            entityStatus.TakeDamage(1, DamageType.Absolute, Hostility.Absolute, transform.root);
+        };
+    }
+
+    #endregion
+
     public void SetMuzzleOffset(Vector2 offset)
     {
         if (muzzleTransform) muzzleTransform.localPosition = offset;
         if (muzzleFlash) muzzleFlash.transform.localPosition = offset + new Vector2(.3125f, 0);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (showGizmos)
+        {
+            if (debug_meleePosition != Vector2.zero)
+            {
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawWireSphere(debug_meleePosition, debug_radius);
+            }
+        }
     }
 }

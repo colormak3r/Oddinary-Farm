@@ -27,12 +27,13 @@ MonoBehaviour:
     RMB: Remove
 
     X  : Drop'
+  description: 
   pickupSound: {fileID: 0}
   selectSound: {fileID: 0}
   primarySound: {fileID: 8300000, guid: 69daa57976447ba4b885ad9cefaadfb8, type: 3}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
-  radius: 0.1
+  radius: 2
   damage: 5
   damageType: 2
   hostility: 2

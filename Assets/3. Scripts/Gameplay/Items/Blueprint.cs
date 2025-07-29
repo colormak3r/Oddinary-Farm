@@ -1,5 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/18/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
+
 using UnityEngine;
 
 public class Blueprint : Spawner
@@ -28,11 +34,5 @@ public class Blueprint : Spawner
         {
             return false;
         }
-    }
-
-    public override void OnSecondaryAction(Vector2 position)
-    {
-        base.OnSecondaryAction(position);
-        ItemSystem.RemoveStructure(position, LayerManager.Main.StructureLayer);
     }
 }

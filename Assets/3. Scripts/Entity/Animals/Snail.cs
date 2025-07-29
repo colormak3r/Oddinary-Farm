@@ -10,20 +10,10 @@ using ColorMak3r.Utility;
 
 public class Snail : Animal
 {
-    [Header("Snail Settings")]
-    [SerializeField]
-    private MinMaxFloat idleStateChangeCdr = new MinMaxFloat { min = 3, max = 5 };
-    private float nextIdleStateChange;
-
     private BehaviourState thinkingState;
-    private BehaviourState nibblingState;
-    private BehaviourState roamingState;
-
+    private BehaviourState followingState;
     private BehaviourState chasingState;
-    private BehaviourState attackPrimaryState;
-
-    private BehaviourState[] idleStates;
-    private BehaviourState[] activeStates;
+    private BehaviourState harvestState;
 
     public override void OnNetworkSpawn()
     {
@@ -32,14 +22,9 @@ public class Snail : Animal
         if (IsServer)
         {
             thinkingState = new ThinkingState(this);
-            nibblingState = new NibblingState(this);
-            roamingState = new RoamingState(this);
-
+            followingState = new FollowingState(this);
             chasingState = new ChasingState(this);
-            attackPrimaryState = new AttackPrimaryState(this);
-
-            idleStates = new BehaviourState[] { thinkingState, nibblingState, roamingState };
-            activeStates = new BehaviourState[] { chasingState, attackPrimaryState };
+            harvestState = new HarvestState(this);
         }
     }
 
@@ -47,26 +32,36 @@ public class Snail : Animal
     {
         if (TargetDetector.CurrentTarget == null)
         {
-            // Idle States
-            if (Time.time > nextIdleStateChange)
+            if (FollowStimulus.TargetRBody != null)
             {
-                nextIdleStateChange = Time.time + Random.Range(idleStateChangeCdr.min, idleStateChangeCdr.max);
-
-                var newState = idleStates[Random.Range(0, idleStates.Length)];
-                ChangeState(newState);
+                if (FollowStimulus.IsNotAtAheadPosition(transform.position))
+                {
+                    if (currentState != followingState)
+                    {
+                        ChangeState(followingState);
+                    }
+                }
+                else
+                {
+                    if (currentState != thinkingState) ChangeState(thinkingState);
+                }
+            }
+            else
+            {
+                // No target, do nothing
+                // Code should not reach here
+                if (currentState != thinkingState) ChangeState(thinkingState);
             }
         }
         else
         {
-            // Active States
-            nextIdleStateChange = 0;
             if (TargetDetector.DistanceToTarget > ItemProperty.Range)
             {
                 if (currentState != chasingState) ChangeState(chasingState);
             }
             else
             {
-                if (currentState != attackPrimaryState) ChangeState(attackPrimaryState);
+                if (currentState != harvestState) ChangeState(harvestState);
             }
         }
     }

@@ -95,7 +95,7 @@ public class CreatureSpawnManager : NetworkBehaviour
             }
             else if (currentHour == wave.spawnHour - 1 && wave.showWarning)
             {
-                WarningUI.Main.ShowWarning($"Breach Detected");
+                WarningUI.Main.ShowWarning();
             }
         }
     }
@@ -108,10 +108,12 @@ public class CreatureSpawnManager : NetworkBehaviour
         int radius = 10;
         int entitiesCount = 0;
         int entitiesCount_cached = 0;
+        int playerCount = 0;
 
         while (radius < 100)
         {
             entitiesCount = 0;
+            playerCount = 0;
             var hits = Physics2D.OverlapCircleAll(waveCenter, radius);
             foreach (var hit in hits)
             {
@@ -119,6 +121,12 @@ public class CreatureSpawnManager : NetworkBehaviour
                 {
                     entitiesCount++;
                     //Debug.Log($"Found entity: {mapElement.name} at {hit.transform.position} within radius {radius}");
+                }
+
+                if (hit.TryGetComponent(out PlayerStatus playerStatus))
+                {
+                    playerCount++;
+                    //Debug.Log($"Found player: {playerStatus.name} at {hit.transform.position} within radius {radius}");
                 }
             }
 
@@ -137,20 +145,25 @@ public class CreatureSpawnManager : NetworkBehaviour
             yield return null;
         }
 
-        SpawnWaveOnServer(wave, waveCenter, radius, radius + 5);
+
+        var multiplier = GetMultiplierFromPlayerCount(playerCount);
+        //if (showDebugs) 
+        Debug.Log($"Spawning wave: {wave} at {waveCenter} with radius {radius} and multiplier {multiplier}");
+        SpawnWaveOnServer(wave, waveCenter, radius, radius + 5, multiplier);
     }
 
-    public void SpawnWaveOnServer(CreatureWave wave, Vector2 position, int safeRadius, int spawnRadius)
+    #region Spawn Waves On Server
+
+    public void SpawnWaveOnServer(CreatureWave wave, Vector2 position, int safeRadius, int spawnRadius, float multiplier)
     {
         if (!IsServer) return;
 
-        StartCoroutine(SpawnWaveCoroutine(wave, position, safeRadius, spawnRadius));
+        StartCoroutine(SpawnWaveCoroutine(wave, position, safeRadius, spawnRadius, multiplier));
     }
 
-    private IEnumerator SpawnWaveCoroutine(CreatureWave wave, Vector2 position, int safeRadius, int spawnRadius)
+    private IEnumerator SpawnWaveCoroutine(CreatureWave wave, Vector2 position, int safeRadius, int spawnRadius, float multiplier)
     {
         spawnablePositions = GetSpawnPositions(position, safeRadius, spawnRadius);
-        var multiplier = NetworkManager.Singleton.ConnectedClients.Count;
 
         foreach (var spawn in wave.creatureSpawns)
         {
@@ -158,9 +171,9 @@ public class CreatureSpawnManager : NetworkBehaviour
         }
     }
 
-    private IEnumerator SpawnCreatureCoroutine(CreatureSpawn spawn, List<Vector2> spawnablePositions, int multiplier, bool headToHeatCenter)
+    private IEnumerator SpawnCreatureCoroutine(CreatureSpawn spawn, List<Vector2> spawnablePositions, float multiplier, bool headToHeatCenter)
     {
-        var scaledCount = spawn.spawnCount * multiplier;
+        var scaledCount = Mathf.FloorToInt(spawn.spawnCount * multiplier);
         for (int i = 0; i < scaledCount; i++)
         {
             var creature = Instantiate(spawn.creaturePrefab, spawnablePositions.GetRandomElement(), Quaternion.identity);
@@ -173,7 +186,9 @@ public class CreatureSpawnManager : NetworkBehaviour
             yield return new WaitForSeconds(spawnDelay);
         }
     }
+    #endregion
 
+    #region Spawn Instantly
     public List<GameObject> SpawnWaveInstantlyOnServer(CreatureWave wave, Vector2 position, int safeRadius, int spawnRadius)
     {
         if (!IsServer) return null;
@@ -201,7 +216,9 @@ public class CreatureSpawnManager : NetworkBehaviour
         }
         return creatures;
     }
+    #endregion
 
+    #region Utilities
     private List<Vector2> GetSpawnPositions(Vector2 position, int safeRadius, int spawnRadius)
     {
         position = position.SnapToGrid();
@@ -220,8 +237,6 @@ public class CreatureSpawnManager : NetworkBehaviour
         }
         return pos;
     }
-
-    #region Utilities
 
     public void SetCanSpawn(bool canSpawn)
     {
@@ -242,7 +257,20 @@ public class CreatureSpawnManager : NetworkBehaviour
     [Rpc(SendTo.Server)]
     private void SpawnTestWaveRpc(Vector2 position, int safeRadius, int spawnRadius)
     {
-        SpawnWaveOnServer(testCreatureWave, position, safeRadius, spawnRadius);
+        SpawnWaveOnServer(testCreatureWave, position, safeRadius, spawnRadius, 1);
+    }
+
+    private float GetMultiplierFromPlayerCount(int playerCount)
+    {
+        // y = 3-4*2^-x
+        // x, y
+        // 1, 1
+        // 2, 2
+        // 3, 2.5
+        // 4, 2.75
+        // 5, ...
+
+        return 3 - 4 * Mathf.Pow(2, -playerCount);
     }
 
     #endregion

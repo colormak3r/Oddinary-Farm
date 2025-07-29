@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/28/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,7 +12,19 @@ using CTabButton = ColorMak3r.UI.TabButton;
 
 public class AppearanceUI : UIBehaviour, ITabCallback
 {
-    //public static AppearanceUI Main { get; private set; }
+    public static AppearanceUI Main { get; private set; }
+
+    private void Awake()
+    {
+        if (Main == null)
+        {
+            Main = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     [Header("Appearance UI Settings")]
     [SerializeField]
@@ -92,6 +111,11 @@ public class AppearanceUI : UIBehaviour, ITabCallback
     {
         RenderRows(appearanceManager.OutfitAssets);
     }
+    public void OnBackButtonClicked()
+    {
+        Hide();
+        AudioManager.Main.PlayClickSound();
+    }
 
     private void RenderRows(IReadOnlyList<AppearanceData> data)
     {
@@ -171,6 +195,8 @@ public class AppearanceUI : UIBehaviour, ITabCallback
 
     public void OnTabButton(int id)
     {
+        AudioManager.Main.PlayClickSound();
+
         // Deselect all buttons
         faceButton.SetSelected(false);
         headButton.SetSelected(false);

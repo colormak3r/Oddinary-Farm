@@ -1,5 +1,4 @@
 using ColorMak3r.Utility;
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,12 +25,16 @@ public class ResourceProperty : ScriptableObject
     [SerializeField]
     private MinMaxFloat resource;
     public MinMaxFloat Resource => resource;
+    [SerializeField]
+    private MinMaxFloat ore;
+    public MinMaxFloat Ore => ore;
 
-    public bool Match(float elevation, float moisture, float resource, out GameObject prefab, out int maxCount)
+    public bool Match(float elevation, float moisture, float resource, float ore, out GameObject prefab, out int maxCount)
     {
         if (Elevation.IsZero() || Elevation.IsInRange(elevation)
             && (Moisture.IsZero() || Moisture.IsInRange(moisture))
-            && (Resource.IsZero() || Resource.IsInRange(resource)))
+            && (Resource.IsZero() || Resource.IsInRange(resource))
+            && (Ore.IsZero() || Ore.IsInRange(ore)))
         {
             var value = GetRandomPrefab(Prefabs);
             prefab = value.Prefab;

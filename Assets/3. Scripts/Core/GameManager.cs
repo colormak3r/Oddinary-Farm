@@ -97,6 +97,7 @@ public class GameManager : NetworkBehaviour
         if (FloodManager.Main.CurrentFloodLevelValue >= WorldGenerator.Main.HighestElevationValue)
         {
             var localPlayer = NetworkManager.Singleton.LocalClient.PlayerObject;
+            var escaped = localPlayer.GetComponent<PlayerMountHandler>().IsControlledValue;
             localPlayer.GetComponent<ControllableController>().SetControl(false);
             GameOver(true);
         }
@@ -188,6 +189,9 @@ public class GameManager : NetworkBehaviour
         Debug.Log($"Game Over: {escaped}");
         GameOverUI.Main.SetGameoverText(escaped);
         gameOverCoroutine = StartCoroutine(GameOverCoroutine());
+
+        // TODO: make UI showing hamster unlocked;
+        if (escaped) PetManager.Main.UnlockPet(PetType.Hamster);
     }
 
     public IEnumerator GameOverCoroutine()

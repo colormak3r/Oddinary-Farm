@@ -139,7 +139,9 @@ MonoBehaviour:
   damagedSound: {fileID: 8300000, guid: 3858773d709f0d64ca46a780ca805b59, type: 3}
   deathSound: {fileID: 8300000, guid: 6daade3a6970eb54fbfe49ca74bba5ec, type: 3}
   showDebugs: 0
-  NetworkCurrentHealth:
+  CanBeHealed:
+    m_InternalValue: 1
+  CurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
     m_PersistentCalls:
@@ -575,11 +577,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 1}
-      - {x: -0.95105654, y: 0.30901697}
-      - {x: -0.5877852, y: -0.80901706}
-      - {x: 0.58778536, y: -0.80901694}
-      - {x: 0.9510565, y: 0.30901712}
+    - - {x: -0.1875, y: 0.5}
+      - {x: -0.1875, y: 0.1875}
+      - {x: 0.1875, y: 0.1875}
+      - {x: 0.1875, y: 0.5}
   m_UseDelaunayMesh: 0
 --- !u!1 &6347380677526457986
 GameObject:

@@ -16,6 +16,12 @@ MonoBehaviour:
   - prefab: {fileID: 3569705655780300392, guid: a008f1d31971c044aad2e8c334c34f00, type: 3}
     chance: 10
     maxCount: 0
+  - prefab: {fileID: 2393666993314806188, guid: a366071419893bd47ab1db48251cdd40, type: 3}
+    chance: 10
+    maxCount: 1
+  - prefab: {fileID: 1682487815208620944, guid: a8793324d6e6c354888763f61fa1101b, type: 3}
+    chance: 5
+    maxCount: 0
   - prefab: {fileID: 1058264906700719505, guid: 0c621d07ddc2f6048a1f1c27618790b3, type: 3}
     chance: 10
     maxCount: 0
@@ -24,6 +30,9 @@ MonoBehaviour:
     maxCount: 0
   - prefab: {fileID: 7351083743375483073, guid: 4ca444b6f0f96c7409cf5a9342ad36a3, type: 3}
     chance: 10
+    maxCount: 0
+  - prefab: {fileID: 4450313114538779774, guid: 84d1ecbbddba1184fb5d09d3d5bc5770, type: 3}
+    chance: 5
     maxCount: 0
   - prefab: {fileID: 8327819289072149800, guid: db0246c35fb3c31478294ac1dcb99331, type: 3}
     chance: 1
@@ -37,16 +46,10 @@ MonoBehaviour:
   - prefab: {fileID: 584407310299724644, guid: db27d28caea10ac4a9833e63271e9014, type: 3}
     chance: 1
     maxCount: 0
-  - prefab: {fileID: 1970836477379599548, guid: 91edc7fdff6dd08429b2faecc40f323d, type: 3}
-    chance: 1
-    maxCount: 0
   - prefab: {fileID: 595606902699718997, guid: c01e06a0f5e7def4a95b2145336c9c4d, type: 3}
     chance: 1
     maxCount: 0
   - prefab: {fileID: 8218975886292785769, guid: 67fd6932c39532841954f021613c899d, type: 3}
-    chance: 1
-    maxCount: 0
-  - prefab: {fileID: 3509704039168950972, guid: 3b685133062db194c90813c7b6533867, type: 3}
     chance: 1
     maxCount: 0
   elevation:
@@ -58,3 +61,6 @@ MonoBehaviour:
   resource:
     min: 0.9
     max: 1
+  ore:
+    min: 0
+    max: 0

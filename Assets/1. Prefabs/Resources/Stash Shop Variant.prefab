@@ -49,6 +49,10 @@ PrefabInstance:
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3284280419715406304, guid: f9a4dcc0cd49dde40af3e06f8bc41874, type: 3}
+      propertyPath: resetMiniMapOnDespawn
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3284280419715406304, guid: f9a4dcc0cd49dde40af3e06f8bc41874, type: 3}
       propertyPath: positions.Array.data[0].x
       value: -1
       objectReference: {fileID: 0}
@@ -225,3 +229,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41d12d51f692f7e4ca9d556e77f73877, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnOffset: {x: 0, y: -0.5}

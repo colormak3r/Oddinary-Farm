@@ -27,13 +27,13 @@ public class InventorySlotUI : MonoBehaviour, IDropHandler
     private int index;
     private PlayerInventory playerInventory;
 
-    public void Initialize(int index, PlayerInventory playerInventory)
+    public void Initialize(int index, PlayerInventory playerInventory, UIBehaviour dropSlot)
     {
         this.index = index;
         this.playerInventory = playerInventory;
 
         itemIndex.text = index.ToString();
-        itemUI.Initialize(index, isInteractable);
+        itemUI.Initialize(index, isInteractable, dropSlot);
 
         // Hide item index if it's greater than 9 (part of the inventory)
         if (index > 9) itemIndex.gameObject.SetActive(false);
@@ -72,7 +72,7 @@ public class InventorySlotUI : MonoBehaviour, IDropHandler
             InventoryItemUI item = eventData.pointerDrag.GetComponent<InventoryItemUI>();
             if (item != null && item.IsInteractable)
             {
-                playerInventory.SwapItem(item.Index, index);
+                playerInventory.SwapItem(index, item.Index);
             }
         }
     }

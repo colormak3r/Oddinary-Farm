@@ -63,7 +63,7 @@ public class Hammer : Tool
     {
         position = position.SnapToGrid();
         base.OnPrimaryAction(position);
-        ItemSystem.FixStructure(position, hammerProperty.StructureLayer);
+        ItemSystem.FixStructure(position, hammerProperty.Size, hammerProperty.StructureLayer);
     }
 
 
@@ -84,12 +84,4 @@ public class Hammer : Tool
             return false;
         }
     }
-
-    public override void OnSecondaryAction(Vector2 position)
-    {
-        base.OnSecondaryAction(position);
-        ItemSystem.RemoveStructure(position, hammerProperty.StructureLayer);
-    }
-
-
 }

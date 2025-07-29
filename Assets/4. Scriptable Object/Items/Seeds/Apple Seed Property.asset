@@ -20,7 +20,7 @@ MonoBehaviour:
   isSellable: 1
   price: 800
   range: 10
-  primaryCdr: 0.25
+  primaryCdr: 0.1
   secondaryCdr: 0.25
   itemContext: "LMB: Place\r\r\nX  : Drop"
   description: Red sweet delicous apple trees.

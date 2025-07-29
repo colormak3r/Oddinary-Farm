@@ -5,6 +5,7 @@
  * Notes:           <write here>
 */
 
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
@@ -82,8 +83,22 @@ public class AudioElement : MonoBehaviour
         }
     }
 
-    public void PlaySoundEffect(int index)
+    public void PlaySoundEffect(int index, bool randomPitch = true)
     {
-        audioSource.PlayOneShot(soundEffects[index]);
+        if (soundEffects != null && index < soundEffects.Length)
+        {
+            PlayOneShot(soundEffects[index], randomPitch);
+        }
+    }
+
+    public void Stop()
+    {
+        audioSource.Stop();
+    }
+
+    public void SetRange(float minRange, float maxRange)
+    {
+        audioSource.minDistance = minRange;
+        audioSource.maxDistance = maxRange;
     }
 }

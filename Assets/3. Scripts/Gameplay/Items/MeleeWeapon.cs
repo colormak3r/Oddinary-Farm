@@ -17,12 +17,6 @@ public class MeleeWeapon : Item
         ItemSystem.DealDamage(position, meleeWeaponProperty);
     }
 
-    public override void OnSecondaryAction(Vector2 position)
-    {
-        base.OnSecondaryAction(position);
-        ItemSystem.RemoveStructure(position, LayerManager.Main.StructureLayer);
-    }
-
     private void OnDrawGizmos()
     {
         if (!showGizmos || meleeWeaponProperty == null) return;

@@ -18,9 +18,9 @@ MonoBehaviour:
   isConsummable: 0
   maxStack: 1
   isSellable: 1
-  price: 800
+  price: 1600
   range: 4
-  primaryCdr: 0.25
+  primaryCdr: 0.35
   secondaryCdr: 0.25
   itemContext: 'LMB: Swing
 
@@ -36,7 +36,7 @@ MonoBehaviour:
   primarySound: {fileID: 8300000, guid: 0604f351202b1a34ebd61af07dd882d9, type: 3}
   secondarySound: {fileID: 0}
   alternativeSound: {fileID: 0}
-  radius: 0.5
+  radius: 2
   damage: 2
   damageType: 2
   hostility: 0

@@ -1,7 +1,7 @@
 /*
  * Created By:      Khoa Nguyen
  * Date Created:    07/09/2025
- * Last Modified:   07/09/2025 (Khoa)
+ * Last Modified:   07/21/2025 (Khoa)
  * Notes:           <write here>
 */
 
@@ -26,7 +26,7 @@ public class PetManager : NetworkBehaviour
         }
 
         // TODO: PetManagerUI
-        //DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);
         FetchCollectedPet();
     }
 
@@ -101,11 +101,14 @@ public class PetManager : NetworkBehaviour
         Debug.Log($"Chihuahua rescue sequence started at {position}.");
     }
 
+    #region Pet Spawning
+    // Funtion call entry here, client authoritative
     public void SpawnPet(PetType petType, Vector2 position, GameObject owner)
     {
         if (canSpawnPet) SpawnPetRpc(petType, position, owner);
     }
 
+    // Send request to server to spawn pet
     [Rpc(SendTo.Server)]
     private void SpawnPetRpc(PetType petType, Vector2 position, NetworkObjectReference ownerRef)
     {
@@ -115,6 +118,7 @@ public class PetManager : NetworkBehaviour
         }
     }
 
+    // Spawn pet on server, then attach pet to owner
     private void SpawnPetInternal(PetType petType, Vector2 position, GameObject owner)
     {
         var rigidbody2D = owner.GetComponent<Rigidbody2D>();
@@ -131,14 +135,18 @@ public class PetManager : NetworkBehaviour
         SetPetSpawnClientRpc(RpcTarget.Single(owner.GetComponent<NetworkObject>().OwnerClientId, RpcTargetUse.Temp));
     }
 
+    // Signal that pet has been spawned on client
+    // This is to prevent player collect pet again in the same game (one pet per game only)
     [Rpc(SendTo.SpecifiedInParams)]
     private void SetPetSpawnClientRpc(RpcParams rpcParams)
     {
         petSpawned = true;
         if (showDebugs) Debug.Log($"PetSpawned set on client {rpcParams.Receive.SenderClientId}.");
     }
+    #endregion
 
-    public void CollectPet(PetType petType)
+    #region Pet Collection
+    public void UnlockPet(PetType petType)
     {
         if (petCollectionStatus.ContainsKey(petType) && !petCollectionStatus[petType])
         {
@@ -176,9 +184,22 @@ public class PetManager : NetworkBehaviour
             if (showDebugs) Debug.Log($"Pet {petData.petType} collection status reset.");
         }
     }
+    #endregion
 
+    // Called from the Pet Selection UI
+    // Set Pet to Spawn before the game started
     public void SetPetToSpawn(PetData petToSpawn)
     {
         this.petToSpawn = petToSpawn;
+    }
+
+    [ContextMenu("Unlock All Pets")]
+    public void UnlockAllPets()
+    {
+        foreach (var petData in petDataEntries)
+        {
+            UnlockPet(petData.petType);
+        }
+        if (showDebugs) Debug.Log("All pets unlocked.");
     }
 }

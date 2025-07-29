@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/24/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
 
 [System.Serializable]
@@ -55,6 +62,12 @@ public class PerlinNoiseGenerator : MapGenerator
         }
 
         TransformMap(mapSize);
+
+        for (int x = -halfMapSize.x; x < halfMapSize.x; ++x)
+            for (int y = -halfMapSize.y; y < halfMapSize.y; ++y)
+            {
+                mapTexture.SetPixel(x + halfMapSize.x, y + halfMapSize.y, GetColor(rawMap[x, y]));
+            }
 
         mapTexture.Apply();
     }

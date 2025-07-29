@@ -116,7 +116,13 @@ public class TimeManager : NetworkBehaviour
         timeSpan = TimeSpan.FromSeconds(offsetTime);
         if (timeSpan.Minutes % 10 == 0 && timeSpan.Minutes != minute_cached)
         {
-            timeText.text = $"Day {timeSpan.Days} - " + timeSpan.ToString(@"hh\:mm");
+            // Create a base DateTime (e.g., midnight) and add the TimeSpan
+            DateTime dateTime = DateTime.Today.Add(timeSpan);
+
+            // Format using 12-hour time with AM/PM
+            string formattedTime = dateTime.ToString("hh:mm tt"); // e.g., "03:45 PM"
+
+            timeText.text = $"Day {timeSpan.Days} - {formattedTime}";
             minute_cached = timeSpan.Minutes;
         }
 

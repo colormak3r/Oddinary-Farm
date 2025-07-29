@@ -2,6 +2,8 @@ using System;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
+using static Steamworks.InventoryItem;
+using static UnityEngine.Rendering.DebugUI;
 public class WalletManager : NetworkBehaviour
 {
     public static WalletManager Main;
@@ -27,7 +29,9 @@ public class WalletManager : NetworkBehaviour
 
     [Header("Debugs")]
     [SerializeField]
-    private NetworkVariable<ulong> GlobalWallet = new NetworkVariable<ulong>(10);
+    private bool showDebugs;
+    [SerializeField]
+    private NetworkVariable<ulong> GlobalWallet = new NetworkVariable<ulong>(0);
     [SerializeField]
     private ulong localSpending = 0;
     public ulong LocalWalletValue => GlobalWallet.Value - localSpending;
@@ -75,10 +79,16 @@ public class WalletManager : NetworkBehaviour
         if (Time.time >= nextFlushTime) FlushPendingAdd();
     }
 
+    private ulong personalCoinsCollected = 0;
     private void FlushPendingAdd()
     {
         if (pendingAdd == 0) return;
 
+        // Update statistics for personal coins collected
+        personalCoinsCollected += pendingAdd;
+        StatisticsManager.Main.UpdateStat(StatisticType.PersonalCoinsCollected, personalCoinsCollected);
+
+        // Add the pending amount to the global wallet
         AddToWalletRpc(pendingAdd);
         pendingAdd = 0;
         nextFlushTime = Time.time + flushInterval;
@@ -94,7 +104,8 @@ public class WalletManager : NetworkBehaviour
     {
         if (amount > GlobalWallet.Value)
         {
-            Debug.LogWarning("Attempted to remove more from wallet than available. Setting local spending equal too global wallet (LocalWallet now = 0)");
+            if (showDebugs) Debug.LogWarning("Attempted to remove more from wallet than available. Setting local spending equal too global wallet (LocalWallet now = 0)");
+            // Set the local spending to the global wallet value, effectively making the local wallet empty.
             localSpending = GlobalWallet.Value;
         }
         else

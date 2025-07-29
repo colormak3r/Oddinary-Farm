@@ -319,7 +319,6 @@ MonoBehaviour:
   showGizmos: 1
   isHungry: 0
   isDying: 0
-  targetFoodTransform: {fileID: 0}
 --- !u!114 &-1474459994236623046
 MonoBehaviour:
   m_ObjectHideFlags: 0

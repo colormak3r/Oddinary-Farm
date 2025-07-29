@@ -177,6 +177,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b5e0b5b254c46f642bcf969c00414e9c, type: 2}
     - target: {fileID: 8968559354677375507, guid: f9a4dcc0cd49dde40af3e06f8bc41874, type: 3}
+      propertyPath: signColor.b
+      value: 0.92941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 8968559354677375507, guid: f9a4dcc0cd49dde40af3e06f8bc41874, type: 3}
+      propertyPath: signColor.g
+      value: 0.6784314
+      objectReference: {fileID: 0}
+    - target: {fileID: 8968559354677375507, guid: f9a4dcc0cd49dde40af3e06f8bc41874, type: 3}
+      propertyPath: signColor.r
+      value: 0.91764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 8968559354677375507, guid: f9a4dcc0cd49dde40af3e06f8bc41874, type: 3}
       propertyPath: shopInventory
       value: 
       objectReference: {fileID: 11400000, guid: 252831f8cc597c54ebcd736f32910b99, type: 2}

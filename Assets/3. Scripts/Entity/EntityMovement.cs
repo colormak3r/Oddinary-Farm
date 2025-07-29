@@ -19,7 +19,7 @@ public class EntityMovement : NetworkBehaviour
     private float speedMultiplier = 1f;
     [SerializeField]
     private float velocity;
-
+    [SerializeField]
     private NetworkVariable<bool> CanBeKnockback = new NetworkVariable<bool>(true, default, NetworkVariableWritePermission.Server);
     private Vector2 movementDirection;
 

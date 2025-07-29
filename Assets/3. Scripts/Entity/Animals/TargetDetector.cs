@@ -185,7 +185,7 @@ public class TargetDetector : NetworkBehaviour
             DeselectTarget($"{currentTarget} died");
     }
 
-    protected void DeselectTarget(string reason)
+    public void DeselectTarget(string reason)
     {
         if (currentTarget != null)
         {

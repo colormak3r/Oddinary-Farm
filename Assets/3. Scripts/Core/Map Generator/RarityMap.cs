@@ -8,47 +8,36 @@ public class RarityMap : PerlinNoiseGenerator
 
     protected override void TransformMap(Vector2Int mapSize)
     {
-        var halfMapSize = mapSize / 2;
-        for (int x = -halfMapSize.x; x < halfMapSize.x; x++)
-        {
-            for (int y = -halfMapSize.y; y < halfMapSize.y; y++)
+        // constants & scratch buffers
+        int halfX = mapSize.x / 2;          // 200 for a 400 × 400 map
+        int halfY = mapSize.y / 2;
+
+        // one byte per tile that says “this is a rarity peak”
+        bool[,] isPeak = new bool[mapSize.x, mapSize.y];
+
+        // pass 1 – detect local maxima
+        for (int x = rawMap.minX; x < rawMap.maxX; ++x)
+            for (int y = rawMap.minY; y < rawMap.maxY; ++y)
             {
-                float maxValue = 0;
-                // there are more efficient algorithms than this
-                for (int xx = -rarity; xx <= rarity; xx++)
-                {
-                    for (int yy = -rarity; yy <= rarity; yy++)
+                float candidate = rawMap[x, y];
+                float maxInNeighbourhood = candidate;
+
+                for (int dx = -rarity; dx <= rarity; ++dx)
+                    for (int dy = -rarity; dy <= rarity; ++dy)
                     {
-                        int xn = xx + x;
-                        int yn = yy + y;
-                        // optionally check that (dx*dx + dy*dy <= rarity * (rarity + 1))
-                        if (-halfMapSize.x <= xn && xn < halfMapSize.x && -halfMapSize.y <= yn && yn < halfMapSize.y)
-                        {
-                            float e = rawMap[xn, yn];
-                            if (e > maxValue) { maxValue = e; }
-                        }
+                        if (dx == 0 && dy == 0) continue;                 // skip self
+
+                        if (rawMap.GetElementSafe(x + dx, y + dy, out var v))
+                            if (v > maxInNeighbourhood) maxInNeighbourhood = v;
                     }
-                }
 
-                if (rawMap[x, y] == maxValue)
-                {
-                    rawMap[x, y] = 1.0f;
-                }
+                if (Mathf.Approximately(candidate, maxInNeighbourhood))
+                    isPeak[x + halfX, y + halfY] = true;              // mark peak
             }
-        }
 
-        var count = 0;
-        for (int x = -halfMapSize.x; x < halfMapSize.x; x++)
-        {
-            for (int y = -halfMapSize.y; y < halfMapSize.y; y++)
-            {
-                if (rawMap[x, y] != 1.0f) rawMap[x, y] = 0.0f;
-                mapTexture.SetPixel(x + halfMapSize.x, y + halfMapSize.y, GetColor(rawMap[x, y]));
-                if (rawMap[x, y] == 1.0f)
-                {
-                    count++;
-                }
-            }
-        }
+        // pass 2 – write back to rawMap
+        for (int x = rawMap.minX; x < rawMap.maxX; ++x)
+            for (int y = rawMap.minY; y < rawMap.maxY; ++y)
+                rawMap[x, y] = isPeak[x + halfX, y + halfY] ? 1f : 0f;
     }
 }

@@ -12,9 +12,17 @@ PrefabInstance:
       propertyPath: moveSpeed
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1984539576561502031, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: CanBeKnockback.m_InternalValue
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2474804323160958134, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: activeTime
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2474804323160958134, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
+      propertyPath: penaltyRange
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3843649885323722000, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: GlobalObjectIdHash
@@ -26,11 +34,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3945629672685620183, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3945629672685620183, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -18
       objectReference: {fileID: 0}
     - target: {fileID: 3945629672685620183, guid: 56280d5313d418348989f6fd2a4a5a4f, type: 3}
       propertyPath: m_LocalPosition.z

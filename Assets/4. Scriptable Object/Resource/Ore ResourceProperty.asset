@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e64b80c51dd69344ba04c19392b4bf0, type: 3}
+  m_Name: Ore ResourceProperty
+  m_EditorClassIdentifier: 
+  prefabs:
+  - prefab: {fileID: 8871702377440113209, guid: 4a296a4b0db22e946a317e659b6e6978, type: 3}
+    chance: 1
+    maxCount: 0
+  elevation:
+    min: 0.55
+    max: 1
+  moisture:
+    min: 0
+    max: 0
+  resource:
+    min: 0
+    max: 0
+  ore:
+    min: 0.9
+    max: 1

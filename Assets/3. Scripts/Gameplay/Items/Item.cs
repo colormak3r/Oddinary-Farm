@@ -1,6 +1,13 @@
-using System.Collections;
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/28/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using UnityEngine;
 using Unity.Netcode;
+using ColorMak3r.Utility;
 
 public class Item : MonoBehaviour
 {
@@ -70,10 +77,13 @@ public class Item : MonoBehaviour
     public virtual void OnSecondaryAction(Vector2 position)
     {
         if (baseProperty.SecondarySound) PlaySecondarySoundRpc();
+
+        // Remove the item from the structure layer
+        ItemSystem.RemoveStructure(position.SnapToGrid(), LayerManager.Main.StructureLayer);
     }
 
     [Rpc(SendTo.Everyone)]
-    private void PlaySecondarySoundRpc()
+    protected void PlaySecondarySoundRpc()
     {
         AudioElement.PlayOneShot(baseProperty.SecondarySound);
     }

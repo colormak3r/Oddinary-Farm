@@ -99,8 +99,8 @@ public class TutorialUI : UIBehaviour, ITabCallback
         PlayerPrefs.Save();
     }
 
-    [ContextMenu("Reset Don't Show Again")]
-    private void ResetDontShowAgain()
+    [ContextMenu("Reset Tutorial")]
+    public void ResetTutorial()
     {
         SetDontShowAgain(false);
     }

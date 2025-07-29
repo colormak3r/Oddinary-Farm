@@ -5,8 +5,6 @@ using System.Linq;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UIElements;
 
 public struct TileData          // one grid cell
 {
@@ -132,6 +130,10 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private MinMaxFloat chihuahuaElevation;
 
+    [Header("HypnoFrog Settings")]
+    [SerializeField]
+    private GameObject hypnoFrogPrefab;
+
     [Header("Resource Settings")]
     [SerializeField]
     private bool canSpawnResources = true;
@@ -157,6 +159,8 @@ public class WorldGenerator : NetworkBehaviour
     [SerializeField]
     private MoistureMap moistureMap;
     [SerializeField]
+    private OreMap oreMap;
+    [SerializeField]
     private TMP_Text elevationText;
 
     private Vector2Int halfMapSize;
@@ -169,7 +173,7 @@ public class WorldGenerator : NetworkBehaviour
     private Texture2D miniMapTexture;
 
     private Offset2DArray<bool> folliageMap;
-    private HashSet<Vector2> invalidFoliagePositionHashSet = new HashSet<Vector2>();
+    private HashSet<Vector2Int> invalidFoliagePositionHashSet = new HashSet<Vector2Int>();
 
     private Offset2DArray<ObservablePrefabStatus> resourceStatusMap;
 
@@ -233,8 +237,7 @@ public class WorldGenerator : NetworkBehaviour
                 {
                     miniMapTexture.SetPixel(i + halfMapSize.x, j + halfMapSize.y, floodColor);
                     var position = new Vector2(i, j);
-                    InvalidateFolliageOnClient(position);
-                    RemoveFoliage(position);
+                    RemoveFoliageOnClient(position);
                     yield return null; // Yield to prevent freezing the main thread
                 }
             }
@@ -285,6 +288,7 @@ public class WorldGenerator : NetworkBehaviour
         elevationMap.GenerateMap(mapSize);
         resourceMap.GenerateMap(mapSize);
         moistureMap.GenerateMap(mapSize);
+        oreMap.GenerateMap(mapSize);
 
         // Generate data from the maps
         GenerateTerrain();
@@ -398,12 +402,13 @@ public class WorldGenerator : NetworkBehaviour
             var elevation = elevationMap.RawMap[x, y];
             var moisture = moistureMap.RawMap[x, y];
             var resource = resourceMap.RawMap[x, y];
+            var ore = oreMap.RawMap[x, y];
 
             bool matched = false;
 
             foreach (var property in resourceProperties)
             {
-                if (!property.Match(elevation, moisture, resource, out var prefab, out var maxCount))
+                if (!property.Match(elevation, moisture, resource, ore, out var prefab, out var maxCount))
                     continue;
 
                 if (maxCount > 0 &&
@@ -427,6 +432,9 @@ public class WorldGenerator : NetworkBehaviour
 
             if (!matched)
                 resourceStatusMap[x, y] = new ObservablePrefabStatus(null, false);
+
+            if (resourceStatusMap[x, y].prefab == hypnoFrogPrefab)
+                HypnoFrogManager.Main.RequestAddToList(new Vector2(x, y));
         }
 
         // 5. Optional: log counts
@@ -716,7 +724,8 @@ public class WorldGenerator : NetworkBehaviour
         folliageMap.GetElementSafe(pos.x, pos.y, out var validFoliage);
         if (canSpawnFoliage && validFoliage &&
             !invalidFoliagePositionHashSet.Contains(pos) &&
-            resourceMap.RawMap[pos.x, pos.y] < 0.99f)
+            resourceMap.RawMap[pos.x, pos.y] < 0.99f
+            && oreMap.RawMap[pos.x, pos.y] < 0.99f)
         {
             foliageGO = SpawnFoliage(pos, foliagePrefabs.GetRandomElement());
         }
@@ -784,11 +793,11 @@ public class WorldGenerator : NetworkBehaviour
                     if (resourceStatus.isObservable && !resourceStatus.isSpawned)
                     {
                         //TODO: Handle resource spawning logic with buffer
-                        var resObj = SpawnResource(resourcePos, resourceStatus.prefab);
+                        var offset = resourceStatus.prefab.GetComponent<ObservabilityController>().SpawnOffset;
+                        var resObj = SpawnResource(resourcePos + offset, resourceStatus.prefab);
                         resObj.GetComponent<ObservabilityController>().InitializeOnServer(resourceStatus);
                         resourceStatus.isSpawned = true;
                         spawnedResources[resourcePos] = resourceStatus;
-
                         yield return null;
                     }
                 }
@@ -833,7 +842,7 @@ public class WorldGenerator : NetworkBehaviour
             if (showDebugs) Debug.Log($"Unloading {positionsToRemove.Count} objects");
             foreach (var item in positionsToRemove)
             {
-                if (spawnedResources[item].isSpawned)
+                if (spawnedResources[item] != null && spawnedResources[item].isSpawned && spawnedResources[item].controller != null)
                 {
                     spawnedResources[item].controller.UnloadOnServer();
                     spawnedResources.Remove(item);
@@ -841,6 +850,8 @@ public class WorldGenerator : NetworkBehaviour
             }
         }
     }
+
+
     #endregion
 
     #region Spawn Methods
@@ -918,13 +929,17 @@ public class WorldGenerator : NetworkBehaviour
 
     public void InvalidateFolliageOnClient(Vector2 position)
     {
-        invalidFoliagePositionHashSet.Add(position);
+        var snappedPosition = position.SnapToGrid().ToInt();
+        invalidFoliagePositionHashSet.Add(snappedPosition);
     }
 
-    public void RemoveFoliage(Vector2 position)
+    public void RemoveFoliageOnClient(Vector2 position)
     {
         // Snap position to cell position
         var positionInt = position.SnapToGrid().ToInt();
+
+        // Remove from invalid foliage positions
+        InvalidateFolliageOnClient(position);
 
         // Tile look up
         if (!tiles.TryGetValue(positionInt, out var tile)) return;

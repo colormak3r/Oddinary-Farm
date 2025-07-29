@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14ee197070563344db18af2810a2479c, type: 3}
+  m_Name: Scythe Property
+  m_EditorClassIdentifier: 
+  iconSprite: {fileID: 587673214, guid: 473cc50d187042a4b83ebe63138273d5, type: 3}
+  objectSprite: {fileID: 21300000, guid: e759594f62697924795e3585a0ef527e, type: 3}
+  prefab: {fileID: 7801270977288863951, guid: 31b10321cb10b1d4eadc4c9cb78a5480, type: 3}
+  isConsummable: 0
+  maxStack: 1
+  isSellable: 1
+  price: 800
+  range: 5
+  primaryCdr: 0.75
+  secondaryCdr: 0.25
+  itemContext: 'LMB: Swing
+
+    RMB: Remove
+
+    X  : Drop'
+  description: 'Slightly better than the Sickle.
+
+
+    2 DPS'
+  pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
+  selectSound: {fileID: 8300000, guid: 6b79a5cea8e803045ada22bf3c138725, type: 3}
+  primarySound: {fileID: 8300000, guid: 0604f351202b1a34ebd61af07dd882d9, type: 3}
+  secondarySound: {fileID: 0}
+  alternativeSound: {fileID: 0}
+  radius: 2
+  damage: 1
+  damageType: 2
+  hostility: 0
+  knockbackForce: 200
+  damageableLayer:
+    serializedVersion: 2
+    m_Bits: 7680
+  canHarvest: 1

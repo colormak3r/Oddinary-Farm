@@ -1,25 +1,43 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   07/26/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class LootGenerator : MonoBehaviour
+public class LootGenerator : NetworkBehaviour
 {
     [Header("Settings")]
     [SerializeField]
     private LootTable lootTable;
-
-    [ContextMenu("Drop Loot")]
-    public void DropLoot()
-    {
-        DropLootOnServer(new NetworkObjectReference());
-    }
 
     public void Initialize(LootTable lootTable)
     {
         this.lootTable = lootTable;
     }
 
-    public void DropLootOnServer(NetworkObjectReference preferRef)
+    [ContextMenu("Drop Loot")]
+    public void DropLoot()
+    {
+        DropLoot(new NetworkObjectReference());
+    }
+
+    public void DropLoot(GameObject preferObject)
+    {
+        DropLootRpc(preferObject);
+    }
+
+    public void DropLoot(NetworkObjectReference preferRef)
+    {
+        DropLootRpc(preferRef);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void DropLootRpc(NetworkObjectReference preferRef)
     {
         if (lootTable == null) return;
 

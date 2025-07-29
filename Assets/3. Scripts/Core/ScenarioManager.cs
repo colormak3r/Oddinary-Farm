@@ -46,6 +46,8 @@ public class ScenarioManager : NetworkBehaviour
     private bool canSpawnResources = false;
     public bool CanSpawnResources => overrideSettings & canSpawnResources;
     [SerializeField]
+    private uint startingCoins = 10;
+    [SerializeField]
     private float realMinutesPerInGameDay = 10f;
     [SerializeField]
     private int dayOffset = 1;
@@ -91,6 +93,7 @@ public class ScenarioManager : NetworkBehaviour
     private IEnumerator InitializeCoroutine()
     {
         yield return new WaitUntil(() => WorldGenerator.Main.IsInitialized);
+        WalletManager.Main.AddToWallet(startingCoins);
         TimeManager.Main.SetRealMinutesPerDay(realMinutesPerInGameDay);
         TimeManager.Main.SetTimeOffset(dayOffset, hourOffset, minuteOffset);
 

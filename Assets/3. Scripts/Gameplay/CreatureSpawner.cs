@@ -69,7 +69,7 @@ public class CreatureSpawner : NetworkBehaviour
         }
         else
         {
-            CreatureSpawnManager.Main.SpawnWaveOnServer(creatureWave, transform.position, safeRadius, spawnRadius);
+            CreatureSpawnManager.Main.SpawnWaveOnServer(creatureWave, transform.position, safeRadius, spawnRadius, 1);
         }
     }
 }

@@ -11,25 +11,25 @@ public class RunawayState : BehaviourState
     public override void EnterState()
     {
         base.EnterState();
-        animal.Animator.SetBool("IsMoving", true);
-        animal.Movement.SetSpeedMultiplier(1.5f);
+        AnimalBase.Animator.SetBool("IsMoving", true);
+        AnimalBase.Movement.SetSpeedMultiplier(1.5f);
     }
 
     public override void ExecuteState()
     {
         base.ExecuteState();
-        if (animal.ThreatDetector.CurrentThreat != null)
+        if (AnimalBase.ThreatDetector.CurrentThreat != null)
         {
-            var direction = (animal.transform.position - animal.ThreatDetector.CurrentThreat.position).normalized;
-            animal.MoveDirection(direction);
+            var direction = (AnimalBase.transform.position - AnimalBase.ThreatDetector.CurrentThreat.position).normalized;
+            AnimalBase.MoveDirection(direction);
         }
     }
 
     public override void ExitState()
     {
         base.ExitState();
-        animal.Animator.SetBool("IsMoving", false);
-        animal.Movement.SetSpeedMultiplier(1f);
-        animal.StopMovement();
+        AnimalBase.Animator.SetBool("IsMoving", false);
+        AnimalBase.Movement.SetSpeedMultiplier(1f);
+        AnimalBase.StopMovement();
     }
 }

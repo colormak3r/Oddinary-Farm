@@ -27,7 +27,7 @@ MonoBehaviour:
     RMB: Remove
 
     X  : Drop'
-  description: Use this to escape the island.
+  description: Use this to escape the island. Please.
   pickupSound: {fileID: 8300000, guid: 00a70666d77faa54a8f6f2dd4e7a85e7, type: 3}
   selectSound: {fileID: 0}
   primarySound: {fileID: 8300000, guid: 9fb1b755bafa7744f8e21ba3bfd68a2a, type: 3}
@@ -47,6 +47,6 @@ MonoBehaviour:
   previewIconOffset: {x: 0, y: 0}
   previewValidColor: {r: 0.44313726, g: 0.6666667, b: 0.20392157, a: 1}
   previewInvalidColor: {r: 0.9019608, g: 0.28235295, b: 0.18039216, a: 1}
-  prefabToSpawn: {fileID: 940610010983976717, guid: 7f460ef42f71096479f0f6e892788553, type: 3}
+  prefabToSpawn: {fileID: 940610010983976717, guid: e37b283e7c7403b49a0009c9f60d5c8e, type: 3}
   spawnOffset: {x: 0, y: -1}
   clearFoliage: 1

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
+[ExecuteInEditMode]
 public class ImageAnimator : MonoBehaviour
 {
     [Header("Settings")]

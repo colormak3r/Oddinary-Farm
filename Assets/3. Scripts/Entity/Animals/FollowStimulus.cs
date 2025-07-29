@@ -1,21 +1,43 @@
 using UnityEngine;
 using ColorMak3r.Utility;
+using Unity.Netcode;
+using Unity.Netcode.Components;
 
-public class FollowStimulus : MonoBehaviour
+public class FollowStimulus : NetworkBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private Rigidbody2D targetRbody;
-    [SerializeField] private float aheadDistance = 2f;
-    [SerializeField] private float minOffsetTime = 3f;
-    [SerializeField] private float maxOffsetTime = 5f;
+    [SerializeField]
+    private float aheadDistance = 2f;
+    [SerializeField]
+    private float minOffsetTime = 3f;
+    [SerializeField]
+    private float maxOffsetTime = 5f;
+    [SerializeField]
+    private bool canTeleportToTarget = true;
+    [SerializeField]
+    private float maxDistanceFromTarget = 20f;
+
+    [Header("Debugs")]
     [SerializeField]
     private Vector2 aheadPosition;
     public Vector2 AheadPosition => aheadPosition;
     [SerializeField]
     private Vector2 randomAheadOffset;
-    private float nextOffset;
-
+    [SerializeField]
+    private Rigidbody2D targetRbody;
     public Rigidbody2D TargetRBody => targetRbody;
+    public Transform Owner => targetRbody.transform;
+    private NetworkTransform networkTransform;
+    private TargetDetector targetDetector;
+
+    private float nextOffset;
+    private float nextTeleportCheck;
+
+    private void Awake()
+    {
+        networkTransform = GetComponent<NetworkTransform>();
+        targetDetector = GetComponent<TargetDetector>();
+    }
 
     private void Update()
     {
@@ -31,6 +53,16 @@ public class FollowStimulus : MonoBehaviour
         }
 
         aheadPosition = targetPosition + targetVelocity * aheadDistance + randomAheadOffset;
+
+        if (canTeleportToTarget && IsServer && Time.time > nextTeleportCheck)
+        {
+            nextTeleportCheck = Time.time + 5f;
+            if (Vector3.Distance(targetPosition, transform.position) > maxDistanceFromTarget)
+            {
+                networkTransform.Teleport(aheadPosition, Quaternion.identity, Vector3.one);
+                if (targetDetector != null) targetDetector.DeselectTarget($"Teleported to {targetRbody.name}");
+            }
+        }
     }
 
     public bool IsNotAtAheadPosition(Vector2 petPosition)
