@@ -69,6 +69,13 @@ public class OptionsUI : UIBehaviour
         AudioManager.Main.PlayClickSound();
     }
 
+    public void ControlButtonClicked()
+    {
+        HideNoFade();
+        ControlsUI.Main.Show();
+        AudioManager.Main.PlayClickSound();
+    }
+
     public void LeaveButtonClicked()
     {
         Hide();

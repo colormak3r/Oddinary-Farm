@@ -119,7 +119,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Drop"",
+                    ""name"": ""Drop Item"",
                     ""type"": ""Button"",
                     ""id"": ""097946b0-a1d8-49ab-802d-83da59df9b3a"",
                     ""expectedControlType"": """",
@@ -128,7 +128,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Primary"",
+                    ""name"": ""Primary Action"",
                     ""type"": ""Button"",
                     ""id"": ""8ab65a53-01f1-4d5f-ba0a-e88a6f6cf498"",
                     ""expectedControlType"": """",
@@ -137,7 +137,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Secondary"",
+                    ""name"": ""Secondary Action"",
                     ""type"": ""Button"",
                     ""id"": ""b156b0e4-f550-44cd-9262-ed1922076a78"",
                     ""expectedControlType"": """",
@@ -146,7 +146,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Alternative"",
+                    ""name"": ""Alternative Action"",
                     ""type"": ""Button"",
                     ""id"": ""9ff8bec7-55df-48b2-940a-b6184314f85e"",
                     ""expectedControlType"": """",
@@ -173,7 +173,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Hotbar Up"",
+                    ""name"": ""Hotbar Left"",
                     ""type"": ""Button"",
                     ""id"": ""67511a4c-f991-472e-824c-b6cd5bdc56ca"",
                     ""expectedControlType"": """",
@@ -182,7 +182,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Hotbar Down"",
+                    ""name"": ""Hotbar Right"",
                     ""type"": ""Button"",
                     ""id"": ""261c58c5-6ad5-4b4c-b62d-50a969c572c6"",
                     ""expectedControlType"": """",
@@ -245,7 +245,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ToggleUI"",
+                    ""name"": ""Toggle UI"",
                     ""type"": ""Button"",
                     ""id"": ""9fc1c24f-2443-41a7-a549-7736146fa3dc"",
                     ""expectedControlType"": """",
@@ -339,7 +339,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Drop"",
+                    ""action"": ""Drop Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -350,7 +350,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Drop"",
+                    ""action"": ""Drop Item"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -361,7 +361,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Primary"",
+                    ""action"": ""Primary Action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -372,7 +372,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Primary"",
+                    ""action"": ""Primary Action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -383,7 +383,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Secondary"",
+                    ""action"": ""Secondary Action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -394,7 +394,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Secondary"",
+                    ""action"": ""Secondary Action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -405,7 +405,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Alternative"",
+                    ""action"": ""Alternative Action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -669,7 +669,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Hotbar Up"",
+                    ""action"": ""Hotbar Left"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -691,7 +691,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Hotbar Down"",
+                    ""action"": ""Hotbar Right"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -702,7 +702,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToggleUI"",
+                    ""action"": ""Toggle UI"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1406,21 +1406,21 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
         m_Gameplay_LookPosition = m_Gameplay.FindAction("Look Position", throwIfNotFound: true);
         m_Gameplay_LookDirection = m_Gameplay.FindAction("Look Direction", throwIfNotFound: true);
-        m_Gameplay_Drop = m_Gameplay.FindAction("Drop", throwIfNotFound: true);
-        m_Gameplay_Primary = m_Gameplay.FindAction("Primary", throwIfNotFound: true);
-        m_Gameplay_Secondary = m_Gameplay.FindAction("Secondary", throwIfNotFound: true);
-        m_Gameplay_Alternative = m_Gameplay.FindAction("Alternative", throwIfNotFound: true);
+        m_Gameplay_DropItem = m_Gameplay.FindAction("Drop Item", throwIfNotFound: true);
+        m_Gameplay_PrimaryAction = m_Gameplay.FindAction("Primary Action", throwIfNotFound: true);
+        m_Gameplay_SecondaryAction = m_Gameplay.FindAction("Secondary Action", throwIfNotFound: true);
+        m_Gameplay_AlternativeAction = m_Gameplay.FindAction("Alternative Action", throwIfNotFound: true);
         m_Gameplay_HotbarScroll = m_Gameplay.FindAction("Hotbar Scroll", throwIfNotFound: true);
         m_Gameplay_Hotbar = m_Gameplay.FindAction("Hotbar", throwIfNotFound: true);
-        m_Gameplay_HotbarUp = m_Gameplay.FindAction("Hotbar Up", throwIfNotFound: true);
-        m_Gameplay_HotbarDown = m_Gameplay.FindAction("Hotbar Down", throwIfNotFound: true);
+        m_Gameplay_HotbarLeft = m_Gameplay.FindAction("Hotbar Left", throwIfNotFound: true);
+        m_Gameplay_HotbarRight = m_Gameplay.FindAction("Hotbar Right", throwIfNotFound: true);
         m_Gameplay_Interact = m_Gameplay.FindAction("Interact", throwIfNotFound: true);
         m_Gameplay_Map = m_Gameplay.FindAction("Map", throwIfNotFound: true);
         m_Gameplay_Pause = m_Gameplay.FindAction("Pause", throwIfNotFound: true);
         m_Gameplay_Inventory = m_Gameplay.FindAction("Inventory", throwIfNotFound: true);
         m_Gameplay_Hand = m_Gameplay.FindAction("Hand", throwIfNotFound: true);
         m_Gameplay_OpenConsole = m_Gameplay.FindAction("Open Console", throwIfNotFound: true);
-        m_Gameplay_ToggleUI = m_Gameplay.FindAction("ToggleUI", throwIfNotFound: true);
+        m_Gameplay_ToggleUI = m_Gameplay.FindAction("Toggle UI", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_OpenConsole = m_UI.FindAction("Open Console", throwIfNotFound: true);
@@ -1525,14 +1525,14 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Move;
     private readonly InputAction m_Gameplay_LookPosition;
     private readonly InputAction m_Gameplay_LookDirection;
-    private readonly InputAction m_Gameplay_Drop;
-    private readonly InputAction m_Gameplay_Primary;
-    private readonly InputAction m_Gameplay_Secondary;
-    private readonly InputAction m_Gameplay_Alternative;
+    private readonly InputAction m_Gameplay_DropItem;
+    private readonly InputAction m_Gameplay_PrimaryAction;
+    private readonly InputAction m_Gameplay_SecondaryAction;
+    private readonly InputAction m_Gameplay_AlternativeAction;
     private readonly InputAction m_Gameplay_HotbarScroll;
     private readonly InputAction m_Gameplay_Hotbar;
-    private readonly InputAction m_Gameplay_HotbarUp;
-    private readonly InputAction m_Gameplay_HotbarDown;
+    private readonly InputAction m_Gameplay_HotbarLeft;
+    private readonly InputAction m_Gameplay_HotbarRight;
     private readonly InputAction m_Gameplay_Interact;
     private readonly InputAction m_Gameplay_Map;
     private readonly InputAction m_Gameplay_Pause;
@@ -1564,21 +1564,21 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @LookDirection => m_Wrapper.m_Gameplay_LookDirection;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Drop".
+        /// Provides access to the underlying input action "Gameplay/DropItem".
         /// </summary>
-        public InputAction @Drop => m_Wrapper.m_Gameplay_Drop;
+        public InputAction @DropItem => m_Wrapper.m_Gameplay_DropItem;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Primary".
+        /// Provides access to the underlying input action "Gameplay/PrimaryAction".
         /// </summary>
-        public InputAction @Primary => m_Wrapper.m_Gameplay_Primary;
+        public InputAction @PrimaryAction => m_Wrapper.m_Gameplay_PrimaryAction;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Secondary".
+        /// Provides access to the underlying input action "Gameplay/SecondaryAction".
         /// </summary>
-        public InputAction @Secondary => m_Wrapper.m_Gameplay_Secondary;
+        public InputAction @SecondaryAction => m_Wrapper.m_Gameplay_SecondaryAction;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/Alternative".
+        /// Provides access to the underlying input action "Gameplay/AlternativeAction".
         /// </summary>
-        public InputAction @Alternative => m_Wrapper.m_Gameplay_Alternative;
+        public InputAction @AlternativeAction => m_Wrapper.m_Gameplay_AlternativeAction;
         /// <summary>
         /// Provides access to the underlying input action "Gameplay/HotbarScroll".
         /// </summary>
@@ -1588,13 +1588,13 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Hotbar => m_Wrapper.m_Gameplay_Hotbar;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/HotbarUp".
+        /// Provides access to the underlying input action "Gameplay/HotbarLeft".
         /// </summary>
-        public InputAction @HotbarUp => m_Wrapper.m_Gameplay_HotbarUp;
+        public InputAction @HotbarLeft => m_Wrapper.m_Gameplay_HotbarLeft;
         /// <summary>
-        /// Provides access to the underlying input action "Gameplay/HotbarDown".
+        /// Provides access to the underlying input action "Gameplay/HotbarRight".
         /// </summary>
-        public InputAction @HotbarDown => m_Wrapper.m_Gameplay_HotbarDown;
+        public InputAction @HotbarRight => m_Wrapper.m_Gameplay_HotbarRight;
         /// <summary>
         /// Provides access to the underlying input action "Gameplay/Interact".
         /// </summary>
@@ -1658,30 +1658,30 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @LookDirection.started += instance.OnLookDirection;
             @LookDirection.performed += instance.OnLookDirection;
             @LookDirection.canceled += instance.OnLookDirection;
-            @Drop.started += instance.OnDrop;
-            @Drop.performed += instance.OnDrop;
-            @Drop.canceled += instance.OnDrop;
-            @Primary.started += instance.OnPrimary;
-            @Primary.performed += instance.OnPrimary;
-            @Primary.canceled += instance.OnPrimary;
-            @Secondary.started += instance.OnSecondary;
-            @Secondary.performed += instance.OnSecondary;
-            @Secondary.canceled += instance.OnSecondary;
-            @Alternative.started += instance.OnAlternative;
-            @Alternative.performed += instance.OnAlternative;
-            @Alternative.canceled += instance.OnAlternative;
+            @DropItem.started += instance.OnDropItem;
+            @DropItem.performed += instance.OnDropItem;
+            @DropItem.canceled += instance.OnDropItem;
+            @PrimaryAction.started += instance.OnPrimaryAction;
+            @PrimaryAction.performed += instance.OnPrimaryAction;
+            @PrimaryAction.canceled += instance.OnPrimaryAction;
+            @SecondaryAction.started += instance.OnSecondaryAction;
+            @SecondaryAction.performed += instance.OnSecondaryAction;
+            @SecondaryAction.canceled += instance.OnSecondaryAction;
+            @AlternativeAction.started += instance.OnAlternativeAction;
+            @AlternativeAction.performed += instance.OnAlternativeAction;
+            @AlternativeAction.canceled += instance.OnAlternativeAction;
             @HotbarScroll.started += instance.OnHotbarScroll;
             @HotbarScroll.performed += instance.OnHotbarScroll;
             @HotbarScroll.canceled += instance.OnHotbarScroll;
             @Hotbar.started += instance.OnHotbar;
             @Hotbar.performed += instance.OnHotbar;
             @Hotbar.canceled += instance.OnHotbar;
-            @HotbarUp.started += instance.OnHotbarUp;
-            @HotbarUp.performed += instance.OnHotbarUp;
-            @HotbarUp.canceled += instance.OnHotbarUp;
-            @HotbarDown.started += instance.OnHotbarDown;
-            @HotbarDown.performed += instance.OnHotbarDown;
-            @HotbarDown.canceled += instance.OnHotbarDown;
+            @HotbarLeft.started += instance.OnHotbarLeft;
+            @HotbarLeft.performed += instance.OnHotbarLeft;
+            @HotbarLeft.canceled += instance.OnHotbarLeft;
+            @HotbarRight.started += instance.OnHotbarRight;
+            @HotbarRight.performed += instance.OnHotbarRight;
+            @HotbarRight.canceled += instance.OnHotbarRight;
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
@@ -1723,30 +1723,30 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
             @LookDirection.started -= instance.OnLookDirection;
             @LookDirection.performed -= instance.OnLookDirection;
             @LookDirection.canceled -= instance.OnLookDirection;
-            @Drop.started -= instance.OnDrop;
-            @Drop.performed -= instance.OnDrop;
-            @Drop.canceled -= instance.OnDrop;
-            @Primary.started -= instance.OnPrimary;
-            @Primary.performed -= instance.OnPrimary;
-            @Primary.canceled -= instance.OnPrimary;
-            @Secondary.started -= instance.OnSecondary;
-            @Secondary.performed -= instance.OnSecondary;
-            @Secondary.canceled -= instance.OnSecondary;
-            @Alternative.started -= instance.OnAlternative;
-            @Alternative.performed -= instance.OnAlternative;
-            @Alternative.canceled -= instance.OnAlternative;
+            @DropItem.started -= instance.OnDropItem;
+            @DropItem.performed -= instance.OnDropItem;
+            @DropItem.canceled -= instance.OnDropItem;
+            @PrimaryAction.started -= instance.OnPrimaryAction;
+            @PrimaryAction.performed -= instance.OnPrimaryAction;
+            @PrimaryAction.canceled -= instance.OnPrimaryAction;
+            @SecondaryAction.started -= instance.OnSecondaryAction;
+            @SecondaryAction.performed -= instance.OnSecondaryAction;
+            @SecondaryAction.canceled -= instance.OnSecondaryAction;
+            @AlternativeAction.started -= instance.OnAlternativeAction;
+            @AlternativeAction.performed -= instance.OnAlternativeAction;
+            @AlternativeAction.canceled -= instance.OnAlternativeAction;
             @HotbarScroll.started -= instance.OnHotbarScroll;
             @HotbarScroll.performed -= instance.OnHotbarScroll;
             @HotbarScroll.canceled -= instance.OnHotbarScroll;
             @Hotbar.started -= instance.OnHotbar;
             @Hotbar.performed -= instance.OnHotbar;
             @Hotbar.canceled -= instance.OnHotbar;
-            @HotbarUp.started -= instance.OnHotbarUp;
-            @HotbarUp.performed -= instance.OnHotbarUp;
-            @HotbarUp.canceled -= instance.OnHotbarUp;
-            @HotbarDown.started -= instance.OnHotbarDown;
-            @HotbarDown.performed -= instance.OnHotbarDown;
-            @HotbarDown.canceled -= instance.OnHotbarDown;
+            @HotbarLeft.started -= instance.OnHotbarLeft;
+            @HotbarLeft.performed -= instance.OnHotbarLeft;
+            @HotbarLeft.canceled -= instance.OnHotbarLeft;
+            @HotbarRight.started -= instance.OnHotbarRight;
+            @HotbarRight.performed -= instance.OnHotbarRight;
+            @HotbarRight.canceled -= instance.OnHotbarRight;
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
@@ -2165,33 +2165,33 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnLookDirection(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Drop" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Drop Item" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnDrop(InputAction.CallbackContext context);
+        void OnDropItem(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Primary" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Primary Action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnPrimary(InputAction.CallbackContext context);
+        void OnPrimaryAction(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Secondary" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Secondary Action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSecondary(InputAction.CallbackContext context);
+        void OnSecondaryAction(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Alternative" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Alternative Action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnAlternative(InputAction.CallbackContext context);
+        void OnAlternativeAction(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Hotbar Scroll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -2207,19 +2207,19 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnHotbar(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Hotbar Up" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Hotbar Left" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnHotbarUp(InputAction.CallbackContext context);
+        void OnHotbarLeft(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Hotbar Down" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Hotbar Right" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnHotbarDown(InputAction.CallbackContext context);
+        void OnHotbarRight(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
@@ -2263,7 +2263,7 @@ public partial class @DefaultInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnOpenConsole(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "ToggleUI" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Toggle UI" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />

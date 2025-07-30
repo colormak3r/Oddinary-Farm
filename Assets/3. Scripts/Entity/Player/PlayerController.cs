@@ -368,7 +368,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         controllerDirection = context.ReadValue<Vector2>();
     }
 
-    public void OnDrop(InputAction.CallbackContext context)
+    public void OnDropItem(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
 
@@ -473,7 +473,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private float primaryStarted;
     private Vector2 invalidPosition_cached;
 
-    public void OnPrimary(InputAction.CallbackContext context)
+    public void OnPrimaryAction(InputAction.CallbackContext context)
     {
         if (!isControllable || currentItem == null) return;
 
@@ -589,14 +589,14 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
     }
 
-    public void OnSecondary(InputAction.CallbackContext context)
+    public void OnSecondaryAction(InputAction.CallbackContext context)
     {
         if (!isControllable || isPointerOverUI || currentItem == null) return;
 
         if (context.performed) currentItem.OnSecondaryAction(lookPosition);
     }
 
-    public void OnAlternative(InputAction.CallbackContext context)
+    public void OnAlternativeAction(InputAction.CallbackContext context)
     {
         if (!isControllable || isPointerOverUI || currentItem == null) return;
 
@@ -640,7 +640,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
     }
 
-    public void OnHotbarUp(InputAction.CallbackContext context)
+    public void OnHotbarRight(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
 
@@ -651,7 +651,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         }
     }
 
-    public void OnHotbarDown(InputAction.CallbackContext context)
+    public void OnHotbarLeft(InputAction.CallbackContext context)
     {
         if (!isControllable) return;
 
@@ -749,7 +749,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         if (showDebugs) Debug.Log($"Primary CDR Modifier set to {primaryCdrModifier} for {gameObject.name}.");
         primaryCdrModifier = modifier;
     }
-    
+
     public void SetIsMounting(bool value, MountController mountController)
     {
         isMounted = value;

@@ -14,6 +14,8 @@ public enum InputMap
 public class InputManager : MonoBehaviour
 {
     public static InputManager Main;
+    private static string PREF_KEY = "InputBindings";
+
     private void Awake()
     {
         if (Main == null)
@@ -124,5 +126,43 @@ public class InputManager : MonoBehaviour
                 Debug.LogError("Invalid InputMap");
                 return null;
         }
+    }
+
+    public void Rebind(string actionName, int bindingIndex,
+                       System.Action<string> onFinished)
+    {
+        var a = inputActions.asset.FindAction(actionName, true);
+        a.Disable();                                        // avoids double-fires
+
+        a.PerformInteractiveRebinding(bindingIndex)
+         .WithCancelingThrough("<Keyboard>/escape")
+         .OnComplete(op =>
+         {
+             op.Dispose();
+             a.Enable();
+             SaveOverrides();
+
+             string nice = InputControlPath.ToHumanReadableString(
+                              a.bindings[bindingIndex].effectivePath,
+                              InputControlPath.HumanReadableStringOptions.OmitDevice);
+             onFinished?.Invoke(nice);                      // update UI
+         })
+         .OnCancel(op => { op.Dispose(); a.Enable(); onFinished?.Invoke("-"); })
+         .Start();
+    }
+
+    public void ResetAll()
+    {
+        inputActions.RemoveAllBindingOverrides();
+        PlayerPrefs.DeleteKey(PREF_KEY);
+    }
+
+
+    private void SaveOverrides() => PlayerPrefs.SetString(PREF_KEY, inputActions.SaveBindingOverridesAsJson());
+
+    private void LoadOverrides()
+    {
+        if (PlayerPrefs.HasKey(PREF_KEY))
+            inputActions.LoadBindingOverridesFromJson(PlayerPrefs.GetString(PREF_KEY));
     }
 }

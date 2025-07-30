@@ -33,7 +33,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Drop",
+                    "name": "Drop Item",
                     "type": "Button",
                     "id": "097946b0-a1d8-49ab-802d-83da59df9b3a",
                     "expectedControlType": "",
@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Primary",
+                    "name": "Primary Action",
                     "type": "Button",
                     "id": "8ab65a53-01f1-4d5f-ba0a-e88a6f6cf498",
                     "expectedControlType": "",
@@ -51,7 +51,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Secondary",
+                    "name": "Secondary Action",
                     "type": "Button",
                     "id": "b156b0e4-f550-44cd-9262-ed1922076a78",
                     "expectedControlType": "",
@@ -60,7 +60,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Alternative",
+                    "name": "Alternative Action",
                     "type": "Button",
                     "id": "9ff8bec7-55df-48b2-940a-b6184314f85e",
                     "expectedControlType": "",
@@ -87,7 +87,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Hotbar Up",
+                    "name": "Hotbar Left",
                     "type": "Button",
                     "id": "67511a4c-f991-472e-824c-b6cd5bdc56ca",
                     "expectedControlType": "",
@@ -96,7 +96,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Hotbar Down",
+                    "name": "Hotbar Right",
                     "type": "Button",
                     "id": "261c58c5-6ad5-4b4c-b62d-50a969c572c6",
                     "expectedControlType": "",
@@ -159,7 +159,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ToggleUI",
+                    "name": "Toggle UI",
                     "type": "Button",
                     "id": "9fc1c24f-2443-41a7-a549-7736146fa3dc",
                     "expectedControlType": "",
@@ -253,7 +253,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Drop",
+                    "action": "Drop Item",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -264,7 +264,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Drop",
+                    "action": "Drop Item",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -275,7 +275,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Primary",
+                    "action": "Primary Action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -286,7 +286,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Primary",
+                    "action": "Primary Action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -297,7 +297,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Secondary",
+                    "action": "Secondary Action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -308,7 +308,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Secondary",
+                    "action": "Secondary Action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -319,7 +319,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Alternative",
+                    "action": "Alternative Action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -583,7 +583,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Hotbar Up",
+                    "action": "Hotbar Left",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -605,7 +605,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Hotbar Down",
+                    "action": "Hotbar Right",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -616,7 +616,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ToggleUI",
+                    "action": "Toggle UI",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
