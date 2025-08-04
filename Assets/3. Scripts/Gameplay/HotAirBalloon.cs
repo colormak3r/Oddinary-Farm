@@ -1,8 +1,13 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   08/03/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class HotAirBalloon : Structure, IInteractable
 {
@@ -18,55 +23,61 @@ public class HotAirBalloon : Structure, IInteractable
     [SerializeField]
     private Collider2D physicCollider;
 
-    private NetworkVariable<int> CurrentStage = new NetworkVariable<int>();
-    private NetworkVariable<bool> CanTakeOff = new NetworkVariable<bool>();
+    [Header("Hot Air Balloon Debugs")]
+    [SerializeField]
+    private bool showDebugs;
 
+    /// <summary>
+    /// Tracks the current upgrade stage of the hot air balloon.
+    /// upgradeStages.GetStageCount() - 1 indicates the maximum stage.
+    /// The value starts at 0 and goes up to upgradeStages.GetStageCount() - 1.
+    /// </summary>
+    [SerializeField]
+    private NetworkVariable<int> CurrentStage = new NetworkVariable<int>();
     public int CurrentStageValue => CurrentStage.Value;
+    public bool IsFullyUpgraded => CurrentStage.Value >= upgradeStages.GetStageCount() - 1;
+
+    /// <summary>
+    /// Checks if the hot air balloon has taken off.
+    /// </summary>
+    [SerializeField]
+    private NetworkVariable<bool> HasTakenOff = new NetworkVariable<bool>();
+
     public bool IsHoldInteractable => false;
-    private Vector2 playerPosition;
+
     private MountInteraction mountInteraction;
-    private MountController mountController;
-    private bool isMounted;
+    private HotAirBalloonMountController mountController;
 
     public override void OnNetworkSpawn()
     {
+        mountController = GetComponent<HotAirBalloonMountController>();
+
+        // Keep track of when the player has mounted the hot air balloon
+        // Try to take off when the player mounts the balloon
         mountInteraction = GetComponent<MountInteraction>();
-        mountController = GetComponent<MountController>();
-
-        if (mountInteraction == null || mountController == null)
-        {
-            Debug.LogError("HotAirBalloon Error: Missing MountInteraction or MountController scripts.");
-            return;
-        }
-
-        // Set mount values to false on init
-        mountInteraction.SetCanMount(false);
-        mountInteraction.OnMountOnClient += TakeOff;        // Take off if a player mounts
-        isMounted = false;
-
-        mountController.CanMove = false;
+        mountInteraction.OnMountOnServer += CheckTakeOffOnMount;
 
         CurrentStage.OnValueChanged += HandleCurrentStageChanged;
-        HandleCurrentStageChanged(0, CurrentStage.Value);
+        HandleCurrentStageChanged(0, CurrentStage.Value);           // Initialize current stage
 
-        if (IsOwner)
+        HasTakenOff.OnValueChanged += HandleHasTakenOffChanged;
+        HandleHasTakenOffChanged(false, HasTakenOff.Value);         // Initialize taken off state
+
+        if (IsServer)
         {
-            TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);        // See when to take off
+            // See when to take off
+            TimeManager.Main.OnHourChanged.AddListener(HandleOnHourChanged);
+            HandleOnHourChanged(TimeManager.Main.CurrentHour);      // See if player can take off 
         }
-        HandleOnHourChanged(TimeManager.Main.CurrentHour);      // See if player can take off 
     }
 
     public override void OnNetworkDespawn()
     {
-        if (mountInteraction == null || mountController == null)
-        {
-            Debug.LogError("HotAirBalloon Error: Missing MountInteraction or MountController scripts.");
-            return;
-        }
-
         CurrentStage.OnValueChanged -= HandleCurrentStageChanged;
+        HasTakenOff.OnValueChanged -= HandleHasTakenOffChanged;
+        mountInteraction.OnMountOnServer -= CheckTakeOffOnMount;
 
-        if (IsOwner)
+        if (IsServer)
         {
             TimeManager.Main.OnHourChanged.RemoveListener(HandleOnHourChanged);
         }
@@ -74,26 +85,20 @@ public class HotAirBalloon : Structure, IInteractable
 
     private void HandleOnHourChanged(int currentHour)
     {
-        Debug.Log($"Handling Hour Change: Date = {TimeManager.Main.CurrentDate}, Hour = {currentHour}");
+        if (showDebugs) Debug.Log($"Handling Hour Change: Date = {TimeManager.Main.CurrentDate}, Hour = {currentHour}");
 
-        if (CanTakeOff.Value)
-            return;
-
-        if (!IsServer)
-            return;
+        if (HasTakenOff.Value) return;
 
         if (CheckTakeOff(currentHour))
         {
-            Debug.Log("Player can now take off");
-
-            CanTakeOff.Value = true;
-
-            if (isMounted)          // Take off if a player is already mounted
-                TakeOff(null);
+            if (showDebugs) Debug.Log("Player can now take off");
+            // Take off if a player is already mounted
+            // This is checked every hour but in reality it will be called very quickly after the flood
+            if (mountInteraction.HasOwner) TakeOffOnServer();
         }
         else
         {
-            Debug.Log("Player can not take off yet");
+            if (showDebugs) Debug.Log("Player can not take off yet");
         }
     }
 
@@ -102,36 +107,80 @@ public class HotAirBalloon : Structure, IInteractable
         spriteRenderer.sprite = upgradeStages.GetStage(newValue).sprite;
     }
 
-    #region Take Off
-    private void TakeOff(Transform source)
+    private void HandleHasTakenOffChanged(bool previousValue, bool newValue)
     {
-        Debug.Log("Attempting take off...");
-
-        if (!CanTakeOff.Value)      // Take off only if conditions are met
-            return;
-
-        Debug.Log("Hot Air Balloon has taken off.");
-
-        mountInteraction.SetCanMount(false);    // Player cannot dismount from balloon
-        mountController.CanMove = true;         // Enable movement and start movement
-        mountController.Move(Vector2.zero);
-
-        GetComponent<Collider2D>().enabled = false;
-        GetComponent<SelectorModifier>().SetCanBeSelected(false);
-        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-
-        // Change sorting order of the hot air balloon
-        // This will also affect the player since the player is a child of the hot air balloon
-        var sortingGroup = GetComponent<SortingGroup>();
-        sortingGroup.sortingLayerName = "UI";
-        sortingGroup.sortingOrder = 99;
-
-        // Disable the collider of the hot air balloon
-        var colliders = GetComponentsInChildren<Collider2D>();
-        foreach (var collider in colliders)
+        // Run on both server and client
+        if (newValue)
         {
-            collider.enabled = false;
+            Debug.Log("Hot Air Balloon has taken off.");
+
+            mountInteraction.SetCanMount(false);    // Player cannot dismount from balloon
+
+            // Disable the collider of the hot air balloon
+            var colliders = GetComponentsInChildren<Collider2D>();
+            foreach (var collider in colliders)
+            {
+                collider.enabled = false;
+            }
+
+            GetComponent<SelectorModifier>().SetCanBeSelected(false);
+            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+
+            // Change sorting order of the hot air balloon
+            // This will also affect the player since the player is a child of the hot air balloon
+            var sortingGroup = GetComponent<SortingGroup>();
+            sortingGroup.sortingLayerName = "UI";
+            sortingGroup.sortingOrder = 99;
         }
+        else
+        {
+            //Reverse take off here in the future if needed
+        }
+    }
+
+    #region Take Off
+
+    /// <summary>
+    /// Used to take off the hot air balloon on Clients. 
+    /// For debugging purposes, this can be called from the Editor context menu.
+    /// </summary>
+    [ContextMenu("Take Off")]
+    private void TakeOff()
+    {
+        if (HasTakenOff.Value) return;
+        TakeOffRpc();
+    }
+
+    /// <summary>
+    /// Method for OnMountOnServer callback.
+    /// When a player mounts the hot air balloon, this method checks if the player can take off on the server.
+    /// </summary>
+    /// <param name="source"></param>
+    private void CheckTakeOffOnMount(Transform source)
+    {
+        if (HasTakenOff.Value || !CheckTakeOff(TimeManager.Main.CurrentHour)) return;
+        TakeOffRpc();
+    }
+
+    /// <summary>
+    /// Used to take off the hot air balloon.
+    /// Works on both server and client.
+    /// </summary>
+    [Rpc(SendTo.Server)]
+    private void TakeOffRpc()
+    {
+        TakeOffOnServer();
+    }
+
+    /// <summary>
+    /// Changes the state of the hot air balloon to taken off on the server.
+    /// </summary>
+    /// <param name="source"></param>
+    private void TakeOffOnServer()
+    {
+        if (HasTakenOff.Value || !IsServer) return;
+        HasTakenOff.Value = true;
+        mountController.TakeOffOnServer();
     }
 
     private bool CheckTakeOff(int currentHour)
@@ -153,20 +202,13 @@ public class HotAirBalloon : Structure, IInteractable
 
     public void Interact(Transform source)
     {
-        if (CurrentStage.Value < upgradeStages.GetStageCount() - 1)     // Player needs to upgrade balloon
-            UpgradeUI.Main.Initialize(source.GetComponent<PlayerInventory>(), upgradeStages, CurrentStageValue, UpgradeBalloon);
-        else                                              // Player can mount balloon now
+        if (!IsFullyUpgraded)   // Player needs to upgrade balloon
         {
-            isMounted = !isMounted;
-            mountInteraction.SetCanMount(true);
-            physicCollider.enabled = !isMounted;
-
-            // Disable colliders/control of player
-            if (source.TryGetComponent<PlayerMountHandler>(out var controller))
-            {
-                controller.SetControl(!isMounted);
-            }
-
+            UpgradeUI.Main.Initialize(source.GetComponent<PlayerInventory>(), upgradeStages, CurrentStageValue, UpgradeBalloon);
+        }
+        else                    // Player can mount balloon now
+        {
+            // No mounting logic here, mount interaction will handle it
             mountInteraction.Interact(source);
         }
     }
@@ -180,20 +222,20 @@ public class HotAirBalloon : Structure, IInteractable
     [Rpc(SendTo.Server)]
     private void UpgradeBalloonRpc()
     {
-        if (CurrentStage.Value < upgradeStages.GetStageCount() - 1)
+        if (!IsFullyUpgraded)
+        {
+            if (showDebugs) Debug.Log("Upgrading Hot Air Balloon...");
             CurrentStage.Value++;
+
+            // Check if the balloon is fully upgraded immidiately after upgrading
+            if (IsFullyUpgraded)
+            {
+                if (showDebugs) Debug.Log("Hot Air Balloon is fully upgraded. Player can now mount the balloon.");
+                mountInteraction.SetCanMount(true);
+            }
+        }
     }
     #endregion
-
-    [ContextMenu("Take Off")]
-    private void TakeOffDebug()
-    {
-        if (!IsServer)
-            return;
-
-        CanTakeOff.Value = true;
-        TakeOff(null);
-    }
 
     public void InteractionStart(Transform source)
     {

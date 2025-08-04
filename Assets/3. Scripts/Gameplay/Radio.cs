@@ -26,7 +26,7 @@ public class Radio : Structure, IInteractable
     private AudioElement audioElement;
 
     // Client authoritative variable
-    private NetworkVariable<bool> PlaySoundTracks = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<bool> PlaySoundTracks = new NetworkVariable<bool>(false);
 
     protected override void Awake()
     {
@@ -144,22 +144,32 @@ public class Radio : Structure, IInteractable
         if (RadioManager.Main.IsActivatedValue)
         {
             //Radio is activated, turn music on or off
-            PlaySoundTracks.Value = !PlaySoundTracks.Value;
+            SetPlaySoundTracksRpc(!PlaySoundTracks.Value);
         }
         else
         {
             // Radio is not activated, play activation sequence
-            RadioManager.Main.SetActivated();
-            PlaySoundTracks.Value = true;
             OnRadioActivatedRpc();
         }
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SetPlaySoundTracksRpc(bool value)
+    {
+        PlaySoundTracks.Value = !PlaySoundTracks.Value;
     }
 
     [Rpc(SendTo.Everyone)]
     private void OnRadioActivatedRpc()
     {
+
         // Mark this object as despawned (cannot be respawned by procedural generation)
-        if (IsServer) GetComponent<ObservabilityController>().DespawnOnServer();
+        if (IsServer)
+        {
+            PlaySoundTracks.Value = true;
+            RadioManager.Main.SetActivatedOnServer();
+            GetComponent<ObservabilityController>().DespawnOnServer();
+        }
 
         // Set the radio as removeable on all clients
         SetIsRemoveable(true);

@@ -1,6 +1,13 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   08/01/2025 (Khoa)
+ * Notes:           This script will handle player state when mounting or dismounting, both physically and graphically
+*/
+
 using System;
-using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -9,16 +16,23 @@ public class PlayerMountHandler : NetworkBehaviour
     [Header("Settings")]
     [SerializeField]
     private SortingGroup sortingGroup;
+    [SerializeField]
+    private Collider2D physicCollider;
 
     private Rigidbody2D rBody;
     private PlayerStatus playerStatus;
     private DrownController drownController;
     private DrownGraphic drownGraphic;
+    private NetworkTransform networkTransform;
 
     [Header("Debugs")]
     [SerializeField]
-    private NetworkVariable<bool> IsControlled = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
-    public bool IsControlledValue => IsControlled.Value;
+    private bool showDebugs = false;
+    [SerializeField]
+    private NetworkVariable<bool> IsMounting = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
+    public bool IsMountingValue => IsMounting.Value;
+
+    public Action<bool> OnMountingChanged;
 
     private void Awake()
     {
@@ -26,51 +40,96 @@ public class PlayerMountHandler : NetworkBehaviour
         playerStatus = GetComponent<PlayerStatus>();
         drownController = GetComponent<DrownController>();
         drownGraphic = GetComponent<DrownGraphic>();
+        networkTransform = GetComponent<NetworkTransform>();
     }
 
-    override public void OnNetworkSpawn()
+    public override void OnNetworkSpawn()
     {
-        IsControlled.OnValueChanged += HandleIsControlledChanged;
+        IsMounting.OnValueChanged += HandleIsControlledChanged;
+        HandleIsControlledChanged(false, IsMounting.Value); // Initialize state
     }
 
-    override public void OnNetworkDespawn()
+    public override void OnNetworkDespawn()
     {
-        IsControlled.OnValueChanged -= HandleIsControlledChanged;
+        IsMounting.OnValueChanged -= HandleIsControlledChanged;
     }
 
-    private void HandleIsControlledChanged(bool previousValue, bool newValue)
+    /// <summary>
+    /// Run owner's behaviour when the parent NetworkObject changes.
+    /// </summary>
+    /// <param name="parentNetworkObject"></param>
+    public override void OnNetworkObjectParentChanged(NetworkObject parentNetworkObject)
     {
-
-    }
-
-    public void SetControl(bool isControlled)
-    {
-        if (IsServer)
+        if (parentNetworkObject)
         {
-            SetControlRpc(isControlled);
+            mountController = parentNetworkObject.GetComponent<MountController>();
+            if (IsOwner)
+            {
+                mountController.SetIsBeingControlled(true);
+                Spectator.Main.SetCamera(mountController.CameraPoint);
+            }
+            if (showDebugs) Debug.Log($"Mount Interaction: Set mountController to {mountController} on parent change.");
         }
         else
         {
-            SetControlInternal(isControlled);
+            if (IsOwner && mountController)
+            {
+                mountController.SetIsBeingControlled(false);
+                Spectator.Main.SetCamera(transform);
+            }
+            mountController = null;
+            if (showDebugs) Debug.Log("Mount Interaction: Parent NetworkObject is null");
         }
+    }
+
+    private void Update()
+    {
+        // Location update after parent change is ambiguous, so we force set the local position here
+        if (mountController) transform.position = mountController.MountingPoint.position;
+    }
+
+    private void HandleIsControlledChanged(bool previousValue, bool isMounting)
+    {
+        sortingGroup.enabled = !isMounting;
+        physicCollider.enabled = !isMounting;
+        drownController.SetCanBeDrowned(!isMounting);
+        drownGraphic.SetCanBeWet(!isMounting);
+
+        if (!isMounting)
+        {
+            rBody.bodyType = RigidbodyType2D.Dynamic;
+            //rBody.simulated = true;
+        }
+        else
+        {
+            rBody.bodyType = RigidbodyType2D.Kinematic;
+            //rBody.simulated = false;
+        }
+
+        OnMountingChanged?.Invoke(isMounting);
+    }
+
+    private MountController mountController;
+    public void SetDirection(Vector2 direcion)
+    {
+        // Generalized for all mounts
+        if (mountController) mountController.Move(direcion);
+    }
+
+    // Can set speed multiplier of the mount here in the future
+    // Can set special skill/keybinds of the mount here in the future
+
+    #region SetIsMounting
+    public void SetIsMounting(bool isMounting)
+    {
+        SetMountingRpc(isMounting);
     }
 
     [Rpc(SendTo.Owner)]
-    private void SetControlRpc(bool isControlled)
+    private void SetMountingRpc(bool isMounting)
     {
-        SetControlInternal(isControlled);
+        Debug.Log($"PlayerMountHandler: SetMountingRpc called with isMounting: {isMounting}");
+        IsMounting.Value = isMounting;
     }
-
-    private void SetControlInternal(bool isControlled)
-    {
-        Debug.Log($"PlayerMountHandler: SetControlInternal called with isControlled: {isControlled}");
-        sortingGroup.enabled = isControlled;
-        drownController.SetCanBeDrowned(isControlled);
-        drownGraphic.SetCanBeWet(isControlled);
-
-        if (isControlled)
-            rBody.bodyType = RigidbodyType2D.Dynamic;
-        else
-            rBody.bodyType = RigidbodyType2D.Kinematic;
-    }
+    #endregion
 }

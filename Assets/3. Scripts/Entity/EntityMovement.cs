@@ -1,5 +1,11 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   08/03/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EntityMovement : NetworkBehaviour
@@ -18,7 +24,8 @@ public class EntityMovement : NetworkBehaviour
     [SerializeField]
     private float speedMultiplier = 1f;
     [SerializeField]
-    private float velocity;
+    private float currentSpeed;         // Can only be read on Owner
+    public Vector2 currentVelocity;     // Can only be read on Owner
     [SerializeField]
     private NetworkVariable<bool> CanBeKnockback = new NetworkVariable<bool>(true, default, NetworkVariableWritePermission.Server);
     private Vector2 movementDirection;
@@ -42,7 +49,8 @@ public class EntityMovement : NetworkBehaviour
             rbody.AddForce(targetDirection * moveSpeed * speedMultiplier * Time.deltaTime);
         }
 
-        velocity = rbody.linearVelocity.magnitude;
+        currentVelocity = rbody.linearVelocity;         // Can only be read on Owner
+        currentSpeed = rbody.linearVelocity.magnitude;  // Can only be read on Owner
 
         // Clamp the velocity to the maximum speed
         if (rbody.linearVelocity.magnitude > maxSpeed)

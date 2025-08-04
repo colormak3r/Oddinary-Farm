@@ -44,6 +44,8 @@ Transform:
   - {fileID: 624401625053526440}
   - {fileID: 4696880306280385907}
   - {fileID: 6681411391769384646}
+  - {fileID: 4242731396204295628}
+  - {fileID: 4193052675390031361}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!210 &7876913304047962499
@@ -71,7 +73,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
+  m_LinearDamping: 15
   m_AngularDamping: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -171,7 +173,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkTransformExpanded: 0
   AutoOwnerAuthorityTickOffset: 1
-  PositionInterpolationType: 0
+  PositionInterpolationType: 1
   RotationInterpolationType: 0
   ScaleInterpolationType: 0
   PositionLerpSmoothing: 1
@@ -181,7 +183,7 @@ MonoBehaviour:
   ScaleLerpSmoothing: 1
   ScaleMaxInterpolationTime: 0.1
   AuthorityMode: 1
-  TickSyncChildren: 1
+  TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
   SyncPositionY: 1
@@ -199,9 +201,9 @@ MonoBehaviour:
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 1
-  Interpolate: 0
-  SlerpPosition: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 1
 --- !u!114 &6339707823571710764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,12 +249,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  moveSpeed: 850
+  moveSpeed: 2500
   maxSpeed: 5
   smoothTime: 0.1
   showDebugs: 0
   speedMultiplier: 1
-  velocity: 0
+  currentSpeed: 0
+  currentVelocity: {x: 0, y: 0}
   CanBeKnockback:
     m_InternalValue: 0
 --- !u!114 &4176837517728966053
@@ -296,6 +299,11 @@ MonoBehaviour:
   upgradeStages: {fileID: 11400000, guid: 3b0c73b5f2dc8654292082cc4fbeb893, type: 2}
   spriteRenderer: {fileID: 6487843671388318122}
   physicCollider: {fileID: 5682155175358053918}
+  showDebugs: 1
+  CurrentStage:
+    m_InternalValue: 0
+  HasTakenOff:
+    m_InternalValue: 0
 --- !u!114 &654695408242344894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,8 +317,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  _mountOffset: {x: 0, y: -0.001, z: 0}
   _debug: 1
+  CanMount:
+    m_InternalValue: 0
 --- !u!114 &3512149633461237853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,9 +333,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  spriteFacingRight: 0
+  faceMovementDirection: 0
+  graphicTransform: {fileID: 4696880306280385907}
+  mountingPoint: {fileID: 4242731396204295628}
+  cameraPoint: {fileID: 4193052675390031361}
   speedMultiplier: 0.1
-  debug: 1
-  physicCollider: {fileID: 5682155175358053918}
+  showDebugs: 0
 --- !u!1 &2707789027467210874
 GameObject:
   m_ObjectHideFlags: 0
@@ -501,6 +514,68 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &4041204143142861531
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4242731396204295628}
+  m_Layer: 10
+  m_Name: Mounting Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4242731396204295628
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4041204143142861531}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2611876951963763595}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4527378409218359673
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4193052675390031361}
+  m_Layer: 10
+  m_Name: Camera Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4193052675390031361
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4527378409218359673}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2611876951963763595}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6600358587627357311
 GameObject:
   m_ObjectHideFlags: 0

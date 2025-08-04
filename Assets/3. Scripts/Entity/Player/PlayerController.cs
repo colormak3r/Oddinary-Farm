@@ -6,6 +6,7 @@
 */
 
 using ColorMak3r.Utility;
+using System;
 using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
@@ -85,20 +86,18 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
     private PlayerAnimationController animationController;
     private LassoController lassoController;
     private ItemSystem itemSystem;
-    private MountController mountController;
+    private PlayerMountHandler mountHandler;
 
-    private bool isOwner;
+    private bool isOwner_MonoBehaviour;
     private bool isInitialized;
 
     private NetworkVariable<bool> IsFacingRight = new NetworkVariable<bool>(false, default, NetworkVariableWritePermission.Owner);
+    public Action<bool> OnIsFacingRightChanged;
 
     public static Transform MuzzleTransform;
 
     private bool rotateArm = false;
     private bool isPointerOverUI;
-
-    [SerializeField]
-    private bool isMounted = false;
 
     private Item currentItem;
     private Camera mainCamera;
@@ -114,6 +113,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         animationController = GetComponentInChildren<PlayerAnimationController>();
         lassoController = GetComponentInChildren<LassoController>();
         itemSystem = GetComponent<ItemSystem>();
+        mountHandler = GetComponent<PlayerMountHandler>();
 
         mainCamera = Camera.main;
         gameplayRenderer = GameplayRenderer.Main;
@@ -130,24 +130,35 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         inventory.OnCurrentItemPropertyChanged -= HandleCurrentItemPropertyChanged;
         inventory.OnCurrentItemChanged -= HandleCurrentItemChanged;
 
-        if (isOwner)
+
+        if (isOwner_MonoBehaviour)
         {
+            // Prevent errors on game closed
             InputManager.Main.InputActions.Gameplay.SetCallbacks(null);
         }
     }
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
         IsFacingRight.OnValueChanged += HandleOnIsFacingRightChanged;
 
         Initialize();
         HandleOnIsFacingRightChanged(false, IsFacingRight.Value);
+
+        if (IsOwner)
+        {
+            mountHandler.OnMountingChanged += HandleOnMountingChanged;
+            HandleOnMountingChanged(false);
+        }
     }
 
     public override void OnNetworkDespawn()
     {
-        base.OnNetworkDespawn();
         IsFacingRight.OnValueChanged -= HandleOnIsFacingRightChanged;
+
+        if (IsOwner)
+        {
+            mountHandler.OnMountingChanged -= HandleOnMountingChanged;
+        }
     }
 
     private Vector2 closetChunkPosition_cached;
@@ -238,7 +249,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
     private void HandleCurrentItemPropertyChanged(ItemProperty itemProperty)
     {
-        if (isOwner) Preview(lookPosition);
+        if (isOwner_MonoBehaviour) Preview(lookPosition);
 
         if (itemProperty == null)
         {
@@ -288,6 +299,8 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
             graphicTransform.localScale = spriteFacingRight ? RIGHT_DIRECTION : LEFT_DIRECTION;
         else
             graphicTransform.localScale = spriteFacingRight ? LEFT_DIRECTION : RIGHT_DIRECTION;
+
+        OnIsFacingRightChanged?.Invoke(isFacingRight);
     }
 
     #endregion
@@ -317,7 +330,7 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         // Set muzzle transform
         MuzzleTransform = muzzleTransform;
 
-        isOwner = true;
+        isOwner_MonoBehaviour = true;
 
         isInitialized = true;
     }
@@ -332,9 +345,11 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         var direction = context.ReadValue<Vector2>().normalized;
 
-        if (isMounted)
+        if (mountHandler.IsMountingValue)
         {
-            mountController?.Move(direction);
+            // The player doesn't need to know about the mount.
+            // The mountHandler will handle input.
+            mountHandler.SetDirection(direction);
             // TODO: Set mount animation
         }
         else
@@ -721,10 +736,17 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
 
         if (!isControllable)
         {
+            // Cancel Movement
             movement.SetDirection(Vector2.zero);
             animator.SetBool("IsMoving", false);
             rbody.linearVelocity = Vector2.zero;
+
+            // Cancel Primary Action
             OnPrimaryCanceled();
+
+            // Cancel Interaction
+            interaction.InteractionEnd();
+            SetMoveable(true);
         }
     }
 
@@ -750,15 +772,18 @@ public class PlayerController : NetworkBehaviour, DefaultInputActions.IGameplayA
         primaryCdrModifier = modifier;
     }
 
-    public void SetIsMounting(bool value, MountController mountController)
+    private void HandleOnMountingChanged(bool isMounting)
     {
-        isMounted = value;
-        this.mountController = mountController;
-
-        // Stop player movment upon mount but do not disable movement
-        StopMovement();
-
-        Debug.Log($"Player Controller: isMounting = {isMounted}, mountController = {mountController}");
+        if (isMounting)
+        {
+            // Stop movement when mounting
+            StopMovement();
+            //animator.SetBool("IsMounting", true);
+        }
+        else
+        {
+            //animator.SetBool("IsMounting", false);
+        }
     }
 
     private void StopMovement()

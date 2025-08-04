@@ -78,15 +78,9 @@ public class RadioManager : NetworkBehaviour
         }
     }
 
-    // If method is called on the server, it use no bandwith. No need to check IsServer
-    public void SetActivated()
+    public void SetActivatedOnServer()
     {
-        SetActivatedRpc();
-    }
-
-    [Rpc(SendTo.Server)]
-    private void SetActivatedRpc()
-    {
+        if (!IsServer) return;
         IsActivated.Value = true;
     }
 }

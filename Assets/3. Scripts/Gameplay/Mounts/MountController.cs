@@ -1,66 +1,111 @@
 /*
  * Created By:      Ryan Carpenter
  * Date Created:    06/23/2025
- * Last Modified:   06/27/2025 (Ryan)
+ * Last Modified:   08/03/2025 (Khoa)
  * Notes:           Handles all mount actions including
  *                  Player movement input
 */
+
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
 [RequireComponent(typeof(MountInteraction))]
 public abstract class MountController : NetworkBehaviour
 {
-    [SerializeField] protected float speedMultiplier = 1f;
-    [SerializeField] protected bool debug = false;
+    private static Vector3 LEFT_DIRECTION = new Vector3(-1, 1, 1);
+    private static Vector3 RIGHT_DIRECTION = new Vector3(1, 1, 1);
 
-    protected EntityMovement movement { get; private set; }
-    protected MountInteraction mountInteraction { get; private set; }
+    [Header("Mount Controller Settings")]
+    [SerializeField]
+    private bool spriteFacingRight;
+    [SerializeField]
+    private bool faceMovementDirection;
+    [SerializeField]
+    private Transform graphicTransform;
+    [SerializeField]
+    private Transform mountingPoint;
+    public Transform MountingPoint => mountingPoint;
+    [SerializeField]
+    private Transform cameraPoint;
+    public Transform CameraPoint => cameraPoint;
+    [SerializeField]
+    protected float speedMultiplier = 1f;
 
-    public bool CanMove { get; set; } = true;
+    [Header("Mount Controller Debugs")]
+    [SerializeField]
+    protected bool showDebugs = false;
 
-    // TODO: Network variable boolean 'IsBeingControlled'
+    // Because mount can have specialized movement behaviour when not mounting, 
+    // we need to keep track of whether the mount is being controlled by the player
+    protected NetworkVariable<bool> IsBeingControlled = new NetworkVariable<bool>(false);
+
+    protected EntityMovement mountMovement { get; private set; }
+    protected Animator mountAnimator { get; private set; }
+
+    private void Awake()
+    {
+        // These can be set without network ownership
+        mountMovement = GetComponent<EntityMovement>();
+        mountMovement.SetDirection(Vector2.zero);
+        mountMovement.SetSpeedMultiplier(speedMultiplier);
+
+        mountAnimator = GetComponent<Animator>();
+    }
 
     public override void OnNetworkSpawn()
     {
-        Initialize();
+        IsBeingControlled.OnValueChanged += HandleIsBeingControlledChanged;
+        HandleIsBeingControlledChanged(false, IsBeingControlled.Value); // Initialize state
     }
 
-    public virtual void Initialize()
+    public override void OnNetworkDespawn()
     {
-        movement = GetComponent<EntityMovement>();
-        mountInteraction = GetComponent<MountInteraction>();
-
-        movement.SetDirection(Vector2.zero);
-        movement.SetSpeedMultiplier(speedMultiplier);
-
-        mountInteraction.OnMountOnClient += HandleOnMount;
-        mountInteraction.OnDismountOnClient += HandleOnDismount;
+        IsBeingControlled.OnValueChanged -= HandleIsBeingControlledChanged;
     }
 
-    protected virtual void HandleOnMount(Transform source)
+    protected virtual void HandleIsBeingControlledChanged(bool previousValue, bool newValue)
     {
-        if (source.TryGetComponent<PlayerController>(out var playerController))
+        if (IsOwner)
         {
-            playerController.SetIsMounting(true, this);
-            Debug.Log("MountController: Player Controller attached.");
-        }
-        else
-        {
-            Debug.LogError("Mount Controller Error: Cannot find player controller for mount.");
+            if (mountAnimator) mountAnimator.SetBool("IsMoving", false);
+            if (mountMovement) mountMovement.SetDirection(Vector2.zero);
         }
     }
 
-    protected virtual void HandleOnDismount(Transform source)
+    // Always hide an RPC behind a public method to add sanity check before calling RPCs, or add thortling in the future.
+    public void SetIsBeingControlled(bool isBeingControlled)
     {
-        if (source.TryGetComponent<PlayerController>(out var pc))
+        SetIsBeingControlledRpc(isBeingControlled);
+    }
+
+    [Rpc(SendTo.Server)]
+    protected void SetIsBeingControlledRpc(bool isBeingControlled)
+    {
+        IsBeingControlled.Value = isBeingControlled;
+    }
+
+    protected virtual void Update()
+    {
+        UpdateFacing();
+    }
+
+    private float x_cached;
+    protected void UpdateFacing()
+    {
+        if (faceMovementDirection && mountMovement && graphicTransform)
         {
-            pc.SetIsMounting(false, null);
-            Debug.Log("MountController: Player Controller released.");
-        }
-        else
-        {
-            Debug.LogError("Mount Controller Error: Cannot find player controller for mount.");
+            if ((transform.position.x - x_cached) > 0.001f)
+            {
+                // If the mount is moving right, we want to face right
+                graphicTransform.localScale = spriteFacingRight ? RIGHT_DIRECTION : LEFT_DIRECTION;
+            }
+            else if ((transform.position.x - x_cached) < -0.001f)
+            {
+                // If the mount is moving left, we want to face left
+                graphicTransform.localScale = spriteFacingRight ? LEFT_DIRECTION : RIGHT_DIRECTION;
+            }
+            x_cached = transform.position.x;    // Cache the x position for next frame comparison
         }
     }
 

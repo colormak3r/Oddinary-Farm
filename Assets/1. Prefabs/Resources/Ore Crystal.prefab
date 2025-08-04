@@ -448,7 +448,7 @@ MonoBehaviour:
   hostility: 1
   maxHealth: 3
   iframeDuration: 0.1
-  isInvincible: 0
+  isInvincible: 1
   damagedEffectPrefab: {fileID: 3303192038522874649, guid: eaa16f0896e08a04684297aa24c4a3ba, type: 3}
   deathEffectPrefab: {fileID: 2017998240076956080, guid: 903b72d91589cde4e9657311c38725ea, type: 3}
   damagedSound: {fileID: 8300000, guid: d8878580919b4824d9b2c998f046f7ea, type: 3}
@@ -459,6 +459,9 @@ MonoBehaviour:
   CurrentHealth:
     m_InternalValue: 0
   OnDeathOnServer:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeathOnClient:
     m_PersistentCalls:
       m_Calls: []
   attackerList: []

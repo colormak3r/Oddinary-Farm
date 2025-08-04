@@ -26,10 +26,12 @@ public class Item : MonoBehaviour
 
     public virtual void Initialize(ItemProperty baseProperty)
     {
-        AudioElement = transform.root.GetComponent<AudioElement>();
+        AudioElement = GetComponentInParent<AudioElement>();
         if (!AudioElement) Debug.LogError("AudioElement not found in parent object", this);
 
-        ItemSystem = transform.root.GetComponent<ItemSystem>();
+        // TODO: Conflict between Player's ItemSystem and Parent's ItemSystem if the player is mounting
+        // Possible solution: disable ItemSystem on the mount when mounting
+        ItemSystem = GetComponentInParent<ItemSystem>();
         if (!ItemSystem) Debug.LogError("ItemSystem not found in parent object", this);
 
         LayerManager = LayerManager.Main;

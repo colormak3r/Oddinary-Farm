@@ -774,7 +774,6 @@ MonoBehaviour:
   screenMousePos: {x: 0, y: 0}
   controllerDirection: {x: 0, y: 0}
   primaryCdrModifier: 1
-  isMounted: 0
 --- !u!114 &3602106504410570466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -925,7 +924,7 @@ MonoBehaviour:
   interactionOffset: {x: 0, y: 0.75, z: 0}
   interactableLayer:
     serializedVersion: 2
-    m_Bits: 536876032
+    m_Bits: 536878080
   showGizmos: 0
   cachedcolliders: []
 --- !u!114 &4905420985265829973
@@ -1100,7 +1099,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   sortingGroup: {fileID: 2207013733290604528}
-  IsControlled:
+  physicCollider: {fileID: 1645639027840338568}
+  showDebugs: 0
+  IsMounting:
     m_InternalValue: 0
 --- !u!114 &5784231218223123395
 MonoBehaviour:
