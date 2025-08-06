@@ -534,7 +534,24 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      LaserDeer_Parts_Modded_0: -5665171347748531405
+      LaserDeer_Parts_Modded_1: -8773561490016575784
+      LaserDeer_Parts_Modded_10: 8418526656062448167
+      LaserDeer_Parts_Modded_11: 4516244624803943428
+      LaserDeer_Parts_Modded_12: -7702422280342473932
+      LaserDeer_Parts_Modded_13: -4368421241810987833
+      LaserDeer_Parts_Modded_14: 4553416143026319797
+      LaserDeer_Parts_Modded_15: -3392603287892155989
+      LaserDeer_Parts_Modded_16: 8782602356757424586
+      LaserDeer_Parts_Modded_2: 210926678388347789
+      LaserDeer_Parts_Modded_3: 7675720856759041873
+      LaserDeer_Parts_Modded_4: 4806045225003276257
+      LaserDeer_Parts_Modded_5: -2389192893982826624
+      LaserDeer_Parts_Modded_6: -4442036703378171962
+      LaserDeer_Parts_Modded_7: -2064837420267178391
+      LaserDeer_Parts_Modded_8: -7586607026279833632
+      LaserDeer_Parts_Modded_9: -1670187936954892695
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
