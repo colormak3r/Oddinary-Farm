@@ -24,5 +24,5 @@ public interface IDamageable
 {
     public uint CurrentHealthValue { get; }
     public Hostility Hostility { get; }
-    public bool TakeDamage(uint damage, DamageType type, Hostility attackerHostility, Transform attacker);
+    public bool TakeDamage(uint damage, DamageType damageType, Hostility attackerHostility, Transform attacker);
 }
