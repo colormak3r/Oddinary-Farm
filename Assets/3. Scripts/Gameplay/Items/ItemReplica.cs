@@ -135,6 +135,7 @@ public class ItemReplica : NetworkBehaviour, INetworkObjectPoolBehaviour
     {
         if (IsServer && Time.time > nextScan && serverPreferredPicker == null)
         {
+            nextScan = Time.time + 0.1f; // Scan every 0.1 seconds
             var player = ScanForPlayer();
             if (player != null) PreferPickerOnServer(player.transform);
         }

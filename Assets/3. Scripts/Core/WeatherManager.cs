@@ -31,6 +31,8 @@ public class WeatherManager : NetworkBehaviour
     [SerializeField]
     private Gradient rainLightColor;
     [SerializeField]
+    private Gradient laserDeerColor;
+    [SerializeField]
     private float transitionSpeed = 1f;
 
     [Header("Rain Settings")]
@@ -68,12 +70,6 @@ public class WeatherManager : NetworkBehaviour
     {
         TimeManager.Main.OnHourChanged.RemoveListener(UpdateRainValue);
     }
-    private void Update()
-    {
-        if (!isInitialized) return;
-
-        UpdateGlobalLight();
-    }
 
     public void Initialize(TimeManager timeManager)
     {
@@ -82,13 +78,28 @@ public class WeatherManager : NetworkBehaviour
         isInitialized = true;
     }
 
-    private void UpdateGlobalLight()
+    private void Update()
     {
-        var timeRatio = (timeManager.CurrentTimeSpan.Minutes + timeManager.CurrentTimeSpan.Hours * 60) / (float)TimeManager.MINUTES_A_DAY;
-        if (isRainning)
-            sunlightLight.color = Color.Lerp(sunlightLight.color, rainLightColor.Evaluate(timeRatio), Time.deltaTime * transitionSpeed);
+        if (!isInitialized) return;
+
+        if (TimeManager.Main.IsPausedValue)
+        {
+            UpdateGlobalLight(0.8f, laserDeerColor);
+        }
         else
-            sunlightLight.color = Color.Lerp(sunlightLight.color, dryLightColor.Evaluate(timeRatio), Time.deltaTime * transitionSpeed);
+        {
+            var timeRatio = (timeManager.CurrentTimeSpan.Minutes + timeManager.CurrentTimeSpan.Hours * 60) / (float)TimeManager.MINUTES_A_DAY;
+
+            if (isRainning)
+                UpdateGlobalLight(timeRatio, rainLightColor);
+            else
+                UpdateGlobalLight(timeRatio, dryLightColor);
+        }
+    }
+
+    private void UpdateGlobalLight(float timeRatio, Gradient colorGradient)
+    {
+        sunlightLight.color = Color.Lerp(sunlightLight.color, colorGradient.Evaluate(timeRatio), Time.deltaTime * transitionSpeed);
     }
 
     private void UpdateRainValue(int currentHour)

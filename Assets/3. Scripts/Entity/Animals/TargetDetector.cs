@@ -1,3 +1,10 @@
+/*
+ * Created By:      Khoa Nguyen
+ * Date Created:    --/--/----
+ * Last Modified:   08/07/2025 (Khoa)
+ * Notes:           <write here>
+*/
+
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;

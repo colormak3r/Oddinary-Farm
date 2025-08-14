@@ -16,6 +16,7 @@ public class SubComponent : MonoBehaviour, IDamageable
     private bool isDestroyed = false;
 
     private SpriteRenderer spriteRenderer;
+    private Collider2D componentCollider;
     private ComponentStatus componentStatus;
 
     public uint CurrentHealthValue => componentStatus.CurrentHealthValue;
@@ -24,6 +25,7 @@ public class SubComponent : MonoBehaviour, IDamageable
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        componentCollider = GetComponent<Collider2D>();
     }
 
     public void Initialize(ComponentStatus componentStatus)
@@ -33,7 +35,6 @@ public class SubComponent : MonoBehaviour, IDamageable
 
     public bool TakeDamage(uint damage, DamageType damageType, Hostility attackerHostility, Transform attacker)
     {
-        Debug.Log($"SubComponent {name} taking damage: {damage}, Type: {damageType}, Attacker Hostility: {attackerHostility}");
         if (isDestroyed) return false;
 
         return componentStatus.TakeDamage(damage, damageType, attackerHostility, attacker);
@@ -57,5 +58,6 @@ public class SubComponent : MonoBehaviour, IDamageable
     {
         isDestroyed = true;
         spriteRenderer.sprite = damagedSprite;
+        componentCollider.enabled = false;
     }
 }

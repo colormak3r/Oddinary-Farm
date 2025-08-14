@@ -11,6 +11,8 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
 
+using Random = UnityEngine.Random;
+
 public class TimeManager : NetworkBehaviour
 {
     public static TimeManager Main;
@@ -60,7 +62,13 @@ public class TimeManager : NetworkBehaviour
     private bool isInitialized = false;
     public bool IsInitialized => isInitialized;
     [SerializeField]
+    private NetworkVariable<bool> IsPaused = new NetworkVariable<bool>(false);
+    public bool IsPausedValue => IsPaused.Value;
+    private bool previouslyPaused = false;
+    [SerializeField]
     private float runTime;
+    [SerializeField]
+    private float pausedTime;
     private TimeSpan timeSpan;
     private int day_cached = -1;
     private int hour_cached = -1;
@@ -105,8 +113,16 @@ public class TimeManager : NetworkBehaviour
         // Get runtime from the server
         runTime = (float)networkManager.ServerTime.Time;
 
+        if (IsPaused.Value)
+        {
+            previouslyPaused = true;
+            pausedTime += Time.deltaTime;
+            timeText.text = $"Day {Random.Range(0, 9)}{Random.Range(0, 9)} - {Random.Range(0, 9)}{Random.Range(0, 9)}:{Random.Range(0, 9)}{Random.Range(0, 9)} ##";
+            return;
+        }
+
         // Get runtime after offset
-        var offsetTime = (runTime +
+        var offsetTime = (runTime - pausedTime +
             DayOffset.Value * SECONDS_A_DAY / timeScale +
             HourOffset.Value * SECONDS_AN_HOUR / timeScale +
             MinuteOffset.Value * SECONDS_A_MINUTE / timeScale)
@@ -114,8 +130,9 @@ public class TimeManager : NetworkBehaviour
 
         // Get timeSpan and display it in Day 1 - 12:30 format
         timeSpan = TimeSpan.FromSeconds(offsetTime);
-        if (timeSpan.Minutes % 10 == 0 && timeSpan.Minutes != minute_cached)
+        if (timeSpan.Minutes % 10 == 0 && timeSpan.Minutes != minute_cached || previouslyPaused)
         {
+            previouslyPaused = false;
             // Create a base DateTime (e.g., midnight) and add the TimeSpan
             DateTime dateTime = DateTime.Today.Add(timeSpan);
 
@@ -174,6 +191,34 @@ public class TimeManager : NetworkBehaviour
         HourOffset.Value = hourOffset;
         MinuteOffset.Value = minuteOffset;
     }
+    #endregion
+
+    #region Pause/Resume
+
+    [ContextMenu("Pause Time")]
+    public void PauseTime()
+    {
+        PauseTimeRpc(true);
+    }
+
+    [ContextMenu("Resume Time")]
+    public void ResumeTime()
+    {
+        PauseTimeRpc(false);
+    }
+
+    [Rpc(SendTo.Server)]
+    private void PauseTimeRpc(bool pause)
+    {
+        PauseTimeOnServer(pause);
+    }
+
+    public void PauseTimeOnServer(bool pause)
+    {
+        Debug.Log($"TimeManager: Pausing time: {pause}");
+        IsPaused.Value = pause;
+    }
+
     #endregion
 }
 

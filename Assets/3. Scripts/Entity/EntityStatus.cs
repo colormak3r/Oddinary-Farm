@@ -43,6 +43,7 @@ public class EntityStatus : NetworkBehaviour, IDamageable
 
     [HideInInspector]
     public UnityEvent OnDeathOnServer;
+    [HideInInspector]
     public UnityEvent OnDeathOnClient;
     public Action<int> OnAttackerListCountChange;
     [SerializeField]

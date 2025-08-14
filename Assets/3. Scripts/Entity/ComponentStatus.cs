@@ -24,7 +24,6 @@ public class ComponentStatus : EntityStatus
 
     protected override void OnEntityDamagedOnClient(uint damage, NetworkObjectReference attackerRef)
     {
-        Debug.Log($"ComponentStatus {componentName} damaged on client: {damage} from {attackerRef}");
         foreach (var subComponent in subComponents)
         {
             if (subComponent != null)
